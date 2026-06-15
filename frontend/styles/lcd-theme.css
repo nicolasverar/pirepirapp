@@ -1,0 +1,55 @@
+:root {
+  --case-black: #111711;
+  --case-dark: #202820;
+  --case-mid: #384238;
+  --lcd-bg: #aecb7c;
+  --lcd-bg-2: #9fbc70;
+  --lcd-mid: #68864d;
+  --lcd-dark: #38562a;
+  --lcd-ink: #192d18;
+  --lcd-line: #20391e;
+  --lcd-alert: #5d2d22;
+  --key-face: #b7ce85;
+  --key-press: #8ca760;
+  --focus: #172817;
+  --shadow-hard: 3px 3px 0 #0b100b;
+  --font-lcd: "Courier New", Consolas, monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--case-black);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background:
+    repeating-linear-gradient(0deg, #111711 0, #111711 6px, #141c14 6px, #141c14 12px);
+  color: var(--lcd-ink);
+  font-family: var(--font-lcd);
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+button {
+  color: inherit;
+}
+
+::selection {
+  background: var(--lcd-ink);
+  color: var(--lcd-bg);
+}

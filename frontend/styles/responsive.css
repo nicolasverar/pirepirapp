@@ -1,0 +1,43 @@
+@media (min-width: 560px) {
+  body {
+    padding: 18px 0;
+  }
+
+  .device-shell {
+    min-height: calc(100svh - 36px);
+    border: 3px solid #070a07;
+    box-shadow: 8px 8px 0 #060806;
+  }
+}
+
+@media (max-width: 360px) {
+  .status-bar {
+    font-size: 0.72rem;
+  }
+
+  .big-money {
+    font-size: 1.85rem;
+  }
+
+  .goal-card {
+    grid-template-columns: 78px 1fr;
+  }
+
+  .wish-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

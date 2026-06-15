@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.*
+backend/.clasp.json
+frontend/scripts/config.local.js
+*.log
+frontend-server.*.log

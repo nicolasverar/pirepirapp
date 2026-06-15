@@ -22,13 +22,17 @@
 }
 
 html {
+  height: 100%;
   min-height: 100%;
+  overflow: hidden;
   background: var(--case-black);
 }
 
 body {
+  height: 100%;
   min-height: 100%;
   margin: 0;
+  overflow: hidden;
   background:
     repeating-linear-gradient(0deg, #111711 0, #111711 6px, #141c14 6px, #141c14 12px);
   color: var(--lcd-ink);

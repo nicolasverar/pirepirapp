@@ -2,7 +2,8 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   width: min(100%, 440px);
-  min-height: 100svh;
+  height: 100svh;
+  height: 100dvh;
   margin: 0 auto;
   padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
   background: var(--case-dark);
@@ -64,6 +65,8 @@
 .lcd-screen {
   position: relative;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   min-height: 0;
   margin: 8px 0;
   padding: 10px;

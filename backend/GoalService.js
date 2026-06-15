@@ -141,6 +141,21 @@ function updateGoal_(payload) {
   });
 }
 
+function deleteGoal_(payload) {
+  return withScriptLock_(function () {
+    var id = requireText_((payload || {}).id, 'ID de meta', 120);
+    var existing = getRecordById_(appSheetNames_().goals, id);
+    if (!existing) {
+      notFoundError_('No existe la meta indicada.');
+    }
+
+    var updated = updateRecordById_(appSheetNames_().goals, id, {
+      Estado: inactiveStatus_()
+    });
+    return goalToApi_(updated);
+  });
+}
+
 function adjustGoalAccumulated_(id, delta) {
   var existing = getRecordById_(appSheetNames_().goals, id);
   if (!existing) {

@@ -132,6 +132,9 @@ function dispatchAction_(action, payload, options) {
     updategoal: function () {
       return updateGoal_(payload);
     },
+    deletegoal: function () {
+      return deleteGoal_(payload);
+    },
     convertwishlisttogoal: function () {
       return convertWishlistToGoal_(payload);
     },

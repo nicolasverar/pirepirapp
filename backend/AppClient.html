@@ -288,7 +288,7 @@
       return '<p class="empty-state">Todavia no cargaste metas.</p>';
     }
     return '<div class="goal-list">' + items.map(function (item) {
-      return '<article class="goal-card">' + renderPhoto(item) + '<div><strong>' + escapeHtml(item.titulo) + '</strong><p>' + escapeHtml(item.descripcion || '') + '</p><dl><dt>Meta</dt><dd>' + escapeHtml(formatMoney(item.montoObjetivo)) + '</dd><dt>Acum.</dt><dd>' + escapeHtml(formatMoney(item.montoAcumulado)) + '</dd></dl>' + renderLiquid(item.porcentaje || 0) + '<button class="tiny-key js-edit-goal" data-id="' + escapeHtml(item.id) + '" type="button">EDIT</button></div></article>';
+      return '<article class="goal-card">' + renderPhoto(item) + '<div><strong>' + escapeHtml(item.titulo) + '</strong><p>' + escapeHtml(item.descripcion || '') + '</p><dl><dt>Meta</dt><dd>' + escapeHtml(formatMoney(item.montoObjetivo)) + '</dd><dt>Acum.</dt><dd>' + escapeHtml(formatMoney(item.montoAcumulado)) + '</dd></dl>' + renderLiquid(item.porcentaje || 0) + '<div class="mini-actions"><button class="tiny-key js-edit-goal" data-id="' + escapeHtml(item.id) + '" type="button">EDIT</button><button class="tiny-key js-delete-goal" data-id="' + escapeHtml(item.id) + '" type="button">DEL</button></div></div></article>';
     }).join('') + '</div>';
   }
 
@@ -369,6 +369,13 @@
     });
     qsa('.js-edit-goal', root).forEach(function (button) {
       button.addEventListener('click', function () { openGoalForm(findById(state.data.metas, button.dataset.id)); });
+    });
+    qsa('.js-delete-goal', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        if (confirm('Eliminar esta meta? Queda guardada como inactiva en Sheets.')) {
+          mutate('deleteGoal', { id: button.dataset.id });
+        }
+      });
     });
     qsa('.js-edit-wish', root).forEach(function (button) {
       button.addEventListener('click', function () { openWishlistForm(findById(state.data.wishlist, button.dataset.id)); });

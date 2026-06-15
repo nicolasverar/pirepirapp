@@ -22,6 +22,7 @@
 - Editar un movimiento y verificar que cambien metricas y acumulados.
 - Eliminar un movimiento y verificar que se reviertan metricas y acumulados.
 - Crear meta con fotografia y verificar efecto LCD pixelado.
+- Eliminar una meta y verificar que desaparece de la lista sin borrar movimientos historicos.
 - Convertir wishlist en meta.
 - Cambiar sueldo mensual en Configuracion.
 

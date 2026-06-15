@@ -4,15 +4,17 @@
 
 - Ejecutar `runSetup` y confirmar que se crean las hojas.
 - Llamar `ping` desde Apps Script y verificar zona horaria `America/Asuncion`.
-- Crear un ahorro futuro.
-- Crear una meta.
-- Crear un elemento de wishlist.
-- Iniciar mes y verificar que no se dupliquen aportes si se ejecuta otra vez.
+- Confirmar que `bootstrap` sin token devuelve error de clave.
+- Confirmar que `bootstrap` con `FINANZAS_API_TOKEN` devuelve datos.
 
-## Interfaz privada
+## PWA
 
-- Abrir la URL `/exec` del Web App estando logueado con tu cuenta.
-- Confirmar que Google bloquea el acceso si se usa otra cuenta sin permiso.
+- Abrir la URL publica de GitHub Pages.
+- Confirmar que aparece el formulario de conexion.
+- Cargar URL `/exec` de Apps Script y clave privada.
+- Marcar `Recordar en este dispositivo` en un celular personal.
+- Instalar desde Chrome con `Instalar app` o `Agregar a pantalla principal`.
+- Abrir desde el icono instalado y verificar que mantiene la conexion.
 - Abrir Resumen y verificar estado de sincronizacion.
 - Registrar un gasto comun.
 - Registrar un ingreso adicional.
@@ -26,8 +28,8 @@
 - Convertir wishlist en meta.
 - Cambiar sueldo mensual en Configuracion.
 
-## GitHub Pages
+## Seguridad
 
-- Abrir la URL publica, si sigue activa.
-- Verificar que solo muestra el aviso de app privada.
-- Desactivar Pages desde Settings > Pages si queres que no exista ningun sitio publico.
+- Abrir la URL de Apps Script sin token y verificar que solo muestra la portada de API.
+- No guardar `FINANZAS_API_TOKEN` en archivos del repo.
+- Si se pierde el celular, cambiar `FINANZAS_API_TOKEN` en Apps Script.

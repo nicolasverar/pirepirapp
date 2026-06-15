@@ -1,8 +1,40 @@
 (function () {
   'use strict';
 
+  var API_URL_KEY = 'finanzasApiUrl';
+  var TOKEN_SESSION_KEY = 'finanzasApiToken';
+  var TOKEN_LOCAL_KEY = 'finanzasApiTokenRemembered';
+
+  function getStoredValue(storage, key) {
+    try {
+      return storage.getItem(key) || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function setStoredValue(storage, key, value) {
+    try {
+      if (value) {
+        storage.setItem(key, value);
+      } else {
+        storage.removeItem(key);
+      }
+    } catch (error) {
+      return;
+    }
+  }
+
   function getApiUrl() {
-    return String((window.FINANZAS_CONFIG && window.FINANZAS_CONFIG.API_URL) || '').trim();
+    return String(
+      getStoredValue(localStorage, API_URL_KEY) ||
+      (window.FINANZAS_CONFIG && window.FINANZAS_CONFIG.API_URL) ||
+      ''
+    ).trim();
+  }
+
+  function setApiUrl(url) {
+    setStoredValue(localStorage, API_URL_KEY, String(url || '').trim());
   }
 
   function hasBackend() {
@@ -11,32 +43,38 @@
   }
 
   function getAuthToken() {
-    try {
-      return sessionStorage.getItem('finanzasApiToken') || '';
-    } catch (error) {
-      return '';
-    }
+    return getStoredValue(localStorage, TOKEN_LOCAL_KEY) || getStoredValue(sessionStorage, TOKEN_SESSION_KEY);
   }
 
-  function setAuthToken(token) {
-    try {
-      sessionStorage.setItem('finanzasApiToken', token || '');
-    } catch (error) {
-      return;
+  function setAuthToken(token, remember) {
+    var value = String(token || '').trim();
+    if (remember) {
+      setStoredValue(localStorage, TOKEN_LOCAL_KEY, value);
+      setStoredValue(sessionStorage, TOKEN_SESSION_KEY, '');
+    } else {
+      setStoredValue(sessionStorage, TOKEN_SESSION_KEY, value);
+      setStoredValue(localStorage, TOKEN_LOCAL_KEY, '');
     }
   }
 
   function clearAuthToken() {
-    try {
-      sessionStorage.removeItem('finanzasApiToken');
-    } catch (error) {
-      return;
-    }
+    setStoredValue(sessionStorage, TOKEN_SESSION_KEY, '');
+    setStoredValue(localStorage, TOKEN_LOCAL_KEY, '');
+  }
+
+  function configureConnection(apiUrl, token, remember) {
+    setApiUrl(apiUrl);
+    setAuthToken(token, remember);
+  }
+
+  function clearConnection() {
+    clearAuthToken();
+    setApiUrl('');
   }
 
   function request(action, payload) {
     if (!hasBackend()) {
-      return Promise.reject(new Error('Falta configurar la URL de la Web App de Apps Script en frontend/scripts/config.js.'));
+      return Promise.reject(new Error('Conecta la URL de Apps Script para sincronizar.'));
     }
 
     var requestPayload = {};
@@ -101,8 +139,11 @@
     request: request,
     hasBackend: hasBackend,
     getApiUrl: getApiUrl,
+    setApiUrl: setApiUrl,
     getAuthToken: getAuthToken,
     setAuthToken: setAuthToken,
-    clearAuthToken: clearAuthToken
+    clearAuthToken: clearAuthToken,
+    configureConnection: configureConnection,
+    clearConnection: clearConnection
   };
 }());

@@ -1,5 +1,5 @@
 window.FINANZAS_CONFIG = {
-  API_URL: 'PEGAR_URL_DE_WEB_APP_DE_APPS_SCRIPT_AQUI',
+  API_URL: '',
   APP_NAME: 'Finanzas LCD',
   DEFAULT_MONTH: ''
 };

@@ -1,6 +1,6 @@
-# Despliegue privado
+# Despliegue instalable
 
-## Apps Script
+## Apps Script API
 
 1. En `backend/`, subi el codigo:
 
@@ -11,29 +11,38 @@ clasp push
 2. Crea una nueva version:
 
 ```powershell
-clasp version "Modo privado Apps Script"
+clasp version "PWA installable API"
 ```
 
-3. Actualiza el despliegue Web App existente o crea uno nuevo.
+3. Desplega o actualiza el Web App.
 4. Configura:
 
 - Ejecutar como: tu usuario.
-- Acceso: solo yo.
+- Acceso: cualquier usuario con el enlace.
 
-5. Abri la URL `/exec` estando logueado con tu cuenta de Google.
+5. Guarda la URL `/exec`.
+
+Las acciones de datos requieren `FINANZAS_API_TOKEN`. Sin esa clave, el endpoint no entrega ni modifica tus datos.
 
 ## GitHub Pages
 
-GitHub Pages no se usa para la app privada.
+El workflow `.github/workflows/pages.yml` publica la carpeta `frontend/`.
 
-Para evitar confusiones:
+1. En GitHub, entra a Settings > Pages.
+2. En Build and deployment, elegi GitHub Actions.
+3. Hace push a `main`.
+4. Espera que termine la action `Deploy Installable PWA`.
+5. Abri la URL de Pages.
 
-- El workflow de Pages fue removido.
-- `frontend/scripts/config.js` no contiene una URL real.
-- `index.html` y `frontend/index.html` muestran solo un aviso de app privada.
+## Instalar En Android
 
-Si el repo esta publico, podes dejarlo asi sin datos reales. Para maxima privacidad, cambia el repo a privado y desactiva Pages en Settings > Pages.
+1. Abri la URL de GitHub Pages en Chrome.
+2. Toca el menu de Chrome.
+3. Elegi `Instalar app` o `Agregar a pantalla principal`.
+4. Abri la app instalada.
+5. Ingresa:
 
-## API publica opcional
+- URL Apps Script: la URL `/exec`.
+- Clave: `FINANZAS_API_TOKEN`.
 
-Las rutas `?action=...` siguen existiendo para pruebas tecnicas, pero requieren `FINANZAS_API_TOKEN` salvo `ping`. No uses esta API como entrada principal si queres privacidad total.
+Podes marcar `Recordar en este dispositivo` si es tu celular personal.

@@ -62,10 +62,9 @@
     return [
       '<section class="system-window">',
       '<div class="window-title">CONFIGURACION</div>',
-      '<p class="lcd-strong">Falta conectar el backend.</p>',
-      '<p>Cuando tengas la Web App de Apps Script, pega la URL en:</p>',
-      '<code>frontend/scripts/config.js</code>',
-      '<p class="lcd-muted">Mientras tanto la interfaz puede abrir, pero no va a escribir en Google Sheets.</p>',
+      '<p class="lcd-strong">Falta conectar Apps Script.</p>',
+      '<p>Ingresa la URL del Web App y tu clave privada para sincronizar este dispositivo.</p>',
+      '<button class="lcd-button primary js-connect-backend" type="button">Conectar</button>',
       '</section>'
     ].join('');
   }
@@ -193,7 +192,10 @@
         '<p>' + utils.escapeHtml(item.descripcion || '') + '</p>',
         '<dl><dt>Mensual</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</dd><dt>Meta</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoObjetivo)) + '</dd><dt>Acum.</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</dd></dl>',
         renderLiquid(item.porcentaje || 0, 'liquid-compact'),
+        '<div class="mini-actions">',
         '<button class="tiny-key js-edit-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
+        '<button class="tiny-key js-delete-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">DEL</button>',
+        '</div>',
         '</div>',
         '</article>'
       ].join('');
@@ -240,6 +242,7 @@
       '<div class="form-actions">',
       '<button class="lcd-button primary" type="submit">Guardar</button>',
       '<button class="lcd-button js-start-month" type="button">Iniciar mes</button>',
+      '<button class="lcd-button js-connect-backend" type="button">Conexion</button>',
       '</div>',
       '</form>',
       '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
@@ -264,6 +267,12 @@
         window.FinanzasRouter.go('gastos');
       });
     }
+
+    utils.qsa('.js-connect-backend', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.FinanzasForms.openAccessForm();
+      });
+    });
 
     var refresh = utils.qs('.js-refresh', root);
     if (refresh) {
@@ -316,6 +325,15 @@
         var item = findById(window.FinanzasState.getState().data.metas, button.getAttribute('data-id'));
         if (item) {
           window.FinanzasForms.openGoalForm(item);
+        }
+      });
+    });
+
+    utils.qsa('.js-delete-goal', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var id = button.getAttribute('data-id');
+        if (window.confirm('Eliminar esta meta? Queda guardada como inactiva en Sheets.')) {
+          window.FinanzasApp.mutate('deleteGoal', { id: id });
         }
       });
     });

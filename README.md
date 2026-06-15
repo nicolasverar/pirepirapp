@@ -1,32 +1,33 @@
 # Pirepirapp
 
-App privada de finanzas personales servida desde Google Apps Script, con Google Sheets como base de datos y Google Drive para imagenes.
+PWA instalable de finanzas personales con Google Apps Script como API, Google Sheets como base de datos y Google Drive para imagenes.
 
-La version publica de GitHub Pages queda desactivada por privacidad. La interfaz real se abre desde el Web App privado de Apps Script, usando tu cuenta de Google.
+La app instalable se publica como frontend estatico. No guarda URL ni claves en el repositorio: cada dispositivo se conecta ingresando la URL del Web App y la clave privada `FINANZAS_API_TOKEN`.
 
 ## Estructura
 
-- `backend/`: proyecto Apps Script completo. Incluye API, Sheets, Drive y la interfaz privada HtmlService.
-- `frontend/`: version estatica anterior, desactivada para uso publico.
+- `backend/`: proyecto Apps Script para API, Sheets y Drive.
+- `frontend/`: PWA instalable con HTML, CSS, JS, manifest, iconos y service worker.
 - `docs/`: guias de instalacion, despliegue y pruebas.
 - `scripts/`: ayudas locales.
 
-## Privacidad
+## Seguridad
 
-El modo recomendado es:
+El frontend puede estar en GitHub Pages porque no contiene datos ni claves.
 
-- Web App de Apps Script con `executeAs: USER_DEPLOYING`.
-- Acceso del Web App en `MYSELF`.
-- Sin GitHub Pages para usar la app real.
-- Sin URL de Apps Script guardada en archivos publicos.
+Los datos se protegen en Apps Script:
 
-El token `FINANZAS_API_TOKEN` puede seguir existiendo como proteccion extra para llamadas API explicitas, pero la interfaz privada usa `google.script.run` dentro de Apps Script y no necesita exponer esa clave.
+- `FINANZAS_API_TOKEN` vive en Script Properties.
+- Las acciones de datos requieren ese token.
+- La PWA guarda la URL y, si elegis recordarlo, el token solo en el dispositivo instalado.
 
-## Uso
+Usa una clave larga y no la subas a GitHub.
 
-1. Entra al proyecto de Apps Script.
-2. Desplega como Web App.
-3. Elegi acceso `Solo yo` / `Only myself`.
-4. Abri la URL `/exec` estando logueado con tu cuenta de Google.
+## Instalacion En El Celular
 
-Si el repo sigue publico, no subas datos reales, credenciales ni claves. Los datos de la app deben vivir solo en Google Sheets, Drive y Script Properties.
+1. Publica `frontend/` en GitHub Pages.
+2. Abri la URL de Pages en Chrome.
+3. Usa `Instalar app` o `Agregar a pantalla principal`.
+4. Al abrir la app instalada, carga la URL `/exec` de Apps Script y tu clave privada.
+
+La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en GitHub Pages.

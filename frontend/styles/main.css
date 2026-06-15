@@ -500,6 +500,23 @@ dd {
   gap: 4px;
 }
 
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lcd-dark);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.check-field input {
+  width: 22px;
+  min-height: 22px;
+  padding: 0;
+  accent-color: var(--lcd-ink);
+}
+
 .field span {
   color: var(--lcd-dark);
   text-transform: uppercase;

@@ -114,19 +114,21 @@
   }
 
   function openAccessForm() {
-    openModal('CLAVE', [
+    openModal('CONEXION', [
       '<form class="lcd-form" id="access-form">',
       '<p class="form-error" hidden></p>',
-      '<p>Ingresa la clave privada de Pirepirapp.</p>',
+      '<p>Conecta esta instalacion con tu Apps Script.</p>',
+      field('URL Apps Script', 'apiUrl', 'url', window.FinanzasApi.getApiUrl(), 'required inputmode="url" autocomplete="url" placeholder="https://script.google.com/macros/s/.../exec"'),
       field('Clave', 'authToken', 'password', '', 'required autocomplete="current-password"'),
+      '<label class="check-field"><input name="remember" type="checkbox" value="1"><span>Recordar en este dispositivo</span></label>',
       '<div class="form-actions">',
-      '<button class="lcd-button primary" type="submit">Entrar</button>',
+      '<button class="lcd-button primary" type="submit">Conectar</button>',
       '</div>',
       '</form>'
     ].join(''), function (root) {
       bindForm(root, '#access-form', function (form) {
         var payload = utils.formDataToObject(form);
-        window.FinanzasApi.setAuthToken(payload.authToken);
+        window.FinanzasApi.configureConnection(payload.apiUrl, payload.authToken, payload.remember === '1');
         closeModal();
         return window.FinanzasApp.refresh();
       });

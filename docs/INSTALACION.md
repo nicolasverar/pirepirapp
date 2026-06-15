@@ -4,12 +4,13 @@
 
 - Google Apps Script vinculado con `clasp`.
 - Acceso a Google Drive y Google Sheets con la misma cuenta.
-- Un navegador moderno con tu sesion de Google iniciada.
+- Un navegador moderno en Android o escritorio.
+- Repositorio publico o un hosting HTTPS para servir la PWA.
 
-## Backend privado
+## Backend
 
 1. Abri una terminal en `backend/`.
-2. Cuando quieras subir el codigo, ejecuta:
+2. Subi el codigo:
 
 ```powershell
 clasp push
@@ -17,7 +18,15 @@ clasp push
 
 3. En Apps Script, ejecuta manualmente `runSetup` una vez.
 4. Acepta los permisos de Google Sheets y Drive.
-5. Desplega como Web App con acceso `Solo yo`.
+5. Configura una Script Property:
+
+```text
+FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
+```
+
+6. Desplega como Web App con acceso `cualquier usuario con el enlace`.
+
+Ese acceso es necesario para que la PWA instalada pueda sincronizar. La proteccion real de datos es el token privado.
 
 `runSetup` crea:
 
@@ -26,20 +35,20 @@ clasp push
 - La carpeta `FinanzasPersonales` en Drive.
 - Las subcarpetas `BaseDeDatos`, `ImagenesMetas`, `ImagenesWishlist` y `Respaldos`.
 
-## Clave privada
+## Frontend Instalado
 
-En modo Apps Script privado, la interfaz visual no necesita exponer una clave en el navegador.
+La carpeta `frontend/` es la app instalable.
 
-Igual conviene mantener una Script Property para las rutas API explicitas:
+No pongas la URL ni la clave en `frontend/scripts/config.js`. La app las pide al abrir y las guarda localmente en el dispositivo.
 
-```text
-FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
+Para probar local:
+
+```powershell
+.\scripts\servir-frontend.ps1
 ```
 
-No guardes esa clave en GitHub.
+Luego abri:
 
-## Frontend
-
-La interfaz principal vive ahora en `backend/App.html`, `backend/AppStyles.html` y `backend/AppClient.html`.
-
-La carpeta `frontend/` queda como version estatica anterior y esta desactivada para uso publico.
+```text
+http://localhost:4173
+```

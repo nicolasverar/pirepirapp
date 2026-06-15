@@ -9,8 +9,8 @@
     bindGlobalActions();
     registerServiceWorker();
     window.FinanzasRender.render();
-    if (window.FinanzasApi.hasBackend() && !window.FinanzasApi.getAuthToken()) {
-      setStatus('Clave requerida');
+    if (!window.FinanzasApi.hasBackend() || !window.FinanzasApi.getAuthToken()) {
+      setStatus('Conectar');
       window.FinanzasForms.openAccessForm();
       return;
     }
@@ -48,7 +48,7 @@
       })
       .catch(function (error) {
         window.FinanzasState.setState({ loading: false, syncStatus: 'Error', error: error.message });
-        if (/clave|token|FINANZAS_API_TOKEN/i.test(error.message)) {
+        if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
           window.FinanzasForms.openAccessForm();
         }
@@ -71,7 +71,7 @@
       })
       .catch(function (error) {
         window.FinanzasState.setState({ syncStatus: 'Error', error: error.message });
-        if (/clave|token|FINANZAS_API_TOKEN/i.test(error.message)) {
+        if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
           window.FinanzasForms.openAccessForm();
         }

@@ -14,7 +14,7 @@ function serveApp_() {
 }
 
 function includeHtml(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  return HtmlService.createTemplateFromFile(filename).getRawContent();
 }
 
 function serverAction(action, payload) {

@@ -1,0 +1,677 @@
+(function () {
+  'use strict';
+
+  var state = {
+    view: 'resumen',
+    syncStatus: 'Iniciando',
+    loading: true,
+    data: null
+  };
+
+  var monthNames = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+  function qs(selector, root) {
+    return (root || document).querySelector(selector);
+  }
+
+  function qsa(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
+  }
+
+  function escapeHtml(value) {
+    return String(value === undefined || value === null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function normalizeAmount(value) {
+    if (value === undefined || value === null || value === '') {
+      return 0;
+    }
+    if (typeof value === 'number') {
+      return Math.round(value);
+    }
+    return Math.round(Number(String(value).replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0);
+  }
+
+  function formatMoney(value) {
+    return 'Gs. ' + normalizeAmount(value).toLocaleString('es-PY');
+  }
+
+  function formatPercent(value) {
+    return Number(value || 0).toLocaleString('es-PY', { maximumFractionDigits: 1 }) + '%';
+  }
+
+  function todayLabel() {
+    var now = new Date();
+    return now.getDate() + ' de ' + monthNames[now.getMonth()];
+  }
+
+  function compactDate() {
+    var now = new Date();
+    return String(now.getDate()).padStart(2, '0') + ' ' + monthNames[now.getMonth()].slice(0, 3).toUpperCase();
+  }
+
+  function currentMonth() {
+    var now = new Date();
+    return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  }
+
+  function toInputDate(value) {
+    if (value) {
+      return value;
+    }
+    var now = new Date();
+    return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  }
+
+  function toInputTime(value) {
+    if (value) {
+      return String(value).slice(0, 5);
+    }
+    var now = new Date();
+    return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  }
+
+  function formObject(form) {
+    var data = {};
+    new FormData(form).forEach(function (value, key) {
+      data[key] = value;
+    });
+    return data;
+  }
+
+  function splitLines(value) {
+    return String(value || '').split(/\r?\n|,/).map(function (item) {
+      return item.trim();
+    }).filter(Boolean);
+  }
+
+  function fixedExpensesFromText(value) {
+    return String(value || '').split(/\r?\n/).map(function (line) {
+      var parts = line.split(':');
+      if (parts.length < 2) {
+        return null;
+      }
+      return { categoria: parts[0].trim(), monto: normalizeAmount(parts.slice(1).join(':')) };
+    }).filter(function (item) {
+      return item && item.categoria;
+    });
+  }
+
+  function fixedExpensesToText(items) {
+    return (items || []).map(function (item) {
+      return (item.categoria || '') + ': ' + normalizeAmount(item.monto);
+    }).join('\n');
+  }
+
+  function callServer(action, payload, statusLabel) {
+    if (statusLabel) {
+      setStatus(statusLabel);
+    }
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var timer = setTimeout(function () {
+        if (!done) {
+          done = true;
+          reject(new Error('Google Sheets esta tardando demasiado. Proba de nuevo.'));
+        }
+      }, 45000);
+
+      google.script.run
+        .withSuccessHandler(function (result) {
+          if (done) {
+            return;
+          }
+          done = true;
+          clearTimeout(timer);
+          if (!result || !result.success) {
+            reject(new Error((result && result.message) || 'No se pudo completar la accion.'));
+            return;
+          }
+          resolve(result.data);
+        })
+        .withFailureHandler(function (error) {
+          if (done) {
+            return;
+          }
+          done = true;
+          clearTimeout(timer);
+          reject(new Error(error && error.message ? error.message : 'Error en Apps Script.'));
+        })
+        .serverAction(action, payload || {});
+    });
+  }
+
+  function refresh() {
+    state.loading = true;
+    setStatus('Cargando');
+    render();
+    return callServer('bootstrap', {}, 'Cargando')
+      .then(function (data) {
+        state.data = data;
+        state.loading = false;
+        setStatus('Sincronizado');
+        render();
+      })
+      .catch(function (error) {
+        state.loading = false;
+        setStatus('Error');
+        renderError(error.message);
+        toast(error.message);
+      });
+  }
+
+  function mutate(action, payload) {
+    return callServer(action, payload, 'Guardando')
+      .then(refresh)
+      .then(function () { toast('Guardado'); })
+      .catch(function (error) {
+        setStatus('Error');
+        toast(error.message);
+        throw error;
+      });
+  }
+
+  function setStatus(status) {
+    state.syncStatus = status;
+    var box = qs('#sync-status');
+    if (box) {
+      box.className = 'sync-indicator ' + (status === 'Error' ? 'sync-error' : status === 'Cargando' || status === 'Guardando' ? 'sync-saving' : 'sync-ok');
+      qs('span:last-child', box).textContent = status;
+    }
+  }
+
+  function renderChrome() {
+    qs('#section-title').textContent = ({ resumen: 'RESUMEN', gastos: 'GASTOS', metas: 'METAS', configuracion: 'CONFIG' })[state.view] || 'RESUMEN';
+    qs('#status-date').textContent = compactDate();
+    qsa('[data-view]').forEach(function (button) {
+      button.classList.toggle('is-active', button.getAttribute('data-view') === state.view);
+    });
+  }
+
+  function render() {
+    renderChrome();
+    var screen = qs('#app-screen');
+    if (state.loading && !state.data) {
+      screen.innerHTML = '<section class="system-window"><div class="window-title">CARGANDO</div><p class="lcd-muted">Leyendo tus datos privados...</p></section>';
+      return;
+    }
+    if (!state.data) {
+      return;
+    }
+    if (state.view === 'gastos') {
+      screen.innerHTML = renderMovements();
+    } else if (state.view === 'metas') {
+      screen.innerHTML = renderGoals();
+    } else if (state.view === 'configuracion') {
+      screen.innerHTML = renderSettings();
+    } else {
+      screen.innerHTML = renderSummary();
+    }
+    bindScreenActions(screen);
+    hydratePhotos(screen);
+  }
+
+  function renderError(message) {
+    qs('#app-screen').innerHTML = '<section class="system-window"><div class="window-title">ERROR</div><p>' + escapeHtml(message) + '</p><button class="lcd-button primary" id="retry-button" type="button">Reintentar</button></section>';
+    qs('#retry-button').addEventListener('click', refresh);
+  }
+
+  function renderSummary() {
+    var summary = state.data.resumen || {};
+    var top = summary.categoriaMayorGasto || {};
+    var recent = summary.actividadReciente || [];
+    return [
+      '<section class="stack">',
+      '<article class="system-window"><div class="window-title">RESUMEN</div><p>Estamos a ' + escapeHtml(todayLabel()) + ' y gastaste:</p><strong class="big-money">' + escapeHtml(formatMoney(summary.totalGastado || 0)) + '</strong></article>',
+      '<article class="system-window"><div class="window-title">MAYOR GASTO</div><p>Lo que mas gastaste fue en:</p><strong>' + escapeHtml(top.categoria || 'Sin gastos') + '</strong><small>' + escapeHtml(top.mensaje || '') + '</small></article>',
+      '<article class="system-window"><div class="window-title">ACTIVIDAD</div>' + renderRecent(recent) + '<button class="lcd-button js-view-full" type="button">Ver completo</button></article>',
+      '<article class="system-window"><div class="window-title">DISPONIBLE</div><p>Te queda disponible</p><strong class="big-money">' + escapeHtml(formatMoney(summary.disponible || 0)) + '</strong>' + renderLiquid(summary.porcentajeDisponible || 0) + '</article>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderRecent(items) {
+    if (!items.length) {
+      return '<p class="empty-state">Sin movimientos cargados.</p>';
+    }
+    return '<ol class="recent-list">' + items.map(function (item) {
+      return '<li class="recent-row"><span><strong>' + escapeHtml(item.motivo) + '</strong><small>' + escapeHtml(item.categoria || item.tipo) + '</small></span><b>' + escapeHtml(formatMoney(item.monto)) + '</b></li>';
+    }).join('') + '</ol>';
+  }
+
+  function renderMovements() {
+    var movements = ((state.data.movimientos || {}).movimientos || []);
+    return [
+      '<section class="system-window">',
+      '<div class="window-title">GASTOS TOTALES</div>',
+      '<div class="toolbar-line"><button class="lcd-button js-refresh" type="button">Actualizar</button><button class="lcd-button js-new-expense" type="button">Gasto</button><button class="lcd-button js-new-income" type="button">Ingreso</button></div>',
+      movements.length ? '<div class="movement-list">' + movements.map(renderMovementRow).join('') + '</div>' : '<p class="empty-state">No hay movimientos este mes.</p>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderMovementRow(item) {
+    return [
+      '<article class="movement-row">',
+      '<button class="movement-main js-edit-movement" data-id="' + escapeHtml(item.id) + '" type="button"><strong>' + escapeHtml(item.motivo) + '</strong><small>' + escapeHtml(item.fecha) + ' ' + escapeHtml(item.tipo) + '</small></button>',
+      '<span><b>' + escapeHtml(formatMoney(item.monto)) + '</b><button class="tiny-key js-delete-movement" data-id="' + escapeHtml(item.id) + '" type="button">DEL</button></span>',
+      '</article>'
+    ].join('');
+  }
+
+  function renderGoals() {
+    return [
+      '<section class="stack">',
+      '<article class="system-window"><div class="window-title">EL FUTURO</div>' + renderFutureSavings(state.data.ahorrosFuturo || []) + '</article>',
+      '<article class="system-window"><div class="window-title">METAS</div>' + renderGoalCards(state.data.metas || []) + '</article>',
+      '<article class="system-window"><div class="window-title">COSAS QUE QUIERO</div>' + renderWishlist(state.data.wishlist || []) + '</article>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderFutureSavings(items) {
+    if (!items.length) {
+      return '<p class="empty-state">Todavia no hay ahorros.</p>';
+    }
+    return '<div class="block-list">' + items.map(function (item) {
+      return '<article class="data-block"><div><strong>' + escapeHtml(item.titulo) + '</strong><p>' + escapeHtml(item.descripcion || '') + '</p></div><dl><dt>Mensual</dt><dd>' + escapeHtml(formatMoney(item.montoMensual)) + '</dd><dt>Acum.</dt><dd>' + escapeHtml(formatMoney(item.montoAcumulado)) + '</dd></dl><button class="tiny-key js-edit-future" data-id="' + escapeHtml(item.id) + '" type="button">EDIT</button></article>';
+    }).join('') + '</div>';
+  }
+
+  function renderGoalCards(items) {
+    if (!items.length) {
+      return '<p class="empty-state">Todavia no cargaste metas.</p>';
+    }
+    return '<div class="goal-list">' + items.map(function (item) {
+      return '<article class="goal-card">' + renderPhoto(item) + '<div><strong>' + escapeHtml(item.titulo) + '</strong><p>' + escapeHtml(item.descripcion || '') + '</p><dl><dt>Meta</dt><dd>' + escapeHtml(formatMoney(item.montoObjetivo)) + '</dd><dt>Acum.</dt><dd>' + escapeHtml(formatMoney(item.montoAcumulado)) + '</dd></dl>' + renderLiquid(item.porcentaje || 0) + '<button class="tiny-key js-edit-goal" data-id="' + escapeHtml(item.id) + '" type="button">EDIT</button></div></article>';
+    }).join('') + '</div>';
+  }
+
+  function renderWishlist(items) {
+    if (!items.length) {
+      return '<p class="empty-state">La lista esta vacia.</p>';
+    }
+    return '<div class="wish-grid">' + items.map(function (item) {
+      return '<article class="wish-card">' + renderPhoto(item) + '<strong>' + escapeHtml(item.titulo) + '</strong><p>' + escapeHtml(item.descripcion || '') + '</p><b>' + escapeHtml(formatMoney(item.costoAproximado)) + '</b><div class="mini-actions"><button class="tiny-key js-convert-wish" data-id="' + escapeHtml(item.id) + '" type="button">META</button><button class="tiny-key js-edit-wish" data-id="' + escapeHtml(item.id) + '" type="button">EDIT</button></div></article>';
+    }).join('') + '</div>';
+  }
+
+  function renderPhoto(item) {
+    return item.imageDriveId
+      ? '<canvas class="lcd-photo" data-image-id="' + escapeHtml(item.imageDriveId) + '" width="216" height="162"></canvas>'
+      : '<div class="lcd-photo-placeholder">IMG</div>';
+  }
+
+  function renderSettings() {
+    var config = state.data.config || {};
+    return [
+      '<section class="system-window"><div class="window-title">CONFIGURACION</div>',
+      '<form class="lcd-form" id="settings-form"><p class="form-error" hidden></p>',
+      field('Sueldo mensual', 'sueldoMensual', 'number', config.sueldoMensual || 0, 'min="0" step="1" inputmode="numeric"'),
+      textarea('Categorias', 'categorias', (config.categorias || []).join('\n'), 'rows="6"'),
+      textarea('Gastos fijos', 'gastosFijos', fixedExpensesToText(config.gastosFijos || []), 'rows="4"'),
+      '<div class="form-actions"><button class="lcd-button primary" type="submit">Guardar</button><button class="lcd-button js-start-month" type="button">Iniciar mes</button></div>',
+      '</form><p class="lcd-muted">Mes activo: ' + escapeHtml(config.mesActual || currentMonth()) + '</p></section>'
+    ].join('');
+  }
+
+  function renderLiquid(percent) {
+    var value = Math.max(0, Math.min(100, Number(percent || 0)));
+    return '<div class="liquid-meter" style="--level:' + value + '%"><div class="liquid-fill"></div><span>' + escapeHtml(formatPercent(value)) + '</span></div>';
+  }
+
+  function field(label, name, type, value, attrs) {
+    return '<label class="field"><span>' + escapeHtml(label) + '</span><input name="' + escapeHtml(name) + '" type="' + escapeHtml(type || 'text') + '" value="' + escapeHtml(value || '') + '" ' + (attrs || '') + '></label>';
+  }
+
+  function textarea(label, name, value, attrs) {
+    return '<label class="field"><span>' + escapeHtml(label) + '</span><textarea name="' + escapeHtml(name) + '" ' + (attrs || '') + '>' + escapeHtml(value || '') + '</textarea></label>';
+  }
+
+  function select(label, name, options, value, attrs) {
+    return '<label class="field"><span>' + escapeHtml(label) + '</span><select name="' + escapeHtml(name) + '" ' + (attrs || '') + '>' + (options || []).map(function (option) {
+      var val = typeof option === 'string' ? option : option.value;
+      var text = typeof option === 'string' ? option : option.label;
+      return '<option value="' + escapeHtml(val) + '"' + (String(val) === String(value || '') ? ' selected' : '') + '>' + escapeHtml(text) + '</option>';
+    }).join('') + '</select></label>';
+  }
+
+  function bindScreenActions(root) {
+    var full = qs('.js-view-full', root);
+    if (full) full.addEventListener('click', function () { setView('gastos'); });
+    var refreshButton = qs('.js-refresh', root);
+    if (refreshButton) refreshButton.addEventListener('click', refresh);
+    var newExpense = qs('.js-new-expense', root);
+    if (newExpense) newExpense.addEventListener('click', function () { openMovementForm('Gasto'); });
+    var newIncome = qs('.js-new-income', root);
+    if (newIncome) newIncome.addEventListener('click', function () { openMovementForm('Ingreso'); });
+
+    qsa('.js-edit-movement', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var item = findById(((state.data.movimientos || {}).movimientos || []), button.dataset.id);
+        if (item) openMovementForm(item.tipo, item);
+      });
+    });
+    qsa('.js-delete-movement', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        if (confirm('Eliminar definitivamente este movimiento?')) {
+          mutate('deleteMovement', { id: button.dataset.id });
+        }
+      });
+    });
+    qsa('.js-edit-future', root).forEach(function (button) {
+      button.addEventListener('click', function () { openFutureSavingForm(findById(state.data.ahorrosFuturo, button.dataset.id)); });
+    });
+    qsa('.js-edit-goal', root).forEach(function (button) {
+      button.addEventListener('click', function () { openGoalForm(findById(state.data.metas, button.dataset.id)); });
+    });
+    qsa('.js-edit-wish', root).forEach(function (button) {
+      button.addEventListener('click', function () { openWishlistForm(findById(state.data.wishlist, button.dataset.id)); });
+    });
+    qsa('.js-convert-wish', root).forEach(function (button) {
+      button.addEventListener('click', function () { openConvertForm(button.dataset.id); });
+    });
+
+    var settings = qs('#settings-form', root);
+    if (settings) {
+      settings.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var payload = formObject(settings);
+        payload.sueldoMensual = normalizeAmount(payload.sueldoMensual);
+        payload.categorias = splitLines(payload.categorias);
+        payload.gastosFijos = fixedExpensesFromText(payload.gastosFijos);
+        mutate('updateConfig', payload);
+      });
+      qs('.js-start-month', root).addEventListener('click', function () {
+        mutate('startMonth', { mes: (state.data.config || {}).mesActual || currentMonth() });
+      });
+    }
+  }
+
+  function openModal(title, content, afterOpen) {
+    var root = qs('#modal-root');
+    root.hidden = false;
+    root.innerHTML = '<div class="modal-backdrop" data-close-modal></div><section class="system-modal"><div class="window-title"><span>' + escapeHtml(title) + '</span><button class="window-close" data-close-modal type="button">CERRAR</button></div>' + content + '</section>';
+    qsa('[data-close-modal]', root).forEach(function (button) {
+      button.addEventListener('click', closeModal);
+    });
+    if (afterOpen) afterOpen(root);
+  }
+
+  function closeModal() {
+    var root = qs('#modal-root');
+    root.hidden = true;
+    root.innerHTML = '';
+  }
+
+  function bindForm(root, selector, handler) {
+    var form = qs(selector, root);
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var errorBox = qs('.form-error', form);
+      if (errorBox) {
+        errorBox.hidden = true;
+      }
+      handler(form).catch(function (error) {
+        if (errorBox) {
+          errorBox.textContent = error.message;
+          errorBox.hidden = false;
+        }
+      });
+    });
+  }
+
+  function openActionMenu() {
+    if (state.view === 'metas') {
+      openModal('NUEVO', '<div class="menu-grid"><button class="menu-item" data-action="future" type="button">Crear ahorro para el futuro</button><button class="menu-item" data-action="goal" type="button">Crear meta especifica</button><button class="menu-item" data-action="wish" type="button">Agregar algo que quiero</button></div>', bindActionMenu);
+      return;
+    }
+    openModal('MOVIMIENTO', '<div class="menu-grid"><button class="menu-item" data-action="expense" type="button">Registrar gasto</button><button class="menu-item" data-action="income" type="button">Registrar ingreso</button></div>', bindActionMenu);
+  }
+
+  function bindActionMenu(root) {
+    qsa('[data-action]', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var action = button.dataset.action;
+        if (action === 'expense') openMovementForm('Gasto');
+        if (action === 'income') openMovementForm('Ingreso');
+        if (action === 'future') openFutureSavingForm();
+        if (action === 'goal') openGoalForm();
+        if (action === 'wish') openWishlistForm();
+      });
+    });
+  }
+
+  function openMovementForm(defaultType, existing) {
+    var data = state.data || {};
+    var config = data.config || {};
+    var movement = existing || {};
+    var type = movement.tipo || defaultType;
+    var typeOptions = type === 'Ingreso'
+      ? [{ value: 'Ingreso', label: 'Ingreso' }]
+      : [{ value: 'Gasto', label: 'Gasto' }, { value: 'Aporte a ahorro', label: 'Aporte a ahorro' }, { value: 'Aporte a meta', label: 'Aporte a meta' }, { value: 'Compra de wishlist', label: 'Compra wishlist' }];
+    var html = '<form class="lcd-form" id="movement-form"><p class="form-error" hidden></p>' +
+      select('Tipo', 'tipo', typeOptions, type, 'data-movement-type') +
+      field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120"') +
+      field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"') +
+      select('Categoria', 'categoria', config.categorias || [], movement.categoria || 'Alimentacion') +
+      select('Relacionado', 'idRelacionado', relatedOptions(type), movement.idRelacionado || '', 'data-related-select') +
+      textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"') +
+      '<div class="field-row">' + field('Fecha', 'fecha', 'date', movement.fecha || toInputDate(), 'required') + field('Hora', 'hora', 'time', movement.hora || toInputTime(), 'required') + '</div>' +
+      '<div class="form-actions"><button class="lcd-button primary" type="submit">' + (existing ? 'Actualizar' : 'Guardar') + '</button><button class="lcd-button" data-close-modal type="button">Cancelar</button></div></form>';
+
+    openModal(type === 'Ingreso' ? 'INGRESO' : 'MOVIMIENTO', html, function (root) {
+      var typeSelect = qs('[data-movement-type]', root);
+      var related = qs('[data-related-select]', root);
+      updateRelated(typeSelect, related);
+      typeSelect.addEventListener('change', function () {
+        related.innerHTML = relatedOptions(typeSelect.value).map(function (option) {
+          return '<option value="' + escapeHtml(option.value) + '">' + escapeHtml(option.label) + '</option>';
+        }).join('');
+        updateRelated(typeSelect, related);
+      });
+      bindForm(root, '#movement-form', function (form) {
+        var payload = formObject(form);
+        payload.monto = normalizeAmount(payload.monto);
+        payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
+        if (!payload.idRelacionado) delete payload.idRelacionado;
+        if (existing) payload.id = existing.id;
+        return mutate(existing ? 'updateMovement' : 'createMovement', payload).then(closeModal);
+      });
+    });
+  }
+
+  function relatedOptions(type) {
+    var blank = [{ value: '', label: 'Sin relacion' }];
+    if (/ahorro/i.test(type)) return blank.concat((state.data.ahorrosFuturo || []).map(function (item) { return { value: item.id, label: item.titulo }; }));
+    if (/meta/i.test(type)) return blank.concat((state.data.metas || []).map(function (item) { return { value: item.id, label: item.titulo }; }));
+    if (/wishlist/i.test(type)) return blank.concat((state.data.wishlist || []).map(function (item) { return { value: item.id, label: item.titulo }; }));
+    return blank;
+  }
+
+  function updateRelated(typeSelect, related) {
+    var needed = /ahorro|meta|wishlist/i.test(typeSelect.value);
+    related.closest('.field').hidden = !needed;
+    related.required = needed;
+  }
+
+  function openFutureSavingForm(existing) {
+    var item = existing || {};
+    var html = '<form class="lcd-form" id="future-form"><p class="form-error" hidden></p>' +
+      field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"') +
+      field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"') +
+      textarea('Descripcion', 'descripcion', item.descripcion || '', 'maxlength="500" rows="3"') +
+      '<div class="form-actions"><button class="lcd-button primary" type="submit">Guardar</button><button class="lcd-button" data-close-modal type="button">Cancelar</button></div></form>';
+    openModal('AHORRO FUTURO', html, function (root) {
+      bindForm(root, '#future-form', function (form) {
+        var payload = formObject(form);
+        payload.montoMensual = normalizeAmount(payload.montoMensual);
+        if (existing) payload.id = existing.id;
+        return mutate(existing ? 'updateFutureSaving' : 'createFutureSaving', payload).then(closeModal);
+      });
+    });
+  }
+
+  function openGoalForm(existing) {
+    var item = existing || {};
+    openImageForm('META', item, 'goal-form', function (payload) {
+      payload.montoMensual = normalizeAmount(payload.montoMensual);
+      payload.montoObjetivo = normalizeAmount(payload.montoObjetivo);
+      if (existing) payload.id = existing.id;
+      return mutate(existing ? 'updateGoal' : 'createGoal', payload);
+    }, true);
+  }
+
+  function openWishlistForm(existing) {
+    var item = existing || {};
+    openImageForm('QUIERO', item, 'wish-form', function (payload) {
+      payload.costoAproximado = normalizeAmount(payload.costoAproximado);
+      if (existing) payload.id = existing.id;
+      return mutate(existing ? 'updateWishlistItem' : 'createWishlistItem', payload);
+    }, false);
+  }
+
+  function openImageForm(title, item, formId, submitter, isGoal) {
+    var html = '<form class="lcd-form" id="' + formId + '"><p class="form-error" hidden></p>' +
+      field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"') +
+      (isGoal ? field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"') + field('Monto objetivo', 'montoObjetivo', 'number', item.montoObjetivo || '', 'required min="1" step="1" inputmode="numeric"') : field('Costo aproximado', 'costoAproximado', 'number', item.costoAproximado || '', 'required min="1" step="1" inputmode="numeric"')) +
+      textarea('Descripcion', 'descripcion', item.descripcion || '', 'maxlength="500" rows="3"') +
+      '<label class="field"><span>Fotografia</span><input name="foto" type="file" accept="image/*" data-photo-input></label><canvas class="lcd-photo-preview" width="216" height="162" data-photo-preview></canvas>' +
+      '<div class="form-actions"><button class="lcd-button primary" type="submit">Guardar</button><button class="lcd-button" data-close-modal type="button">Cancelar</button></div></form>';
+    openModal(title, html, function (root) {
+      bindPhotoPreview(root);
+      bindForm(root, '#' + formId, function (form) {
+        return imagePayload(form).then(function (image) {
+          var payload = formObject(form);
+          delete payload.foto;
+          Object.keys(image).forEach(function (key) { payload[key] = image[key]; });
+          return submitter(payload);
+        }).then(closeModal);
+      });
+    });
+  }
+
+  function openConvertForm(id) {
+    var html = '<form class="lcd-form" id="convert-form"><p class="form-error" hidden></p>' + field('Monto mensual', 'montoMensual', 'number', '', 'required min="0" step="1" inputmode="numeric"') + '<div class="form-actions"><button class="lcd-button primary" type="submit">Convertir</button><button class="lcd-button" data-close-modal type="button">Cancelar</button></div></form>';
+    openModal('CONVERTIR', html, function (root) {
+      bindForm(root, '#convert-form', function (form) {
+        var payload = formObject(form);
+        payload.wishlistId = id;
+        payload.montoMensual = normalizeAmount(payload.montoMensual);
+        return mutate('convertWishlistToGoal', payload).then(closeModal);
+      });
+    });
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) {
+        resolve('');
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(new Error('No se pudo leer la imagen.')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function imagePayload(form) {
+    var input = qs('[data-photo-input]', form);
+    var file = input && input.files && input.files[0];
+    if (!file) {
+      return Promise.resolve({});
+    }
+    return fileToDataUrl(file).then(function (dataUrl) {
+      return { imageBase64: dataUrl, imageFileName: file.name, imageMimeType: file.type || 'image/png' };
+    });
+  }
+
+  function bindPhotoPreview(root) {
+    var input = qs('[data-photo-input]', root);
+    var canvas = qs('[data-photo-preview]', root);
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      fileToDataUrl(file).then(function (dataUrl) { renderLcdImage(dataUrl, canvas); });
+    });
+  }
+
+  function hydratePhotos(root) {
+    qsa('canvas[data-image-id]', root).forEach(function (canvas) {
+      if (canvas.dataset.loaded === 'true') return;
+      canvas.dataset.loaded = 'true';
+      callServer('getPhoto', { fileId: canvas.dataset.imageId })
+        .then(function (photo) { renderLcdImage(photo.dataUrl, canvas); })
+        .catch(function () { canvas.classList.add('lcd-photo-error'); });
+    });
+  }
+
+  function renderLcdImage(dataUrl, canvas) {
+    var image = new Image();
+    image.onload = function () {
+      var small = document.createElement('canvas');
+      var width = 72;
+      var height = 54;
+      small.width = width;
+      small.height = height;
+      var sctx = small.getContext('2d', { willReadFrequently: true });
+      sctx.imageSmoothingEnabled = false;
+      sctx.fillStyle = 'rgb(174,203,124)';
+      sctx.fillRect(0, 0, width, height);
+      var scale = Math.max(width / image.width, height / image.height);
+      var drawWidth = image.width * scale;
+      var drawHeight = image.height * scale;
+      sctx.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+      var pixels = sctx.getImageData(0, 0, width, height);
+      var palette = [[25,45,24], [56,86,42], [105,135,76], [174,203,124]];
+      for (var i = 0; i < pixels.data.length; i += 4) {
+        var gray = (pixels.data[i] * 0.299 + pixels.data[i + 1] * 0.587 + pixels.data[i + 2] * 0.114) / 255;
+        var level = Math.max(0, Math.min(3, Math.floor(gray * 4)));
+        var color = palette[level];
+        pixels.data[i] = color[0];
+        pixels.data[i + 1] = color[1];
+        pixels.data[i + 2] = color[2];
+        pixels.data[i + 3] = 255;
+      }
+      sctx.putImageData(pixels, 0, 0);
+      canvas.width = 216;
+      canvas.height = 162;
+      var ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(small, 0, 0, canvas.width, canvas.height);
+    };
+    image.src = dataUrl;
+  }
+
+  function findById(items, id) {
+    return (items || []).filter(function (item) { return String(item.id) === String(id); })[0];
+  }
+
+  function setView(view) {
+    state.view = view;
+    render();
+  }
+
+  function toast(message) {
+    var root = qs('#toast-root');
+    var item = document.createElement('div');
+    item.className = 'toast';
+    item.textContent = message;
+    root.appendChild(item);
+    setTimeout(function () { item.remove(); }, 2600);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    qsa('[data-view]').forEach(function (button) {
+      button.addEventListener('click', function () { setView(button.dataset.view); });
+    });
+    qs('#action-key').addEventListener('click', openActionMenu);
+    refresh();
+  });
+}());

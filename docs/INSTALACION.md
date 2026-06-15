@@ -4,9 +4,9 @@
 
 - Google Apps Script vinculado con `clasp`.
 - Acceso a Google Drive y Google Sheets con la misma cuenta.
-- Un navegador moderno en Android o escritorio.
+- Un navegador moderno con tu sesion de Google iniciada.
 
-## Backend
+## Backend privado
 
 1. Abri una terminal en `backend/`.
 2. Cuando quieras subir el codigo, ejecuta:
@@ -17,18 +17,7 @@ clasp push
 
 3. En Apps Script, ejecuta manualmente `runSetup` una vez.
 4. Acepta los permisos de Google Sheets y Drive.
-
-## Clave privada
-
-En Apps Script, entra a Project Settings > Script Properties y agrega:
-
-```text
-FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
-```
-
-No guardes esa clave en GitHub ni en `frontend/scripts/config.js`.
-
-La Web App puede ser publica para que GitHub Pages la llame, pero las acciones reales van a rechazar cualquier solicitud que no incluya esta clave.
+5. Desplega como Web App con acceso `Solo yo`.
 
 `runSetup` crea:
 
@@ -37,36 +26,20 @@ La Web App puede ser publica para que GitHub Pages la llame, pero las acciones r
 - La carpeta `FinanzasPersonales` en Drive.
 - Las subcarpetas `BaseDeDatos`, `ImagenesMetas`, `ImagenesWishlist` y `Respaldos`.
 
+## Clave privada
+
+En modo Apps Script privado, la interfaz visual no necesita exponer una clave en el navegador.
+
+Igual conviene mantener una Script Property para las rutas API explicitas:
+
+```text
+FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
+```
+
+No guardes esa clave en GitHub.
+
 ## Frontend
 
-1. Desplega Apps Script como Web App.
-2. Copia la URL terminada en `/exec`.
-3. Pegala en:
+La interfaz principal vive ahora en `backend/App.html`, `backend/AppStyles.html` y `backend/AppClient.html`.
 
-```text
-frontend/scripts/config.js
-```
-
-Ejemplo:
-
-```js
-window.FINANZAS_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec',
-  APP_NAME: 'Finanzas LCD',
-  DEFAULT_MONTH: ''
-};
-```
-
-## Uso local
-
-Para probar la PWA en localhost:
-
-```powershell
-.\scripts\servir-frontend.ps1
-```
-
-Luego abri:
-
-```text
-http://localhost:4173
-```
+La carpeta `frontend/` queda como version estatica anterior y esta desactivada para uso publico.

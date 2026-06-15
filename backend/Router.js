@@ -1,7 +1,7 @@
 function routeRequest_(method, event) {
   try {
     var request = parseRequest_(method, event || {});
-    var data = dispatchAction_(request.action, request.payload, request);
+    var data = dispatchAction_(request.action, request.payload, { requireAuth: true });
     return jsonResponse_({
       success: true,
       data: data,
@@ -69,9 +69,10 @@ function parseRequestBody_(contents) {
   return {};
 }
 
-function dispatchAction_(action, payload) {
+function dispatchAction_(action, payload, options) {
   var route = normalizeText_(action).toLowerCase();
-  if (route !== 'ping') {
+  var settings = options || {};
+  if (settings.requireAuth !== false && route !== 'ping') {
     assertAuthorizedRequest_(payload);
   }
 

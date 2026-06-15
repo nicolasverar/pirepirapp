@@ -1,62 +1,32 @@
-# Finanzas LCD
+# Pirepirapp
 
-Aplicacion PWA de finanzas personales con frontend estatico, backend en Google Apps Script, Google Sheets como base de datos y Google Drive para imagenes.
+App privada de finanzas personales servida desde Google Apps Script, con Google Sheets como base de datos y Google Drive para imagenes.
 
-La interfaz esta pensada para celular, con estetica LCD verde inspirada en agendas electronicas clasicas.
+La version publica de GitHub Pages queda desactivada por privacidad. La interfaz real se abre desde el Web App privado de Apps Script, usando tu cuenta de Google.
 
 ## Estructura
 
-- `backend/`: proyecto Apps Script para API, Sheets y Drive.
-- `frontend/`: HTML, CSS, JavaScript puro, manifest y service worker.
+- `backend/`: proyecto Apps Script completo. Incluye API, Sheets, Drive y la interfaz privada HtmlService.
+- `frontend/`: version estatica anterior, desactivada para uso publico.
 - `docs/`: guias de instalacion, despliegue y pruebas.
 - `scripts/`: ayudas locales.
 
-## Estado actual
+## Privacidad
 
-El backend y el frontend ya tienen codigo funcional local. La URL real de la Web App de Apps Script vive en:
+El modo recomendado es:
 
-```text
-frontend/scripts/config.js
-```
+- Web App de Apps Script con `executeAs: USER_DEPLOYING`.
+- Acceso del Web App en `MYSELF`.
+- Sin GitHub Pages para usar la app real.
+- Sin URL de Apps Script guardada en archivos publicos.
 
-## Seguridad
+El token `FINANZAS_API_TOKEN` puede seguir existiendo como proteccion extra para llamadas API explicitas, pero la interfaz privada usa `google.script.run` dentro de Apps Script y no necesita exponer esa clave.
 
-El repositorio y GitHub Pages pueden ser publicos, pero la API de Apps Script debe protegerse con una clave privada guardada en Apps Script, no en GitHub.
+## Uso
 
-Configura una Script Property llamada:
+1. Entra al proyecto de Apps Script.
+2. Desplega como Web App.
+3. Elegi acceso `Solo yo` / `Only myself`.
+4. Abri la URL `/exec` estando logueado con tu cuenta de Google.
 
-```text
-FINANZAS_API_TOKEN
-```
-
-La app te pedira esa clave al abrir. Se guarda solo en `sessionStorage` del navegador.
-
-## GitHub Pages
-
-El repo incluye un workflow en `.github/workflows/pages.yml` que publica la carpeta `frontend/` en GitHub Pages.
-
-Cuando el repositorio este en GitHub:
-
-1. Entra a Settings > Pages.
-2. En Build and deployment, elegi GitHub Actions.
-3. Hace push a `main`.
-4. Abri la URL que GitHub Pages muestre al terminar el workflow.
-
-No abras directamente la URL de Apps Script para usar la app visual; esa URL es solo la API.
-
-## Siguiente paso seguro
-
-Primero revisa los cambios. Cuando quieras subir el backend a Apps Script:
-
-```powershell
-cd backend
-clasp push
-```
-
-Despues crea o actualiza el despliegue como Web App desde Apps Script y pega la URL `/exec` en `frontend/scripts/config.js`.
-
-Mas detalle en:
-
-- `docs/INSTALACION.md`
-- `docs/DESPLIEGUE.md`
-- `docs/PRUEBAS.md`
+Si el repo sigue publico, no subas datos reales, credenciales ni claves. Los datos de la app deben vivir solo en Google Sheets, Drive y Script Properties.

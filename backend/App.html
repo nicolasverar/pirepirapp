@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <style><?!= includeHtml_('AppStyles'); ?></style>
+  </head>
+  <body>
+    <div class="device-shell">
+      <header class="status-bar">
+        <div>
+          <strong id="section-title">RESUMEN</strong>
+          <span id="status-date">-- ---</span>
+        </div>
+        <div class="sync-indicator" id="sync-status">
+          <span class="sync-dot"></span>
+          <span>Iniciando</span>
+        </div>
+      </header>
+
+      <main class="lcd-screen" id="app-screen">
+        <section class="system-window">
+          <div class="window-title">CARGANDO</div>
+          <p class="lcd-muted">Leyendo tus datos privados...</p>
+        </section>
+      </main>
+
+      <section class="key-zone">
+        <button class="action-key" id="action-key" type="button">AGREGAR</button>
+        <nav class="bottom-nav">
+          <button class="nav-key is-active" data-view="resumen" type="button">Resumen</button>
+          <button class="nav-key" data-view="gastos" type="button">Gastos</button>
+          <button class="nav-key" data-view="metas" type="button">Metas</button>
+          <button class="nav-key" data-view="configuracion" type="button">Config</button>
+        </nav>
+      </section>
+    </div>
+
+    <div id="modal-root" class="modal-root" hidden></div>
+    <div id="toast-root" class="toast-root"></div>
+    <script><?!= includeHtml_('AppClient'); ?></script>
+  </body>
+</html>

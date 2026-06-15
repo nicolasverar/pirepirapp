@@ -9,8 +9,10 @@
 - Crear un elemento de wishlist.
 - Iniciar mes y verificar que no se dupliquen aportes si se ejecuta otra vez.
 
-## Frontend
+## Interfaz privada
 
+- Abrir la URL `/exec` del Web App estando logueado con tu cuenta.
+- Confirmar que Google bloquea el acceso si se usa otra cuenta sin permiso.
 - Abrir Resumen y verificar estado de sincronizacion.
 - Registrar un gasto comun.
 - Registrar un ingreso adicional.
@@ -23,10 +25,8 @@
 - Convertir wishlist en meta.
 - Cambiar sueldo mensual en Configuracion.
 
-## PWA
+## GitHub Pages
 
-- Abrir desde `localhost` o GitHub Pages.
-- Confirmar que se registra el service worker.
-- Instalar en Android.
-- Abrir desde el icono instalado.
-- Cargar sin conexion y verificar que se muestra la estructura visual.
+- Abrir la URL publica, si sigue activa.
+- Verificar que solo muestra el aviso de app privada.
+- Desactivar Pages desde Settings > Pages si queres que no exista ningun sitio publico.

@@ -1,4 +1,4 @@
-# Despliegue
+# Despliegue privado
 
 ## Apps Script
 
@@ -8,43 +8,32 @@
 clasp push
 ```
 
-2. Abri el proyecto:
+2. Crea una nueva version:
 
 ```powershell
-clasp open
+clasp version "Modo privado Apps Script"
 ```
 
-3. En Apps Script, crea un despliegue de tipo Web App.
+3. Actualiza el despliegue Web App existente o crea uno nuevo.
 4. Configura:
 
 - Ejecutar como: tu usuario.
-- Acceso: cualquier usuario con el enlace, o la opcion equivalente que prefieras.
+- Acceso: solo yo.
 
-5. Copia la URL `/exec`.
-
-## Configurar frontend
-
-Edita `frontend/scripts/config.js`:
-
-```js
-window.FINANZAS_CONFIG = {
-  API_URL: 'URL_DE_APPS_SCRIPT_WEB_APP',
-  APP_NAME: 'Finanzas LCD',
-  DEFAULT_MONTH: ''
-};
-```
-
-No agregues la clave privada en este archivo. La app la pide en pantalla y la guarda solo durante la sesion del navegador.
+5. Abri la URL `/exec` estando logueado con tu cuenta de Google.
 
 ## GitHub Pages
 
-1. Sube el repositorio a GitHub.
-2. En Settings > Pages, selecciona la carpeta `frontend` si usas una rama dedicada, o publica la carpeta mediante el flujo que prefieras.
-3. Verifica que `index.html`, `manifest.json`, `service-worker.js`, `styles/`, `scripts/` e `icons/` queden disponibles en la URL publica.
+GitHub Pages no se usa para la app privada.
 
-## Android
+Para evitar confusiones:
 
-1. Abri la URL de GitHub Pages en Chrome.
-2. Espera a que cargue la app.
-3. Usa la opcion de instalar aplicacion o agregar a pantalla principal.
-4. La app debe abrir en modo `standalone`.
+- El workflow de Pages fue removido.
+- `frontend/scripts/config.js` no contiene una URL real.
+- `index.html` y `frontend/index.html` muestran solo un aviso de app privada.
+
+Si el repo esta publico, podes dejarlo asi sin datos reales. Para maxima privacidad, cambia el repo a privado y desactiva Pages en Settings > Pages.
+
+## API publica opcional
+
+Las rutas `?action=...` siguen existiendo para pruebas tecnicas, pero requieren `FINANZAS_API_TOKEN` salvo `ping`. No uses esta API como entrada principal si queres privacidad total.

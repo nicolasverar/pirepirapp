@@ -13,7 +13,7 @@ function serveApp_() {
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover');
 }
 
-function includeHtml_(filename) {
+function includeHtml(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 

@@ -113,6 +113,26 @@
     ].join(''), bindActionMenu);
   }
 
+  function openAccessForm() {
+    openModal('CLAVE', [
+      '<form class="lcd-form" id="access-form">',
+      '<p class="form-error" hidden></p>',
+      '<p>Ingresa la clave privada de Pirepirapp.</p>',
+      field('Clave', 'authToken', 'password', '', 'required autocomplete="current-password"'),
+      '<div class="form-actions">',
+      '<button class="lcd-button primary" type="submit">Entrar</button>',
+      '</div>',
+      '</form>'
+    ].join(''), function (root) {
+      bindForm(root, '#access-form', function (form) {
+        var payload = utils.formDataToObject(form);
+        window.FinanzasApi.setAuthToken(payload.authToken);
+        closeModal();
+        return window.FinanzasApp.refresh();
+      });
+    });
+  }
+
   function bindActionMenu(root) {
     utils.qsa('[data-form-action]', root).forEach(function (button) {
       button.addEventListener('click', function () {
@@ -362,6 +382,7 @@
 
   window.FinanzasForms = {
     actionMenu: actionMenu,
+    openAccessForm: openAccessForm,
     openMovementForm: openMovementForm,
     openFutureSavingForm: openFutureSavingForm,
     openGoalForm: openGoalForm,

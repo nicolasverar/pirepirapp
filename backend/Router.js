@@ -71,6 +71,10 @@ function parseRequestBody_(contents) {
 
 function dispatchAction_(action, payload) {
   var route = normalizeText_(action).toLowerCase();
+  if (route !== 'ping') {
+    assertAuthorizedRequest_(payload);
+  }
+
   var routes = {
     ping: function () {
       return {
@@ -151,6 +155,22 @@ function dispatchAction_(action, payload) {
     validationError_('Accion no reconocida: ' + action);
   }
   return routes[route]();
+}
+
+function assertAuthorizedRequest_(payload) {
+  var configuredToken = normalizeText_(getScriptProperties_().getProperty(appPropertyKeys_().apiToken));
+  if (!configuredToken) {
+    validationError_('Falta configurar FINANZAS_API_TOKEN en Apps Script.');
+  }
+
+  var providedToken = normalizeText_((payload || {}).authToken || (payload || {}).apiToken || (payload || {}).token);
+  if (!providedToken || providedToken !== configuredToken) {
+    validationError_('Clave de acceso invalida.');
+  }
+
+  delete payload.authToken;
+  delete payload.apiToken;
+  delete payload.token;
 }
 
 function jsonResponse_(payload) {

@@ -1,6 +1,17 @@
 function ensureDriveStructure_() {
   var props = getScriptProperties_();
   var keys = appPropertyKeys_();
+  var existing = getDriveStructure_();
+  if (
+    existing.rootFolderId &&
+    existing.databaseFolderId &&
+    existing.goalImagesFolderId &&
+    existing.wishlistImagesFolderId &&
+    existing.backupsFolderId
+  ) {
+    return existing;
+  }
+
   var rootFolder = getFolderByPropertyOrName_(keys.driveRootFolderId, 'FinanzasPersonales', null);
   props.setProperty(keys.driveRootFolderId, rootFolder.getId());
 
@@ -60,7 +71,13 @@ function getOrCreateChildFolder_(parentFolder, folderName) {
 }
 
 function moveSpreadsheetToDatabaseFolder_(spreadsheetId) {
-  var structure = ensureDriveStructure_();
+  var props = getScriptProperties_();
+  var keys = appPropertyKeys_();
+  if (props.getProperty(keys.spreadsheetMoved) === spreadsheetId) {
+    return;
+  }
+
+  var structure = getDriveStructure_();
   if (!structure.databaseFolderId) {
     return;
   }
@@ -71,6 +88,8 @@ function moveSpreadsheetToDatabaseFolder_(spreadsheetId) {
     file.moveTo(folder);
   } catch (error) {
     // Si Drive no permite mover el archivo por permisos, la planilla sigue utilizable.
+  } finally {
+    props.setProperty(keys.spreadsheetMoved, spreadsheetId);
   }
 }
 

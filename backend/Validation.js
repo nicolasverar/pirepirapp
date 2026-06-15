@@ -13,7 +13,10 @@ function appPropertyKeys_() {
     databaseFolderId: 'FINANZAS_DATABASE_FOLDER_ID',
     goalImagesFolderId: 'FINANZAS_GOAL_IMAGES_FOLDER_ID',
     wishlistImagesFolderId: 'FINANZAS_WISHLIST_IMAGES_FOLDER_ID',
-    backupsFolderId: 'FINANZAS_BACKUPS_FOLDER_ID'
+    backupsFolderId: 'FINANZAS_BACKUPS_FOLDER_ID',
+    databaseInitialized: 'FINANZAS_DATABASE_INITIALIZED',
+    spreadsheetMoved: 'FINANZAS_SPREADSHEET_MOVED_TO_DRIVE',
+    apiToken: 'FINANZAS_API_TOKEN'
   };
 }
 

@@ -9,6 +9,11 @@
     bindGlobalActions();
     registerServiceWorker();
     window.FinanzasRender.render();
+    if (window.FinanzasApi.hasBackend() && !window.FinanzasApi.getAuthToken()) {
+      setStatus('Clave requerida');
+      window.FinanzasForms.openAccessForm();
+      return;
+    }
     refresh();
   }
 
@@ -43,6 +48,10 @@
       })
       .catch(function (error) {
         window.FinanzasState.setState({ loading: false, syncStatus: 'Error', error: error.message });
+        if (/clave|token|FINANZAS_API_TOKEN/i.test(error.message)) {
+          window.FinanzasApi.clearAuthToken();
+          window.FinanzasForms.openAccessForm();
+        }
         toast(error.message);
       });
   }
@@ -62,6 +71,10 @@
       })
       .catch(function (error) {
         window.FinanzasState.setState({ syncStatus: 'Error', error: error.message });
+        if (/clave|token|FINANZAS_API_TOKEN/i.test(error.message)) {
+          window.FinanzasApi.clearAuthToken();
+          window.FinanzasForms.openAccessForm();
+        }
         toast(error.message);
         throw error;
       });

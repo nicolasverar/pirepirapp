@@ -18,6 +18,18 @@ clasp push
 3. En Apps Script, ejecuta manualmente `runSetup` una vez.
 4. Acepta los permisos de Google Sheets y Drive.
 
+## Clave privada
+
+En Apps Script, entra a Project Settings > Script Properties y agrega:
+
+```text
+FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
+```
+
+No guardes esa clave en GitHub ni en `frontend/scripts/config.js`.
+
+La Web App puede ser publica para que GitHub Pages la llame, pero las acciones reales van a rechazar cualquier solicitud que no incluya esta clave.
+
 `runSetup` crea:
 
 - La planilla principal.

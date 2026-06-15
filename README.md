@@ -13,11 +13,23 @@ La interfaz esta pensada para celular, con estetica LCD verde inspirada en agend
 
 ## Estado actual
 
-El backend y el frontend ya tienen codigo funcional local. Falta que pegues la URL real de la Web App de Apps Script en:
+El backend y el frontend ya tienen codigo funcional local. La URL real de la Web App de Apps Script vive en:
 
 ```text
 frontend/scripts/config.js
 ```
+
+## Seguridad
+
+El repositorio y GitHub Pages pueden ser publicos, pero la API de Apps Script debe protegerse con una clave privada guardada en Apps Script, no en GitHub.
+
+Configura una Script Property llamada:
+
+```text
+FINANZAS_API_TOKEN
+```
+
+La app te pedira esa clave al abrir. Se guarda solo en `sessionStorage` del navegador.
 
 ## GitHub Pages
 

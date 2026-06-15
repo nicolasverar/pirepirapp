@@ -1,3 +1,12 @@
+var FINANZAS_RUNTIME_CACHE_ = {
+  spreadsheet: null,
+  databaseReady: false
+};
+
+function runtimeCache_() {
+  return FINANZAS_RUNTIME_CACHE_;
+}
+
 function getScriptProperties_() {
   return PropertiesService.getScriptProperties();
 }
@@ -11,31 +20,51 @@ function getExpectedHeaders_(sheetName) {
 }
 
 function getSpreadsheet_() {
-  ensureDatabase_();
   var props = getScriptProperties_();
+  var cache = runtimeCache_();
   var spreadsheetId = props.getProperty(appPropertyKeys_().spreadsheetId);
+  if (!spreadsheetId || !cache.databaseReady) {
+    ensureDatabase_();
+    spreadsheetId = props.getProperty(appPropertyKeys_().spreadsheetId);
+  }
   if (!spreadsheetId) {
     validationError_('No se pudo obtener el ID de la planilla.');
   }
-  return SpreadsheetApp.openById(spreadsheetId);
+  if (cache.spreadsheet && cache.spreadsheet.getId() === spreadsheetId) {
+    return cache.spreadsheet;
+  }
+  cache.spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  return cache.spreadsheet;
 }
 
 function ensureDatabase_() {
   var props = getScriptProperties_();
   var keys = appPropertyKeys_();
+  var cache = runtimeCache_();
+  if (cache.databaseReady && cache.spreadsheet) {
+    return databaseInfo_(cache.spreadsheet);
+  }
+
   var spreadsheetId = props.getProperty(keys.spreadsheetId);
   var spreadsheet = null;
 
   if (spreadsheetId) {
     try {
       spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+      cache.spreadsheet = spreadsheet;
     } catch (error) {
       spreadsheet = null;
     }
   }
 
+  if (spreadsheet && props.getProperty(keys.databaseInitialized) === 'true') {
+    cache.databaseReady = true;
+    return databaseInfo_(spreadsheet);
+  }
+
   if (!spreadsheet) {
     spreadsheet = SpreadsheetApp.create('FinanzasPersonales - Base de Datos');
+    cache.spreadsheet = spreadsheet;
     props.setProperty(keys.spreadsheetId, spreadsheet.getId());
   }
 
@@ -43,7 +72,13 @@ function ensureDatabase_() {
   moveSpreadsheetToDatabaseFolder_(spreadsheet.getId());
   ensureAllSheets_(spreadsheet);
   ensureDefaultConfigInSpreadsheet_(spreadsheet);
+  props.setProperty(keys.databaseInitialized, 'true');
+  cache.databaseReady = true;
 
+  return databaseInfo_(spreadsheet);
+}
+
+function databaseInfo_(spreadsheet) {
   return {
     spreadsheetId: spreadsheet.getId(),
     spreadsheetName: spreadsheet.getName(),

@@ -34,6 +34,8 @@ window.FINANZAS_CONFIG = {
 };
 ```
 
+No agregues la clave privada en este archivo. La app la pide en pantalla y la guarda solo durante la sesion del navegador.
+
 ## GitHub Pages
 
 1. Sube el repositorio a GitHub.

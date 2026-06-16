@@ -1,26 +1,30 @@
-const CACHE_NAME = 'finanzas-lcd-v14';
+const CACHE_NAME = 'finanzas-lcd-v15';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './reset.html',
   './manifest.json',
-  './styles/lcd-theme.css?v=2.6',
-  './styles/main.css?v=2.6',
-  './styles/responsive.css?v=2.6',
-  './scripts/config.js?v=2.6',
-  './scripts/utils.js?v=2.6',
-  './scripts/state.js?v=2.6',
-  './scripts/api.js?v=2.6',
-  './scripts/local-cache.js?v=2.6',
-  './scripts/router.js?v=2.6',
-  './scripts/lcd-image.js?v=2.6',
-  './scripts/forms.js?v=2.6',
-  './scripts/render.js?v=2.6',
-  './scripts/app.js?v=2.6',
+  './styles/lcd-theme.css?v=2.7',
+  './styles/main.css?v=2.7',
+  './styles/responsive.css?v=2.7',
+  './scripts/config.js?v=2.7',
+  './scripts/utils.js?v=2.7',
+  './scripts/state.js?v=2.7',
+  './scripts/api.js?v=2.7',
+  './scripts/local-cache.js?v=2.7',
+  './scripts/router.js?v=2.7',
+  './scripts/lcd-image.js?v=2.7',
+  './scripts/forms.js?v=2.7',
+  './scripts/render.js?v=2.7',
+  './scripts/app.js?v=2.7',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-192.svg',
-  './icons/icon-512.svg'
+  './icons/icon-512.svg',
+  './icons/nav/resumen.png',
+  './icons/nav/gastos.png',
+  './icons/nav/metas.png',
+  './icons/nav/config.png'
 ];
 
 self.addEventListener('install', (event) => {

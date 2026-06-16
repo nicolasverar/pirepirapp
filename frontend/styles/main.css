@@ -820,12 +820,27 @@ code {
 .nav-icon {
   width: 22px;
   height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-  shape-rendering: crispEdges;
+  display: block;
+  background: currentColor;
+  image-rendering: pixelated;
+  -webkit-mask: var(--nav-icon) center / contain no-repeat;
+  mask: var(--nav-icon) center / contain no-repeat;
+}
+
+.nav-icon-summary {
+  --nav-icon: url("../icons/nav/resumen.png");
+}
+
+.nav-icon-expenses {
+  --nav-icon: url("../icons/nav/gastos.png");
+}
+
+.nav-icon-goals {
+  --nav-icon: url("../icons/nav/metas.png");
+}
+
+.nav-icon-config {
+  --nav-icon: url("../icons/nav/config.png");
 }
 
 .nav-key.is-active .nav-icon {

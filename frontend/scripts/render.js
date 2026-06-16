@@ -34,7 +34,6 @@
 
     bindRenderedActions(screen);
     window.FinanzasImages.hydrate(screen);
-    hydrateWishParticles(screen);
   }
 
   function updateChrome(state) {
@@ -102,7 +101,7 @@
       '<article class="system-window availability-card">',
       '<div class="window-title">DISPONIBLE</div>',
       '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
-      renderLiquid(summary.porcentajeDisponible || 0, 'liquid-large'),
+      renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
       '</article>',
       '</section>'
     ].join('');
@@ -191,7 +190,6 @@
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
       '<div class="window-title">EL FUTURO</div>',
-      renderBirdFlyover(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window">',
@@ -237,7 +235,7 @@
         '<div class="goal-photo">' + renderPhotoCanvas(item) + '</div>',
         '</div>',
         '<div class="goal-balance"><strong>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</strong><span>de ' + utils.escapeHtml(utils.formatMoney(item.montoObjetivo)) + '</span></div>',
-        renderLiquid(item.porcentaje || 0, 'liquid-goal-progress'),
+        renderProgressMeter(item.porcentaje || 0, 'goal-progress'),
         '<div class="mini-actions goal-actions">',
         '<button class="tiny-key js-edit-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
         '<button class="tiny-key js-delete-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">DEL</button>',
@@ -253,7 +251,7 @@
     }
     return '<div class="wish-grid">' + items.map(function (item) {
       return [
-        '<article class="wish-card" data-wish-particles>',
+        '<article class="wish-card">',
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
@@ -267,16 +265,6 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
-  }
-
-  function renderBirdFlyover() {
-    return [
-      '<span class="bird-flyover" aria-hidden="true">',
-      '<span class="fly-bird fly-bird-a"></span>',
-      '<span class="fly-bird fly-bird-b"></span>',
-      '<span class="fly-bird fly-bird-c"></span>',
-      '</span>'
-    ].join('');
   }
 
   function renderPhotoCanvas(item) {
@@ -319,37 +307,16 @@
     ].join('');
   }
 
-  function renderLiquid(percent, extraClass) {
+  function renderProgressMeter(percent, extraClass) {
     var value = Math.max(0, Math.min(100, Number(percent || 0)));
-    var moodClass = value > 66 ? ' liquid-high' : value > 33 ? ' liquid-mid' : ' liquid-low';
+    var moodClass = value > 66 ? ' progress-high' : value > 33 ? ' progress-mid' : ' progress-low';
+    var label = utils.formatPercent(value);
     return [
-      '<div class="liquid-meter ' + (extraClass || '') + moodClass + '" style="--level:' + value + '%">',
-      '<div class="liquid-grid" aria-hidden="true"></div>',
-      '<div class="liquid-fill"><i></i><i></i><i></i></div>',
-      '<span class="liquid-label">' + utils.escapeHtml(utils.formatPercent(value)) + '</span>',
+      '<div class="progress-meter ' + (extraClass || '') + moodClass + '" style="--level:' + value + '%" aria-label="Progreso ' + utils.escapeHtml(label) + '">',
+      '<div class="progress-track" aria-hidden="true"><span></span></div>',
+      '<span class="progress-label">' + utils.escapeHtml(label) + '</span>',
       '</div>'
     ].join('');
-  }
-
-  function hydrateWishParticles(root) {
-    utils.qsa('[data-wish-particles]', root).forEach(function (card, cardIndex) {
-      if (utils.qs('.wish-spark-layer', card)) {
-        return;
-      }
-      var layer = document.createElement('span');
-      var particleCount = 4 + (cardIndex % 2);
-      layer.className = 'wish-spark-layer';
-      layer.setAttribute('aria-hidden', 'true');
-      for (var i = 0; i < particleCount; i += 1) {
-        var spark = document.createElement('i');
-        spark.style.setProperty('--spark-x', (8 + Math.round(Math.random() * 84)) + '%');
-        spark.style.setProperty('--spark-y', (10 + Math.round(Math.random() * 76)) + '%');
-        spark.style.setProperty('--spark-delay', (Math.random() * 2.4 + i * 0.18).toFixed(2) + 's');
-        spark.style.setProperty('--spark-size', (2 + Math.round(Math.random() * 2)) + 'px');
-        layer.appendChild(spark);
-      }
-      card.insertBefore(layer, card.firstChild);
-    });
   }
 
   function bindRenderedActions(root) {

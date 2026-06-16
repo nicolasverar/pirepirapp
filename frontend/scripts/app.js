@@ -9,13 +9,17 @@
     syncVersionLabels();
     bindGlobalActions();
     registerServiceWorker();
-    window.FinanzasRender.render();
     if (!window.FinanzasApi.hasBackend() || !window.FinanzasApi.getAuthToken()) {
+      window.FinanzasRender.render();
       setStatus('Conectar');
       window.FinanzasForms.openAccessForm();
       return;
     }
-    refresh();
+    var hadCache = loadCachedBootstrap();
+    if (!hadCache) {
+      window.FinanzasRender.render();
+    }
+    refresh({ background: hadCache });
   }
 
   function bindGlobalActions() {
@@ -39,24 +43,62 @@
     });
   }
 
-  function refresh() {
+  function loadCachedBootstrap() {
+    if (!window.FinanzasLocalCache) {
+      return false;
+    }
+    var cache = window.FinanzasLocalCache.loadBootstrap();
+    if (!cache || !cache.data) {
+      return false;
+    }
+    window.FinanzasState.setData(cache.data);
+    window.FinanzasState.setState({
+      loading: false,
+      syncStatus: 'Local',
+      error: '',
+      localDataSavedAt: cache.savedAt || ''
+    });
+    return true;
+  }
+
+  function refresh(options) {
+    var settings = options || {};
     if (!window.FinanzasApi.hasBackend()) {
       setStatus('Falta URL');
       window.FinanzasRender.render();
       return Promise.resolve();
     }
 
-    window.FinanzasState.setState({ loading: true, syncStatus: 'Cargando', error: '' });
+    var hasData = Boolean(window.FinanzasState.getState().data.resumen);
+    window.FinanzasState.setState({
+      loading: !hasData,
+      syncStatus: hasData || settings.background ? 'Actualizando' : 'Cargando',
+      error: ''
+    });
     return window.FinanzasApi.request('bootstrap', {})
       .then(function (data) {
         window.FinanzasState.setData(data);
+        if (window.FinanzasLocalCache) {
+          window.FinanzasLocalCache.saveBootstrap(data);
+        }
         window.FinanzasState.setState({ loading: false, syncStatus: 'Sincronizado', error: '' });
       })
       .catch(function (error) {
-        window.FinanzasState.setState({ loading: false, syncStatus: 'Error', error: error.message });
+        var hasLocalData = Boolean(window.FinanzasState.getState().data.resumen);
+        window.FinanzasState.setState({
+          loading: false,
+          syncStatus: hasLocalData ? 'Local' : 'Error',
+          error: error.message
+        });
         if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
           window.FinanzasForms.openAccessForm();
+          toast(error.message);
+          return;
+        }
+        if (hasLocalData) {
+          toast(navigator.onLine === false ? 'Sin conexion. Usando datos guardados.' : 'Usando datos guardados.');
+          return;
         }
         toast(error.message);
       });

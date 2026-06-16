@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finanzas-lcd-v7';
+const CACHE_NAME = 'finanzas-lcd-v8';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const STATIC_ASSETS = [
   './scripts/utils.js',
   './scripts/state.js',
   './scripts/api.js',
+  './scripts/local-cache.js',
   './scripts/router.js',
   './scripts/lcd-image.js',
   './scripts/forms.js',
@@ -31,7 +32,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
-      keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      keys.filter((key) => key.indexOf('finanzas-lcd-') === 0 && key !== CACHE_NAME).map((key) => caches.delete(key))
     ))
   );
   self.clients.claim();

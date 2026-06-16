@@ -14,6 +14,7 @@
     [3, 11, 1, 9],
     [15, 7, 13, 5]
   ];
+  var photoPromises = {};
 
   function fileToDataUrl(file) {
     return new Promise(function (resolve, reject) {
@@ -96,18 +97,47 @@
     var canvases = window.FinanzasUtils.qsa('canvas[data-image-id]', root || document);
     canvases.forEach(function (canvas) {
       var imageId = canvas.getAttribute('data-image-id');
-      if (!imageId || canvas.getAttribute('data-loaded') === 'true' || !window.FinanzasApi.hasBackend()) {
+      if (!imageId || canvas.getAttribute('data-loaded') === 'true') {
         return;
       }
       canvas.setAttribute('data-loaded', 'true');
-      window.FinanzasApi.request('getPhoto', { fileId: imageId })
-        .then(function (photo) {
-          return renderDataUrlToCanvas(photo.dataUrl, canvas);
+      getPhotoDataUrl(imageId)
+        .then(function (dataUrl) {
+          if (!dataUrl) {
+            throw new Error('Sin imagen local.');
+          }
+          return renderDataUrlToCanvas(dataUrl, canvas);
         })
         .catch(function () {
           canvas.classList.add('lcd-photo-error');
         });
     });
+  }
+
+  function getPhotoDataUrl(imageId) {
+    if (photoPromises[imageId]) {
+      return photoPromises[imageId];
+    }
+
+    var cache = window.FinanzasLocalCache;
+    var cached = cache ? cache.loadPhoto(imageId) : Promise.resolve('');
+    photoPromises[imageId] = cached.then(function (dataUrl) {
+      if (dataUrl) {
+        return dataUrl;
+      }
+      if (!window.FinanzasApi.hasBackend()) {
+        return '';
+      }
+      return window.FinanzasApi.request('getPhoto', { fileId: imageId })
+        .then(function (photo) {
+          var freshDataUrl = photo && photo.dataUrl ? photo.dataUrl : '';
+          if (cache && freshDataUrl) {
+            cache.savePhoto(imageId, freshDataUrl);
+          }
+          return freshDataUrl;
+        });
+    });
+    return photoPromises[imageId];
   }
 
   window.FinanzasImages = {

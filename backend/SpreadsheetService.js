@@ -224,10 +224,54 @@ function getMonthlyMovementsSheet_(month) {
 function readMovementRecordsForMonth_(month) {
   var targetMonth = assertMonthString_(month || currentMonthString_(), 'Mes');
   var sheet = getMonthlyMovementsSheet_(targetMonth);
-  return readRecordsFromSheet_(sheet)
-    .filter(function (record) {
-      return normalizeText_(record.Mes) === targetMonth;
+  var records = [];
+  var seen = {};
+
+  function addRecord(record, assumeTargetMonth) {
+    var normalizedMonth = normalizeText_(record.Mes);
+    if (!normalizedMonth && isDateValue_(record.Fecha)) {
+      normalizedMonth = formatDate_(record.Fecha, 'yyyy-MM');
+      record.Mes = normalizedMonth;
+    }
+    if (!normalizedMonth && /^\d{4}-\d{2}/.test(normalizeText_(record.Fecha))) {
+      normalizedMonth = normalizeText_(record.Fecha).slice(0, 7);
+      record.Mes = normalizedMonth;
+    }
+    if (!normalizedMonth && assumeTargetMonth) {
+      record.Mes = targetMonth;
+      normalizedMonth = targetMonth;
+    }
+    if (normalizedMonth !== targetMonth) {
+      return;
+    }
+
+    var id = normalizeText_(record.ID);
+    var key = id || [
+      normalizeText_(record.Fecha),
+      normalizeText_(record.Hora),
+      normalizeText_(record.Tipo),
+      normalizeText_(record.Motivo),
+      normalizeText_(record.Monto)
+    ].join('|');
+    if (seen[key]) {
+      return;
+    }
+    seen[key] = true;
+    records.push(record);
+  }
+
+  readRecordsFromSheet_(sheet).forEach(function (record) {
+    addRecord(record, true);
+  });
+
+  var legacySheet = ensureSheet_(getSpreadsheet_(), appSheetNames_().movements);
+  if (legacySheet.getParent().getId() !== sheet.getParent().getId()) {
+    readRecordsFromSheet_(legacySheet).forEach(function (record) {
+      addRecord(record, false);
     });
+  }
+
+  return records;
 }
 
 function readAllMovementRecords_() {

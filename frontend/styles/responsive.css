@@ -35,16 +35,29 @@
     font-size: 0.64rem;
   }
 
-  .sync-indicator span:last-child {
-    display: none;
+  .sync-indicator {
+    max-width: 92px;
+    font-size: 0.58rem;
   }
 
   .big-money {
     font-size: 1.85rem;
   }
 
-  .goal-card {
-    grid-template-columns: 72px 1fr;
+  .goal-top-band {
+    grid-template-columns: minmax(0, 1fr) 78px;
+    min-height: 72px;
+  }
+
+  .goal-photo,
+  .goal-photo .lcd-photo,
+  .goal-photo .lcd-photo-placeholder {
+    width: 78px;
+  }
+
+  .goal-monthly,
+  .goal-balance {
+    font-size: 0.62rem;
   }
 
   .nav-key {
@@ -68,7 +81,18 @@
   }
 
   .wish-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .wish-card {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .wish-info p,
+  .wish-info b {
+    font-size: 0.64rem;
   }
 
   .field-row {

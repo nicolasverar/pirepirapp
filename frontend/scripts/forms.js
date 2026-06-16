@@ -90,11 +90,20 @@
         setFormPending(form, false);
         return;
       }
-      Promise.resolve(result)
-        .catch(function (error) {
-          setFormError(form, error.message || 'No se pudo guardar.');
+      Promise.resolve(result).catch(function (error) {
+        var message = error.message || 'No se pudo guardar.';
+        if (form.getAttribute('data-close-on-submit') === 'true') {
+          if (window.FinanzasApp && window.FinanzasApp.toast) {
+            window.FinanzasApp.toast(message);
+          }
+        } else {
+          setFormError(form, message);
           setFormPending(form, false);
-        });
+        }
+      });
+      if (form.getAttribute('data-close-on-submit') === 'true') {
+        closeModal();
+      }
     });
   }
 
@@ -203,7 +212,7 @@
 
     var relatedOptions = relatedSelectOptions(data, movement.tipo || defaultType);
     var html = [
-      '<form class="lcd-form" id="movement-form">',
+      '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
@@ -311,7 +320,7 @@
   function openFutureSavingForm(existing) {
     var item = existing || {};
     var html = [
-      '<form class="lcd-form" id="future-form">',
+      '<form class="lcd-form" id="future-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"'),
@@ -335,7 +344,7 @@
   function openGoalForm(existing) {
     var item = existing || {};
     var html = [
-      '<form class="lcd-form" id="goal-form">',
+      '<form class="lcd-form" id="goal-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"'),
@@ -369,7 +378,7 @@
   function openWishlistForm(existing) {
     var item = existing || {};
     var html = [
-      '<form class="lcd-form" id="wish-form">',
+      '<form class="lcd-form" id="wish-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Costo aproximado', 'costoAproximado', 'number', item.costoAproximado || '', 'required min="1" step="1" inputmode="numeric"'),
@@ -430,7 +439,7 @@
 
   function convertWishlist(id) {
     openModal('CONVERTIR', [
-      '<form class="lcd-form" id="convert-form">',
+      '<form class="lcd-form" id="convert-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Monto mensual', 'montoMensual', 'number', '', 'required min="0" step="1" inputmode="numeric"'),
       formActions('Convertir'),

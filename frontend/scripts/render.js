@@ -189,9 +189,9 @@
     var data = state.data;
     return [
       '<section class="goals-stack">',
-      renderBirdFlyover(),
-      '<article class="system-window">',
+      '<article class="system-window future-window">',
       '<div class="window-title">EL FUTURO</div>',
+      renderBirdFlyover(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window">',
@@ -228,29 +228,23 @@
     return '<div class="goal-list">' + items.map(function (item) {
       return [
         '<article class="goal-card">',
-        renderPhotoCanvas(item),
-        '<div class="goal-body">',
-        '<div class="goal-copy"><strong>' + utils.escapeHtml(item.titulo) + '</strong><p>' + utils.escapeHtml(item.descripcion || '') + '</p></div>',
-        '<div class="goal-metrics">',
-        renderMetric('Mensual', item.montoMensual),
-        renderMetric('Meta', item.montoObjetivo),
-        renderMetric('Acum.', item.montoAcumulado),
+        '<div class="goal-top-band">',
+        '<div class="goal-copy">',
+        '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
+        '<p>' + utils.escapeHtml(item.descripcion || '') + '</p>',
+        '<span class="goal-monthly">Por mes: <b>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</b></span>',
         '</div>',
-        '<div class="goal-progress-row">',
-        renderLiquid(item.porcentaje || 0, 'liquid-compact'),
+        '<div class="goal-photo">' + renderPhotoCanvas(item) + '</div>',
+        '</div>',
+        '<div class="goal-balance"><strong>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</strong><span>de ' + utils.escapeHtml(utils.formatMoney(item.montoObjetivo)) + '</span></div>',
+        renderLiquid(item.porcentaje || 0, 'liquid-goal-progress'),
         '<div class="mini-actions goal-actions">',
         '<button class="tiny-key js-edit-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
         '<button class="tiny-key js-delete-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">DEL</button>',
         '</div>',
-        '</div>',
-        '</div>',
         '</article>'
       ].join('');
     }).join('') + '</div>';
-  }
-
-  function renderMetric(label, value) {
-    return '<span class="metric-pill"><small>' + utils.escapeHtml(label) + '</small><strong>' + utils.escapeHtml(utils.formatMoney(value)) + '</strong></span>';
   }
 
   function renderWishlist(items) {

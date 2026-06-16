@@ -113,6 +113,7 @@
   justify-content: end;
   gap: 6px;
   font-size: 0.76rem;
+  flex: 0 0 auto;
 }
 
 .sync-indicator {
@@ -120,8 +121,9 @@
   align-items: center;
   gap: 4px;
   white-space: nowrap;
-  max-width: 96px;
-  overflow: hidden;
+  max-width: 136px;
+  overflow: visible;
+  font-size: 0.68rem;
 }
 
 .sync-dot {
@@ -666,22 +668,22 @@ code {
 
 @keyframes bird-flyover {
   0%,
-  20% {
+  8% {
     opacity: 0;
     transform: translate(-28px, 0);
   }
-  25%,
-  58% {
-    opacity: 0.82;
+  12%,
+  72% {
+    opacity: 0.95;
   }
-  66% {
-    opacity: 0.64;
-    transform: translate(calc(100vw + 28px), -8px);
+  82% {
+    opacity: 0.72;
+    transform: translate(440px, -8px);
   }
-  67%,
+  83%,
   100% {
     opacity: 0;
-    transform: translate(calc(100vw + 36px), -10px);
+    transform: translate(470px, -10px);
   }
 }
 
@@ -694,12 +696,12 @@ code {
   }
   60%,
   78% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0.48;
+    transform: translate(-50%, -50%) scale(1);
   }
   88% {
-    opacity: 0.38;
-    transform: translate(-50%, -50%) scale(0.82);
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(0.72);
   }
 }
 
@@ -885,11 +887,21 @@ code {
   box-shadow: 2px 2px 0 var(--lcd-dark);
 }
 
+.future-window {
+  position: relative;
+  overflow: hidden;
+}
+
+.future-window > :not(.bird-flyover) {
+  position: relative;
+  z-index: 2;
+}
+
 .bird-flyover {
   position: absolute;
-  inset: 6px 0 auto;
-  z-index: 4;
-  height: 36px;
+  inset: 28px 0 auto;
+  z-index: 1;
+  height: 42px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -897,19 +909,20 @@ code {
 .fly-bird {
   position: absolute;
   left: 0;
-  width: 14px;
-  height: 8px;
+  width: 18px;
+  height: 10px;
   opacity: 0;
-  color: var(--lcd-ink);
-  animation: bird-flyover 9.5s steps(18) infinite;
+  color: var(--lcd-line);
+  filter: drop-shadow(1px 1px 0 var(--lcd-bg));
+  animation: bird-flyover 5.8s steps(18) infinite;
 }
 
 .fly-bird::before,
 .fly-bird::after {
   content: "";
   position: absolute;
-  top: 3px;
-  width: 6px;
+  top: 4px;
+  width: 7px;
   height: 2px;
   background: currentColor;
 }
@@ -925,20 +938,20 @@ code {
 }
 
 .fly-bird-a {
-  top: 4px;
-  animation-delay: 0.7s;
+  top: 8px;
+  animation-delay: 0s;
 }
 
 .fly-bird-b {
-  top: 18px;
-  animation-delay: 4.8s;
-  animation-duration: 11s;
+  top: 24px;
+  animation-delay: 2.4s;
+  animation-duration: 7.4s;
 }
 
 .fly-bird-c {
-  top: 11px;
-  animation-delay: 8.4s;
-  animation-duration: 12.5s;
+  top: 16px;
+  animation-delay: 5.2s;
+  animation-duration: 8.8s;
 }
 
 .data-block {
@@ -971,8 +984,7 @@ dd {
 
 .goal-card {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  gap: 8px;
+  gap: 7px;
   overflow: hidden;
   padding: 8px;
   background:
@@ -983,15 +995,21 @@ dd {
   box-shadow: 2px 2px 0 var(--lcd-dark);
 }
 
-.goal-body {
+.goal-top-band {
   display: grid;
-  grid-template-rows: auto auto auto;
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) 94px;
+  gap: 8px;
+  align-items: stretch;
   min-width: 0;
+  min-height: 82px;
 }
 
 .goal-copy {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 4px;
   min-width: 0;
+  padding: 2px 0;
 }
 
 .goal-copy > strong,
@@ -1005,57 +1023,74 @@ dd {
 
 .goal-copy p {
   display: -webkit-box;
-  min-height: 2.7em;
+  min-height: 2.6em;
+  margin: 0;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
-.goal-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-}
-
-.metric-pill {
-  display: grid;
-  align-content: center;
+.goal-monthly {
+  display: block;
   min-width: 0;
-  min-height: 38px;
-  padding: 3px 4px;
-  border: 1px solid var(--lcd-line);
-  background: rgba(174, 203, 124, 0.35);
-}
-
-.metric-pill small {
+  padding: 4px;
   color: var(--lcd-dark);
+  background: rgba(174, 203, 124, 0.32);
+  border: 1px solid var(--lcd-line);
   text-transform: uppercase;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 
-.metric-pill strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.68rem;
+.goal-monthly b {
+  color: var(--lcd-ink);
 }
 
-.goal-progress-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px;
-  align-items: stretch;
+.goal-photo {
+  align-self: start;
+  justify-self: end;
+  width: 94px;
+}
+
+.goal-photo .lcd-photo,
+.goal-photo .lcd-photo-placeholder {
+  width: 94px;
+  aspect-ratio: 4 / 3;
+}
+
+.goal-balance {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding-top: 2px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.goal-balance strong,
+.goal-balance span {
+  overflow-wrap: anywhere;
+}
+
+.goal-balance span {
+  color: var(--lcd-dark);
+}
+
+.liquid-goal-progress {
+  height: 42px;
+  margin-top: 0;
 }
 
 .goal-actions {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 4px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
 }
 
 .goal-actions .tiny-key {
-  min-width: 34px;
+  min-width: 0;
   min-height: 28px;
 }
 
@@ -1082,16 +1117,18 @@ dd {
 }
 
 .wish-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .wish-card {
   display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 5px;
   overflow: hidden;
   isolation: isolate;
-  min-height: 104px;
+  min-height: 96px;
+  padding: 5px;
 }
 
 .wish-card > :not(.wish-spark-layer) {
@@ -1102,7 +1139,7 @@ dd {
 .wish-info {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto auto;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 
@@ -1115,14 +1152,33 @@ dd {
 
 .wish-info p {
   display: -webkit-box;
-  min-height: 2.7em;
+  min-height: 2.45em;
+  margin-bottom: 2px;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  font-size: 0.72rem;
 }
 
 .wish-info b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: right;
+  font-size: 0.72rem;
+}
+
+.wish-info .mini-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.wish-info .tiny-key {
+  min-width: 0;
+  min-height: 24px;
+  padding: 2px;
+  font-size: 0.56rem;
 }
 
 .wish-spark-layer {
@@ -1139,22 +1195,17 @@ dd {
   top: var(--spark-y);
   width: var(--spark-size);
   height: var(--spark-size);
-  color: var(--lcd-bg);
+  color: var(--lcd-ink);
   background: currentColor;
   opacity: 0;
   box-shadow:
-    0 0 0 1px var(--lcd-ink),
-    calc(var(--spark-size) * -1) 0 0 var(--lcd-ink),
-    var(--spark-size) 0 0 var(--lcd-ink),
-    0 calc(var(--spark-size) * -1) 0 var(--lcd-ink),
-    0 var(--spark-size) 0 var(--lcd-ink),
-    calc(var(--spark-size) * -2) 0 0 currentColor,
-    calc(var(--spark-size) * 2) 0 0 currentColor,
-    0 calc(var(--spark-size) * -2) 0 currentColor,
-    0 calc(var(--spark-size) * 2) 0 currentColor;
+    calc(var(--spark-size) * -1) 0 0 currentColor,
+    var(--spark-size) 0 0 currentColor,
+    0 calc(var(--spark-size) * -1) 0 currentColor,
+    0 var(--spark-size) 0 currentColor;
   transform: translate(-50%, -50%) scale(1);
-  filter: drop-shadow(1px 1px 0 var(--lcd-dark));
-  animation: wish-sparkle 2.7s steps(5) infinite;
+  filter: none;
+  animation: wish-sparkle 4.4s steps(5) infinite;
   animation-delay: var(--spark-delay);
 }
 

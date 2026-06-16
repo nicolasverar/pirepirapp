@@ -100,6 +100,23 @@ function startMonth_(payload) {
     var created = [];
     var marker = monthStartMarker_(month);
 
+    (config.gastosFijos || [])
+      .filter(function (expense) {
+        return normalizeText_(expense.categoria || expense.category) && Number(expense.monto || expense.amount || 0) > 0;
+      })
+      .forEach(function (expense) {
+        created.push(createMovementUnlocked_({
+          tipo: movementTypes_().expense,
+          fecha: date,
+          hora: time,
+          mes: month,
+          motivo: 'Gasto fijo: ' + normalizeText_(expense.categoria || expense.category),
+          categoria: normalizeText_(expense.categoria || expense.category),
+          monto: Number(expense.monto || expense.amount || 0),
+          descripcion: marker
+        }));
+      });
+
     readRecords_(appSheetNames_().futureSavings)
       .filter(function (saving) {
         return normalizeText_(saving.Estado) === activeStatus_() && Number(saving['Monto mensual'] || 0) > 0;

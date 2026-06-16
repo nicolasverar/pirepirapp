@@ -217,8 +217,10 @@ code {
   margin-top: 8px;
   border: 2px solid var(--lcd-line);
   background:
+    repeating-linear-gradient(0deg, rgba(25, 45, 24, 0.12) 0, rgba(25, 45, 24, 0.12) 2px, transparent 2px, transparent 8px),
     repeating-linear-gradient(90deg, transparent 0, transparent 8px, rgba(25, 45, 24, 0.18) 8px, rgba(25, 45, 24, 0.18) 10px),
     var(--lcd-bg-2);
+  image-rendering: pixelated;
 }
 
 .liquid-large {
@@ -235,8 +237,79 @@ code {
   height: var(--level);
   min-height: 2px;
   background:
-    repeating-linear-gradient(45deg, var(--lcd-dark) 0, var(--lcd-dark) 3px, var(--lcd-mid) 3px, var(--lcd-mid) 6px);
-  animation: lcd-wave 1.6s steps(4) infinite;
+    repeating-linear-gradient(90deg, rgba(25, 45, 24, 0.28) 0, rgba(25, 45, 24, 0.28) 4px, transparent 4px, transparent 12px),
+    repeating-linear-gradient(45deg, var(--lcd-dark) 0, var(--lcd-dark) 4px, var(--lcd-mid) 4px, var(--lcd-mid) 8px);
+  transition: height 240ms steps(8);
+  animation: lcd-wave 1.1s steps(6) infinite, liquid-bob 2.4s steps(4) infinite;
+}
+
+.liquid-fill::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  top: -8px;
+  height: 12px;
+  background:
+    linear-gradient(90deg, transparent 0 6px, var(--lcd-mid) 6px 12px, var(--lcd-dark) 12px 18px, transparent 18px 24px);
+  background-size: 24px 12px;
+  animation: liquid-crest 1.2s steps(4) infinite;
+}
+
+.liquid-fill::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  bottom: 8px;
+  width: 4px;
+  height: 4px;
+  background: var(--lcd-bg-2);
+  box-shadow:
+    28px -10px 0 var(--lcd-bg-2),
+    68px 4px 0 var(--lcd-bg-2),
+    116px -16px 0 var(--lcd-bg-2),
+    154px 2px 0 var(--lcd-bg-2);
+  opacity: 0.9;
+  animation: liquid-pixels 1.8s steps(3) infinite;
+}
+
+.liquid-fill i {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: var(--lcd-mid);
+  opacity: 0.82;
+  animation: liquid-block 2s steps(4) infinite;
+}
+
+.liquid-fill i:nth-child(1) {
+  left: 18%;
+  bottom: 20%;
+}
+
+.liquid-fill i:nth-child(2) {
+  left: 52%;
+  bottom: 46%;
+  animation-delay: 0.4s;
+}
+
+.liquid-fill i:nth-child(3) {
+  left: 78%;
+  bottom: 28%;
+  animation-delay: 0.8s;
+}
+
+.liquid-low .liquid-fill {
+  background:
+    repeating-linear-gradient(90deg, rgba(25, 45, 24, 0.22) 0, rgba(25, 45, 24, 0.22) 4px, transparent 4px, transparent 12px),
+    repeating-linear-gradient(45deg, #38562a 0, #38562a 4px, #68864d 4px, #68864d 8px);
+}
+
+.liquid-high .liquid-fill {
+  background:
+    repeating-linear-gradient(90deg, rgba(25, 45, 24, 0.32) 0, rgba(25, 45, 24, 0.32) 4px, transparent 4px, transparent 12px),
+    repeating-linear-gradient(45deg, #192d18 0, #192d18 4px, #38562a 4px, #38562a 8px);
 }
 
 .liquid-meter span {
@@ -244,8 +317,10 @@ code {
   inset: 0;
   display: grid;
   place-items: center;
+  z-index: 2;
   font-weight: 700;
   color: var(--lcd-ink);
+  text-shadow: 1px 1px 0 var(--lcd-bg);
 }
 
 @keyframes lcd-wave {
@@ -253,7 +328,46 @@ code {
     background-position: 0 0;
   }
   to {
-    background-position: 12px 0;
+    background-position: 24px 0;
+  }
+}
+
+@keyframes liquid-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes liquid-crest {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(24px);
+  }
+}
+
+@keyframes liquid-pixels {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(8px, -4px);
+  }
+}
+
+@keyframes liquid-block {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -6px);
   }
 }
 

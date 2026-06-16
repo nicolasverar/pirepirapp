@@ -163,6 +163,7 @@
     var config = data.config || {};
     var categories = config.categorias || [];
     var movement = existing || {};
+    var defaultDate = movement.fecha || defaultDateForActiveMonth(config.mesActual);
     var isIncome = defaultType === 'Ingreso' || movement.tipo === 'Ingreso';
     var typeOptions = isIncome
       ? [{ value: 'Ingreso', label: 'Ingreso' }]
@@ -184,7 +185,7 @@
       select('Relacionado', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
-      field('Fecha', 'fecha', 'date', movement.fecha || utils.toInputDate(), 'required'),
+      field('Fecha', 'fecha', 'date', defaultDate, 'required'),
       field('Hora', 'hora', 'time', movement.hora || utils.toInputTime(), 'required'),
       '</div>',
       formActions(existing ? 'Actualizar' : 'Guardar'),
@@ -216,6 +217,15 @@
           .then(closeModal);
       });
     });
+  }
+
+  function defaultDateForActiveMonth(activeMonth) {
+    var month = String(activeMonth || utils.currentMonth()).slice(0, 7);
+    var today = utils.toInputDate();
+    if (today.slice(0, 7) === month) {
+      return today;
+    }
+    return month + '-01';
   }
 
   function relatedSelectOptions(data, type) {

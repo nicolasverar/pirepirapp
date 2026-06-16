@@ -118,9 +118,11 @@
 
   function renderMovements(state) {
     var movements = ((state.data.movimientos || {}).movimientos || []).slice();
+    var config = state.data.config || {};
     return [
       '<section class="system-window">',
       '<div class="window-title">GASTOS TOTALES</div>',
+      '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
       '<div class="toolbar-line">',
       '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
       '<button class="lcd-button js-new-expense" type="button">Gasto</button>',
@@ -237,6 +239,7 @@
       '<div class="window-title">CONFIGURACION</div>',
       '<form class="lcd-form settings-form" id="settings-form">',
       '<p class="form-error" hidden></p>',
+      '<label class="field"><span>Mes activo</span><input name="mesActual" type="month" value="' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '" required></label>',
       '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '<label class="field"><span>Categorias</span><textarea name="categorias" rows="6">' + utils.escapeHtml((config.categorias || []).join('\n')) + '</textarea></label>',
       '<label class="field"><span>Gastos fijos</span><textarea name="gastosFijos" rows="4">' + utils.escapeHtml(utils.fixedExpensesToText(config.gastosFijos || [])) + '</textarea></label>',
@@ -264,9 +267,10 @@
 
   function renderLiquid(percent, extraClass) {
     var value = Math.max(0, Math.min(100, Number(percent || 0)));
+    var moodClass = value > 66 ? ' liquid-high' : value > 33 ? ' liquid-mid' : ' liquid-low';
     return [
-      '<div class="liquid-meter ' + (extraClass || '') + '" style="--level:' + value + '%">',
-      '<div class="liquid-fill"></div>',
+      '<div class="liquid-meter ' + (extraClass || '') + moodClass + '" style="--level:' + value + '%">',
+      '<div class="liquid-fill"><i></i><i></i><i></i></div>',
       '<span>' + utils.escapeHtml(utils.formatPercent(value)) + '</span>',
       '</div>'
     ].join('');
@@ -397,7 +401,9 @@
     var start = utils.qs('.js-start-month', root);
     if (start) {
       start.addEventListener('click', function () {
-        window.FinanzasApp.mutate('startMonth', { mes: (window.FinanzasState.getState().data.config || {}).mesActual || utils.currentMonth() });
+        var monthInput = utils.qs('[name="mesActual"]', form);
+        var selectedMonth = monthInput && monthInput.value ? monthInput.value : ((window.FinanzasState.getState().data.config || {}).mesActual || utils.currentMonth());
+        window.FinanzasApp.mutate('startMonth', { mes: selectedMonth });
       });
     }
   }

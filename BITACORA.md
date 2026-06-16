@@ -43,6 +43,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - Validacion de assets de `frontend/service-worker.js`: todos los archivos existen.
 - Servidor local iniciado en `http://127.0.0.1:4173`; `index.html` responde `200` y contiene `v2.11`.
+- Push a `origin/main`: commit `80fae38`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.11` / `finanzas-lcd-v19`.
 
 ### Pendientes
 - No se pudo tomar screenshot automatico porque no hay Playwright ni navegador disponible en PATH.

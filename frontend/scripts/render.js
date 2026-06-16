@@ -65,6 +65,7 @@
       '<p class="lcd-strong">Falta conectar Apps Script.</p>',
       '<p>Ingresa la URL del Web App y tu clave privada para sincronizar este dispositivo.</p>',
       '<button class="lcd-button primary js-connect-backend" type="button">Conectar</button>',
+      renderAppVersionPanel(),
       '</section>'
     ].join('');
   }
@@ -246,7 +247,18 @@
       '</div>',
       '</form>',
       '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
+      renderAppVersionPanel(),
       '</section>'
+    ].join('');
+  }
+
+  function renderAppVersionPanel() {
+    var version = (window.FinanzasApp && window.FinanzasApp.version && window.FinanzasApp.version()) || ((window.FINANZAS_CONFIG || {}).APP_VERSION || 'dev');
+    return [
+      '<div class="app-version-panel">',
+      '<div class="version-line"><span>Version actual</span><strong>' + utils.escapeHtml(version) + '</strong></div>',
+      '<button class="lcd-button js-update-app" type="button">Actualizar app</button>',
+      '</div>'
     ].join('');
   }
 
@@ -271,6 +283,12 @@
     utils.qsa('.js-connect-backend', root).forEach(function (button) {
       button.addEventListener('click', function () {
         window.FinanzasForms.openAccessForm();
+      });
+    });
+
+    utils.qsa('.js-update-app', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.FinanzasApp.updateApp();
       });
     });
 

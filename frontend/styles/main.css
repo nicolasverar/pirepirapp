@@ -520,6 +520,29 @@ dd {
   accent-color: var(--lcd-ink);
 }
 
+.app-version-panel {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 2px solid var(--lcd-line);
+}
+
+.version-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--lcd-dark);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.version-line strong {
+  color: var(--lcd-ink);
+  overflow-wrap: anywhere;
+}
+
 .field span {
   color: var(--lcd-dark);
   text-transform: uppercase;

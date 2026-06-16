@@ -98,6 +98,70 @@
     }, 2200);
   }
 
+  function version() {
+    return (window.FINANZAS_CONFIG && window.FINANZAS_CONFIG.APP_VERSION) || 'dev';
+  }
+
+  function updateApp() {
+    if (navigator.onLine === false) {
+      toast('Necesitas conexion para actualizar.');
+      return Promise.resolve();
+    }
+
+    setStatus('Actualizando');
+    toast('Actualizando app...');
+
+    return Promise.all([
+      clearAppCaches(),
+      unregisterServiceWorker()
+    ]).then(function () {
+      rememberUpdateMoment();
+      reloadWithoutCache();
+    }).catch(function (error) {
+      setStatus('Error');
+      toast(error && error.message ? error.message : 'No se pudo actualizar la app.');
+    });
+  }
+
+  function clearAppCaches() {
+    if (!window.caches) {
+      return Promise.resolve();
+    }
+    return caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (key) {
+        return key.indexOf('finanzas-lcd-') === 0;
+      }).map(function (key) {
+        return caches.delete(key);
+      }));
+    });
+  }
+
+  function unregisterServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+      return Promise.resolve();
+    }
+    return navigator.serviceWorker.getRegistration().then(function (registration) {
+      if (!registration) {
+        return null;
+      }
+      return registration.unregister();
+    });
+  }
+
+  function rememberUpdateMoment() {
+    try {
+      localStorage.setItem('finanzasLastAppUpdate', new Date().toISOString());
+    } catch (error) {
+      // Local storage can be unavailable in private browsing.
+    }
+  }
+
+  function reloadWithoutCache() {
+    var url = new URL(window.location.href);
+    url.searchParams.set('appUpdate', String(Date.now()));
+    window.location.replace(url.toString());
+  }
+
   function registerServiceWorker() {
     if (!('serviceWorker' in navigator)) {
       return;
@@ -113,7 +177,9 @@
     init: init,
     refresh: refresh,
     mutate: mutate,
-    toast: toast
+    toast: toast,
+    updateApp: updateApp,
+    version: version
   };
 
   if (document.readyState === 'loading') {

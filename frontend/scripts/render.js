@@ -337,7 +337,7 @@
         return;
       }
       var layer = document.createElement('span');
-      var particleCount = 6 + (cardIndex % 3);
+      var particleCount = 4 + (cardIndex % 2);
       layer.className = 'wish-spark-layer';
       layer.setAttribute('aria-hidden', 'true');
       for (var i = 0; i < particleCount; i += 1) {
@@ -345,7 +345,7 @@
         spark.style.setProperty('--spark-x', (8 + Math.round(Math.random() * 84)) + '%');
         spark.style.setProperty('--spark-y', (10 + Math.round(Math.random() * 76)) + '%');
         spark.style.setProperty('--spark-delay', (Math.random() * 2.4 + i * 0.18).toFixed(2) + 's');
-        spark.style.setProperty('--spark-size', (3 + Math.round(Math.random() * 3)) + 'px');
+        spark.style.setProperty('--spark-size', (2 + Math.round(Math.random() * 2)) + 'px');
         layer.appendChild(spark);
       }
       card.insertBefore(layer, card.firstChild);

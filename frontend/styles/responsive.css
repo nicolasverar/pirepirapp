@@ -45,19 +45,29 @@
   }
 
   .goal-top-band {
-    grid-template-columns: minmax(0, 1fr) 78px;
-    min-height: 72px;
+    grid-template-columns: minmax(0, 1fr) 86px;
+    gap: 8px;
+    min-height: 90px;
   }
 
   .goal-photo,
   .goal-photo .lcd-photo,
   .goal-photo .lcd-photo-placeholder {
-    width: 78px;
+    width: 86px;
   }
 
   .goal-monthly,
   .goal-balance {
-    font-size: 0.62rem;
+    font-size: 0.64rem;
+  }
+
+  .goal-copy p {
+    min-height: 2.85em;
+    -webkit-line-clamp: 2;
+  }
+
+  .liquid-goal-progress {
+    height: 44px;
   }
 
   .nav-key {
@@ -82,17 +92,24 @@
 
   .wish-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 5px;
+    gap: 6px;
   }
 
   .wish-card {
-    grid-template-columns: 46px minmax(0, 1fr);
-    gap: 4px;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 5px;
+    min-height: 106px;
+    padding: 6px;
   }
 
   .wish-info p,
   .wish-info b {
-    font-size: 0.64rem;
+    font-size: 0.66rem;
+  }
+
+  .wish-info .tiny-key {
+    min-height: 25px;
+    font-size: 0.56rem;
   }
 
   .field-row {
@@ -107,5 +124,27 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
+  }
+
+  .fly-bird {
+    opacity: 0.9 !important;
+    animation: none !important;
+  }
+
+  .fly-bird::before,
+  .fly-bird::after {
+    animation: none !important;
+  }
+
+  .fly-bird-a {
+    transform: translate3d(92px, -4px, 0) scale(1);
+  }
+
+  .fly-bird-b {
+    transform: translate3d(214px, 7px, 0) scale(0.96);
+  }
+
+  .fly-bird-c {
+    transform: translate3d(318px, -10px, 0) scale(0.9);
   }
 }

@@ -13,19 +13,35 @@
 
 @media (max-width: 360px) {
   .status-bar {
+    grid-template-columns: 86px 1fr auto;
+    gap: 4px;
     font-size: 0.72rem;
   }
 
   .status-main {
-    gap: 7px;
+    gap: 4px;
+    padding-inline: 4px;
   }
 
   .status-tools {
-    gap: 4px;
+    gap: 3px;
+  }
+
+  .weekday-strip {
+    gap: 1px;
+  }
+
+  .weekday-strip span {
+    min-height: 22px;
+    border-width: 1px;
   }
 
   .version-key {
     font-size: 0.64rem;
+  }
+
+  .sync-indicator span:last-child {
+    display: none;
   }
 
   .big-money {
@@ -33,7 +49,16 @@
   }
 
   .goal-card {
-    grid-template-columns: 78px 1fr;
+    grid-template-columns: 72px 1fr;
+  }
+
+  .graffiti-zone {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .nav-key {
+    min-height: 48px;
+    font-size: 0.58rem;
   }
 
   .wish-grid {

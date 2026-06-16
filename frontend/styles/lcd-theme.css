@@ -1,18 +1,21 @@
 :root {
-  --case-black: #111711;
-  --case-dark: #202820;
-  --case-mid: #384238;
-  --lcd-bg: #aecb7c;
-  --lcd-bg-2: #9fbc70;
-  --lcd-mid: #68864d;
-  --lcd-dark: #38562a;
-  --lcd-ink: #192d18;
-  --lcd-line: #20391e;
+  --case-black: #101313;
+  --case-dark: #2d3432;
+  --case-mid: #4a5551;
+  --case-hi: #707b75;
+  --case-low: #171c1a;
+  --lcd-bg: #b8cdb2;
+  --lcd-bg-2: #a6bfa4;
+  --lcd-mid: #6d8666;
+  --lcd-dark: #3b5638;
+  --lcd-ink: #172818;
+  --lcd-line: #213923;
   --lcd-alert: #5d2d22;
-  --key-face: #b7ce85;
-  --key-press: #8ca760;
+  --key-face: #3f4945;
+  --key-face-2: #252d2a;
+  --key-press: #8da17f;
   --focus: #172817;
-  --shadow-hard: 3px 3px 0 #0b100b;
+  --shadow-hard: 3px 3px 0 #090c0b;
   --font-lcd: "Courier New", Consolas, monospace;
   color-scheme: dark;
 }
@@ -34,7 +37,8 @@ body {
   margin: 0;
   overflow: hidden;
   background:
-    repeating-linear-gradient(0deg, #111711 0, #111711 6px, #141c14 6px, #141c14 12px);
+    radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0.14), transparent 36%),
+    repeating-linear-gradient(0deg, #171b1a 0, #171b1a 6px, #101313 6px, #101313 12px);
   color: var(--lcd-ink);
   font-family: var(--font-lcd);
   letter-spacing: 0;

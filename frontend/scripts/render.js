@@ -60,11 +60,13 @@
 
   function renderMissingConfig() {
     return [
-      '<section class="system-window">',
+      '<section class="system-window palm-panel">',
       '<div class="window-title">CONFIGURACION</div>',
-      '<p class="lcd-strong">Falta conectar Apps Script.</p>',
+      '<div class="memo-block">',
+      '<strong>Falta conectar Apps Script.</strong>',
       '<p>Ingresa la URL del Web App y tu clave privada para sincronizar este dispositivo.</p>',
-      '<button class="lcd-button primary js-connect-backend" type="button">Conectar</button>',
+      '</div>',
+      '<div class="palm-command-row"><button class="lcd-button primary js-connect-backend" type="button">Conectar</button></div>',
       renderAppVersionPanel(),
       '</section>'
     ].join('');
@@ -75,41 +77,50 @@
     var top = summary.categoriaMayorGasto || {};
     var recent = summary.actividadReciente || [];
     return [
-      '<section class="summary-stack">',
-      '<article class="system-window total-window">',
-      '<div class="window-title">RESUMEN</div>',
-      '<p>Estamos a ' + utils.escapeHtml(utils.friendlyDate()) + ' y gastaste:</p>',
+      '<section class="palm-stack">',
+      '<article class="system-window total-window palm-panel">',
+      '<div class="window-title"><span>HOY</span><span>' + utils.escapeHtml(utils.friendlyDate()) + '</span></div>',
+      '<div class="palm-total">',
+      '<span>Gastado</span>',
       '<strong class="big-money">' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + '</strong>',
+      '</div>',
+      '<div class="ledger-grid">',
+      ledgerLine('Ingresos', summary.totalIngresos || 0),
+      ledgerLine('Apartado', summary.totalApartado || 0),
+      ledgerLine('Disponible', summary.disponible || 0),
+      '</div>',
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">MAYOR GASTO</div>',
-      '<p>Lo que mas gastaste fue en:</p>',
-      '<strong class="lcd-strong">' + utils.escapeHtml(top.categoria || 'Sin gastos') + '</strong>',
-      '<span class="lcd-muted">' + utils.escapeHtml(top.mensaje || '') + '</span>',
+      '<div class="memo-block"><strong>' + utils.escapeHtml(top.categoria || 'Sin gastos') + '</strong><p>' + utils.escapeHtml(top.mensaje || 'Sin movimientos para analizar.') + '</p></div>',
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">ACTIVIDAD RECIENTE</div>',
       renderRecent(recent),
-      '<button class="text-key js-view-full" type="button">Ver completo</button>',
+      '<div class="palm-command-row"><button class="text-key js-view-full" type="button">Details</button><button class="text-key js-view-full" type="button">Go to</button></div>',
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">DISPONIBLE</div>',
-      '<p>Te queda disponible</p>',
-      '<strong class="big-money">' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong>',
+      '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
       renderLiquid(summary.porcentajeDisponible || 0, 'liquid-large'),
       '</article>',
       '</section>'
     ].join('');
   }
 
+  function ledgerLine(label, value) {
+    return '<div class="ledger-line"><span>' + utils.escapeHtml(label) + '</span><strong>' + utils.escapeHtml(utils.formatMoney(value)) + '</strong></div>';
+  }
+
   function renderRecent(items) {
     if (!items.length) {
       return '<p class="empty-state">Sin movimientos cargados.</p>';
     }
-    return '<ol class="recent-list">' + items.map(function (item, index) {
+    return '<ol class="recent-list palm-list">' + items.map(function (item, index) {
       return [
         '<li class="recent-row fade-' + index + '">',
-        '<span><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.categoria || item.tipo) + '</small></span>',
+        '<span class="row-time">' + utils.escapeHtml(String(item.hora || '').slice(0, 5) || item.fecha || '--') + '</span>',
+        '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.categoria || item.tipo) + '</small></span>',
         '<b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
         '</li>'
       ].join('');
@@ -120,13 +131,12 @@
     var movements = ((state.data.movimientos || {}).movimientos || []).slice();
     var config = state.data.config || {};
     return [
-      '<section class="system-window">',
-      '<div class="window-title">GASTOS TOTALES</div>',
-      '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
-      '<div class="toolbar-line">',
-      '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
-      '<button class="lcd-button js-new-expense" type="button">Gasto</button>',
+      '<section class="system-window palm-panel">',
+      '<div class="window-title"><span>GASTOS</span><span>' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</span></div>',
+      '<div class="palm-command-row">',
+      '<button class="lcd-button js-new-expense" type="button">New</button>',
       '<button class="lcd-button js-new-income" type="button">Ingreso</button>',
+      '<button class="lcd-button js-refresh" type="button">Sync</button>',
       '</div>',
       movements.length ? renderMovementTable(movements) : '<p class="empty-state">No hay movimientos para este mes.</p>',
       '</section>'
@@ -134,12 +144,13 @@
   }
 
   function renderMovementTable(movements) {
-    return '<div class="movement-list">' + movements.map(function (item) {
+    return '<div class="movement-list palm-list">' + movements.map(function (item) {
       return [
         '<article class="movement-row">',
         '<button class="movement-main js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">',
-        '<span><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.fecha) + ' ' + utils.escapeHtml(item.hora) + '</small></span>',
-        '<span><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.tipo) + '</small></span>',
+        '<span class="row-time">' + utils.escapeHtml(String(item.hora || '').slice(0, 5)) + '</span>',
+        '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.fecha) + ' ' + utils.escapeHtml(item.tipo) + '</small></span>',
+        '<span class="row-amount"><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.categoria || '') + '</small></span>',
         '</button>',
         '<button class="tiny-key js-delete-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">DEL</button>',
         '</article>'
@@ -150,16 +161,16 @@
   function renderGoals(state) {
     var data = state.data;
     return [
-      '<section class="goals-stack">',
-      '<article class="system-window">',
+      '<section class="palm-stack goals-stack">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">EL FUTURO</div>',
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">METAS</div>',
       renderGoalCards(data.metas || []),
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window palm-panel">',
       '<div class="window-title">COSAS QUE QUIERO</div>',
       renderWishlist(data.wishlist || []),
       '</article>',
@@ -171,7 +182,7 @@
     if (!items.length) {
       return '<p class="empty-state">Todavia no hay ahorros para el futuro.</p>';
     }
-    return '<div class="block-list">' + items.map(function (item) {
+    return '<div class="block-list palm-list">' + items.map(function (item) {
       return [
         '<article class="data-block">',
         '<div><strong>' + utils.escapeHtml(item.titulo) + '</strong><p>' + utils.escapeHtml(item.descripcion || '') + '</p></div>',
@@ -186,7 +197,7 @@
     if (!items.length) {
       return '<p class="empty-state">Todavia no cargaste metas especificas.</p>';
     }
-    return '<div class="goal-list">' + items.map(function (item) {
+    return '<div class="goal-list palm-list">' + items.map(function (item) {
       return [
         '<article class="goal-card">',
         renderPhotoCanvas(item),
@@ -209,7 +220,7 @@
     if (!items.length) {
       return '<p class="empty-state">La lista esta vacia.</p>';
     }
-    return '<div class="wish-grid">' + items.map(function (item) {
+    return '<div class="wish-grid palm-list">' + items.map(function (item) {
       return [
         '<article class="wish-card">',
         renderPhotoCanvas(item),
@@ -235,7 +246,7 @@
   function renderSettings(state) {
     var config = state.data.config || {};
     return [
-      '<section class="system-window">',
+      '<section class="system-window palm-panel">',
       '<div class="window-title">CONFIGURACION</div>',
       '<form class="lcd-form settings-form" id="settings-form">',
       '<p class="form-error" hidden></p>',

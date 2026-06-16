@@ -1,6 +1,6 @@
 window.FINANZAS_CONFIG = {
   API_URL: '',
   APP_NAME: 'Finanzas LCD',
-  APP_VERSION: '2026.06.15.5',
+  APP_VERSION: 'v2.0',
   DEFAULT_MONTH: ''
 };

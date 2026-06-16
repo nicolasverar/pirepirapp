@@ -7,10 +7,7 @@ function listMovements_(payload) {
   var limit = source.limit ? Math.max(0, Number(source.limit)) : 0;
   var order = normalizeText_(source.order || source.orden || 'desc').toLowerCase();
 
-  var records = readRecords_(appSheetNames_().movements)
-    .filter(function (record) {
-      return allMonths || normalizeText_(record.Mes) === month;
-    });
+  var records = allMonths ? readAllMovementRecords_() : readMovementRecordsForMonth_(month);
 
   records = sortMovementRecords_(records, order !== 'asc');
   if (limit > 0) {
@@ -36,7 +33,7 @@ function createMovement_(payload) {
 function createMovementUnlocked_(payload) {
   var record = buildMovementRecord_(payload, null);
   validateRelatedTargetForMovement_(record, null);
-  appendRecord_(appSheetNames_().movements, record);
+  appendMovementRecord_(record);
   applyMovementImpact_(record, 1);
   return record;
 }
@@ -45,7 +42,7 @@ function updateMovement_(payload) {
   return withScriptLock_(function () {
     var source = payload || {};
     var id = requireText_(source.id, 'ID de movimiento', 120);
-    var existing = getRecordById_(appSheetNames_().movements, id);
+    var existing = getMovementRecordById_(id, source.mes || source.month);
     if (!existing) {
       notFoundError_('No existe el movimiento indicado.');
     }
@@ -53,7 +50,7 @@ function updateMovement_(payload) {
     var updatedRecord = buildMovementRecord_(source, existing);
     validateRelatedTargetForMovement_(updatedRecord, existing);
     applyMovementImpact_(existing, -1);
-    var stored = updateRecordById_(appSheetNames_().movements, id, updatedRecord);
+    var stored = updateMovementRecordById_(id, updatedRecord, existing.Mes);
     applyMovementImpact_(stored, 1);
 
     return {
@@ -65,14 +62,15 @@ function updateMovement_(payload) {
 
 function deleteMovement_(payload) {
   return withScriptLock_(function () {
-    var id = requireText_((payload || {}).id, 'ID de movimiento', 120);
-    var existing = getRecordById_(appSheetNames_().movements, id);
+    var source = payload || {};
+    var id = requireText_(source.id, 'ID de movimiento', 120);
+    var existing = getMovementRecordById_(id, source.mes || source.month);
     if (!existing) {
       notFoundError_('No existe el movimiento indicado.');
     }
 
     applyMovementImpact_(existing, -1);
-    var deleted = deleteRecordById_(appSheetNames_().movements, id);
+    var deleted = deleteMovementRecordById_(id, existing.Mes);
     return {
       movimiento: movementToApi_(deleted),
       resumen: getMonthlySummary_({ mes: deleted.Mes })
@@ -84,85 +82,18 @@ function startMonth_(payload) {
   return withScriptLock_(function () {
     var source = payload || {};
     var month = assertMonthString_(source.mes || source.month || currentMonthString_(), 'Mes');
-    var config = getConfig_();
-
-    if (config.fechaUltimoInicioMes === month || hasMonthStartMarker_(month)) {
-      return {
-        mes: month,
-        yaIniciado: true,
-        movimientosCreados: [],
-        resumen: getMonthlySummary_({ mes: month })
-      };
-    }
-
-    var date = month === currentMonthString_() ? currentDateString_() : month + '-01';
-    var time = currentTimeString_();
-    var created = [];
-    var marker = monthStartMarker_(month);
-
-    (config.gastosFijos || [])
-      .filter(function (expense) {
-        return normalizeText_(expense.categoria || expense.category) && Number(expense.monto || expense.amount || 0) > 0;
-      })
-      .forEach(function (expense) {
-        created.push(createMovementUnlocked_({
-          tipo: movementTypes_().expense,
-          fecha: date,
-          hora: time,
-          mes: month,
-          motivo: 'Gasto fijo: ' + normalizeText_(expense.categoria || expense.category),
-          categoria: normalizeText_(expense.categoria || expense.category),
-          monto: Number(expense.monto || expense.amount || 0),
-          descripcion: marker
-        }));
-      });
-
-    readRecords_(appSheetNames_().futureSavings)
-      .filter(function (saving) {
-        return normalizeText_(saving.Estado) === activeStatus_() && Number(saving['Monto mensual'] || 0) > 0;
-      })
-      .forEach(function (saving) {
-        created.push(createMovementUnlocked_({
-          tipo: movementTypes_().futureSaving,
-          fecha: date,
-          hora: time,
-          mes: month,
-          motivo: 'Aporte mensual: ' + saving.Titulo,
-          monto: saving['Monto mensual'],
-          idRelacionado: saving.ID,
-          tipoRelacionado: relatedTypes_().futureSaving,
-          descripcion: marker
-        }));
-      });
-
-    readRecords_(appSheetNames_().goals)
-      .filter(function (goal) {
-        return normalizeText_(goal.Estado) === activeStatus_() && Number(goal['Monto mensual'] || 0) > 0;
-      })
-      .forEach(function (goal) {
-        created.push(createMovementUnlocked_({
-          tipo: movementTypes_().goal,
-          fecha: date,
-          hora: time,
-          mes: month,
-          motivo: 'Aporte mensual: ' + goal.Titulo,
-          monto: goal['Monto mensual'],
-          idRelacionado: goal.ID,
-          tipoRelacionado: relatedTypes_().goal,
-          descripcion: marker
-        }));
-      });
+    var store = ensureMonthlyMovementStore_(month);
 
     setConfigValues_({
       mesActual: month,
-      estadoMesActual: 'iniciado',
+      estadoMesActual: 'abierto',
       fechaUltimoInicioMes: month
     });
 
     return {
       mes: month,
-      yaIniciado: false,
-      movimientosCreados: created.map(movementToApi_),
+      archivoMensual: store,
+      movimientosCreados: [],
       resumen: getMonthlySummary_({ mes: month })
     };
   });
@@ -235,7 +166,7 @@ function applyMovementImpact_(record, direction) {
 
 function hasMonthStartMarker_(month) {
   var marker = monthStartMarker_(month);
-  return readRecords_(appSheetNames_().movements).some(function (record) {
+  return readMovementRecordsForMonth_(month).some(function (record) {
     return normalizeText_(record.Mes) === month && normalizeText_(record.Descripcion) === marker;
   });
 }

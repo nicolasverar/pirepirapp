@@ -16,6 +16,9 @@ function appPropertyKeys_() {
     backupsFolderId: 'FINANZAS_BACKUPS_FOLDER_ID',
     databaseInitialized: 'FINANZAS_DATABASE_INITIALIZED',
     spreadsheetMoved: 'FINANZAS_SPREADSHEET_MOVED_TO_DRIVE',
+    monthlyFolderPrefix: 'FINANZAS_MONTHLY_FOLDER_ID_',
+    monthlyMovementsPrefix: 'FINANZAS_MONTHLY_MOVEMENTS_SPREADSHEET_ID_',
+    lastCalendarMonth: 'FINANZAS_LAST_CALENDAR_MONTH',
     apiToken: 'FINANZAS_API_TOKEN'
   };
 }

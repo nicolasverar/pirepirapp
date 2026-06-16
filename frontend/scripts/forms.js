@@ -161,10 +161,11 @@
   function openMovementForm(defaultType, existing) {
     var data = window.FinanzasState.getState().data;
     var config = data.config || {};
-    var categories = config.categorias || [];
+    var categories = categoryOptions(config);
     var movement = existing || {};
     var defaultDate = movement.fecha || defaultDateForActiveMonth(config.mesActual);
     var isIncome = defaultType === 'Ingreso' || movement.tipo === 'Ingreso';
+    var defaultCategory = movement.categoria || (isIncome ? 'Otros' : categories[0]);
     var typeOptions = isIncome
       ? [{ value: 'Ingreso', label: 'Ingreso' }]
       : [
@@ -181,7 +182,7 @@
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
-      select('Categoria', 'categoria', categories, movement.categoria || (isIncome ? 'Otros' : 'Alimentacion')),
+      select('Categoria', 'categoria', categories, defaultCategory),
       select('Relacionado', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
@@ -226,6 +227,31 @@
       return today;
     }
     return month + '-01';
+  }
+
+  function categoryOptions(config) {
+    var seen = {};
+    var list = Array.isArray((config || {}).categorias) ? (config || {}).categorias : [];
+    var result = list.map(function (item) {
+      return String(item || '').trim();
+    }).filter(function (item) {
+      var key = item.toLowerCase();
+      if (!item || seen[key]) {
+        return false;
+      }
+      seen[key] = true;
+      return true;
+    });
+
+    ['Ahorros', 'Metas', 'Wishlist', 'Otros'].forEach(function (item) {
+      var key = item.toLowerCase();
+      if (!seen[key]) {
+        seen[key] = true;
+        result.push(item);
+      }
+    });
+
+    return result.length ? result : ['Otros'];
   }
 
   function relatedSelectOptions(data, type) {

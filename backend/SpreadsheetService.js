@@ -1,5 +1,6 @@
 var FINANZAS_RUNTIME_CACHE_ = {
   spreadsheet: null,
+  monthlySpreadsheets: {},
   databaseReady: false
 };
 
@@ -35,6 +36,32 @@ function getSpreadsheet_() {
   }
   cache.spreadsheet = SpreadsheetApp.openById(spreadsheetId);
   return cache.spreadsheet;
+}
+
+function ensureCurrentCalendarPeriod_() {
+  var currentMonth = currentMonthString_();
+  ensureMonthlyMovementStore_(currentMonth);
+
+  var props = getScriptProperties_();
+  var keys = appPropertyKeys_();
+  var lastCalendarMonth = normalizeText_(props.getProperty(keys.lastCalendarMonth));
+  if (lastCalendarMonth === currentMonth) {
+    return currentMonth;
+  }
+
+  var configMap = readConfigMap_();
+  var updates = {
+    mesActual: currentMonth,
+    estadoMesActual: 'abierto',
+    fechaUltimoInicioMes: currentMonth
+  };
+
+  if (normalizeText_(configMap.mesActual) === currentMonth) {
+    delete updates.mesActual;
+  }
+  setConfigValues_(updates);
+  props.setProperty(keys.lastCalendarMonth, currentMonth);
+  return currentMonth;
 }
 
 function ensureDatabase_() {
@@ -76,6 +103,289 @@ function ensureDatabase_() {
   cache.databaseReady = true;
 
   return databaseInfo_(spreadsheet);
+}
+
+function monthStorageKey_(month) {
+  return assertMonthString_(month, 'Mes').replace('-', '_');
+}
+
+function monthFromStorageKey_(storageKey) {
+  var text = normalizeText_(storageKey);
+  if (!/^\d{4}_\d{2}$/.test(text)) {
+    return '';
+  }
+  return text.replace('_', '-');
+}
+
+function monthlyFolderPropertyKey_(month) {
+  return appPropertyKeys_().monthlyFolderPrefix + monthStorageKey_(month);
+}
+
+function monthlyMovementsPropertyKey_(month) {
+  return appPropertyKeys_().monthlyMovementsPrefix + monthStorageKey_(month);
+}
+
+function ensureMonthlyMovementStore_(month) {
+  var targetMonth = assertMonthString_(month || currentMonthString_(), 'Mes');
+  var storageKey = monthStorageKey_(targetMonth);
+  var props = getScriptProperties_();
+  var keys = appPropertyKeys_();
+  var cache = runtimeCache_();
+  var propertyKey = monthlyMovementsPropertyKey_(targetMonth);
+  var spreadsheetId = props.getProperty(propertyKey);
+  var spreadsheet = null;
+
+  if (cache.monthlySpreadsheets[storageKey] && cache.monthlySpreadsheets[storageKey].getId() === spreadsheetId) {
+    return monthlyMovementStoreInfo_(targetMonth, cache.monthlySpreadsheets[storageKey]);
+  }
+
+  if (spreadsheetId) {
+    try {
+      spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+    } catch (error) {
+      spreadsheet = null;
+      props.deleteProperty(propertyKey);
+    }
+  }
+
+  ensureDriveStructure_();
+  var folder = ensureMonthlyFolder_(targetMonth);
+
+  if (!spreadsheet) {
+    spreadsheet = SpreadsheetApp.create('Pirepirapp Movimientos ' + storageKey);
+    props.setProperty(propertyKey, spreadsheet.getId());
+    moveFileToFolder_(spreadsheet.getId(), folder);
+  }
+
+  var sheet = ensureSheet_(spreadsheet, appSheetNames_().movements);
+  removeEmptyDefaultSheet_(spreadsheet);
+  migrateLegacyMovementsForMonth_(targetMonth, sheet);
+  cache.monthlySpreadsheets[storageKey] = spreadsheet;
+  return monthlyMovementStoreInfo_(targetMonth, spreadsheet);
+}
+
+function monthlyMovementStoreInfo_(month, spreadsheet) {
+  return {
+    month: month,
+    storageKey: monthStorageKey_(month),
+    spreadsheetId: spreadsheet.getId(),
+    spreadsheetName: spreadsheet.getName(),
+    folderId: getScriptProperties_().getProperty(monthlyFolderPropertyKey_(month))
+  };
+}
+
+function ensureMonthlyFolder_(month) {
+  var props = getScriptProperties_();
+  var structure = getDriveStructure_();
+  var folderName = monthStorageKey_(month);
+  var propertyKey = monthlyFolderPropertyKey_(month);
+  var folder = null;
+
+  var folderId = props.getProperty(propertyKey);
+  if (folderId) {
+    try {
+      folder = DriveApp.getFolderById(folderId);
+    } catch (error) {
+      folder = null;
+      props.deleteProperty(propertyKey);
+    }
+  }
+
+  if (!folder) {
+    var parent = structure.databaseFolderId
+      ? DriveApp.getFolderById(structure.databaseFolderId)
+      : DriveApp.getFolderById(structure.rootFolderId);
+    folder = getOrCreateChildFolder_(parent, folderName);
+    props.setProperty(propertyKey, folder.getId());
+  }
+  return folder;
+}
+
+function moveFileToFolder_(fileId, folder) {
+  try {
+    DriveApp.getFileById(fileId).moveTo(folder);
+  } catch (error) {
+    // La planilla queda utilizable aunque Drive no permita moverla.
+  }
+}
+
+function getMonthlyMovementsSheet_(month) {
+  var info = ensureMonthlyMovementStore_(month || currentMonthString_());
+  var cache = runtimeCache_();
+  var storageKey = monthStorageKey_(info.month);
+  var spreadsheet = cache.monthlySpreadsheets[storageKey];
+  if (!spreadsheet || spreadsheet.getId() !== info.spreadsheetId) {
+    spreadsheet = SpreadsheetApp.openById(info.spreadsheetId);
+    cache.monthlySpreadsheets[storageKey] = spreadsheet;
+  }
+  return ensureSheet_(spreadsheet, appSheetNames_().movements);
+}
+
+function readMovementRecordsForMonth_(month) {
+  var targetMonth = assertMonthString_(month || currentMonthString_(), 'Mes');
+  var sheet = getMonthlyMovementsSheet_(targetMonth);
+  return readRecordsFromSheet_(sheet)
+    .filter(function (record) {
+      return normalizeText_(record.Mes) === targetMonth;
+    });
+}
+
+function readAllMovementRecords_() {
+  var knownMonths = knownMonthlyMovementMonths_();
+  var monthlyRecords = [];
+  knownMonths.forEach(function (month) {
+    monthlyRecords = monthlyRecords.concat(readMovementRecordsForMonth_(month));
+  });
+
+  var migrated = {};
+  knownMonths.forEach(function (month) {
+    migrated[month] = true;
+  });
+
+  var legacySheet = ensureSheet_(getSpreadsheet_(), appSheetNames_().movements);
+  var legacyRecords = readRecordsFromSheet_(legacySheet)
+    .filter(function (record) {
+      return !migrated[normalizeText_(record.Mes)];
+    });
+
+  return monthlyRecords.concat(legacyRecords);
+}
+
+function appendMovementRecord_(record) {
+  var month = assertMonthString_(record.Mes || currentMonthString_(), 'Mes');
+  var sheet = getMonthlyMovementsSheet_(month);
+  return appendRecordToSheet_(sheet, record);
+}
+
+function getMovementRecordById_(id, monthHint) {
+  var rowInfo = findMovementRowById_(id, monthHint);
+  return rowInfo ? rowInfo.record : null;
+}
+
+function updateMovementRecordById_(id, updates, monthHint) {
+  var rowInfo = findMovementRowById_(id, monthHint);
+  if (!rowInfo) {
+    notFoundError_('No existe el registro con ID ' + id + '.');
+  }
+
+  var updatedRecord = {};
+  Object.keys(rowInfo.record).forEach(function (key) {
+    if (key !== '_rowNumber') {
+      updatedRecord[key] = rowInfo.record[key];
+    }
+  });
+  Object.keys(updates || {}).forEach(function (key) {
+    updatedRecord[key] = updates[key];
+  });
+
+  var targetMonth = assertMonthString_(updatedRecord.Mes, 'Mes');
+  if (targetMonth !== rowInfo.month) {
+    rowInfo.sheet.deleteRow(rowInfo.rowNumber);
+    appendMovementRecord_(updatedRecord);
+    updatedRecord._rowNumber = getMonthlyMovementsSheet_(targetMonth).getLastRow();
+    return updatedRecord;
+  }
+
+  var headers = getHeadersFromSheet_(rowInfo.sheet);
+  var row = headers.map(function (header) {
+    return serializeSheetValue_(updatedRecord[header]);
+  });
+  rowInfo.sheet.getRange(rowInfo.rowNumber, 1, 1, headers.length).setValues([row]);
+  updatedRecord._rowNumber = rowInfo.rowNumber;
+  return updatedRecord;
+}
+
+function deleteMovementRecordById_(id, monthHint) {
+  var rowInfo = findMovementRowById_(id, monthHint);
+  if (!rowInfo) {
+    notFoundError_('No existe el registro con ID ' + id + '.');
+  }
+  rowInfo.sheet.deleteRow(rowInfo.rowNumber);
+  return rowInfo.record;
+}
+
+function findMovementRowById_(id, monthHint) {
+  var normalizedId = normalizeText_(id);
+  var months = [];
+  var seen = {};
+  function addMonth(month) {
+    var normalizedMonth = normalizeText_(month);
+    if (/^\d{4}-\d{2}$/.test(normalizedMonth) && !seen[normalizedMonth]) {
+      seen[normalizedMonth] = true;
+      months.push(normalizedMonth);
+    }
+  }
+
+  addMonth(monthHint);
+  addMonth(readConfigMap_().mesActual);
+  addMonth(currentMonthString_());
+  knownMonthlyMovementMonths_().forEach(addMonth);
+
+  for (var monthIndex = 0; monthIndex < months.length; monthIndex += 1) {
+    var month = months[monthIndex];
+    var sheet = getMonthlyMovementsSheet_(month);
+    var found = findRecordRowByIdInSheet_(sheet, normalizedId);
+    if (found) {
+      found.month = month;
+      return found;
+    }
+  }
+
+  var legacySheet = ensureSheet_(getSpreadsheet_(), appSheetNames_().movements);
+  var legacyFound = findRecordRowByIdInSheet_(legacySheet, normalizedId);
+  if (legacyFound) {
+    legacyFound.month = normalizeText_(legacyFound.record.Mes);
+    return legacyFound;
+  }
+  return null;
+}
+
+function findRecordRowByIdInSheet_(sheet, normalizedId) {
+  var records = readRecordsFromSheet_(sheet);
+  for (var index = 0; index < records.length; index += 1) {
+    if (normalizeText_(records[index].ID) === normalizedId) {
+      return {
+        sheet: sheet,
+        rowNumber: records[index]._rowNumber,
+        record: records[index]
+      };
+    }
+  }
+  return null;
+}
+
+function knownMonthlyMovementMonths_() {
+  var props = getScriptProperties_().getProperties();
+  var prefix = appPropertyKeys_().monthlyMovementsPrefix;
+  return Object.keys(props)
+    .filter(function (key) {
+      return key.indexOf(prefix) === 0 && normalizeText_(props[key]);
+    })
+    .map(function (key) {
+      return monthFromStorageKey_(key.slice(prefix.length));
+    })
+    .filter(Boolean)
+    .sort();
+}
+
+function migrateLegacyMovementsForMonth_(month, monthlySheet) {
+  if (monthlySheet.getLastRow() > 1) {
+    return;
+  }
+
+  var legacySpreadsheet = getSpreadsheet_();
+  var legacySheet = ensureSheet_(legacySpreadsheet, appSheetNames_().movements);
+  if (legacySheet.getParent().getId() === monthlySheet.getParent().getId()) {
+    return;
+  }
+
+  readRecordsFromSheet_(legacySheet)
+    .filter(function (record) {
+      return normalizeText_(record.Mes) === month;
+    })
+    .forEach(function (record) {
+      appendRecordToSheet_(monthlySheet, record);
+    });
 }
 
 function databaseInfo_(spreadsheet) {
@@ -363,6 +673,7 @@ function readConfigMap_() {
 
 function getConfig_() {
   ensureDatabase_();
+  ensureCurrentCalendarPeriod_();
   var map = readConfigMap_();
   var month = map.mesActual ? assertMonthString_(map.mesActual, 'Mes actual') : currentMonthString_();
   var lastStart = map.fechaUltimoInicioMes ? assertMonthString_(map.fechaUltimoInicioMes, 'Fecha del ultimo inicio de mes') : '';

@@ -75,6 +75,10 @@ function dispatchAction_(action, payload, options) {
   if (settings.requireAuth !== false && route !== 'ping') {
     assertAuthorizedRequest_(payload);
   }
+  if (route !== 'ping' && route !== 'setup') {
+    ensureDatabase_();
+    ensureCurrentCalendarPeriod_();
+  }
 
   var routes = {
     ping: function () {

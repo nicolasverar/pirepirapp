@@ -141,7 +141,7 @@
   }
 
   function renderMovements(state) {
-    var movements = ((state.data.movimientos || {}).movimientos || []).slice();
+    var movements = movementItemsFromState_(state).slice();
     var config = state.data.config || {};
     return [
       '<section class="system-window">',
@@ -155,6 +155,20 @@
       movements.length ? renderMovementTable(movements) : '<p class="empty-state">No hay movimientos para este mes.</p>',
       '</section>'
     ].join('');
+  }
+
+  function movementItemsFromState_(state) {
+    var source = (state.data || {}).movimientos;
+    if (Array.isArray(source)) {
+      return source;
+    }
+    if (source && Array.isArray(source.movimientos)) {
+      return source.movimientos;
+    }
+    if (source && Array.isArray(source.data)) {
+      return source.data;
+    }
+    return [];
   }
 
   function renderMovementTable(movements) {
@@ -483,7 +497,7 @@
   }
 
   function findMovement(id) {
-    return findById(((window.FinanzasState.getState().data.movimientos || {}).movimientos || []), id);
+    return findById(movementItemsFromState_(window.FinanzasState.getState()), id);
   }
 
   function findById(items, id) {

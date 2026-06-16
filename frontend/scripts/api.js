@@ -93,7 +93,7 @@
     var controller = new AbortController();
     var timeout = setTimeout(function () {
       controller.abort();
-    }, 35000);
+    }, 60000);
 
     return fetch(getApiUrl(), {
       method: 'POST',

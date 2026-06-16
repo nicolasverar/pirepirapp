@@ -2,10 +2,7 @@ function getMonthlySummary_(payload) {
   var source = payload || {};
   var config = getConfig_();
   var month = assertMonthString_(source.mes || source.month || config.mesActual || currentMonthString_(), 'Mes');
-  var movements = readRecords_(appSheetNames_().movements)
-    .filter(function (record) {
-      return normalizeText_(record.Mes) === month;
-    });
+  var movements = readMovementRecordsForMonth_(month);
 
   var types = movementTypes_();
   var monthlySalary = Number(config.sueldoMensual || 0);

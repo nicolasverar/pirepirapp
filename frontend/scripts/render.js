@@ -34,6 +34,7 @@
 
     bindRenderedActions(screen);
     window.FinanzasImages.hydrate(screen);
+    hydrateWishParticles(screen);
   }
 
   function updateChrome(state) {
@@ -196,7 +197,8 @@
     }
     return '<div class="block-list">' + items.map(function (item) {
       return [
-        '<article class="data-block">',
+        '<article class="data-block future-card">',
+        renderFutureScene(),
         '<div><strong>' + utils.escapeHtml(item.titulo) + '</strong><p>' + utils.escapeHtml(item.descripcion || '') + '</p></div>',
         '<dl><dt>Mensual</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</dd><dt>Acumulado</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</dd></dl>',
         '<button class="tiny-key js-edit-future" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
@@ -212,6 +214,7 @@
     return '<div class="goal-list">' + items.map(function (item) {
       return [
         '<article class="goal-card">',
+        renderGoalFlameFrame(),
         renderPhotoCanvas(item),
         '<div class="goal-body">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
@@ -234,7 +237,7 @@
     }
     return '<div class="wish-grid">' + items.map(function (item) {
       return [
-        '<article class="wish-card">',
+        '<article class="wish-card" data-wish-particles>',
         renderPhotoCanvas(item),
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
         '<p>' + utils.escapeHtml(item.descripcion || '') + '</p>',
@@ -246,6 +249,32 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
+  }
+
+  function renderFutureScene() {
+    return [
+      '<span class="future-scene" aria-hidden="true">',
+      '<span class="future-hill"></span>',
+      '<span class="future-tree tree-a"></span>',
+      '<span class="future-tree tree-b"></span>',
+      '<span class="future-tree tree-c"></span>',
+      '<span class="future-tree tree-d"></span>',
+      '<span class="future-bird bird-a"></span>',
+      '<span class="future-bird bird-b"></span>',
+      '<span class="future-bird bird-c"></span>',
+      '</span>'
+    ].join('');
+  }
+
+  function renderGoalFlameFrame() {
+    return [
+      '<svg class="goal-flame-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">',
+      '<path class="flame-step flame-step-1" d="M4 18 L8 12 L8 6 L18 6 L22 2 L29 6 L40 5 L44 10 L52 5 L60 7 L68 3 L73 9 L84 7 L90 12 L96 10 L94 22 L98 30 L94 40 L96 52 L91 59 L96 67 L92 76 L96 88 L86 92 L79 98 L70 92 L60 96 L52 91 L42 94 L35 90 L25 95 L20 89 L10 92 L6 82 L3 75 L7 65 L3 56 L6 48 L2 38 L6 30 Z"></path>',
+      '<path class="flame-step flame-step-2" d="M5 16 L10 10 L7 5 L20 7 L25 3 L31 8 L39 4 L46 11 L54 6 L61 9 L69 4 L76 10 L83 6 L91 14 L97 12 L92 24 L97 33 L93 42 L98 52 L90 61 L96 70 L91 78 L95 89 L84 91 L78 96 L69 91 L61 98 L51 90 L43 95 L34 89 L26 94 L18 88 L9 93 L5 81 L2 73 L8 64 L4 55 L8 47 L3 37 L7 28 Z"></path>',
+      '<path class="flame-step flame-step-3" d="M3 20 L9 13 L6 7 L17 5 L23 9 L30 3 L38 8 L45 4 L53 10 L60 5 L68 8 L74 4 L82 10 L89 8 L96 17 L92 25 L98 31 L94 43 L97 51 L92 60 L98 68 L90 77 L96 86 L87 94 L78 91 L70 97 L61 92 L53 95 L44 90 L36 97 L27 90 L19 95 L11 90 L7 83 L3 76 L8 66 L2 58 L7 49 L3 40 L8 31 Z"></path>',
+      '<path class="flame-step flame-step-4" d="M6 17 L7 9 L12 5 L20 8 L24 2 L32 7 L41 6 L46 10 L55 4 L62 8 L70 5 L76 11 L85 6 L90 13 L97 11 L95 21 L99 29 L93 39 L96 49 L92 57 L97 66 L91 75 L96 88 L86 93 L80 97 L71 92 L63 96 L54 91 L45 94 L36 90 L29 97 L20 88 L11 93 L5 84 L2 74 L7 67 L3 57 L8 50 L2 39 L7 30 Z"></path>',
+      '</svg>'
+    ].join('');
   }
 
   function renderPhotoCanvas(item) {
@@ -298,6 +327,27 @@
       '<span class="liquid-label">' + utils.escapeHtml(utils.formatPercent(value)) + '</span>',
       '</div>'
     ].join('');
+  }
+
+  function hydrateWishParticles(root) {
+    utils.qsa('[data-wish-particles]', root).forEach(function (card, cardIndex) {
+      if (utils.qs('.wish-spark-layer', card)) {
+        return;
+      }
+      var layer = document.createElement('span');
+      var particleCount = 3 + (cardIndex % 2);
+      layer.className = 'wish-spark-layer';
+      layer.setAttribute('aria-hidden', 'true');
+      for (var i = 0; i < particleCount; i += 1) {
+        var spark = document.createElement('i');
+        spark.style.setProperty('--spark-x', (10 + Math.round(Math.random() * 78)) + '%');
+        spark.style.setProperty('--spark-y', (12 + Math.round(Math.random() * 70)) + '%');
+        spark.style.setProperty('--spark-delay', (Math.random() * 2.8 + i * 0.22).toFixed(2) + 's');
+        spark.style.setProperty('--spark-size', (2 + Math.round(Math.random() * 2)) + 'px');
+        layer.appendChild(spark);
+      }
+      card.insertBefore(layer, card.firstChild);
+    });
   }
 
   function bindRenderedActions(root) {

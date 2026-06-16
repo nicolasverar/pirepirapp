@@ -165,6 +165,11 @@
     setStatus('Actualizando');
     toast('Actualizando app...');
 
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      window.location.assign('./reset.html?from=app&appUpdate=' + Date.now());
+      return Promise.resolve();
+    }
+
     return Promise.all([
       clearAppCaches(),
       unregisterServiceWorker()
@@ -194,11 +199,15 @@
     if (!('serviceWorker' in navigator)) {
       return Promise.resolve();
     }
+    if (navigator.serviceWorker.getRegistrations) {
+      return navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        return Promise.all(registrations.map(function (registration) {
+          return registration.unregister();
+        }));
+      });
+    }
     return navigator.serviceWorker.getRegistration().then(function (registration) {
-      if (!registration) {
-        return null;
-      }
-      return registration.unregister();
+      return registration ? registration.unregister() : null;
     });
   }
 

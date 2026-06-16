@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1e2a1e">
+    <title>Actualizando Finanzas LCD</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      body {
+        display: grid;
+        min-height: 100dvh;
+        margin: 0;
+        place-items: center;
+        color: #192d18;
+        background: #111711;
+        font-family: "Courier New", Consolas, monospace;
+      }
+
+      main {
+        width: min(360px, calc(100vw - 28px));
+        padding: 14px;
+        background: #aecb7c;
+        border: 4px solid #20391e;
+        box-shadow: 5px 5px 0 #070a07;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Actualizando app</h1>
+      <p>Limpiando cache local...</p>
+    </main>
+    <script>
+      (function () {
+        'use strict';
+
+        function clearCaches() {
+          if (!window.caches) {
+            return Promise.resolve();
+          }
+          return caches.keys().then(function (keys) {
+            return Promise.all(keys.filter(function (key) {
+              return key.indexOf('finanzas-lcd-') === 0;
+            }).map(function (key) {
+              return caches.delete(key);
+            }));
+          });
+        }
+
+        function unregisterWorkers() {
+          if (!navigator.serviceWorker || !navigator.serviceWorker.getRegistrations) {
+            return Promise.resolve();
+          }
+          return navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            return Promise.all(registrations.map(function (registration) {
+              return registration.unregister();
+            }));
+          });
+        }
+
+        Promise.all([
+          clearCaches(),
+          unregisterWorkers()
+        ]).then(function () {
+          var url = new URL('./index.html', window.location.href);
+          url.searchParams.set('appUpdate', String(Date.now()));
+          window.location.replace(url.toString());
+        }).catch(function () {
+          window.location.replace('./index.html?appUpdate=' + Date.now());
+        });
+      }());
+    </script>
+  </body>
+</html>

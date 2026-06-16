@@ -1,21 +1,22 @@
-const CACHE_NAME = 'finanzas-lcd-v9';
+const CACHE_NAME = 'finanzas-lcd-v10';
 const STATIC_ASSETS = [
   './',
   './index.html',
+  './reset.html',
   './manifest.json',
-  './styles/lcd-theme.css',
-  './styles/main.css',
-  './styles/responsive.css',
-  './scripts/config.js',
-  './scripts/utils.js',
-  './scripts/state.js',
-  './scripts/api.js',
-  './scripts/local-cache.js',
-  './scripts/router.js',
-  './scripts/lcd-image.js',
-  './scripts/forms.js',
-  './scripts/render.js',
-  './scripts/app.js',
+  './styles/lcd-theme.css?v=2.3',
+  './styles/main.css?v=2.3',
+  './styles/responsive.css?v=2.3',
+  './scripts/config.js?v=2.3',
+  './scripts/utils.js?v=2.3',
+  './scripts/state.js?v=2.3',
+  './scripts/api.js?v=2.3',
+  './scripts/local-cache.js?v=2.3',
+  './scripts/router.js?v=2.3',
+  './scripts/lcd-image.js?v=2.3',
+  './scripts/forms.js?v=2.3',
+  './scripts/render.js?v=2.3',
+  './scripts/app.js?v=2.3',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-192.svg',
@@ -41,7 +42,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
 
-  if (requestUrl.pathname.endsWith('/scripts/config.js')) {
+  if (event.request.mode === 'navigate' || requestUrl.pathname.endsWith('/index.html') || requestUrl.pathname.endsWith('/scripts/config.js')) {
     event.respondWith(networkFirst(event.request));
     return;
   }

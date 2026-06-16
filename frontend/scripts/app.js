@@ -113,9 +113,11 @@
 
     window.FinanzasState.setState({ syncStatus: 'Guardando', error: '' });
     return window.FinanzasApi.request(action, payload || {})
-      .then(function () {
+      .then(function (data) {
+        applyMutationResult(action, data);
         toast('Guardado');
-        return refresh();
+        refresh({ background: true });
+        return data;
       })
       .catch(function (error) {
         window.FinanzasState.setState({ syncStatus: 'Error', error: error.message });
@@ -126,6 +128,68 @@
         toast(error.message);
         throw error;
       });
+  }
+
+  function applyMutationResult(action, data) {
+    var result = data || {};
+    var route = String(action || '').toLowerCase();
+    if (route.indexOf('movement') === -1 || !result.movimiento) {
+      return;
+    }
+
+    var current = window.FinanzasState.getState().data;
+    var activeMonth = String(
+      ((current.config || {}).mesActual) ||
+      ((result.resumen || {}).mes) ||
+      result.movimiento.mes ||
+      utils.currentMonth()
+    ).slice(0, 7);
+    var source = current.movimientos || {};
+    var items = movementItemsFromData(source).filter(function (item) {
+      return String(item.id) !== String(result.movimiento.id);
+    });
+
+    if (route !== 'deletemovement' && String(result.movimiento.mes || activeMonth).slice(0, 7) === activeMonth) {
+      items.push(result.movimiento);
+    }
+
+    items.sort(function (left, right) {
+      var leftKey = String(left.fecha || '') + ' ' + String(left.hora || '');
+      var rightKey = String(right.fecha || '') + ' ' + String(right.hora || '');
+      if (leftKey === rightKey) {
+        return 0;
+      }
+      return leftKey < rightKey ? 1 : -1;
+    });
+
+    var nextMovements = Array.isArray(source)
+      ? items
+      : Object.assign({}, source, {
+        mes: activeMonth,
+        movimientos: items
+      });
+
+    window.FinanzasState.setData({
+      config: current.config,
+      resumen: result.resumen || current.resumen,
+      movimientos: nextMovements,
+      ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
+      metas: (result.resumen && result.resumen.metas) || current.metas,
+      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
+    });
+  }
+
+  function movementItemsFromData(source) {
+    if (Array.isArray(source)) {
+      return source.slice();
+    }
+    if (source && Array.isArray(source.movimientos)) {
+      return source.movimientos.slice();
+    }
+    if (source && Array.isArray(source.data)) {
+      return source.data.slice();
+    }
+    return [];
   }
 
   function setStatus(status) {

@@ -58,6 +58,15 @@
     height: 19px;
   }
 
+  .nav-icon-summary {
+    width: 23px;
+    height: 23px;
+  }
+
+  .nav-key[data-view="resumen"] {
+    grid-template-rows: 23px auto;
+  }
+
   .wish-grid {
     grid-template-columns: 1fr;
   }

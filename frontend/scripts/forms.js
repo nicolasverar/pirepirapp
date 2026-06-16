@@ -77,11 +77,37 @@
     var form = utils.qs(selector, root);
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+      if (form.getAttribute('data-submitting') === 'true') {
+        return;
+      }
       setFormError(form, '');
-      handler(form).catch(function (error) {
+      setFormPending(form, true);
+      var result;
+      try {
+        result = handler(form);
+      } catch (error) {
         setFormError(form, error.message || 'No se pudo guardar.');
-      });
+        setFormPending(form, false);
+        return;
+      }
+      Promise.resolve(result)
+        .catch(function (error) {
+          setFormError(form, error.message || 'No se pudo guardar.');
+          setFormPending(form, false);
+        });
     });
+  }
+
+  function setFormPending(form, pending) {
+    var submit = utils.qs('button[type="submit"]', form);
+    form.setAttribute('data-submitting', pending ? 'true' : 'false');
+    if (submit) {
+      if (!submit.getAttribute('data-original-label')) {
+        submit.setAttribute('data-original-label', submit.textContent);
+      }
+      submit.disabled = pending;
+      submit.textContent = pending ? 'Guardando...' : submit.getAttribute('data-original-label');
+    }
   }
 
   function setFormError(form, message) {
@@ -214,6 +240,7 @@
         if (existing) {
           payload.id = existing.id;
         }
+        payload.mes = (config.mesActual || utils.currentMonth()).slice(0, 7);
         return window.FinanzasApp.mutate(existing ? 'updateMovement' : 'createMovement', payload)
           .then(closeModal);
       });

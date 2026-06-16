@@ -37,10 +37,22 @@
   }
 
   function updateChrome(state) {
-    utils.qs('#section-title').textContent = window.FinanzasRouter.currentLabel();
-    utils.qs('#status-date').textContent = utils.compactDate();
-    utils.qs('#sync-status span:last-child').textContent = state.syncStatus;
-    utils.qs('#sync-status').className = 'sync-indicator sync-' + syncClass(state.syncStatus);
+    var sectionTitle = utils.qs('#section-title');
+    var statusDate = utils.qs('#status-date');
+    var syncLabel = utils.qs('#sync-status span:last-child');
+    var syncBox = utils.qs('#sync-status');
+    if (sectionTitle) {
+      sectionTitle.textContent = window.FinanzasRouter.currentLabel();
+    }
+    if (statusDate) {
+      statusDate.textContent = utils.compactDate();
+    }
+    if (syncLabel) {
+      syncLabel.textContent = state.syncStatus;
+    }
+    if (syncBox) {
+      syncBox.className = 'sync-indicator sync-' + syncClass(state.syncStatus);
+    }
     window.FinanzasRouter.syncNav();
   }
 
@@ -60,13 +72,11 @@
 
   function renderMissingConfig() {
     return [
-      '<section class="system-window palm-panel">',
+      '<section class="system-window">',
       '<div class="window-title">CONFIGURACION</div>',
-      '<div class="memo-block">',
-      '<strong>Falta conectar Apps Script.</strong>',
+      '<p class="lcd-strong">Falta conectar Apps Script.</p>',
       '<p>Ingresa la URL del Web App y tu clave privada para sincronizar este dispositivo.</p>',
-      '</div>',
-      '<div class="palm-command-row"><button class="lcd-button primary js-connect-backend" type="button">Conectar</button></div>',
+      '<button class="lcd-button primary js-connect-backend" type="button">Conectar</button>',
       renderAppVersionPanel(),
       '</section>'
     ].join('');
@@ -77,29 +87,18 @@
     var top = summary.categoriaMayorGasto || {};
     var recent = summary.actividadReciente || [];
     return [
-      '<section class="palm-stack">',
-      '<article class="system-window total-window palm-panel">',
-      '<div class="window-title"><span>HOY</span><span>' + utils.escapeHtml(utils.friendlyDate()) + '</span></div>',
-      '<div class="palm-total">',
-      '<span>Gastado</span>',
+      '<section class="summary-stack">',
+      '<article class="system-window total-window summary-primary">',
+      '<p class="summary-date-line"><strong>Estamos el ' + utils.escapeHtml(utils.friendlyDate()) + '</strong></p>',
+      '<p class="summary-subline">y ya gastaste:</p>',
       '<strong class="big-money">' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + '</strong>',
-      '</div>',
-      '<div class="ledger-grid">',
-      ledgerLine('Ingresos', summary.totalIngresos || 0),
-      ledgerLine('Apartado', summary.totalApartado || 0),
-      ledgerLine('Disponible', summary.disponible || 0),
-      '</div>',
       '</article>',
-      '<article class="system-window palm-panel">',
-      '<div class="window-title">MAYOR GASTO</div>',
-      '<div class="memo-block"><strong>' + utils.escapeHtml(top.categoria || 'Sin gastos') + '</strong><p>' + utils.escapeHtml(top.mensaje || 'Sin movimientos para analizar.') + '</p></div>',
-      '</article>',
-      '<article class="system-window palm-panel">',
-      '<div class="window-title">ACTIVIDAD RECIENTE</div>',
+      '<article class="system-window summary-metrics-card">',
+      '<p class="top-spend-line">Gastaste mas en: <strong>' + utils.escapeHtml(top.categoria || 'Sin gastos') + '</strong></p>',
       renderRecent(recent),
-      '<div class="palm-command-row"><button class="text-key js-view-full" type="button">Details</button><button class="text-key js-view-full" type="button">Go to</button></div>',
+      '<button class="text-key js-view-full" type="button">Ver completo</button>',
       '</article>',
-      '<article class="system-window palm-panel">',
+      '<article class="system-window availability-card">',
       '<div class="window-title">DISPONIBLE</div>',
       '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
       renderLiquid(summary.porcentajeDisponible || 0, 'liquid-large'),
@@ -116,27 +115,41 @@
     if (!items.length) {
       return '<p class="empty-state">Sin movimientos cargados.</p>';
     }
-    return '<ol class="recent-list palm-list">' + items.map(function (item, index) {
+    return '<ol class="recent-list dataframe-list">' + items.map(function (item, index) {
       return [
-        '<li class="recent-row fade-' + index + '">',
-        '<span class="row-time">' + utils.escapeHtml(String(item.hora || '').slice(0, 5) || item.fecha || '--') + '</span>',
+        '<li class="recent-row dataframe-row ' + recentDitherClass(index) + '">',
+        '<span class="df-index">' + utils.escapeHtml(String(index + 1).padStart(2, '0')) + '</span>',
         '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.categoria || item.tipo) + '</small></span>',
-        '<b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
+        '<b class="df-amount">' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
         '</li>'
       ].join('');
     }).join('') + '</ol>';
+  }
+
+  function recentDitherClass(index) {
+    if (index < 3) {
+      return 'dither-sharp';
+    }
+    if (index === 3) {
+      return 'dither-soft';
+    }
+    if (index === 4) {
+      return 'dither-dots';
+    }
+    return 'dither-hidden';
   }
 
   function renderMovements(state) {
     var movements = ((state.data.movimientos || {}).movimientos || []).slice();
     var config = state.data.config || {};
     return [
-      '<section class="system-window palm-panel">',
-      '<div class="window-title"><span>GASTOS</span><span>' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</span></div>',
-      '<div class="palm-command-row">',
-      '<button class="lcd-button js-new-expense" type="button">New</button>',
+      '<section class="system-window">',
+      '<div class="window-title">GASTOS TOTALES</div>',
+      '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
+      '<div class="toolbar-line">',
+      '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
+      '<button class="lcd-button js-new-expense" type="button">Gasto</button>',
       '<button class="lcd-button js-new-income" type="button">Ingreso</button>',
-      '<button class="lcd-button js-refresh" type="button">Sync</button>',
       '</div>',
       movements.length ? renderMovementTable(movements) : '<p class="empty-state">No hay movimientos para este mes.</p>',
       '</section>'
@@ -144,13 +157,12 @@
   }
 
   function renderMovementTable(movements) {
-    return '<div class="movement-list palm-list">' + movements.map(function (item) {
+    return '<div class="movement-list">' + movements.map(function (item) {
       return [
         '<article class="movement-row">',
         '<button class="movement-main js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">',
-        '<span class="row-time">' + utils.escapeHtml(String(item.hora || '').slice(0, 5)) + '</span>',
-        '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.fecha) + ' ' + utils.escapeHtml(item.tipo) + '</small></span>',
-        '<span class="row-amount"><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.categoria || '') + '</small></span>',
+        '<span><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.fecha) + ' ' + utils.escapeHtml(item.hora) + '</small></span>',
+        '<span><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.tipo) + '</small></span>',
         '</button>',
         '<button class="tiny-key js-delete-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">DEL</button>',
         '</article>'
@@ -161,16 +173,16 @@
   function renderGoals(state) {
     var data = state.data;
     return [
-      '<section class="palm-stack goals-stack">',
-      '<article class="system-window palm-panel">',
+      '<section class="goals-stack">',
+      '<article class="system-window">',
       '<div class="window-title">EL FUTURO</div>',
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
-      '<article class="system-window palm-panel">',
+      '<article class="system-window">',
       '<div class="window-title">METAS</div>',
       renderGoalCards(data.metas || []),
       '</article>',
-      '<article class="system-window palm-panel">',
+      '<article class="system-window">',
       '<div class="window-title">COSAS QUE QUIERO</div>',
       renderWishlist(data.wishlist || []),
       '</article>',
@@ -182,7 +194,7 @@
     if (!items.length) {
       return '<p class="empty-state">Todavia no hay ahorros para el futuro.</p>';
     }
-    return '<div class="block-list palm-list">' + items.map(function (item) {
+    return '<div class="block-list">' + items.map(function (item) {
       return [
         '<article class="data-block">',
         '<div><strong>' + utils.escapeHtml(item.titulo) + '</strong><p>' + utils.escapeHtml(item.descripcion || '') + '</p></div>',
@@ -197,7 +209,7 @@
     if (!items.length) {
       return '<p class="empty-state">Todavia no cargaste metas especificas.</p>';
     }
-    return '<div class="goal-list palm-list">' + items.map(function (item) {
+    return '<div class="goal-list">' + items.map(function (item) {
       return [
         '<article class="goal-card">',
         renderPhotoCanvas(item),
@@ -220,7 +232,7 @@
     if (!items.length) {
       return '<p class="empty-state">La lista esta vacia.</p>';
     }
-    return '<div class="wish-grid palm-list">' + items.map(function (item) {
+    return '<div class="wish-grid">' + items.map(function (item) {
       return [
         '<article class="wish-card">',
         renderPhotoCanvas(item),
@@ -246,7 +258,7 @@
   function renderSettings(state) {
     var config = state.data.config || {};
     return [
-      '<section class="system-window palm-panel">',
+      '<section class="system-window">',
       '<div class="window-title">CONFIGURACION</div>',
       '<form class="lcd-form settings-form" id="settings-form">',
       '<p class="form-error" hidden></p>',
@@ -281,8 +293,9 @@
     var moodClass = value > 66 ? ' liquid-high' : value > 33 ? ' liquid-mid' : ' liquid-low';
     return [
       '<div class="liquid-meter ' + (extraClass || '') + moodClass + '" style="--level:' + value + '%">',
+      '<div class="liquid-grid" aria-hidden="true"></div>',
       '<div class="liquid-fill"><i></i><i></i><i></i></div>',
-      '<span>' + utils.escapeHtml(utils.formatPercent(value)) + '</span>',
+      '<span class="liquid-label">' + utils.escapeHtml(utils.formatPercent(value)) + '</span>',
       '</div>'
     ].join('');
   }

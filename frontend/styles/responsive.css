@@ -13,27 +13,22 @@
 
 @media (max-width: 360px) {
   .status-bar {
-    grid-template-columns: 86px 1fr auto;
-    gap: 4px;
+    gap: 5px;
     font-size: 0.72rem;
   }
 
-  .status-main {
-    gap: 4px;
-    padding-inline: 4px;
+  .brand-mark {
+    gap: 5px;
   }
 
-  .status-tools {
-    gap: 3px;
+  .brand-mark strong {
+    max-width: 104px;
+    font-size: 0.76rem;
   }
 
-  .weekday-strip {
-    gap: 1px;
-  }
-
-  .weekday-strip span {
-    min-height: 22px;
-    border-width: 1px;
+  .brand-pixel {
+    width: 17px;
+    height: 16px;
   }
 
   .version-key {
@@ -52,13 +47,15 @@
     grid-template-columns: 72px 1fr;
   }
 
-  .graffiti-zone {
-    grid-template-columns: 64px 1fr;
-  }
-
   .nav-key {
     min-height: 48px;
-    font-size: 0.58rem;
+    grid-template-rows: 20px auto;
+    font-size: 0.56rem;
+  }
+
+  .nav-icon {
+    width: 19px;
+    height: 19px;
   }
 
   .wish-grid {

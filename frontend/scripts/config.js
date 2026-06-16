@@ -1,6 +1,6 @@
 window.FINANZAS_CONFIG = {
   API_URL: '',
-  APP_NAME: 'Finanzas LCD',
-  APP_VERSION: 'v3.0',
+  APP_NAME: 'Pirepirapp',
+  APP_VERSION: 'v2.4',
   DEFAULT_MONTH: ''
 };

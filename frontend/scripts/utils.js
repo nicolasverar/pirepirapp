@@ -45,7 +45,9 @@
 
   function formatMoney(value) {
     var amount = normalizeAmount(value);
-    return 'Gs. ' + amount.toLocaleString('es-PY');
+    var sign = amount < 0 ? '-' : '';
+    var digits = String(Math.abs(amount)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return 'Gs. ' + sign + digits;
   }
 
   function formatPercent(value) {

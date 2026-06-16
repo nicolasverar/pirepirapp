@@ -1,6 +1,6 @@
 {
-  "name": "Finanzas LCD",
-  "short_name": "Finanzas",
+  "name": "Pirepirapp",
+  "short_name": "Pirepirapp",
   "description": "Finanzas personales en una pantalla LCD verde.",
   "start_url": "./index.html",
   "scope": "./",

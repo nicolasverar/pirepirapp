@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finanzas-lcd-v6';
+const CACHE_NAME = 'finanzas-lcd-v7';
 const STATIC_ASSETS = [
   './',
   './index.html',

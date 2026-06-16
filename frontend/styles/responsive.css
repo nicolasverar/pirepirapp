@@ -16,6 +16,18 @@
     font-size: 0.72rem;
   }
 
+  .status-main {
+    gap: 7px;
+  }
+
+  .status-tools {
+    gap: 4px;
+  }
+
+  .version-key {
+    font-size: 0.64rem;
+  }
+
   .big-money {
     font-size: 1.85rem;
   }

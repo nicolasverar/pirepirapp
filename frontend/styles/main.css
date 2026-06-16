@@ -25,11 +25,19 @@
   font-size: 0.82rem;
 }
 
-.status-bar > div:first-child {
+.status-main,
+.status-tools {
   display: flex;
-  gap: 12px;
   align-items: center;
   min-width: 0;
+}
+
+.status-main {
+  gap: 12px;
+}
+
+.status-tools {
+  gap: 6px;
 }
 
 .sync-indicator {
@@ -60,6 +68,23 @@
 
 .sync-offline .sync-dot {
   background: transparent;
+}
+
+.version-key {
+  min-height: 26px;
+  padding: 2px 5px;
+  color: var(--lcd-bg);
+  background: var(--lcd-ink);
+  border: 1px solid var(--lcd-bg);
+  box-shadow: 1px 1px 0 #070a07;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.version-key:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
 }
 
 .lcd-screen {

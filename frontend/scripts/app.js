@@ -6,6 +6,7 @@
   function init() {
     window.FinanzasRouter.bind();
     window.FinanzasState.subscribe(window.FinanzasRender.render);
+    syncVersionLabels();
     bindGlobalActions();
     registerServiceWorker();
     window.FinanzasRender.render();
@@ -22,6 +23,11 @@
     actionKey.addEventListener('click', function () {
       window.FinanzasForms.actionMenu();
     });
+
+    var updateButton = utils.qs('#update-app-button');
+    if (updateButton) {
+      updateButton.addEventListener('click', updateApp);
+    }
 
     window.addEventListener('online', function () {
       setStatus('Sincronizado');
@@ -102,6 +108,12 @@
     return (window.FINANZAS_CONFIG && window.FINANZAS_CONFIG.APP_VERSION) || 'dev';
   }
 
+  function syncVersionLabels() {
+    utils.qsa('[data-app-version], #update-app-button').forEach(function (item) {
+      item.textContent = version();
+    });
+  }
+
   function updateApp() {
     if (navigator.onLine === false) {
       toast('Necesitas conexion para actualizar.');
@@ -179,7 +191,8 @@
     mutate: mutate,
     toast: toast,
     updateApp: updateApp,
-    version: version
+    version: version,
+    syncVersionLabels: syncVersionLabels
   };
 
   if (document.readyState === 'loading') {

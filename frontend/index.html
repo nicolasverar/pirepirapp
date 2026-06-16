@@ -15,13 +15,16 @@
   <body>
     <div class="device-shell">
       <header class="status-bar" aria-live="polite">
-        <div>
+        <div class="status-main">
           <strong id="section-title">RESUMEN</strong>
           <span id="status-date">-- ---</span>
         </div>
-        <div class="sync-indicator" id="sync-status">
-          <span class="sync-dot" aria-hidden="true"></span>
-          <span>Sin iniciar</span>
+        <div class="status-tools">
+          <button class="version-key" id="update-app-button" type="button" aria-label="Actualizar app">v2.0</button>
+          <div class="sync-indicator" id="sync-status">
+            <span class="sync-dot" aria-hidden="true"></span>
+            <span>Sin iniciar</span>
+          </div>
         </div>
       </header>
 

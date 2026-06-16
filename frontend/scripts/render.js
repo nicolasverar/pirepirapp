@@ -256,7 +256,7 @@
     var version = (window.FinanzasApp && window.FinanzasApp.version && window.FinanzasApp.version()) || ((window.FINANZAS_CONFIG || {}).APP_VERSION || 'dev');
     return [
       '<div class="app-version-panel">',
-      '<div class="version-line"><strong>' + utils.escapeHtml(version) + '</strong></div>',
+      '<div class="version-line"><strong data-app-version>' + utils.escapeHtml(version) + '</strong></div>',
       '<button class="lcd-button js-update-app" type="button">Actualizar app</button>',
       '</div>'
     ].join('');

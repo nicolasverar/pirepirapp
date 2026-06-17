@@ -107,9 +107,11 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `clasp version "Pirepirapp v2.15 gastos y wishlist"`: creo version 14.
 - `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 14 --description "Pirepirapp v2.15 gastos y wishlist"`: Web App redeployado.
 - `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: `200 OK`.
+- Commit `9de5c1c` (`Corregir gastos y compactar wishlist`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.15` / `finanzas-lcd-v23`.
 
 ### Pendientes
-- Commit, push y verificacion publica en GitHub Pages.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

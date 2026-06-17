@@ -121,6 +121,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda `rg` en `frontend` de `bird-flyover`, `fly-bird`, `v2.13` y `finanzas-lcd-v21`: sin resultados viejos; aparecen `v2.14`, `finanzas-lcd-v22` y las clases nuevas `sky-*`.
 - `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
 - Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.14`.
+- Push a `origin/main`: commit `628dfc9`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.14` / `finanzas-lcd-v22`.
 
 ### Pendientes
-- Verificar despliegue publico tras push.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.

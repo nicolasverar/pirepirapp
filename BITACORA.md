@@ -101,3 +101,26 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
+
+## 2026-06-17 - Nubes y pajaros en Futuro
+
+### Objetivo
+- Reemplazar la silueta que se leia como avion por una escena con nubes, pajaros y aves.
+
+### Cambios
+- `frontend/scripts/render.js`: `EL FUTURO` ahora renderiza una escena de cielo con dos nubes, dos pajaros pequenos y un ave mas grande.
+- `frontend/styles/main.css`: se reemplazaron las clases de la silueta anterior por nubes pixeladas y pajaros tipo gaviota.
+- `frontend/styles/responsive.css`: se actualizaron las clases para ocultar la escena animada en modo de movimiento reducido.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.14` y cache a `finanzas-lcd-v22`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: todos los archivos existen.
+- Busqueda `rg` en `frontend` de `bird-flyover`, `fly-bird`, `v2.13` y `finanzas-lcd-v21`: sin resultados viejos; aparecen `v2.14`, `finanzas-lcd-v22` y las clases nuevas `sky-*`.
+- `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.14`.
+
+### Pendientes
+- Verificar despliegue publico tras push.

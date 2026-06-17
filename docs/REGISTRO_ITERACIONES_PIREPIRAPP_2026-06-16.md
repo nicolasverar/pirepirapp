@@ -56,3 +56,12 @@ unpoquito mas vistosoel brillo y las aves parecen muricelagos
 ### Resumen operativo
 - Se aumenta ligeramente la visibilidad de los destellos.
 - Se redibuja la silueta de las aves para evitar apariencia de murcielago.
+
+### Prompt 7 - Usuario
+
+```text
+EN LUGAR DEE AVIONES PONE NUBES Y PAJAROS Y AVES
+```
+
+### Resumen operativo
+- Se reemplaza la silueta anterior por una escena con nubes pixeladas, pajaros pequeños y un ave mas grande.

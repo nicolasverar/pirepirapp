@@ -528,26 +528,26 @@ code {
   }
 }
 
-@keyframes bird-flyover {
+@keyframes sky-drift {
   0%,
   10% {
     opacity: 0;
-    transform: translate3d(-34px, 4px, 0) scale(var(--bird-scale));
+    transform: translate3d(-56px, 0, 0) scale(var(--sky-scale));
   }
   18%,
-  62% {
-    opacity: 0.64;
+  72% {
+    opacity: var(--sky-opacity);
   }
-  42% {
-    transform: translate3d(170px, -3px, 0) scale(var(--bird-scale));
+  50% {
+    transform: translate3d(180px, var(--sky-y), 0) scale(var(--sky-scale));
   }
-  82% {
-    opacity: 0.48;
-    transform: translate3d(340px, 5px, 0) scale(var(--bird-scale));
+  88% {
+    opacity: calc(var(--sky-opacity) * 0.75);
+    transform: translate3d(350px, calc(var(--sky-y) * -1), 0) scale(var(--sky-scale));
   }
   100% {
     opacity: 0;
-    transform: translate3d(430px, -5px, 0) scale(var(--bird-scale));
+    transform: translate3d(440px, 0, 0) scale(var(--sky-scale));
   }
 }
 
@@ -755,60 +755,145 @@ code {
   overflow: hidden;
 }
 
-.future-window > :not(.bird-flyover) {
+.future-window > :not(.sky-scene) {
   position: relative;
   z-index: 2;
 }
 
 .future-window .block-list,
 .future-window .empty-state {
-  margin-top: 28px;
+  margin-top: 36px;
 }
 
-.bird-flyover {
+.sky-scene {
   position: absolute;
   inset: 26px 8px auto;
   z-index: 1;
-  height: 28px;
+  height: 36px;
   overflow: hidden;
   pointer-events: none;
 }
 
-.fly-bird {
-  --bird-scale: 1;
+.pixel-cloud,
+.sky-bird,
+.sky-ave {
   position: absolute;
-  left: -34px;
-  width: 18px;
-  height: 8px;
+  left: -56px;
   color: var(--lcd-line);
-  background: currentColor;
   opacity: 0;
-  clip-path: polygon(0 54%, 14% 34%, 22% 48%, 42% 42%, 58% 8%, 66% 44%, 84% 45%, 100% 53%, 84% 61%, 48% 62%, 22% 58%, 14% 76%);
-  animation: bird-flyover 10.5s linear infinite;
+  animation: sky-drift 12s linear infinite;
 }
 
-.fly-bird::before,
-.fly-bird::after {
-  display: none;
+.pixel-cloud {
+  --sky-scale: 1;
+  --sky-y: 2px;
+  --sky-opacity: 0.28;
+  width: 34px;
+  height: 13px;
+  background: currentColor;
+  box-shadow:
+    7px -5px 0 currentColor,
+    15px -8px 0 currentColor,
+    23px -4px 0 currentColor,
+    31px 0 0 currentColor;
+  clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
 }
 
-.fly-bird-a {
+.pixel-cloud i {
+  position: absolute;
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: var(--lcd-bg);
+  opacity: 0.38;
+}
+
+.pixel-cloud i:nth-child(1) {
+  left: 4px;
   top: 5px;
-  animation-delay: -1.4s;
 }
 
-.fly-bird-b {
-  --bird-scale: 0.84;
-  top: 17px;
-  animation-delay: -4.9s;
-  animation-duration: 12s;
+.pixel-cloud i:nth-child(2) {
+  left: 17px;
+  top: 1px;
 }
 
-.fly-bird-c {
-  --bird-scale: 0.72;
-  top: 10px;
-  animation-delay: -8.2s;
-  animation-duration: 13.4s;
+.pixel-cloud i:nth-child(3) {
+  right: -2px;
+  top: 7px;
+}
+
+.pixel-cloud-a {
+  top: 11px;
+  animation-delay: -2.2s;
+  animation-duration: 18s;
+}
+
+.pixel-cloud-b {
+  --sky-scale: 0.72;
+  --sky-y: -2px;
+  --sky-opacity: 0.2;
+  top: 23px;
+  animation-delay: -10.5s;
+  animation-duration: 22s;
+}
+
+.sky-bird,
+.sky-ave {
+  --sky-scale: 1;
+  --sky-y: -3px;
+  --sky-opacity: 0.72;
+  width: 22px;
+  height: 12px;
+}
+
+.sky-bird::before,
+.sky-bird::after,
+.sky-ave::before,
+.sky-ave::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  width: 12px;
+  height: 3px;
+  background: currentColor;
+  transform-origin: center right;
+}
+
+.sky-bird::before,
+.sky-ave::before {
+  left: 0;
+  transform: rotate(-24deg);
+}
+
+.sky-bird::after,
+.sky-ave::after {
+  right: 1px;
+  transform-origin: center left;
+  transform: rotate(24deg);
+}
+
+.sky-bird-a {
+  top: 5px;
+  animation-delay: -4.1s;
+  animation-duration: 11.5s;
+}
+
+.sky-bird-b {
+  --sky-scale: 0.78;
+  --sky-y: 4px;
+  top: 20px;
+  animation-delay: -7.6s;
+  animation-duration: 12.8s;
+}
+
+.sky-ave-a {
+  --sky-scale: 1.14;
+  --sky-y: 2px;
+  --sky-opacity: 0.62;
+  top: 13px;
+  animation-delay: -1.2s;
+  animation-duration: 15.2s;
 }
 
 .data-block {

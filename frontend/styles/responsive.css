@@ -140,7 +140,9 @@
     scroll-behavior: auto !important;
   }
 
-  .fly-bird,
+  .pixel-cloud,
+  .sky-bird,
+  .sky-ave,
   .sharp-spark {
     opacity: 0 !important;
   }

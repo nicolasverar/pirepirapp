@@ -190,7 +190,7 @@
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
       '<div class="window-title">EL FUTURO</div>',
-      renderBirdFlyover(),
+      renderSkyScene(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window">',
@@ -269,12 +269,14 @@
     }).join('') + '</div>';
   }
 
-  function renderBirdFlyover() {
+  function renderSkyScene() {
     return [
-      '<span class="bird-flyover" aria-hidden="true">',
-      '<span class="fly-bird fly-bird-a"></span>',
-      '<span class="fly-bird fly-bird-b"></span>',
-      '<span class="fly-bird fly-bird-c"></span>',
+      '<span class="sky-scene" aria-hidden="true">',
+      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i></span>',
+      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i></span>',
+      '<span class="sky-bird sky-bird-a"></span>',
+      '<span class="sky-bird sky-bird-b"></span>',
+      '<span class="sky-ave sky-ave-a"></span>',
       '</span>'
     ].join('');
   }

@@ -71,6 +71,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Validacion de assets de `frontend/service-worker.js`: todos los archivos existen.
 - `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
 - Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.12`.
+- Push a `origin/main`: commit `e2e1b7f`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.12` / `finanzas-lcd-v20`.
 
 ### Pendientes
-- Verificar despliegue publico tras push.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.

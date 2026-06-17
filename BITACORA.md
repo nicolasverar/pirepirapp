@@ -96,6 +96,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda `rg` en `frontend` de `v2.12`, `finanzas-lcd-v20` y `liquid`: sin resultados viejos; solo aparecen `v2.13` y `finanzas-lcd-v21`.
 - `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
 - Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.13`.
+- Push a `origin/main`: commit `a0bc6dc`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.13` / `finanzas-lcd-v21`.
 
 ### Pendientes
-- Verificar despliegue publico tras push.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.

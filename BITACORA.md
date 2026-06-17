@@ -76,3 +76,26 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
+
+## 2026-06-17 - Ajuste de brillo y silueta de aves
+
+### Objetivo
+- Hacer el brillo un poco mas vistoso sin saturar las tarjetas.
+- Redibujar las aves para que no parezcan murcielagos.
+
+### Cambios
+- `frontend/scripts/render.js`: se agrego un cuarto destello por tarjeta.
+- `frontend/styles/main.css`: se aumento el contraste/pico de brillo y se redibujo la silueta lateral de las aves con ala superior, cola y cuerpo mas estilizado.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.13` y cache a `finanzas-lcd-v21`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: todos los archivos existen.
+- Busqueda `rg` en `frontend` de `v2.12`, `finanzas-lcd-v20` y `liquid`: sin resultados viejos; solo aparecen `v2.13` y `finanzas-lcd-v21`.
+- `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.13`.
+
+### Pendientes
+- Verificar despliegue publico tras push.

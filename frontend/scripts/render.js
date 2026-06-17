@@ -285,6 +285,7 @@
       '<i class="sharp-spark sharp-spark-a"></i>',
       '<i class="sharp-spark sharp-spark-b"></i>',
       '<i class="sharp-spark sharp-spark-c"></i>',
+      '<i class="sharp-spark sharp-spark-d"></i>',
       '</span>'
     ].join('');
   }

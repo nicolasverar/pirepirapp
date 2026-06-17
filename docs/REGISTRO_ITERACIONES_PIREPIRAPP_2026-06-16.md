@@ -1,6 +1,6 @@
 # Registro de iteraciones - Pirepirapp
 
-Ultima edicion: 2026-06-16
+Ultima edicion: 2026-06-17
 
 ## Sesion 2026-06-16
 
@@ -46,3 +46,13 @@ continua
 - Se implementa B2 con destellos puntiagudos y P3 con bandada minima.
 - Se mantiene eliminado el liquido.
 - Se optimiza la aplicacion local de resultados para que guardados y conversion de wishlist a meta se vean apenas responde la mutacion.
+
+### Prompt 6 - Usuario
+
+```text
+unpoquito mas vistosoel brillo y las aves parecen muricelagos
+```
+
+### Resumen operativo
+- Se aumenta ligeramente la visibilidad de los destellos.
+- Se redibuja la silueta de las aves para evitar apariencia de murcielago.

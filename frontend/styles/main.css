@@ -559,11 +559,11 @@ code {
     transform: scale(0.28) rotate(0deg);
   }
   70% {
-    opacity: 0.42;
+    opacity: 0.62;
     transform: scale(1) rotate(0deg);
   }
   78% {
-    opacity: 0.18;
+    opacity: 0.3;
     transform: scale(0.66) rotate(45deg);
   }
 }
@@ -778,35 +778,18 @@ code {
   --bird-scale: 1;
   position: absolute;
   left: -34px;
-  width: 7px;
-  height: 4px;
+  width: 18px;
+  height: 8px;
   color: var(--lcd-line);
   background: currentColor;
   opacity: 0;
-  box-shadow: 4px 0 0 currentColor;
+  clip-path: polygon(0 54%, 14% 34%, 22% 48%, 42% 42%, 58% 8%, 66% 44%, 84% 45%, 100% 53%, 84% 61%, 48% 62%, 22% 58%, 14% 76%);
   animation: bird-flyover 10.5s linear infinite;
 }
 
 .fly-bird::before,
 .fly-bird::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  width: 12px;
-  height: 5px;
-  background: currentColor;
-  clip-path: polygon(0 100%, 100% 0, 78% 100%);
-  transform-origin: bottom center;
-}
-
-.fly-bird::before {
-  right: 4px;
-  transform: rotate(8deg);
-}
-
-.fly-bird::after {
-  left: 8px;
-  transform: scaleX(-1) rotate(8deg);
+  display: none;
 }
 
 .fly-bird-a {
@@ -1033,7 +1016,7 @@ dd {
 .sharp-spark-layer {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
 }
 
@@ -1043,8 +1026,10 @@ dd {
   height: var(--spark-size);
   color: var(--lcd-line);
   opacity: 0;
-  filter: drop-shadow(0 0 1px rgba(174, 203, 124, 0.5));
-  animation: sharp-sparkle 5.8s steps(6) infinite;
+  filter:
+    drop-shadow(1px 0 0 rgba(174, 203, 124, 0.52))
+    drop-shadow(0 1px 0 rgba(25, 45, 24, 0.26));
+  animation: sharp-sparkle 4.9s steps(6) infinite;
   animation-delay: var(--spark-delay);
 }
 
@@ -1063,24 +1048,31 @@ dd {
 }
 
 .sharp-spark-a {
-  --spark-size: 17px;
+  --spark-size: 20px;
   --spark-delay: 0.4s;
-  right: 8px;
-  top: 9px;
+  right: 7px;
+  top: 8px;
 }
 
 .sharp-spark-b {
-  --spark-size: 12px;
-  --spark-delay: 2.1s;
+  --spark-size: 14px;
+  --spark-delay: 1.8s;
   left: 9px;
   top: 44%;
 }
 
 .sharp-spark-c {
-  --spark-size: 10px;
-  --spark-delay: 3.7s;
-  right: 18px;
-  bottom: 38px;
+  --spark-size: 12px;
+  --spark-delay: 3.1s;
+  right: 16px;
+  bottom: 36px;
+}
+
+.sharp-spark-d {
+  --spark-size: 9px;
+  --spark-delay: 4.2s;
+  left: 14px;
+  bottom: 12px;
 }
 
 .wish-info {

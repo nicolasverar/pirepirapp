@@ -145,9 +145,11 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `clasp version "Pirepirapp v2.16 resumen e icono"`: creo version 15.
 - `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 15 --description "Pirepirapp v2.16 resumen e icono"`: Web App redeployado.
 - `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: `200 OK`.
+- Commit `48bcbf3` (`Ajustar resumen fecha icono y pixel art`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js`, `service-worker.js`, `manifest.json` e `icons/icon-192.png` sirven `v2.16` / `finanzas-lcd-v24`, manifest solo usa PNG y el icono responde `200`.
 
 ### Pendientes
-- Commit, push y verificacion publica en GitHub Pages.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

@@ -70,9 +70,10 @@
     }
 
     var hasData = Boolean(window.FinanzasState.getState().data.resumen);
+    var currentStatus = window.FinanzasState.getState().syncStatus;
     window.FinanzasState.setState({
       loading: !hasData,
-      syncStatus: hasData || settings.background ? 'Actualizando' : 'Cargando',
+      syncStatus: settings.silent ? currentStatus : (hasData || settings.background ? 'Actualizando' : 'Cargando'),
       error: ''
     });
     return window.FinanzasApi.request('bootstrap', {})
@@ -87,13 +88,16 @@
         var hasLocalData = Boolean(window.FinanzasState.getState().data.resumen);
         window.FinanzasState.setState({
           loading: false,
-          syncStatus: hasLocalData ? 'Local' : 'Error',
+          syncStatus: settings.silent && hasLocalData ? currentStatus : (hasLocalData ? 'Local' : 'Error'),
           error: error.message
         });
         if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
           window.FinanzasForms.openAccessForm();
           toast(error.message);
+          return;
+        }
+        if (settings.silent && hasLocalData) {
           return;
         }
         if (hasLocalData) {
@@ -115,8 +119,9 @@
     return window.FinanzasApi.request(action, payload || {})
       .then(function (data) {
         applyMutationResult(action, data);
+        window.FinanzasState.setState({ syncStatus: 'Sincronizado', error: '' });
         toast('Guardado');
-        refresh({ background: true });
+        refresh({ background: true, silent: true });
         return data;
       })
       .catch(function (error) {
@@ -133,10 +138,42 @@
   function applyMutationResult(action, data) {
     var result = data || {};
     var route = String(action || '').toLowerCase();
-    if (route.indexOf('movement') === -1 || !result.movimiento) {
+    if (route.indexOf('movement') !== -1 && result.movimiento) {
+      applyMovementResult(route, result);
       return;
     }
 
+    if (route === 'updateconfig' && result) {
+      applyConfigResult(result);
+      return;
+    }
+
+    if (route === 'startmonth' && result.resumen) {
+      applyStartMonthResult(result);
+      return;
+    }
+
+    if ((route === 'createfuturesaving' || route === 'updatefuturesaving') && result.id) {
+      applyListItemResult('ahorrosFuturo', result, true);
+      return;
+    }
+
+    if ((route === 'creategoal' || route === 'updategoal' || route === 'deletegoal') && result.id) {
+      applyListItemResult('metas', result, isActiveItem(result));
+      return;
+    }
+
+    if ((route === 'createwishlistitem' || route === 'updatewishlistitem') && result.id) {
+      applyListItemResult('wishlist', result, isActiveItem(result));
+      return;
+    }
+
+    if (route === 'convertwishlisttogoal') {
+      applyConvertWishlistResult(result);
+    }
+  }
+
+  function applyMovementResult(route, result) {
     var current = window.FinanzasState.getState().data;
     var activeMonth = String(
       ((current.config || {}).mesActual) ||
@@ -177,6 +214,96 @@
       metas: (result.resumen && result.resumen.metas) || current.metas,
       wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
     });
+    saveCurrentBootstrap();
+  }
+
+  function applyConfigResult(config) {
+    var current = window.FinanzasState.getState().data;
+    window.FinanzasState.setData({
+      config: config || current.config,
+      resumen: current.resumen,
+      movimientos: current.movimientos,
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: current.metas,
+      wishlist: current.wishlist
+    });
+    saveCurrentBootstrap();
+  }
+
+  function applyStartMonthResult(result) {
+    var current = window.FinanzasState.getState().data;
+    var nextConfig = Object.assign({}, current.config, {
+      mesActual: result.mes || (current.config || {}).mesActual
+    });
+    window.FinanzasState.setData({
+      config: nextConfig,
+      resumen: result.resumen || current.resumen,
+      movimientos: {
+        mes: result.mes || null,
+        movimientos: result.movimientosCreados || []
+      },
+      ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
+      metas: (result.resumen && result.resumen.metas) || current.metas,
+      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
+    });
+    saveCurrentBootstrap();
+  }
+
+  function applyListItemResult(listName, item, keepVisible) {
+    var current = window.FinanzasState.getState().data;
+    var source = Array.isArray(current[listName]) ? current[listName] : [];
+    var items = source.filter(function (existing) {
+      return String(existing.id) !== String(item.id);
+    });
+    if (keepVisible) {
+      items.push(item);
+    }
+    window.FinanzasState.setData(Object.assign({}, current, objectWithKey(listName, items)));
+    saveCurrentBootstrap();
+  }
+
+  function applyConvertWishlistResult(result) {
+    var current = window.FinanzasState.getState().data;
+    var metas = Array.isArray(current.metas) ? current.metas.filter(function (item) {
+      return !result.goal || String(item.id) !== String(result.goal.id);
+    }) : [];
+    if (result.goal && isActiveItem(result.goal)) {
+      metas.push(result.goal);
+    }
+
+    var convertedId = result.wishlistItem && result.wishlistItem.id;
+    var wishlist = Array.isArray(current.wishlist) ? current.wishlist.filter(function (item) {
+      return String(item.id) !== String(convertedId);
+    }) : [];
+    if (result.wishlistItem && isActiveItem(result.wishlistItem)) {
+      wishlist.push(result.wishlistItem);
+    }
+
+    window.FinanzasState.setData({
+      config: current.config,
+      resumen: current.resumen,
+      movimientos: current.movimientos,
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: metas,
+      wishlist: wishlist
+    });
+    saveCurrentBootstrap();
+  }
+
+  function objectWithKey(key, value) {
+    var result = {};
+    result[key] = value;
+    return result;
+  }
+
+  function isActiveItem(item) {
+    return !item || !item.estado || String(item.estado).toLowerCase() === 'activo';
+  }
+
+  function saveCurrentBootstrap() {
+    if (window.FinanzasLocalCache) {
+      window.FinanzasLocalCache.saveBootstrap(window.FinanzasState.getState().data);
+    }
   }
 
   function movementItemsFromData(source) {

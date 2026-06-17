@@ -139,4 +139,9 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+
+  .fly-bird,
+  .sharp-spark {
+    opacity: 0 !important;
+  }
 }

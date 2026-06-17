@@ -49,3 +49,28 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - No se pudo tomar screenshot automatico porque no hay Playwright ni navegador disponible en PATH.
 - Revisar visualmente en el dispositivo final y usar `Actualizar app` para limpiar cache si ya estaba instalada.
+
+## 2026-06-16 - Brillos P3 y guardado inmediato
+
+### Objetivo
+- Implementar la seleccion del usuario: B2 con brillos puntiagudos, P3 para pajaros y sin liquido.
+- Hacer que guardados y conversion de `Cosas que quiero` a meta se reflejen mas rapido en pantalla.
+
+### Cambios
+- `frontend/scripts/render.js`: se agrego la bandada minima P3 en `EL FUTURO` y la capa de brillos puntiagudos B2 en tarjetas de wishlist.
+- `frontend/styles/main.css`: se diseno el brillo como estrella/punta fina y se definio la animacion lenta de pajaros. No se reintrodujo ningun efecto liquido.
+- `frontend/styles/responsive.css`: se ocultaron animaciones de pajaros/brillos cuando el sistema pide movimiento reducido.
+- `frontend/scripts/app.js`: se aplica en memoria el resultado de `create/update/delete` de movimientos, ahorros, metas, wishlist y `convertWishlistToGoal` apenas responde la mutacion; el `refresh` posterior queda silencioso.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.12` y cache a `finanzas-lcd-v20`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registraron los prompts nuevos.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- Busqueda `rg` en `frontend` de `liquid`, `v2.11` y `finanzas-lcd-v19`: sin resultados.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: todos los archivos existen.
+- `git diff --check`: sin errores, solo avisos de fin de linea CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: `index.html` responde `200` y contiene `v2.12`.
+
+### Pendientes
+- Verificar despliegue publico tras push.

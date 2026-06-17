@@ -190,6 +190,7 @@
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
       '<div class="window-title">EL FUTURO</div>',
+      renderBirdFlyover(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window">',
@@ -252,6 +253,7 @@
     return '<div class="wish-grid">' + items.map(function (item) {
       return [
         '<article class="wish-card">',
+        renderSharpSparkles(),
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
@@ -265,6 +267,26 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
+  }
+
+  function renderBirdFlyover() {
+    return [
+      '<span class="bird-flyover" aria-hidden="true">',
+      '<span class="fly-bird fly-bird-a"></span>',
+      '<span class="fly-bird fly-bird-b"></span>',
+      '<span class="fly-bird fly-bird-c"></span>',
+      '</span>'
+    ].join('');
+  }
+
+  function renderSharpSparkles() {
+    return [
+      '<span class="sharp-spark-layer" aria-hidden="true">',
+      '<i class="sharp-spark sharp-spark-a"></i>',
+      '<i class="sharp-spark sharp-spark-b"></i>',
+      '<i class="sharp-spark sharp-spark-c"></i>',
+      '</span>'
+    ].join('');
   }
 
   function renderPhotoCanvas(item) {

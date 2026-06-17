@@ -98,3 +98,14 @@ cambia el iocno por C:\Users\pc\Desktop\Coding\Finanzas\icono.jpeg
 - Se refuerza el pixel art de nubes y aves.
 - Se cambia actividad reciente del resumen para usar movimientos globales y se agrega formato de fecha/hora en español.
 - Se reemplaza el icono PWA por PNG generado desde `icono.jpeg`.
+
+### Prompt 12 - Usuario
+
+```text
+sigue sin salir cuanto gate este mesen total y debe ser coherente con el mes  en el quee eaamos y sumar todos esos regisstros pero aca paraece haber  una inconsistencia porque se empieza nueveo mes pero este mes sigue siendo el mismo yo no puedo for zar a que epiece un mes  entonces revvisa eso
+```
+
+### Resumen operativo
+- Se corrige la fuente del mes mensual: el resumen suma por fecha real del movimiento y no por la columna `Mes` si quedo inconsistente.
+- Se evita enviar/usar un mes forzado al crear movimientos.
+- Se ajusta el flujo de configuracion para sincronizar con el mes calendario actual.

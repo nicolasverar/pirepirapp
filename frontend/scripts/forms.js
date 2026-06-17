@@ -249,7 +249,6 @@
         if (existing) {
           payload.id = existing.id;
         }
-        payload.mes = (config.mesActual || utils.currentMonth()).slice(0, 7);
         return window.FinanzasApp.mutate(existing ? 'updateMovement' : 'createMovement', payload)
           .then(closeModal);
       });

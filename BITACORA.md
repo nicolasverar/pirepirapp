@@ -151,6 +151,39 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-17 - Mes actual coherente y total mensual v2.17
+
+### Objetivo
+- Corregir que `este mes gastaste` no muestre el total real del mes calendario actual.
+- Evitar que un gasto con fecha del mes actual quede guardado o resumido bajo un mes anterior.
+- Cambiar el flujo de `Iniciar mes` para que sincronice con el mes calendario actual.
+
+### Cambios
+- `backend/SpreadsheetService.js`: `ensureCurrentCalendarPeriod_` ahora corrige `mesActual` aunque la marca interna del mes ya exista, evitando que quede atrasado.
+- `backend/SummaryService.js`: el resumen mensual suma los movimientos por la fecha real (`Fecha`) del registro; si la columna `Mes` quedo vieja, el gasto igual cuenta en el mes calendario correcto.
+- `backend/Validation.js`: los movimientos derivan `Mes` desde `Fecha`; se ignoran meses forzados que lleguen desde clientes cacheados.
+- `backend/AppClient.html`: se reemplazo `Iniciar mes` por `Sincronizar mes actual` y se usa siempre el mes calendario actual.
+- `frontend/scripts/forms.js`: ya no envia `payload.mes`; la fecha elegida determina el mes del gasto.
+- `frontend/scripts/app.js`: al guardar un movimiento, el resumen devuelto por backend actualiza tambien `mesActual` en memoria.
+- `frontend/scripts/render.js`: el resumen dice `este mes gastaste`; `Gastos` y `Config` muestran `Mes actual`; el boton sincroniza con el mes calendario actual.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.17` y cache a `finanzas-lcd-v25`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- `rg` en `frontend backend` de `payload.mes`, `Iniciar mes`, `Mes activo`, `v2.16` y `finanzas-lcd-v24`: sin usos activos en frontend; solo quedan descripciones tecnicas internas de config en backend.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.17`, `APP_VERSION: 'v2.17'`, `finanzas-lcd-v25` y `forms.js?v=2.17`.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp v2.17 mes actual coherente"`: creo version 16.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 16 --description "Pirepirapp v2.17 mes actual coherente"`: Web App redeployado.
+- `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: `200 OK`.
+
+### Pendientes
+- Commit, push y verificacion publica en GitHub Pages.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

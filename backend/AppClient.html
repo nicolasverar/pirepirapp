@@ -315,8 +315,8 @@
       field('Sueldo mensual', 'sueldoMensual', 'number', config.sueldoMensual || 0, 'min="0" step="1" inputmode="numeric"'),
       textarea('Categorias', 'categorias', (config.categorias || []).join('\n'), 'rows="6"'),
       textarea('Gastos fijos', 'gastosFijos', fixedExpensesToText(config.gastosFijos || []), 'rows="4"'),
-      '<div class="form-actions"><button class="lcd-button primary" type="submit">Guardar</button><button class="lcd-button js-start-month" type="button">Iniciar mes</button></div>',
-      '</form><p class="lcd-muted">Mes activo: ' + escapeHtml(config.mesActual || currentMonth()) + '</p></section>'
+      '<div class="form-actions"><button class="lcd-button primary" type="submit">Guardar</button><button class="lcd-button js-start-month" type="button">Sincronizar mes actual</button></div>',
+      '</form><p class="lcd-muted">Mes actual: ' + escapeHtml(config.mesActual || currentMonth()) + '</p></section>'
     ].join('');
   }
 
@@ -395,7 +395,7 @@
         mutate('updateConfig', payload);
       });
       qs('.js-start-month', root).addEventListener('click', function () {
-        mutate('startMonth', { mes: (state.data.config || {}).mesActual || currentMonth() });
+        mutate('startMonth', { mes: currentMonth() });
       });
     }
   }

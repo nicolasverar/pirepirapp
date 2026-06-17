@@ -45,19 +45,19 @@ function ensureCurrentCalendarPeriod_() {
   var props = getScriptProperties_();
   var keys = appPropertyKeys_();
   var lastCalendarMonth = normalizeText_(props.getProperty(keys.lastCalendarMonth));
-  if (lastCalendarMonth === currentMonth) {
+  var configMap = readConfigMap_();
+  var configuredMonth = normalizeText_(configMap.mesActual);
+  if (lastCalendarMonth === currentMonth && configuredMonth === currentMonth) {
     return currentMonth;
   }
 
-  var configMap = readConfigMap_();
   var updates = {
-    mesActual: currentMonth,
     estadoMesActual: 'abierto',
     fechaUltimoInicioMes: currentMonth
   };
 
-  if (normalizeText_(configMap.mesActual) === currentMonth) {
-    delete updates.mesActual;
+  if (configuredMonth !== currentMonth) {
+    updates.mesActual = currentMonth;
   }
   setConfigValues_(updates);
   props.setProperty(keys.lastCalendarMonth, currentMonth);

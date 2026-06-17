@@ -364,9 +364,7 @@ function validateMovementRecordInput_(payload, existing) {
   var hora = source.hora !== undefined || source.time !== undefined
     ? assertTimeString_(source.hora !== undefined ? source.hora : source.time, 'Hora')
     : normalizeText_(base.Hora) || currentTimeString_();
-  var mes = source.mes !== undefined || source.month !== undefined
-    ? assertMonthString_(source.mes !== undefined ? source.mes : source.month, 'Mes')
-    : monthFromDateString_(fecha);
+  var mes = monthFromDateString_(fecha);
   var motivo = source.motivo !== undefined || source.reason !== undefined
     ? requireText_(source.motivo !== undefined ? source.motivo : source.reason, 'Motivo', 120)
     : requireText_(base.Motivo, 'Motivo', 120);

@@ -176,8 +176,8 @@
   function applyMovementResult(route, result) {
     var current = window.FinanzasState.getState().data;
     var activeMonth = String(
-      ((current.config || {}).mesActual) ||
       ((result.resumen || {}).mes) ||
+      ((current.config || {}).mesActual) ||
       result.movimiento.mes ||
       utils.currentMonth()
     ).slice(0, 7);
@@ -210,9 +210,12 @@
       });
     var summaryMonth = result.resumen && result.resumen.mes ? String(result.resumen.mes).slice(0, 7) : activeMonth;
     var nextSummary = summaryMonth === activeMonth ? (result.resumen || current.resumen) : current.resumen;
+    var nextConfig = result.resumen && result.resumen.mes
+      ? Object.assign({}, current.config, { mesActual: summaryMonth })
+      : current.config;
 
     window.FinanzasState.setData({
-      config: current.config,
+      config: nextConfig,
       resumen: nextSummary,
       movimientos: nextMovements,
       ahorrosFuturo: (summaryMonth === activeMonth && result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,

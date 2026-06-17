@@ -2,7 +2,10 @@ function getMonthlySummary_(payload) {
   var source = payload || {};
   var config = getConfig_();
   var month = assertMonthString_(source.mes || source.month || config.mesActual || currentMonthString_(), 'Mes');
-  var movements = readMovementRecordsForMonth_(month);
+  var allMovements = readAllMovementRecords_();
+  var movements = allMovements.filter(function (record) {
+    return movementCalendarMonth_(record) === month;
+  });
 
   var types = movementTypes_();
   var monthlySalary = Number(config.sueldoMensual || 0);
@@ -48,7 +51,7 @@ function getMonthlySummary_(payload) {
     : 0;
 
   var topCategory = topSpendingCategory_(categoryTotals);
-  var recent = sortMovementRecords_(readAllMovementRecords_(), true).slice(0, 5).map(movementToApi_);
+  var recent = sortMovementRecords_(allMovements.slice(), true).slice(0, 5).map(movementToApi_);
 
   return {
     mes: month,
@@ -71,6 +74,17 @@ function getMonthlySummary_(payload) {
     metas: listGoals_({ includeInactive: false }),
     wishlist: listWishlist_({ includeInactive: false, order: 'asc' })
   };
+}
+
+function movementCalendarMonth_(record) {
+  if (isDateValue_(record.Fecha)) {
+    return formatDate_(record.Fecha, 'yyyy-MM');
+  }
+  var textDate = normalizeText_(record.Fecha);
+  if (/^\d{4}-\d{2}/.test(textDate)) {
+    return textDate.slice(0, 7);
+  }
+  return normalizeText_(record.Mes);
 }
 
 function topSpendingCategory_(categoryTotals) {

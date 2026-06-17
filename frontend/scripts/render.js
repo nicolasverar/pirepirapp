@@ -92,7 +92,7 @@
       '<section class="summary-stack">',
       '<article class="system-window total-window summary-primary">',
       '<p class="summary-date-line"><strong>Estamos el ' + utils.escapeHtml(utils.friendlyDate()) + '</strong></p>',
-      '<p class="summary-subline">y ya gastaste:</p>',
+      '<p class="summary-subline">este mes gastaste:</p>',
       '<strong class="big-money">' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + '</strong>',
       '</article>',
       '<article class="system-window summary-metrics-card">',
@@ -148,8 +148,8 @@
     var config = state.data.config || {};
     var allMonths = !Array.isArray(source) && (source.allMonths || source.mes === null);
     var subtitle = allMonths
-      ? 'Mostrando todos los movimientos. Mes activo: ' + (config.mesActual || utils.currentMonth())
-      : 'Mes activo: ' + (config.mesActual || utils.currentMonth());
+      ? 'Mostrando todos los movimientos. Mes actual: ' + (config.mesActual || utils.currentMonth())
+      : 'Mes actual: ' + (config.mesActual || utils.currentMonth());
     return [
       '<section class="system-window">',
       '<div class="window-title">GASTOS TOTALES</div>',
@@ -328,17 +328,17 @@
       '<div class="window-title">CONFIGURACION</div>',
       '<form class="lcd-form settings-form" id="settings-form">',
       '<p class="form-error" hidden></p>',
-      '<label class="field"><span>Mes activo</span><input name="mesActual" type="month" value="' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '" required></label>',
+      '<label class="field"><span>Mes actual</span><input name="mesActual" type="month" value="' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '" required></label>',
       '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '<label class="field"><span>Categorias</span><textarea name="categorias" rows="6">' + utils.escapeHtml((config.categorias || []).join('\n')) + '</textarea></label>',
       '<label class="field"><span>Gastos fijos</span><textarea name="gastosFijos" rows="4">' + utils.escapeHtml(utils.fixedExpensesToText(config.gastosFijos || [])) + '</textarea></label>',
       '<div class="form-actions">',
       '<button class="lcd-button primary" type="submit">Guardar</button>',
-      '<button class="lcd-button js-start-month" type="button">Iniciar mes</button>',
+      '<button class="lcd-button js-start-month" type="button">Sincronizar mes actual</button>',
       '<button class="lcd-button js-connect-backend" type="button">Conexion</button>',
       '</div>',
       '</form>',
-      '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
+      '<p class="lcd-muted">Mes actual: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
       renderAppVersionPanel(),
       '</section>'
     ].join('');
@@ -497,9 +497,7 @@
     var start = utils.qs('.js-start-month', root);
     if (start) {
       start.addEventListener('click', function () {
-        var monthInput = utils.qs('[name="mesActual"]', form);
-        var selectedMonth = monthInput && monthInput.value ? monthInput.value : ((window.FinanzasState.getState().data.config || {}).mesActual || utils.currentMonth());
-        window.FinanzasApp.mutate('startMonth', { mes: selectedMonth });
+        window.FinanzasApp.mutate('startMonth', { mes: utils.currentMonth() });
       });
     }
   }

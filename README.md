@@ -31,3 +31,9 @@ Usa una clave larga y no la subas a GitHub.
 4. Al abrir la app instalada, carga la URL `/exec` de Apps Script y tu clave privada.
 
 La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en GitHub Pages.
+
+## Uso Actual
+
+- `Gastos` muestra todos los movimientos disponibles en Drive/Sheets; el resumen calcula el mes activo configurado.
+- `Cosas que quiero` no usa descripcion. Solo al convertir una cosa en meta se puede agregar un comentario para la nueva meta.
+- La lista de `Cosas que quiero` se puede ordenar por costo de menor a mayor o de mayor a menor.

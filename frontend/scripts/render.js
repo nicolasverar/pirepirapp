@@ -140,18 +140,23 @@
   }
 
   function renderMovements(state) {
+    var source = (state.data || {}).movimientos || {};
     var movements = movementItemsFromState_(state).slice();
     var config = state.data.config || {};
+    var allMonths = !Array.isArray(source) && (source.allMonths || source.mes === null);
+    var subtitle = allMonths
+      ? 'Mostrando todos los movimientos. Mes activo: ' + (config.mesActual || utils.currentMonth())
+      : 'Mes activo: ' + (config.mesActual || utils.currentMonth());
     return [
       '<section class="system-window">',
       '<div class="window-title">GASTOS TOTALES</div>',
-      '<p class="lcd-muted">Mes activo: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
+      '<p class="lcd-muted">' + utils.escapeHtml(subtitle) + '</p>',
       '<div class="toolbar-line">',
       '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
       '<button class="lcd-button js-new-expense" type="button">Gasto</button>',
       '<button class="lcd-button js-new-income" type="button">Ingreso</button>',
       '</div>',
-      movements.length ? renderMovementTable(movements) : '<p class="empty-state">No hay movimientos para este mes.</p>',
+      movements.length ? renderMovementTable(movements, allMonths) : '<p class="empty-state">No hay movimientos cargados.</p>',
       '</section>'
     ].join('');
   }
@@ -170,13 +175,17 @@
     return [];
   }
 
-  function renderMovementTable(movements) {
+  function renderMovementTable(movements, showMonth) {
     return '<div class="movement-list">' + movements.map(function (item) {
+      var meta = [item.fecha, item.hora].filter(Boolean).join(' ');
+      if (showMonth && item.mes) {
+        meta += ' · ' + item.mes;
+      }
       return [
         '<article class="movement-row">',
         '<button class="movement-main js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">',
-        '<span><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.fecha) + ' ' + utils.escapeHtml(item.hora) + '</small></span>',
-        '<span><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.tipo) + '</small></span>',
+        '<span class="movement-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(meta) + '</small></span>',
+        '<span class="movement-value"><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.tipo) + '</small></span>',
         '</button>',
         '<button class="tiny-key js-delete-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">DEL</button>',
         '</article>'
@@ -186,6 +195,7 @@
 
   function renderGoals(state) {
     var data = state.data;
+    var wishlistSort = state.wishlistSort || 'asc';
     return [
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
@@ -199,7 +209,7 @@
       '</article>',
       '<article class="system-window">',
       '<div class="window-title">COSAS QUE QUIERO</div>',
-      renderWishlist(data.wishlist || []),
+      renderWishlist(data.wishlist || [], wishlistSort),
       '</article>',
       '</section>'
     ].join('');
@@ -246,18 +256,29 @@
     }).join('') + '</div>';
   }
 
-  function renderWishlist(items) {
+  function renderWishlist(items, sortOrder) {
     if (!items.length) {
       return '<p class="empty-state">La lista esta vacia.</p>';
     }
-    return '<div class="wish-grid">' + items.map(function (item) {
+    var order = sortOrder === 'desc' ? 'desc' : 'asc';
+    var sorted = items.slice().sort(function (left, right) {
+      var leftAmount = Number(left.costoAproximado || 0);
+      var rightAmount = Number(right.costoAproximado || 0);
+      return order === 'desc' ? rightAmount - leftAmount : leftAmount - rightAmount;
+    });
+    return [
+      '<div class="wish-toolbar" aria-label="Ordenar cosas que quiero">',
+      '<button class="tiny-key js-wish-sort' + (order === 'asc' ? ' is-active' : '') + '" type="button" data-order="asc">MENOR</button>',
+      '<button class="tiny-key js-wish-sort' + (order === 'desc' ? ' is-active' : '') + '" type="button" data-order="desc">MAYOR</button>',
+      '</div>',
+      '<div class="wish-grid">'
+    ].join('') + sorted.map(function (item) {
       return [
         '<article class="wish-card">',
         renderSharpSparkles(),
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
-        '<p>' + utils.escapeHtml(item.descripcion || '') + '</p>',
         '<b>' + utils.escapeHtml(utils.formatMoney(item.costoAproximado)) + '</b>',
         '<div class="mini-actions">',
         '<button class="tiny-key js-convert-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button">META</button>',
@@ -272,11 +293,11 @@
   function renderSkyScene() {
     return [
       '<span class="sky-scene" aria-hidden="true">',
-      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i></span>',
-      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i></span>',
-      '<span class="sky-bird sky-bird-a"></span>',
-      '<span class="sky-bird sky-bird-b"></span>',
-      '<span class="sky-ave sky-ave-a"></span>',
+      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i><i></i><i></i></span>',
+      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i><i></i><i></i></span>',
+      '<span class="sky-bird sky-bird-a"><i></i></span>',
+      '<span class="sky-bird sky-bird-b"><i></i></span>',
+      '<span class="sky-ave sky-ave-a"><i></i></span>',
       '</span>'
     ].join('');
   }
@@ -440,6 +461,12 @@
     utils.qsa('.js-convert-wish', root).forEach(function (button) {
       button.addEventListener('click', function () {
         window.FinanzasForms.convertWishlist(button.getAttribute('data-id'));
+      });
+    });
+
+    utils.qsa('.js-wish-sort', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.FinanzasState.setState({ wishlistSort: button.getAttribute('data-order') || 'asc' });
       });
     });
 

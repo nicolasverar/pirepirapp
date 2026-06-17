@@ -207,7 +207,7 @@
         { value: 'Gasto', label: 'Gasto' },
         { value: 'Aporte a ahorro', label: 'Aporte a ahorro' },
         { value: 'Aporte a meta', label: 'Aporte a meta' },
-        { value: 'Compra de wishlist', label: 'Compra wishlist' }
+        { value: 'Compra de wishlist', label: 'Compra cosa que quiero' }
       ];
 
     var relatedOptions = relatedSelectOptions(data, movement.tipo || defaultType);
@@ -218,7 +218,7 @@
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
       select('Categoria', 'categoria', categories, defaultCategory),
-      select('Relacionado', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
+      select('Destino', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
       field('Fecha', 'fecha', 'date', defaultDate, 'required'),
@@ -292,7 +292,7 @@
 
   function relatedSelectOptions(data, type) {
     var normalized = String(type || '').toLowerCase();
-    var blank = [{ value: '', label: 'Sin relacion' }];
+    var blank = [{ value: '', label: relatedBlankLabel(type) }];
     if (normalized.indexOf('ahorro') !== -1) {
       return blank.concat((data.ahorrosFuturo || []).map(function (item) {
         return { value: item.id, label: item.titulo };
@@ -311,9 +311,44 @@
     return blank;
   }
 
+  function relatedBlankLabel(type) {
+    var normalized = String(type || '').toLowerCase();
+    if (normalized.indexOf('ahorro') !== -1) {
+      return 'Elegir ahorro';
+    }
+    if (normalized.indexOf('meta') !== -1) {
+      return 'Elegir meta';
+    }
+    if (normalized.indexOf('wishlist') !== -1) {
+      return 'Elegir cosa';
+    }
+    return 'Sin destino';
+  }
+
+  function relatedFieldLabel(type) {
+    var normalized = String(type || '').toLowerCase();
+    if (normalized.indexOf('ahorro') !== -1) {
+      return 'Ahorro destino';
+    }
+    if (normalized.indexOf('meta') !== -1) {
+      return 'Meta destino';
+    }
+    if (normalized.indexOf('wishlist') !== -1) {
+      return 'Cosa que quiero';
+    }
+    return 'Destino';
+  }
+
   function updateRelatedVisibility(typeSelect, relatedSelect) {
     var needsRelated = /ahorro|meta|wishlist/i.test(typeSelect.value);
-    relatedSelect.closest('.field').hidden = !needsRelated;
+    var fieldBox = relatedSelect.closest('.field');
+    var label = fieldBox && utils.qs('span', fieldBox);
+    if (label) {
+      label.textContent = relatedFieldLabel(typeSelect.value);
+    }
+    if (fieldBox) {
+      fieldBox.hidden = !needsRelated;
+    }
     relatedSelect.required = needsRelated;
   }
 
@@ -382,7 +417,6 @@
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Costo aproximado', 'costoAproximado', 'number', item.costoAproximado || '', 'required min="1" step="1" inputmode="numeric"'),
-      textarea('Descripcion', 'descripcion', item.descripcion || '', 'maxlength="500" rows="3"'),
       '<label class="field"><span>Fotografia</span><input name="foto" type="file" accept="image/*" data-photo-input></label>',
       '<canvas class="lcd-photo-preview" data-photo-preview width="216" height="162"></canvas>',
       formActions(existing ? 'Actualizar' : 'Guardar'),
@@ -394,6 +428,7 @@
         return buildImagePayload(form).then(function (imagePayload) {
           var payload = utils.formDataToObject(form);
           delete payload.foto;
+          payload.descripcion = '';
           payload.costoAproximado = utils.normalizeAmount(payload.costoAproximado);
           Object.keys(imagePayload).forEach(function (key) {
             payload[key] = imagePayload[key];
@@ -442,6 +477,7 @@
       '<form class="lcd-form" id="convert-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Monto mensual', 'montoMensual', 'number', '', 'required min="0" step="1" inputmode="numeric"'),
+      textarea('Comentario para la meta', 'descripcion', '', 'maxlength="500" rows="3"'),
       formActions('Convertir'),
       '</form>'
     ].join(''), function (root) {

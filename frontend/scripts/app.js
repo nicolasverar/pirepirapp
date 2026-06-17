@@ -182,11 +182,13 @@
       utils.currentMonth()
     ).slice(0, 7);
     var source = current.movimientos || {};
+    var showingAllMonths = !Array.isArray(source) && (source.allMonths || source.mes === null);
     var items = movementItemsFromData(source).filter(function (item) {
       return String(item.id) !== String(result.movimiento.id);
     });
+    var movementMonth = String(result.movimiento.mes || activeMonth).slice(0, 7);
 
-    if (route !== 'deletemovement' && String(result.movimiento.mes || activeMonth).slice(0, 7) === activeMonth) {
+    if (route !== 'deletemovement' && (showingAllMonths || movementMonth === activeMonth)) {
       items.push(result.movimiento);
     }
 
@@ -202,17 +204,20 @@
     var nextMovements = Array.isArray(source)
       ? items
       : Object.assign({}, source, {
-        mes: activeMonth,
+        mes: showingAllMonths ? null : activeMonth,
+        allMonths: showingAllMonths,
         movimientos: items
       });
+    var summaryMonth = result.resumen && result.resumen.mes ? String(result.resumen.mes).slice(0, 7) : activeMonth;
+    var nextSummary = summaryMonth === activeMonth ? (result.resumen || current.resumen) : current.resumen;
 
     window.FinanzasState.setData({
       config: current.config,
-      resumen: result.resumen || current.resumen,
+      resumen: nextSummary,
       movimientos: nextMovements,
-      ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
-      metas: (result.resumen && result.resumen.metas) || current.metas,
-      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
+      ahorrosFuturo: (summaryMonth === activeMonth && result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
+      metas: (summaryMonth === activeMonth && result.resumen && result.resumen.metas) || current.metas,
+      wishlist: (summaryMonth === activeMonth && result.resumen && result.resumen.wishlist) || current.wishlist
     });
     saveCurrentBootstrap();
   }

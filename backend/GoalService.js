@@ -199,10 +199,16 @@ function goalToApi_(record) {
 }
 
 function listWishlist_(payload) {
-  var includeInactive = Boolean((payload || {}).includeInactive);
+  var source = payload || {};
+  var includeInactive = Boolean(source.includeInactive);
+  var order = normalizeText_(source.order || source.orden || 'asc').toLowerCase();
   return readRecords_(appSheetNames_().wishlist)
     .filter(function (record) {
       return includeInactive || normalizeText_(record.Estado) === activeStatus_();
+    })
+    .sort(function (left, right) {
+      var diff = Number(left['Costo aproximado'] || 0) - Number(right['Costo aproximado'] || 0);
+      return order === 'desc' ? -diff : diff;
     })
     .map(wishlistToApi_);
 }
@@ -219,7 +225,7 @@ function createWishlistItemUnlocked_(payload) {
   var record = {
     ID: generateId_('wis'),
     Titulo: input.titulo,
-    Descripcion: input.descripcion,
+    Descripcion: '',
     'Costo aproximado': input.costoAproximado,
     'ID de imagen en Drive': input.imageDriveId,
     'URL o referencia de imagen': input.imageRef,
@@ -243,7 +249,7 @@ function updateWishlistItem_(payload) {
     var input = validateWishlistInput_(prepared, existing);
     var updated = updateRecordById_(appSheetNames_().wishlist, id, {
       Titulo: input.titulo,
-      Descripcion: input.descripcion,
+      Descripcion: '',
       'Costo aproximado': input.costoAproximado,
       'ID de imagen en Drive': input.imageDriveId,
       'URL o referencia de imagen': input.imageRef,
@@ -262,10 +268,11 @@ function convertWishlistToGoal_(payload) {
     if (!item || normalizeText_(item.Estado) !== activeStatus_()) {
       notFoundError_('No existe un elemento activo de wishlist con ese ID.');
     }
+    var descriptionValue = source.descripcion !== undefined ? source.descripcion : source.description;
 
     var goal = createGoalUnlocked_({
       titulo: item.Titulo,
-      descripcion: item.Descripcion,
+      descripcion: descriptionValue !== undefined ? normalizeOptionalText_(descriptionValue, 500) : '',
       montoMensual: monthlyAmount,
       montoObjetivo: item['Costo aproximado'],
       montoAcumulado: 0,
@@ -315,7 +322,7 @@ function wishlistToApi_(record) {
   return {
     id: normalizeText_(record.ID),
     titulo: normalizeText_(record.Titulo),
-    descripcion: normalizeText_(record.Descripcion),
+    descripcion: '',
     costoAproximado: Number(record['Costo aproximado'] || 0),
     imageDriveId: normalizeText_(record['ID de imagen en Drive']),
     imageRef: normalizeText_(record['URL o referencia de imagen']),

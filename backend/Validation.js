@@ -465,12 +465,11 @@ function validateWishlistInput_(payload, existing) {
   var source = payload || {};
   var base = existing || {};
   var titleValue = source.titulo !== undefined ? source.titulo : source.title;
-  var descriptionValue = source.descripcion !== undefined ? source.descripcion : source.description;
   var costValue = source.costoAproximado !== undefined ? source.costoAproximado : source.approxCost;
 
   return {
     titulo: titleValue !== undefined ? requireText_(titleValue, 'Titulo', 100) : requireText_(base.Titulo, 'Titulo', 100),
-    descripcion: descriptionValue !== undefined ? normalizeOptionalText_(descriptionValue, 500) : normalizeOptionalText_(base.Descripcion, 500),
+    descripcion: '',
     costoAproximado: costValue !== undefined ? normalizeAmount_(costValue, 'Costo aproximado', false) : normalizeAmount_(base['Costo aproximado'], 'Costo aproximado', false),
     imageDriveId: normalizeOptionalText_(source.imageDriveId !== undefined ? source.imageDriveId : base['ID de imagen en Drive'], 200),
     imageRef: normalizeOptionalText_(source.imageRef !== undefined ? source.imageRef : base['URL o referencia de imagen'], 300),

@@ -65,3 +65,19 @@ EN LUGAR DEE AVIONES PONE NUBES Y PAJAROS Y AVES
 
 ### Resumen operativo
 - Se reemplaza la silueta anterior por una escena con nubes pixeladas, pajaros pequeños y un ave mas grande.
+
+### Prompt 8 - Usuario
+
+```text
+las nubes que sean con mayor pixel art definido asi tambien las aves mas definicion que significa la relacion en el formulario soluciona por favor el gasto total en resumen no se actualiza cuando se carga el gasto enicma en la parte de gastos el registro se ve con los registros mal posicionados y si salgo de la seccion se elimina e registro  no puedo ver el desvanecido tampoco nada fijate en el drive hay muchos gastos cargados y ninguno se ve en la app
+```
+
+### Prompt 9 - Usuario
+
+```text
+elimina las descripciones de todaas las cosas qeu quiero y la capacidadde incluir furuos comentarios solo cuando se conviertnen metas se puede poner un cmenario y agrega la capacidad de que se ordene de m enor a mayor o viceversalas cosass qeu quier tambien ahora que ya no hay descripcion achica ese espacio muerto nuevo
+```
+
+### Resumen operativo
+- Se trabaja sobre gastos, resumen, wishlist y escena visual.
+- Se elimina descripcion normal de wishlist, se permite comentario solo al convertir a meta y se agrega orden menor/mayor por costo.

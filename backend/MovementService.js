@@ -16,6 +16,7 @@ function listMovements_(payload) {
 
   return {
     mes: month || null,
+    allMonths: allMonths,
     movimientos: records.map(movementToApi_)
   };
 }

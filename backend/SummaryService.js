@@ -48,7 +48,7 @@ function getMonthlySummary_(payload) {
     : 0;
 
   var topCategory = topSpendingCategory_(categoryTotals);
-  var recent = sortMovementRecords_(movements.slice(), true).slice(0, 4).map(movementToApi_);
+  var recent = sortMovementRecords_(movements.slice(), true).slice(0, 5).map(movementToApi_);
 
   return {
     mes: month,
@@ -69,7 +69,7 @@ function getMonthlySummary_(payload) {
     cantidadMovimientos: movements.length,
     ahorrosFuturo: listFutureSavings_({ includeInactive: false }),
     metas: listGoals_({ includeInactive: false }),
-    wishlist: listWishlist_({ includeInactive: false })
+    wishlist: listWishlist_({ includeInactive: false, order: 'asc' })
   };
 }
 
@@ -102,9 +102,9 @@ function getBootstrapData_() {
   return {
     config: config,
     resumen: getMonthlySummary_({ mes: config.mesActual || currentMonthString_() }),
-    movimientos: listMovements_({ mes: config.mesActual || currentMonthString_(), order: 'desc' }),
+    movimientos: listMovements_({ allMonths: true, order: 'desc' }),
     ahorrosFuturo: listFutureSavings_({ includeInactive: false }),
     metas: listGoals_({ includeInactive: false }),
-    wishlist: listWishlist_({ includeInactive: false })
+    wishlist: listWishlist_({ includeInactive: false, order: 'asc' })
   };
 }

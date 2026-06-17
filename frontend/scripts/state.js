@@ -4,6 +4,7 @@
   var listeners = [];
   var state = {
     currentView: 'resumen',
+    wishlistSort: 'asc',
     syncStatus: 'Sin iniciar',
     loading: false,
     error: '',

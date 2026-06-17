@@ -99,11 +99,31 @@
     gap: 6px;
   }
 
+  .movement-row {
+    grid-template-columns: minmax(0, 1fr) 34px;
+    gap: 4px;
+  }
+
+  .movement-main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+    min-height: 58px;
+  }
+
+  .movement-value {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .wish-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 66px));
+  }
+
   .wish-card {
     grid-template-columns: none;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
     gap: 6px;
-    min-height: 218px;
+    min-height: 166px;
     padding: 6px;
   }
 
@@ -111,12 +131,6 @@
     font-size: 0.72rem;
   }
 
-  .wish-info p {
-    min-height: 3.3em;
-    -webkit-line-clamp: 3;
-  }
-
-  .wish-info p,
   .wish-info b {
     font-size: 0.64rem;
   }

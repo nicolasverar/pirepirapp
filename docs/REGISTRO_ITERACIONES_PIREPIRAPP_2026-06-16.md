@@ -81,3 +81,20 @@ elimina las descripciones de todaas las cosas qeu quiero y la capacidadde inclui
 ### Resumen operativo
 - Se trabaja sobre gastos, resumen, wishlist y escena visual.
 - Se elimina descripcion normal de wishlist, se permite comentario solo al convertir a meta y se agrega orden menor/mayor por costo.
+
+### Prompt 10 - Usuario
+
+```text
+nubes y aves aun mas definidos 32bit art por ahi, dmas la tabla resumen no levanta nada y gastos totales debe estar la fecha en español LUN 07/MAYO/2026 15:45  porejemplo
+```
+
+### Prompt 11 - Usuario
+
+```text
+cambia el iocno por C:\Users\pc\Desktop\Coding\Finanzas\icono.jpeg
+```
+
+### Resumen operativo
+- Se refuerza el pixel art de nubes y aves.
+- Se cambia actividad reciente del resumen para usar movimientos globales y se agrega formato de fecha/hora en español.
+- Se reemplaza el icono PWA por PNG generado desde `icono.jpeg`.

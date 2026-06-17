@@ -48,7 +48,7 @@ function getMonthlySummary_(payload) {
     : 0;
 
   var topCategory = topSpendingCategory_(categoryTotals);
-  var recent = sortMovementRecords_(movements.slice(), true).slice(0, 5).map(movementToApi_);
+  var recent = sortMovementRecords_(readAllMovementRecords_(), true).slice(0, 5).map(movementToApi_);
 
   return {
     mes: month,

@@ -15,6 +15,10 @@
     'noviembre',
     'diciembre'
   ];
+  var MONTHS_UPPER = MONTHS.map(function (item) {
+    return item.toUpperCase();
+  });
+  var DAYS_SHORT = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
 
   function qs(selector, root) {
     return (root || document).querySelector(selector);
@@ -53,6 +57,25 @@
   function formatPercent(value) {
     var number = Number(value || 0);
     return number.toLocaleString('es-PY', { maximumFractionDigits: 1 }) + '%';
+  }
+
+  function formatMovementDateTime(dateString, timeString) {
+    var value = String(dateString || '');
+    var match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+    var time = String(timeString || '').slice(0, 5);
+    if (!match) {
+      return [value, time].filter(Boolean).join(' ');
+    }
+
+    var year = Number(match[1]);
+    var monthIndex = Number(match[2]) - 1;
+    var day = Number(match[3]);
+    var date = new Date(year, monthIndex, day);
+    var dayLabel = DAYS_SHORT[date.getDay()] || '';
+    var monthLabel = MONTHS_UPPER[monthIndex] || match[2];
+    return [dayLabel + ' ' + String(day).padStart(2, '0') + '/' + monthLabel + '/' + year, time]
+      .filter(Boolean)
+      .join(' ');
   }
 
   function todayParts() {
@@ -155,6 +178,7 @@
     normalizeAmount: normalizeAmount,
     formatMoney: formatMoney,
     formatPercent: formatPercent,
+    formatMovementDateTime: formatMovementDateTime,
     friendlyDate: friendlyDate,
     compactDate: compactDate,
     currentMonth: currentMonth,

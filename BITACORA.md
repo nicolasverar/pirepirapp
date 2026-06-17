@@ -113,6 +113,42 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-17 - Resumen global, fecha española e icono v2.16
+
+### Objetivo
+- Hacer nubes y aves aun mas definidas, con lectura tipo pixel/32-bit.
+- Lograr que la tabla del resumen muestre actividad aunque el mes activo no tenga movimientos.
+- Mostrar fecha/hora de gastos en formato español tipo `LUN 07/MAYO/2026 15:45`.
+- Cambiar el icono de la PWA usando `icono.jpeg`.
+
+### Cambios
+- `backend/SummaryService.js`: `actividadReciente` del resumen ahora se toma de todos los movimientos disponibles, no solo del mes activo.
+- `frontend/scripts/utils.js`: se agrego `formatMovementDateTime` para fechas tipo `JUE 07/MAYO/2026 15:45`.
+- `frontend/scripts/render.js`: resumen usa movimientos globales como respaldo si no hay actividad reciente; `Gastos totales` muestra fecha/hora en español; nubes y aves tienen mas piezas pixeladas.
+- `frontend/styles/main.css`: se aumento el detalle visual de nubes y aves con bloques tipo sprite.
+- `frontend/icons/icon-192.png` y `frontend/icons/icon-512.png`: regenerados desde `icono.jpeg`.
+- `frontend/index.html`, `frontend/manifest.json` y `frontend/service-worker.js`: el icono apunta a PNG y se retiraron referencias de iconos SVG del manifest/cache.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.16` y cache a `finanzas-lcd-v24`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registraron los prompts nuevos.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- `rg` en `frontend` de `v2.15`, `finanzas-lcd-v23`, `icon-192.svg` e `icon-512.svg`: sin referencias activas.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.16`, `finanzas-lcd-v24` y `icon-192.png`.
+- `node -e` para `formatMovementDateTime('2026-05-07','15:45:00')`: `JUE 07/MAYO/2026 15:45`.
+- `magick identify`: `icon-192.png` mide `192x192`; `icon-512.png` mide `512x512`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp v2.16 resumen e icono"`: creo version 15.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 15 --description "Pirepirapp v2.16 resumen e icono"`: Web App redeployado.
+- `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: `200 OK`.
+
+### Pendientes
+- Commit, push y verificacion publica en GitHub Pages.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

@@ -85,7 +85,9 @@
   function renderSummary(state) {
     var summary = state.data.resumen || {};
     var top = summary.categoriaMayorGasto || {};
-    var recent = summary.actividadReciente || [];
+    var recent = (summary.actividadReciente || []).length
+      ? summary.actividadReciente
+      : movementItemsFromState_(state).slice(0, 5);
     return [
       '<section class="summary-stack">',
       '<article class="system-window total-window summary-primary">',
@@ -116,10 +118,11 @@
       return '<p class="empty-state">Sin movimientos cargados.</p>';
     }
     return '<ol class="recent-list dataframe-list">' + items.map(function (item, index) {
+      var details = [item.categoria || item.tipo, utils.formatMovementDateTime(item.fecha, item.hora)].filter(Boolean).join(' · ');
       return [
         '<li class="recent-row dataframe-row ' + recentDitherClass(index) + '">',
         '<span class="df-index">' + utils.escapeHtml(String(index + 1).padStart(2, '0')) + '</span>',
-        '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(item.categoria || item.tipo) + '</small></span>',
+        '<span class="row-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(details) + '</small></span>',
         '<b class="df-amount">' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
         '</li>'
       ].join('');
@@ -177,10 +180,7 @@
 
   function renderMovementTable(movements, showMonth) {
     return '<div class="movement-list">' + movements.map(function (item) {
-      var meta = [item.fecha, item.hora].filter(Boolean).join(' ');
-      if (showMonth && item.mes) {
-        meta += ' · ' + item.mes;
-      }
+      var meta = utils.formatMovementDateTime(item.fecha, item.hora);
       return [
         '<article class="movement-row">',
         '<button class="movement-main js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">',
@@ -293,11 +293,12 @@
   function renderSkyScene() {
     return [
       '<span class="sky-scene" aria-hidden="true">',
-      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="sky-bird sky-bird-a"><i></i></span>',
-      '<span class="sky-bird sky-bird-b"><i></i></span>',
-      '<span class="sky-ave sky-ave-a"><i></i></span>',
+      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
+      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
+      '<span class="pixel-cloud pixel-cloud-c"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
+      '<span class="sky-bird sky-bird-a"><i></i><b></b><em></em></span>',
+      '<span class="sky-bird sky-bird-b"><i></i><b></b><em></em></span>',
+      '<span class="sky-ave sky-ave-a"><i></i><b></b><em></em></span>',
       '</span>'
     ].join('');
   }

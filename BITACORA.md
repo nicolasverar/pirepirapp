@@ -336,9 +336,15 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.21`, `APP_VERSION: 'v2.21'`, `finanzas-lcd-v29`, `app.js?v=2.21` y `render.js?v=2.21`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit `c112278` (`Simplificar gastos y particion de sueldo`) y push a `origin/main`.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp v2.21 sueldo gastos fijos"`: creo version 19.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 19 --description "Pirepirapp v2.21 sueldo gastos fijos"`: Web App redeployado.
+- `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: devuelve `{"ok":true}`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.21` / `finanzas-lcd-v29`; `app.js?v=2.21`, `render.js?v=2.21` y `forms.js?v=2.21` estan referenciados.
 
 ### Pendientes
-- Desplegar backend con `clasp` y verificar GitHub Pages publico tras el commit.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

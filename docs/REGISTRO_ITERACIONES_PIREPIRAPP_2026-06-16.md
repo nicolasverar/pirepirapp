@@ -331,3 +331,20 @@ EL ICONO DEBE SER MAS GRANDE MENOS ESPACIO BLANCO EN LOS MARCOS
 - La tarjeta de mayor gasto pasa a un recuadro delineado sin fondo pesado.
 - Disponible se mantiene sin cambios decorativos.
 - La particion de sueldo pasa de barra SVG a caja principal con subcajas proporcionales tipo treemap.
+
+### Prompt 23 - Usuario
+
+```text
+DEPURACIÓN DE ESTADO Y REFINAMIENTO ESTÉTICO (UI/UX)
+
+1. Reevaluar completamente gastos porque un gasto aparece momentaneamente y luego desaparece.
+2. Rediseñar aves y nubes de metas para que sean finas, minimalistas, estilizadas y organicas.
+3. Ajustar Cosas que quiero para que los titulos largos se lean completos.
+4. Optimizar y rediseñar el confeti de Configuracion / ¡Cobré! para que sea instantaneo y mas dinamico.
+```
+
+### Resumen operativo
+- Causa raiz identificada: un `bootstrap`/refresh silencioso podia resolver mientras un `createMovement` aun tenia ID temporal; como esa alta pendiente no estaba en `movementSyncGuards`, el snapshot viejo de Sheets podia pisar el estado optimista y sacar el gasto del DOM.
+- Se registra tambien la creacion optimista con clave de cliente hasta que el backend responde con ID real.
+- Se hace el ordenamiento de movimientos deterministico con fecha, hora, modificacion/id.
+- Se refinan aves/nubes con formas organicas, wishlist sin recorte de titulo y confeti inmediato previo a la respuesta de Sheets.

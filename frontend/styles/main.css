@@ -908,20 +908,20 @@ code {
 @keyframes bird-left-flap {
   0%,
   100% {
-    transform: rotate(-18deg) translate3d(0, -7px, 0);
+    transform: rotate(-12deg) translate3d(0, -4px, 0);
   }
   50% {
-    transform: rotate(10deg) translate3d(0, 5px, 0);
+    transform: rotate(8deg) translate3d(0, 3px, 0);
   }
 }
 
 @keyframes bird-right-flap {
   0%,
   100% {
-    transform: rotate(16deg) translate3d(0, -6px, 0);
+    transform: rotate(12deg) translate3d(0, -4px, 0);
   }
   50% {
-    transform: rotate(-12deg) translate3d(0, 5px, 0);
+    transform: rotate(-8deg) translate3d(0, 3px, 0);
   }
 }
 
@@ -957,18 +957,22 @@ code {
 @keyframes pixel-confetti-burst {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.6);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.4);
   }
-  10% {
+  8% {
     opacity: 1;
   }
-  48% {
+  38% {
     opacity: 1;
     transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)) scale(1);
   }
+  72% {
+    opacity: 0.92;
+    transform: translate3d(calc(var(--dx) + var(--drift)), calc(var(--dy) * 0.18), 0) rotate(calc(var(--rot) + var(--spin))) scale(0.92);
+  }
   100% {
     opacity: 0;
-    transform: translate3d(calc(var(--dx) * 0.72), 96px, 0) rotate(calc(var(--rot) * 1.6)) scale(0.72);
+    transform: translate3d(calc(var(--dx) + var(--drift) * 1.4), 116vh, 0) rotate(calc(var(--rot) + var(--spin) * 1.8)) scale(0.68);
   }
 }
 
@@ -983,24 +987,24 @@ code {
 .pixel-confetti-piece {
   position: absolute;
   bottom: max(12px, env(safe-area-inset-bottom));
-  width: 7px;
-  height: 7px;
+  width: var(--size);
+  height: calc(var(--size) * 1.65);
   opacity: 0;
   background: var(--lcd-ink);
-  box-shadow:
-    7px 0 0 currentColor,
-    0 7px 0 rgba(25, 45, 24, 0.7);
+  border-radius: 2px;
   color: var(--lcd-ink);
-  animation: pixel-confetti-burst var(--duration) steps(9, end) forwards;
+  box-shadow: 0 0 0 1px rgba(25, 45, 24, 0.28);
+  will-change: transform, opacity;
+  animation: pixel-confetti-burst var(--duration) cubic-bezier(0.15, 0.82, 0.26, 1) forwards;
   animation-delay: var(--delay);
 }
 
 .pixel-confetti-left {
-  left: 0;
+  left: 4px;
 }
 
 .pixel-confetti-right {
-  right: 0;
+  right: 4px;
 }
 
 .confetti-tone-0 {
@@ -1026,6 +1030,16 @@ code {
 .confetti-tone-4 {
   background: var(--lcd-bg);
   color: var(--lcd-bg);
+}
+
+.confetti-tone-5 {
+  background: var(--lcd-surface-hi);
+  color: var(--lcd-surface-hi);
+}
+
+.confetti-tone-6 {
+  background: var(--key-face);
+  color: var(--key-face);
 }
 
 .key-zone {
@@ -1291,74 +1305,62 @@ code {
 .pixel-cloud {
   --sky-scale: 1;
   --sky-y: 2px;
-  --sky-opacity: 0.82;
-  width: 72px;
+  --sky-opacity: 0.46;
+  width: 92px;
   height: 34px;
-  color: var(--lcd-line);
+  color: var(--lcd-surface-hi);
   background:
-    linear-gradient(currentColor 0 0) 4px 20px / 64px 8px no-repeat,
-    linear-gradient(currentColor 0 0) 10px 14px / 14px 14px no-repeat,
-    linear-gradient(currentColor 0 0) 22px 8px / 20px 20px no-repeat,
-    linear-gradient(currentColor 0 0) 40px 12px / 16px 16px no-repeat,
-    linear-gradient(currentColor 0 0) 55px 17px / 12px 11px no-repeat,
-    linear-gradient(currentColor 0 0) 14px 28px / 48px 4px no-repeat;
-  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.2));
+    radial-gradient(ellipse at 26% 64%, currentColor 0 19px, transparent 20px),
+    radial-gradient(ellipse at 46% 45%, currentColor 0 22px, transparent 23px),
+    radial-gradient(ellipse at 68% 62%, currentColor 0 18px, transparent 19px),
+    linear-gradient(currentColor, currentColor) 14px 19px / 64px 13px no-repeat;
+  border-radius: 999px;
+  filter: drop-shadow(0 1px 0 rgba(25, 45, 24, 0.18));
 }
 
 .pixel-cloud i {
   position: absolute;
   display: block;
-  background: var(--lcd-surface-hi);
-  opacity: 0.94;
+  background: rgba(25, 45, 24, 0.12);
+  border-radius: 999px;
+  opacity: 0.72;
 }
 
 .pixel-cloud i:nth-child(1) {
-  left: 9px;
-  top: 22px;
-  width: 58px;
-  height: 3px;
-}
-
-.pixel-cloud i:nth-child(2) {
-  left: 13px;
-  top: 16px;
-  width: 8px;
-  height: 8px;
-}
-
-.pixel-cloud i:nth-child(3) {
-  left: 25px;
-  top: 10px;
-  width: 14px;
-  height: 14px;
-}
-
-.pixel-cloud i:nth-child(4) {
-  left: 42px;
-  top: 14px;
-  width: 10px;
-  height: 10px;
-}
-
-.pixel-cloud i:nth-child(5) {
-  left: 56px;
-  top: 19px;
-  width: 8px;
-  height: 5px;
-}
-
-.pixel-cloud i:nth-child(6) {
   left: 18px;
-  top: 26px;
-  width: 38px;
+  top: 25px;
+  width: 58px;
   height: 2px;
 }
 
-.pixel-cloud i:nth-child(7) {
+.pixel-cloud i:nth-child(2) {
   left: 28px;
-  top: 7px;
-  width: 8px;
-  height: 3px;
+  top: 14px;
+  width: 16px;
+  height: 2px;
+}
+
+.pixel-cloud i:nth-child(3) {
+  left: 50px;
+  top: 11px;
+  width: 19px;
+  height: 2px;
+}
+
+.pixel-cloud i:nth-child(4) {
+  display: none;
+}
+
+.pixel-cloud i:nth-child(5) {
+  display: none;
+}
+
+.pixel-cloud i:nth-child(6) {
+  display: none;
+}
+
+.pixel-cloud i:nth-child(7) {
+  display: none;
 }
 
 .pixel-cloud-a {
@@ -1370,7 +1372,7 @@ code {
 .pixel-cloud-b {
   --sky-scale: 0.78;
   --sky-y: -4px;
-  --sky-opacity: 0.68;
+  --sky-opacity: 0.34;
   top: 26px;
   animation-delay: -10.5s;
   animation-duration: 22s;
@@ -1379,7 +1381,7 @@ code {
 .pixel-cloud-c {
   --sky-scale: 0.58;
   --sky-y: 3px;
-  --sky-opacity: 0.56;
+  --sky-opacity: 0.28;
   top: 4px;
   animation-delay: -15.5s;
   animation-duration: 26s;
@@ -1389,13 +1391,13 @@ code {
 .sky-ave {
   --sky-scale: 1;
   --sky-y: -3px;
-  --sky-opacity: 0.92;
-  --flap-speed: 0.62s;
+  --sky-opacity: 0.72;
+  --flap-speed: 1.18s;
   --flap-delay: 0s;
-  width: 54px;
-  height: 34px;
-  color: var(--lcd-ink);
-  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.28));
+  width: 58px;
+  height: 32px;
+  color: rgba(25, 45, 24, 0.9);
+  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.22));
 }
 
 .sky-bird i,
@@ -1407,77 +1409,71 @@ code {
   position: absolute;
   display: block;
   font-style: normal;
-  background: currentColor;
+  background: transparent;
 }
 
 .sky-bird i,
 .sky-ave i {
-  left: 18px;
-  top: 16px;
-  width: 17px;
-  height: 7px;
-  box-shadow:
-    -5px 2px 0 currentColor,
-    7px 1px 0 currentColor;
+  left: 24px;
+  top: 15px;
+  width: 14px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 999px;
 }
 
 .sky-bird i::before,
 .sky-ave i::before {
   content: "";
   position: absolute;
-  right: -10px;
-  top: -4px;
-  width: 9px;
-  height: 7px;
+  right: -7px;
+  top: -3px;
+  width: 7px;
+  height: 6px;
   background: currentColor;
-  box-shadow:
-    8px 3px 0 -2px currentColor,
-    4px -3px 0 -3px currentColor;
+  border-radius: 999px 999px 999px 2px;
 }
 
 .sky-bird i::after,
 .sky-ave i::after {
   content: "";
   position: absolute;
-  left: -14px;
+  left: -10px;
   top: 1px;
-  width: 9px;
+  width: 10px;
   height: 5px;
-  background: currentColor;
-  box-shadow:
-    -5px -3px 0 -1px currentColor,
-    -5px 4px 0 -1px currentColor;
+  background: transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 999px 0 0 0;
+  transform: rotate(-18deg);
 }
 
 .sky-bird b,
 .sky-ave b {
-  left: 15px;
-  top: 13px;
-  width: 16px;
-  height: 5px;
-  transform-origin: 13px 8px;
-  animation: bird-left-flap var(--flap-speed) steps(2, end) infinite;
+  left: 6px;
+  top: 7px;
+  width: 28px;
+  height: 15px;
+  border-top: 2px solid currentColor;
+  border-radius: 100% 0 0 0;
+  transform-origin: 28px 12px;
+  animation: bird-left-flap var(--flap-speed) ease-in-out infinite;
   animation-delay: var(--flap-delay);
-  box-shadow:
-    4px -5px 0 currentColor,
-    8px -9px 0 currentColor,
-    13px -6px 0 currentColor,
-    -4px 4px 0 -1px currentColor;
+  box-shadow: none;
 }
 
 .sky-bird em,
 .sky-ave em {
-  left: 22px;
-  top: 20px;
-  width: 14px;
-  height: 5px;
-  transform-origin: 3px -1px;
-  animation: bird-right-flap var(--flap-speed) steps(2, end) infinite;
+  left: 30px;
+  top: 7px;
+  width: 28px;
+  height: 15px;
+  border-top: 2px solid currentColor;
+  border-radius: 0 100% 0 0;
+  transform-origin: 0 12px;
+  animation: bird-right-flap var(--flap-speed) ease-in-out infinite;
   animation-delay: var(--flap-delay);
-  box-shadow:
-    4px 4px 0 currentColor,
-    8px 8px 0 currentColor,
-    -4px -3px 0 -1px currentColor;
+  box-shadow: none;
 }
 
 .sky-bird-a {
@@ -1499,7 +1495,7 @@ code {
 .sky-bird-c {
   --sky-scale: 0.68;
   --sky-y: -5px;
-  --sky-opacity: 0.78;
+  --sky-opacity: 0.58;
   --flap-delay: -0.22s;
   top: 12px;
   animation-delay: -10.2s;
@@ -1509,8 +1505,8 @@ code {
 .sky-ave-a {
   --sky-scale: 1.24;
   --sky-y: 2px;
-  --sky-opacity: 0.9;
-  --flap-speed: 0.74s;
+  --sky-opacity: 0.68;
+  --flap-speed: 1.28s;
   --flap-delay: -0.42s;
   top: 17px;
   animation-delay: -1.2s;
@@ -1520,8 +1516,8 @@ code {
 .sky-ave-b {
   --sky-scale: 1.08;
   --sky-y: -1px;
-  --sky-opacity: 0.88;
-  --flap-speed: 0.7s;
+  --sky-opacity: 0.66;
+  --flap-speed: 1.22s;
   --flap-delay: -0.18s;
   top: 2px;
   animation-delay: -12.4s;
@@ -1529,31 +1525,22 @@ code {
 }
 
 .sky-ave i {
-  width: 19px;
-  height: 8px;
+  width: 16px;
+  height: 5px;
 }
 
 .sky-ave i::before {
-  width: 10px;
-  height: 8px;
-  right: -11px;
+  width: 8px;
+  height: 7px;
+  right: -8px;
 }
 
 .sky-ave b {
-  width: 19px;
-  box-shadow:
-    5px -6px 0 currentColor,
-    10px -11px 0 currentColor,
-    16px -7px 0 currentColor,
-    -5px 5px 0 -1px currentColor;
+  width: 31px;
 }
 
 .sky-ave em {
-  width: 16px;
-  box-shadow:
-    5px 5px 0 currentColor,
-    10px 9px 0 currentColor,
-    -5px -3px 0 -1px currentColor;
+  width: 31px;
 }
 
 .data-block {
@@ -1799,6 +1786,7 @@ dd {
 .wish-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  align-items: stretch;
 }
 
 .wish-toolbar {
@@ -1823,10 +1811,11 @@ dd {
 
 .wish-card {
   display: grid;
-  grid-template-rows: auto auto;
-  gap: 6px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 7px;
   overflow: hidden;
-  min-height: 182px;
+  min-height: 184px;
+  height: 100%;
   padding: 7px;
 }
 
@@ -1927,17 +1916,18 @@ dd {
 .wish-info {
   display: grid;
   grid-template-rows: auto auto auto;
-  gap: 5px;
+  align-content: start;
+  gap: 6px;
   min-width: 0;
 }
 
 .wish-info > strong {
-  display: -webkit-box;
-  overflow: hidden;
+  display: block;
+  overflow: visible;
   overflow-wrap: anywhere;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-height: 1.12;
+  white-space: normal;
+  line-height: 1.16;
+  font-size: 0.76rem;
 }
 
 .wish-info b {

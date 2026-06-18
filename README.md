@@ -36,7 +36,7 @@ La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en
 
 ## Uso Actual
 
-- `Gastos` muestra todos los movimientos disponibles en Drive/Sheets; el mes se sincroniza automaticamente con el calendario y las altas/bajas recalculan el resumen al instante.
+- `Gastos` muestra todos los movimientos disponibles en Drive/Sheets; el mes se sincroniza automaticamente con el calendario y las altas/bajas se mantienen visibles aun durante refreshes silenciosos.
 - En `Gastos`, `Gasto fijo` permite elegir un gasto fijo configurado y precargarlo como movimiento; `Gasto corriente` abre el formulario estandar sin campo de categoria.
 - `Configuracion` permite cargar sueldo mensual, registrar `¡Cobré!` como ingreso de sueldo y administrar gastos fijos estructurados.
 - `Resumen` agrupa `Gastaste mas en` por motivo similar y muestra la particion del sueldo entre gastos fijos y disponible.

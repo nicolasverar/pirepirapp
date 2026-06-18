@@ -158,6 +158,7 @@
     if (!window.confirm('Registrar ingreso de sueldo por ' + utils.formatMoney(salary) + '?')) {
       return Promise.resolve();
     }
+    launchPixelConfetti();
     return mutate('createMovement', {
       tipo: 'Ingreso',
       motivo: 'Sueldo',
@@ -167,7 +168,6 @@
       hora: utils.toInputTime() + ':00',
       descripcion: ''
     }).then(function (result) {
-      launchPixelConfetti();
       toast('Sueldo registrado');
       return result;
     });
@@ -175,37 +175,46 @@
 
   function launchPixelConfetti() {
     var root = document.createElement('div');
+    var fragment = document.createDocumentFragment();
     root.className = 'pixel-confetti-layer';
     root.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(root);
 
     ['left', 'right'].forEach(function (side) {
-      var count = 24;
+      var count = 42;
       var index;
       for (index = 0; index < count; index += 1) {
-        root.appendChild(confettiPiece(side, index));
+        fragment.appendChild(confettiPiece(side, index));
       }
     });
+
+    root.appendChild(fragment);
+    document.body.appendChild(root);
 
     window.setTimeout(function () {
       if (root.parentNode) {
         root.parentNode.removeChild(root);
       }
-    }, 1800);
+    }, 2600);
   }
 
   function confettiPiece(side, index) {
     var piece = document.createElement('i');
-    var angle = (side === 'left' ? -1 : 1) * (28 + Math.random() * 58);
-    var distance = 78 + Math.random() * 112;
-    var dx = Math.cos(angle * Math.PI / 180) * distance;
-    var dy = -68 - Math.random() * 102;
-    piece.className = 'pixel-confetti-piece pixel-confetti-' + side + ' confetti-tone-' + (index % 5);
+    var sideFactor = side === 'left' ? 1 : -1;
+    var angle = (side === 'left' ? 1 : -1) * (20 + Math.random() * 64);
+    var distance = 92 + Math.random() * 150;
+    var dx = (side === 'left' ? 1 : -1) * Math.cos(angle * Math.PI / 180) * distance;
+    var dy = -92 - Math.random() * 150;
+    var drift = sideFactor * (22 + Math.random() * 72);
+    var size = 4 + Math.round(Math.random() * 7);
+    piece.className = 'pixel-confetti-piece pixel-confetti-' + side + ' confetti-tone-' + (index % 7);
     piece.style.setProperty('--dx', dx.toFixed(0) + 'px');
     piece.style.setProperty('--dy', dy.toFixed(0) + 'px');
-    piece.style.setProperty('--rot', String((Math.random() * 540) - 270) + 'deg');
-    piece.style.setProperty('--delay', String(Math.random() * 0.16) + 's');
-    piece.style.setProperty('--duration', String(1.05 + Math.random() * 0.55) + 's');
+    piece.style.setProperty('--drift', drift.toFixed(0) + 'px');
+    piece.style.setProperty('--rot', String((Math.random() * 760) - 380) + 'deg');
+    piece.style.setProperty('--spin', String((Math.random() * 960) - 480) + 'deg');
+    piece.style.setProperty('--size', size + 'px');
+    piece.style.setProperty('--delay', String(Math.random() * 0.08) + 's');
+    piece.style.setProperty('--duration', String(1.45 + Math.random() * 0.95) + 's');
     return piece;
   }
 
@@ -336,9 +345,11 @@
     sortMovementItems(items);
 
     applyMovementItemsToState(current, source, items, current.resumen, current.config);
+    rememberMovementCreate(movement);
     saveCurrentBootstrap();
 
     return function () {
+      forgetMovementGuard(movement.id);
       window.FinanzasState.setData(snapshot);
       saveCurrentBootstrap();
     };
@@ -532,14 +543,23 @@
 
   function sortMovementItems(items) {
     items.sort(function (left, right) {
-      var leftKey = String(left.fecha || '') + ' ' + String(left.hora || '');
-      var rightKey = String(right.fecha || '') + ' ' + String(right.hora || '');
+      var leftKey = movementSortKey(left);
+      var rightKey = movementSortKey(right);
       if (leftKey === rightKey) {
         return 0;
       }
       return leftKey < rightKey ? 1 : -1;
     });
     return items;
+  }
+
+  function movementSortKey(item) {
+    return [
+      String((item || {}).fecha || ''),
+      String((item || {}).hora || ''),
+      String((item || {}).fechaModificacion || (item || {}).fechaCreacion || ''),
+      String((item || {}).id || '')
+    ].join(' ');
   }
 
   function recalculateSummary(summary, config, movements) {
@@ -658,6 +678,18 @@
     };
   }
 
+  function rememberMovementCreate(movement) {
+    if (!movement || !movement.id) {
+      return;
+    }
+    movementSyncGuards[movement.id] = {
+      action: 'create',
+      key: movement.optimisticKey || movementClientKey(movement),
+      movement: cloneData(movement),
+      expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
+    };
+  }
+
   function rememberMovementDelete(id) {
     if (!id) {
       return;
@@ -674,6 +706,15 @@
     if (id && movementSyncGuards[id]) {
       delete movementSyncGuards[id];
     }
+  }
+
+  function forgetMovementCreateGuard(key) {
+    Object.keys(movementSyncGuards).forEach(function (id) {
+      var guard = movementSyncGuards[id];
+      if (guard && guard.action === 'create' && guard.key === key) {
+        delete movementSyncGuards[id];
+      }
+    });
   }
 
   function activeMovementGuards() {
@@ -710,6 +751,14 @@
           return String(item.id) !== String(guard.movement.id);
         });
         items.push(guard.movement);
+      }
+      if (guard.action === 'create' && guard.movement) {
+        var exists = items.some(function (item) {
+          return String(item.id) === String(guard.movement.id) || movementClientKey(item) === guard.key;
+        });
+        if (!exists) {
+          items.push(guard.movement);
+        }
       }
     });
     sortMovementItems(items);
@@ -782,6 +831,7 @@
       items = items.filter(function (item) {
         return !(item.optimisticAction === 'createMovement' && item.optimisticKey === resultKey);
       });
+      forgetMovementCreateGuard(resultKey);
     }
 
     if (route !== 'deletemovement' && (showingAllMonths || movementMonth === activeMonth)) {

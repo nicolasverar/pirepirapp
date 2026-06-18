@@ -173,6 +173,38 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Depuracion de gastos y refinamiento UI
+
+### Objetivo
+- Corregir definitivamente que un gasto recien cargado aparezca y luego desaparezca por refresh/render posterior.
+- Redisenar nubes y aves de `EL FUTURO` con formas finas, organicas y menos rigidas.
+- Permitir lectura completa de titulos largos en `Cosas que quiero`.
+- Hacer que el confeti de `¡Cobré!` dispare sin esperar a Sheets y tenga mas dinamica visual.
+
+### Causa raiz
+- La app ya aplicaba alta optimista para `createMovement`, pero no registraba esa alta temporal en `movementSyncGuards`.
+- Si un `bootstrap` o refresh silencioso iniciado antes de guardar resolvia durante la ventana en que el movimiento tenia ID temporal, el snapshot viejo de Sheets reemplazaba la lista local y quitaba el gasto del DOM.
+- La proteccion existente empezaba para movimientos confirmados o eliminados, pero no para creaciones pendientes.
+
+### Cambios
+- `frontend/scripts/app.js`: se agrego guard para creaciones optimistas, limpieza al recibir el ID real, orden deterministico por fecha/hora/modificacion/id y confeti inmediato tras confirmar `¡Cobré!`.
+- `frontend/styles/main.css`: confeti con particulas fluidas, tamanos variables y caida con transform GPU; nubes/aves pasan a formas organicas de lineas suaves.
+- `frontend/styles/main.css`: `Cosas que quiero` ya no recorta el titulo a dos lineas y deja que la tarjeta crezca manteniendo grilla simetrica por fila.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.26` y cache a `finanzas-lcd-v34`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json` y `backend/appsscript.json`: manifiestos OK.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, cache `finanzas-lcd-v34`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.26`, `APP_VERSION: 'v2.26'`, `finanzas-lcd-v34`, `app.js?v=2.26` y `main.css?v=2.26`.
+- Busqueda de referencias viejas `v2.25`, `v=2.25` y `finanzas-lcd-v33`: sin resultados en archivos de version/cache.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

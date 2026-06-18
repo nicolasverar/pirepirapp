@@ -285,15 +285,17 @@
       '</div>',
       '<div class="wish-grid">'
     ].join('') + sorted.map(function (item) {
+      var cardClass = 'wish-card' + (item.conversionFeedback ? ' is-converting' : '');
       return [
-        '<article class="wish-card">',
+        '<article class="' + cardClass + '">',
         renderSharpSparkles(),
+        item.conversionFeedback ? '<span class="wish-convert-check" aria-hidden="true">OK</span>' : '',
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
         '<b>' + utils.escapeHtml(utils.formatMoney(item.costoAproximado)) + '</b>',
         '<div class="mini-actions">',
-        '<button class="tiny-key js-convert-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button">META</button>',
+        '<button class="tiny-key js-convert-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button"' + (item.conversionPending ? ' disabled' : '') + '>Convertir en meta</button>',
         '<button class="tiny-key js-edit-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
         '</div>',
         '</div>',
@@ -645,7 +647,7 @@
 
     utils.qsa('.js-convert-wish', root).forEach(function (button) {
       button.addEventListener('click', function () {
-        window.FinanzasForms.convertWishlist(button.getAttribute('data-id'));
+        window.FinanzasApp.convertWishlistInstant(button.getAttribute('data-id'));
       });
     });
 

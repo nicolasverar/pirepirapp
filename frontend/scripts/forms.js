@@ -598,24 +598,6 @@
     });
   }
 
-  function convertWishlist(id) {
-    openModal('CONVERTIR', [
-      '<form class="lcd-form" id="convert-form" data-close-on-submit="true">',
-      '<p class="form-error" hidden></p>',
-      field('Monto mensual', 'montoMensual', 'number', '', 'required min="0" step="1" inputmode="numeric"'),
-      textarea('Comentario para la meta', 'descripcion', '', 'maxlength="500" rows="3"'),
-      formActions('Convertir'),
-      '</form>'
-    ].join(''), function (root) {
-      bindForm(root, '#convert-form', function (form) {
-        var payload = utils.formDataToObject(form);
-        payload.wishlistId = id;
-        payload.montoMensual = utils.normalizeAmount(payload.montoMensual);
-        return window.FinanzasApp.mutate('convertWishlistToGoal', payload).then(closeModal);
-      });
-    });
-  }
-
   window.FinanzasForms = {
     actionMenu: actionMenu,
     openAccessForm: openAccessForm,
@@ -624,7 +606,6 @@
     openFutureSavingForm: openFutureSavingForm,
     openGoalForm: openGoalForm,
     openWishlistForm: openWishlistForm,
-    convertWishlist: convertWishlist,
     closeModal: closeModal
   };
 }());

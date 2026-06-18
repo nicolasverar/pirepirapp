@@ -259,3 +259,24 @@ RETOMA LO QUE ESTABAS HACIENDO
 - Se agrega `¡Cobré!` con confirmacion, movimiento `Ingreso/Sueldo` y confeti pixel art.
 - Se agrupa `Gastaste mas en` por motivo similar con Levenshtein/trigramas y umbral 80%.
 - Se redisenan los gastos fijos como filas estructuradas y se agrega particion visual del sueldo en Resumen.
+
+### Prompt 19 - Usuario
+
+```text
+Cambio 1 — Conversión de "Cosa que quiero" a Meta: flujo instantáneo
+El flujo actual abre un formulario intermedio al convertir un ítem de wishlist en meta, lo cual es lento. Reemplazalo por:
+
+Un botón "Convertir en meta" en la tarjeta que ejecute la conversión de forma inmediata sin abrir ningún modal ni formulario.
+La conversión usa directamente el título y costo aproximado del ítem como nombre y monto objetivo de la nueva meta.
+Se muestra una micro-confirmación visual inline en la tarjeta (ej. la tarjeta parpadea una vez o muestra un checkmark por 1 segundo) y luego desaparece de la lista de wishlist.
+Si se necesita confirmación, que sea un único tap/click de confirmación inline dentro de la tarjeta, sin abrir ninguna capa nueva.
+Optimizá el request al backend para que la UI actualice el estado local de forma optimista antes de que el servidor confirme, revirtiendo solo si hay error.
+Cambio 2 — Rediseño de paleta: profundidad con dos variantes de verde
+La app actualmente usa un verde de fondo prácticamente plano. Rediseñá la paleta incorporando dos variantes adicionales que generen profundidad sin romper la armonía LCD.No introduzcas nuevos colores fuera de la familia del verde. No uses librerías externas. Mantené ES5 en JS y variables CSS nativas sin preprocesadores
+```
+
+### Resumen operativo
+- Se reemplaza el modal de conversion wishlist por accion directa `Convertir en meta`.
+- Se agrega conversion optimista: meta temporal local, check inline en tarjeta y rollback si falla el servidor.
+- Backend permite convertir wishlist sin pedir monto mensual, usando titulo/costo como titulo/objetivo.
+- Se incorporan dos variantes verdes adicionales a la paleta LCD para dar profundidad visual.

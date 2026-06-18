@@ -263,7 +263,10 @@ function convertWishlistToGoal_(payload) {
   return withScriptLock_(function () {
     var source = payload || {};
     var wishlistId = requireText_(source.wishlistId || source.id, 'ID de wishlist', 120);
-    var monthlyAmount = normalizeAmount_(source.montoMensual !== undefined ? source.montoMensual : source.monthlyAmount, 'Monto mensual', true);
+    var monthlySource = source.montoMensual !== undefined ? source.montoMensual : source.monthlyAmount;
+    var monthlyAmount = monthlySource !== undefined
+      ? normalizeAmount_(monthlySource, 'Monto mensual', true)
+      : 0;
     var item = getRecordById_(appSheetNames_().wishlist, wishlistId);
     if (!item || normalizeText_(item.Estado) !== activeStatus_()) {
       notFoundError_('No existe un elemento activo de wishlist con ese ID.');

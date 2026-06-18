@@ -40,5 +40,5 @@ La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en
 - En `Gastos`, `Gasto fijo` permite elegir un gasto fijo configurado y precargarlo como movimiento; `Gasto corriente` abre el formulario estandar sin campo de categoria.
 - `Configuracion` permite cargar sueldo mensual, registrar `¡Cobré!` como ingreso de sueldo y administrar gastos fijos estructurados.
 - `Resumen` agrupa `Gastaste mas en` por motivo similar y muestra la particion del sueldo entre gastos fijos y disponible.
-- `Cosas que quiero` no usa descripcion. Solo al convertir una cosa en meta se puede agregar un comentario para la nueva meta.
+- `Cosas que quiero` no usa descripcion. `Convertir en meta` crea la meta al instante con el titulo y costo aproximado del item.
 - La lista de `Cosas que quiero` se puede ordenar por costo de menor a mayor o de mayor a menor.

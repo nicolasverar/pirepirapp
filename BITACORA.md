@@ -346,6 +346,33 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Conversion instantanea de wishlist y profundidad LCD
+
+### Objetivo
+- Convertir una `Cosa que quiero` en meta sin modal ni formulario intermedio.
+- Actualizar la UI de forma optimista con micro-confirmacion inline y rollback ante error.
+- Dar mas profundidad visual a la paleta LCD usando solo variantes verdes.
+
+### Cambios
+- `frontend/scripts/render.js`: el boton de wishlist ahora dice `Convertir en meta`, dispara la conversion directa y muestra check inline/parpadeo durante la salida de la tarjeta.
+- `frontend/scripts/app.js`: se agrego conversion optimista con meta temporal local, remocion diferida de la tarjeta y reemplazo por la respuesta real del backend.
+- `frontend/scripts/forms.js`: se elimino el modal/formulario intermedio de conversion.
+- `backend/GoalService.js`: `convertWishlistToGoal_` ya no requiere `montoMensual`; usa `0` si no se envia y mantiene titulo/costo de wishlist como titulo/objetivo de la meta.
+- `frontend/styles/lcd-theme.css` y `frontend/styles/main.css`: se agregaron `--lcd-surface-hi` y `--lcd-surface-lo` y se aplicaron gradientes verdes de profundidad en pantalla, tarjetas, inputs y filas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.22` y cache a `finanzas-lcd-v30`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.22`, `APP_VERSION: 'v2.22'`, `finanzas-lcd-v30`, `app.js?v=2.22` y `render.js?v=2.22`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Desplegar backend con `clasp` y verificar GitHub Pages publico tras el commit.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

@@ -205,7 +205,94 @@
     if (route === 'deletemovement' && payload && payload.id) {
       return applyOptimisticMovementDelete(payload.id);
     }
+    if (route === 'convertwishlisttogoal' && payload && (payload.wishlistId || payload.id)) {
+      return applyOptimisticWishlistConversion(payload.wishlistId || payload.id);
+    }
     return null;
+  }
+
+  function convertWishlistInstant(id) {
+    return mutate('convertWishlistToGoal', { wishlistId: id });
+  }
+
+  function applyOptimisticWishlistConversion(id) {
+    var current = window.FinanzasState.getState().data;
+    var snapshot = cloneData(current);
+    var wishlist = Array.isArray(current.wishlist) ? current.wishlist.slice() : [];
+    var item = wishlist.filter(function (entry) {
+      return String(entry.id) === String(id);
+    })[0];
+    if (!item) {
+      return null;
+    }
+
+    var optimisticGoalId = 'optimistic-goal-' + item.id;
+    var goal = {
+      id: optimisticGoalId,
+      titulo: item.titulo,
+      descripcion: '',
+      montoMensual: 0,
+      montoObjetivo: utils.normalizeAmount(item.costoAproximado),
+      montoAcumulado: 0,
+      porcentaje: 0,
+      imageDriveId: item.imageDriveId || '',
+      imageRef: item.imageRef || '',
+      estado: 'Activo',
+      optimisticSourceWishlistId: item.id
+    };
+    var nextWishlist = wishlist.map(function (entry) {
+      if (String(entry.id) !== String(id)) {
+        return entry;
+      }
+      var nextEntry = {};
+      Object.keys(entry).forEach(function (key) {
+        nextEntry[key] = entry[key];
+      });
+      nextEntry.conversionFeedback = true;
+      nextEntry.conversionPending = true;
+      return nextEntry;
+    });
+    var nextGoals = (Array.isArray(current.metas) ? current.metas.slice() : []).filter(function (entry) {
+      return String(entry.id) !== optimisticGoalId;
+    });
+    nextGoals.push(goal);
+
+    window.FinanzasState.setData({
+      config: current.config,
+      resumen: current.resumen,
+      movimientos: current.movimientos,
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: nextGoals,
+      wishlist: nextWishlist
+    });
+    saveCurrentBootstrap();
+
+    var timer = window.setTimeout(function () {
+      removeOptimisticWishlistCard(id);
+    }, 850);
+
+    return function () {
+      window.clearTimeout(timer);
+      window.FinanzasState.setData(snapshot);
+      saveCurrentBootstrap();
+    };
+  }
+
+  function removeOptimisticWishlistCard(id) {
+    var current = window.FinanzasState.getState().data;
+    var wishlist = Array.isArray(current.wishlist) ? current.wishlist.filter(function (entry) {
+      return !(String(entry.id) === String(id) && entry.conversionPending);
+    }) : [];
+
+    window.FinanzasState.setData({
+      config: current.config,
+      resumen: current.resumen,
+      movimientos: current.movimientos,
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: current.metas,
+      wishlist: wishlist
+    });
+    saveCurrentBootstrap();
   }
 
   function applyOptimisticMovementDelete(id) {
@@ -437,14 +524,17 @@
 
   function applyConvertWishlistResult(result) {
     var current = window.FinanzasState.getState().data;
+    var convertedId = result.wishlistItem && result.wishlistItem.id;
     var metas = Array.isArray(current.metas) ? current.metas.filter(function (item) {
-      return !result.goal || String(item.id) !== String(result.goal.id);
+      if (result.goal && String(item.id) === String(result.goal.id)) {
+        return false;
+      }
+      return !(convertedId && String(item.optimisticSourceWishlistId) === String(convertedId));
     }) : [];
     if (result.goal && isActiveItem(result.goal)) {
       metas.push(result.goal);
     }
 
-    var convertedId = result.wishlistItem && result.wishlistItem.id;
     var wishlist = Array.isArray(current.wishlist) ? current.wishlist.filter(function (item) {
       return String(item.id) !== String(convertedId);
     }) : [];
@@ -608,6 +698,7 @@
     init: init,
     refresh: refresh,
     mutate: mutate,
+    convertWishlistInstant: convertWishlistInstant,
     claimSalary: claimSalary,
     toast: toast,
     updateApp: updateApp,

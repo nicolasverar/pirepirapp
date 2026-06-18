@@ -180,7 +180,6 @@
       '<p class="lcd-muted">' + utils.escapeHtml(subtitle) + '</p>',
       '<div class="toolbar-line">',
       '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
-      '<button class="lcd-button js-new-fixed-expense" type="button">Gasto fijo</button>',
       '<button class="lcd-button js-new-expense" type="button">Gasto corriente</button>',
       '<button class="lcd-button js-new-income" type="button">Ingreso</button>',
       '</div>',
@@ -673,13 +672,6 @@
       refresh.addEventListener('click', window.FinanzasApp.refresh);
     }
 
-    var newFixedExpense = utils.qs('.js-new-fixed-expense', root);
-    if (newFixedExpense) {
-      newFixedExpense.addEventListener('click', function () {
-        window.FinanzasForms.openFixedExpensePicker();
-      });
-    }
-
     var newExpense = utils.qs('.js-new-expense', root);
     if (newExpense) {
       newExpense.addEventListener('click', function () {
@@ -887,7 +879,7 @@
     var month = String((summary || {}).mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
     var groups = [];
     (movements || []).forEach(function (item) {
-      if (!isExpenseMovement(item) || movementMonth(item) !== month) {
+      if (!isExpenseMovement(item) || utils.isFixedExpenseMovement(item) || movementMonth(item) !== month) {
         return;
       }
       addMovementToMotiveGroups(groups, item);

@@ -147,6 +147,9 @@ function dispatchAction_(action, payload, options) {
     getmovements: function () {
       return listMovements_(payload);
     },
+    syncfixedexpenses: function () {
+      return syncFixedExpenses_(payload);
+    },
     createmovement: function () {
       return createMovement_(payload);
     },

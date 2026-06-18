@@ -1,6 +1,6 @@
 window.FINANZAS_CONFIG = {
   API_URL: '',
   APP_NAME: 'Pirepirapp',
-  APP_VERSION: 'v2.26',
+  APP_VERSION: 'v2.27',
   DEFAULT_MONTH: ''
 };

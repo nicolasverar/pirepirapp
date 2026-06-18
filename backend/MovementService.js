@@ -40,6 +40,53 @@ function createMovementUnlocked_(payload) {
   return record;
 }
 
+function syncFixedExpenses_(payload) {
+  return withScriptLock_(function () {
+    var source = payload || {};
+    var config = getConfig_();
+    var month = assertMonthString_(source.mes || source.month || config.mesActual || currentMonthString_(), 'Mes');
+    var fixed = sanitizeFixedExpenses_(config.gastosFijos || []);
+    var existing = readMovementRecordsForMonth_(month);
+    var existingKeys = {};
+    var created = [];
+
+    existing.forEach(function (record) {
+      var key = fixedExpenseRecordKey_(record);
+      if (key) {
+        existingKeys[key] = true;
+      }
+    });
+
+    fixed.forEach(function (item) {
+      var name = normalizeText_(item.nombre || item.categoria);
+      var amount = Number(item.monto || 0);
+      var key = fixedExpenseMovementKey_(month, name);
+      if (!name || amount <= 0 || existingKeys[key]) {
+        return;
+      }
+      var record = createMovementUnlocked_({
+        fecha: month + '-01',
+        hora: '00:00:00',
+        tipo: movementTypes_().expense,
+        motivo: name,
+        categoria: fixedExpenseCategory_(),
+        monto: amount,
+        descripcion: fixedExpenseMarker_(month, name)
+      });
+      existingKeys[key] = true;
+      created.push(record);
+    });
+
+    SpreadsheetApp.flush();
+    return {
+      mes: month,
+      movimientosCreados: created.map(movementToApi_),
+      movimientos: sortMovementRecords_(readMovementRecordsForMonth_(month), true).map(movementToApi_),
+      resumen: getMonthlySummary_({ mes: month })
+    };
+  });
+}
+
 function updateMovement_(payload) {
   return withScriptLock_(function () {
     var source = payload || {};
@@ -177,6 +224,27 @@ function hasMonthStartMarker_(month) {
 
 function monthStartMarker_(month) {
   return 'Inicio automatico del mes ' + month;
+}
+
+function fixedExpenseCategory_() {
+  return 'Gasto fijo';
+}
+
+function fixedExpenseMarker_(month, name) {
+  return 'Gasto fijo automatico ' + month + ' :: ' + normalizeText_(name);
+}
+
+function fixedExpenseMovementKey_(month, name) {
+  return normalizeText_(month) + '|' + normalizeText_(name).toLowerCase().replace(/\s+/g, ' ');
+}
+
+function fixedExpenseRecordKey_(record) {
+  var category = normalizeText_((record || {}).Categoria).toLowerCase();
+  var description = normalizeText_((record || {}).Descripcion).toLowerCase();
+  if (category !== 'gasto fijo' && description.indexOf('gasto fijo automatico') !== 0) {
+    return '';
+  }
+  return fixedExpenseMovementKey_(normalizeText_(record.Mes), normalizeText_(record.Motivo));
 }
 
 function sortMovementRecords_(records, descending) {

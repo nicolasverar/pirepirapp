@@ -197,6 +197,13 @@
       });
   }
 
+  function isFixedExpenseMovement(item) {
+    var source = item || {};
+    var category = String(source.categoria || source.category || '').toLowerCase();
+    var description = String(source.descripcion || source.description || '').toLowerCase();
+    return category === 'gasto fijo' || description.indexOf('gasto fijo automatico') === 0;
+  }
+
   function debounce(fn, delay) {
     var timer = 0;
     return function () {
@@ -229,6 +236,7 @@
     fixedExpenseAmount: fixedExpenseAmount,
     fixedExpensePercent: fixedExpensePercent,
     normalizeFixedExpenses: normalizeFixedExpenses,
+    isFixedExpenseMovement: isFixedExpenseMovement,
     debounce: debounce
   };
 }());

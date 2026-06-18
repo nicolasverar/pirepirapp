@@ -5,6 +5,7 @@
   var movementGuardCounter = 0;
   var movementRefreshTimer = 0;
   var movementSyncGuards = {};
+  var fixedExpenseSyncInFlight = false;
   var MOVEMENT_GUARD_TTL_MS = 15000;
 
   function init() {
@@ -88,6 +89,7 @@
           window.FinanzasLocalCache.saveBootstrap(reconciled);
         }
         window.FinanzasState.setState({ loading: false, syncStatus: 'Sincronizado', error: '' });
+        syncFixedExpensesIfNeeded(reconciled);
       })
       .catch(function (error) {
         var hasLocalData = Boolean(window.FinanzasState.getState().data.resumen);
@@ -146,6 +148,85 @@
         toast(error.message);
         throw error;
       });
+  }
+
+  function syncFixedExpensesIfNeeded(data) {
+    var current = data || window.FinanzasState.getState().data || {};
+    var config = current.config || {};
+    var month = String((current.resumen || {}).mes || config.mesActual || utils.currentMonth()).slice(0, 7);
+    var fixed = utils.normalizeFixedExpenses(config.gastosFijos || [], config.sueldoMensual || 0).filter(function (item) {
+      return utils.fixedExpenseAmount(item) > 0 && utils.fixedExpenseName(item);
+    });
+    if (!fixed.length || fixedExpenseSyncInFlight || !window.FinanzasApi.hasBackend()) {
+      return;
+    }
+    var movements = movementItemsFromData(current.movimientos || {});
+    var missing = fixed.some(function (item) {
+      return !hasFixedExpenseMovement(movements, month, item);
+    });
+    if (!missing) {
+      return;
+    }
+
+    fixedExpenseSyncInFlight = true;
+    window.FinanzasApi.request('syncFixedExpenses', { mes: month })
+      .then(function (result) {
+        fixedExpenseSyncInFlight = false;
+        applyFixedExpenseSyncResult(result || {});
+      })
+      .catch(function () {
+        fixedExpenseSyncInFlight = false;
+      });
+  }
+
+  function hasFixedExpenseMovement(movements, month, fixedExpense) {
+    var name = normalizeFixedExpenseName(utils.fixedExpenseName(fixedExpense));
+    return (movements || []).some(function (item) {
+      return movementMonth(item) === month
+        && utils.isFixedExpenseMovement(item)
+        && normalizeFixedExpenseName(item.motivo) === name;
+    });
+  }
+
+  function normalizeFixedExpenseName(value) {
+    return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function applyFixedExpenseSyncResult(result) {
+    var created = Array.isArray(result.movimientosCreados) ? result.movimientosCreados : [];
+    if (!created.length && !Array.isArray(result.movimientos)) {
+      return;
+    }
+
+    var current = window.FinanzasState.getState().data;
+    var source = current.movimientos || {};
+    var sourceItems = movementItemsFromData(source);
+    var sourceIsAllMonths = !Array.isArray(source) && Boolean(source.allMonths);
+    var items = sourceIsAllMonths
+      ? mergeMovementItems(sourceItems, created)
+      : (Array.isArray(result.movimientos) ? result.movimientos.slice() : mergeMovementItems(sourceItems, created));
+    sortMovementItems(items);
+    applyMovementItemsToState(current, source, items, result.resumen || current.resumen, current.config);
+    saveCurrentBootstrap();
+    if (created.length) {
+      toast('Gastos fijos sincronizados');
+    }
+  }
+
+  function mergeMovementItems(items, additions) {
+    var seen = {};
+    var merged = [];
+    (items || []).concat(additions || []).forEach(function (item) {
+      var id = String((item || {}).id || '');
+      if (id && seen[id]) {
+        return;
+      }
+      if (id) {
+        seen[id] = true;
+      }
+      merged.push(item);
+    });
+    return merged;
   }
 
   function claimSalary(amount) {
@@ -569,6 +650,8 @@
     var monthlySalary = utils.normalizeAmount(appConfig.sueldoMensual !== undefined ? appConfig.sueldoMensual : base.sueldoMensual);
     var totals = {
       gastos: 0,
+      gastosFijos: 0,
+      gastosVariables: 0,
       comprasWishlist: 0,
       ingresosExtra: 0,
       aportesAhorro: 0,
@@ -587,7 +670,12 @@
       count += 1;
       if (type === 'Gasto') {
         totals.gastos += amount;
-        categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+        if (utils.isFixedExpenseMovement(item)) {
+          totals.gastosFijos += amount;
+        } else {
+          totals.gastosVariables += amount;
+          categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+        }
       }
       if (type === 'Compra de wishlist') {
         totals.comprasWishlist += amount;
@@ -607,7 +695,9 @@
     var totalGastado = totals.gastos + totals.comprasWishlist;
     var totalIngresos = monthlySalary + totals.ingresosExtra;
     var totalApartado = totals.aportesAhorro + totals.aportesMeta;
-    var disponible = totalIngresos - totalGastado - totalApartado;
+    var fixedConfigured = fixedExpenseTotal(appConfig.gastosFijos, monthlySalary);
+    var baseDisponible = monthlySalary - fixedConfigured;
+    var disponible = baseDisponible + totals.ingresosExtra - totals.gastosVariables - totals.comprasWishlist - totalApartado;
     base.mes = month;
     base.moneda = appConfig.moneda || base.moneda || 'PYG';
     base.sueldoMensual = monthlySalary;
@@ -615,10 +705,14 @@
     base.totalIngresos = totalIngresos;
     base.totalGastado = totalGastado;
     base.gastosNormales = totals.gastos;
+    base.gastosFijos = totals.gastosFijos;
+    base.gastosVariables = totals.gastosVariables;
+    base.gastosFijosConfigurados = fixedConfigured;
     base.comprasWishlist = totals.comprasWishlist;
     base.aportesAhorro = totals.aportesAhorro;
     base.aportesMeta = totals.aportesMeta;
     base.totalApartado = totalApartado;
+    base.baseDisponible = baseDisponible;
     base.disponible = disponible;
     base.porcentajeDisponible = totalIngresos > 0
       ? Math.max(0, Math.min(100, Math.round((disponible / totalIngresos) * 10000) / 100))
@@ -627,6 +721,12 @@
     base.actividadReciente = sortMovementItems((movements || []).slice()).slice(0, 5);
     base.cantidadMovimientos = count;
     return base;
+  }
+
+  function fixedExpenseTotal(items, salary) {
+    return utils.normalizeFixedExpenses(items || [], salary).reduce(function (sum, item) {
+      return sum + utils.fixedExpenseAmount(item);
+    }, 0);
   }
 
   function topCategoryFromTotals(categoryTotals) {

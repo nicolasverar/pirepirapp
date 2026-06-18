@@ -210,6 +210,36 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Fijos automaticos e icono cerrado
+
+### Objetivo
+- Redibujar aves y nubes de `EL FUTURO` para que sean mas reconocibles.
+- Reducir el espacio libre del icono PWA.
+- Hacer que `Disponible` use sueldo menos gastos fijos configurados.
+- Evitar que los gastos fijos se carguen manualmente o dominen `Gastaste mas en`, pero que queden guardados y visibles en `Gastos`.
+
+### Cambios
+- `frontend/styles/main.css`: nubes con base/contorno definido y aves con cuerpo, cabeza/pico, cola y alas solidas animadas.
+- `frontend/icons/icon-192.png` y `frontend/icons/icon-512.png`: regenerados desde `icono.jpeg` con recorte mas cerrado.
+- `frontend/scripts/forms.js` y `frontend/scripts/render.js`: se quito la carga manual visible de `Gasto fijo` desde el menu y la pestaña `Gastos`.
+- `frontend/scripts/app.js` y `frontend/scripts/utils.js`: se agrego sincronizacion automatica de gastos fijos del mes, exclusion de fijos del ranking y calculo local de disponible desde sueldo menos fijos.
+- `backend/MovementService.js`, `backend/Router.js` y `backend/SummaryService.js`: nueva accion `syncFixedExpenses`, resumen backend coherente y exclusion de fijos de `Gastaste mas en`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.27` y cache a `finanzas-lcd-v35`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json` y `backend/appsscript.json`: manifiestos OK.
+- PNGs de icono validados: `icon-192.png` mide `192x192`; `icon-512.png` mide `512x512`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, cache `finanzas-lcd-v35`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.27`, `APP_VERSION: 'v2.27'`, `finanzas-lcd-v35`, `app.js?v=2.27` y `main.css?v=2.27`.
+- Busqueda de referencias viejas `v2.26`, `v=2.26` y `finanzas-lcd-v34`: sin resultados en archivos de version/cache.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, desplegar backend con `clasp`, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

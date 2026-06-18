@@ -11,6 +11,8 @@ function getMonthlySummary_(payload) {
   var monthlySalary = Number(config.sueldoMensual || 0);
   var totals = {
     gastos: 0,
+    gastosFijos: 0,
+    gastosVariables: 0,
     comprasWishlist: 0,
     ingresosExtra: 0,
     aportesAhorro: 0,
@@ -25,7 +27,12 @@ function getMonthlySummary_(payload) {
 
     if (type === types.expense) {
       totals.gastos += amount;
-      categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+      if (fixedExpenseRecordKey_(record)) {
+        totals.gastosFijos += amount;
+      } else {
+        totals.gastosVariables += amount;
+        categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+      }
     }
     if (type === types.wishlistPurchase) {
       totals.comprasWishlist += amount;
@@ -45,7 +52,9 @@ function getMonthlySummary_(payload) {
   var totalGastado = totals.gastos + totals.comprasWishlist;
   var totalIngresos = monthlySalary + totals.ingresosExtra;
   var totalApartado = totals.aportesAhorro + totals.aportesMeta;
-  var disponible = totalIngresos - totalGastado - totalApartado;
+  var fixedConfigured = fixedExpenseConfiguredTotal_(config.gastosFijos);
+  var baseDisponible = monthlySalary - fixedConfigured;
+  var disponible = baseDisponible + totals.ingresosExtra - totals.gastosVariables - totals.comprasWishlist - totalApartado;
   var porcentajeDisponible = totalIngresos > 0
     ? Math.max(0, Math.min(100, Math.round((disponible / totalIngresos) * 10000) / 100))
     : 0;
@@ -61,10 +70,14 @@ function getMonthlySummary_(payload) {
     totalIngresos: totalIngresos,
     totalGastado: totalGastado,
     gastosNormales: totals.gastos,
+    gastosFijos: totals.gastosFijos,
+    gastosVariables: totals.gastosVariables,
+    gastosFijosConfigurados: fixedConfigured,
     comprasWishlist: totals.comprasWishlist,
     aportesAhorro: totals.aportesAhorro,
     aportesMeta: totals.aportesMeta,
     totalApartado: totalApartado,
+    baseDisponible: baseDisponible,
     disponible: disponible,
     porcentajeDisponible: porcentajeDisponible,
     categoriaMayorGasto: topCategory,
@@ -74,6 +87,12 @@ function getMonthlySummary_(payload) {
     metas: listGoals_({ includeInactive: false }),
     wishlist: listWishlist_({ includeInactive: false, order: 'asc' })
   };
+}
+
+function fixedExpenseConfiguredTotal_(items) {
+  return (Array.isArray(items) ? items : []).reduce(function (sum, item) {
+    return sum + Number((item || {}).monto || 0);
+  }, 0);
 }
 
 function isSalaryIncomeRecord_(record) {

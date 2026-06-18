@@ -348,3 +348,18 @@ DEPURACIÓN DE ESTADO Y REFINAMIENTO ESTÉTICO (UI/UX)
 - Se registra tambien la creacion optimista con clave de cliente hasta que el backend responde con ID real.
 - Se hace el ordenamiento de movimientos deterministico con fecha, hora, modificacion/id.
 - Se refinan aves/nubes con formas organicas, wishlist sin recorte de titulo y confeti inmediato previo a la respuesta de Sheets.
+
+### Prompt 24 - Usuario
+
+```text
+LAS AVES NO PARECEN AVES LAS NUBES PARECEN HUMO MAS BIEN
+EL ICONO DEBE SER MAS GRANDE MENOS ESPACIO BLANCO EN LOS MARCOS
+ah el calculo de lo que te queda disponible que sea de la parte del sueldo que se le resta los gastos fijos entonces esos gastos fijos mejor que no aparezca y que no pueda cargar asi no cuenta en la pestaña de gastase mas en [...] si se guarde automaticamente en el excel y que aparezca en gastos pero que no se use como calculo en gastaste mas en
+```
+
+### Resumen operativo
+- Se redibujan nubes con base y contorno definidos para que no se lean como humo.
+- Se redibujan aves como siluetas con cuerpo, cabeza/pico, cola y alas solidas animadas.
+- Se regeneran `icon-192.png` e `icon-512.png` con recorte mas cerrado desde `icono.jpeg`.
+- Se elimina la carga manual visible de `Gasto fijo`; los fijos configurados se sincronizan automaticamente a movimientos de Sheets.
+- `Disponible` pasa a calcularse desde sueldo menos gastos fijos configurados, y `Gastaste mas en` excluye movimientos de categoria `Gasto fijo`.

@@ -151,7 +151,6 @@
 
     openModal('MOVIMIENTO', [
       '<div class="menu-grid">',
-      '<button class="menu-item" type="button" data-form-action="fixed-expense">Gasto fijo</button>',
       '<button class="menu-item" type="button" data-form-action="expense">Gasto corriente</button>',
       '<button class="menu-item" type="button" data-form-action="income">Registrar ingreso</button>',
       '</div>'
@@ -186,9 +185,6 @@
         var action = button.getAttribute('data-form-action');
         if (action === 'expense') {
           openMovementForm('Gasto');
-        }
-        if (action === 'fixed-expense') {
-          openFixedExpensePicker();
         }
         if (action === 'income') {
           openMovementForm('Ingreso');

@@ -370,8 +370,16 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.22`, `APP_VERSION: 'v2.22'`, `finanzas-lcd-v30`, `app.js?v=2.22` y `render.js?v=2.22`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `5601f1e` (`Agilizar conversion wishlist y profundizar paleta`) subido a `origin/main`.
+- `clasp push`: 13 archivos backend publicados.
+- `clasp version "Pirepirapp v2.22 conversion wishlist instantanea"`: version `20`.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 20`: redeploy publico `@20`.
+- Ping backend publico: `{"ok":true}`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.22` sirve `v2.22`, `APP_VERSION: 'v2.22'`, `finanzas-lcd-v30`, `app.js?v=2.22`, `render.js?v=2.22` y `forms.js?v=2.22`.
+
 ### Pendientes
-- Desplegar backend con `clasp` y verificar GitHub Pages publico tras el commit.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

@@ -303,6 +303,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda en frontend de `v2.19` y `finanzas-lcd-v27`: sin referencias activas.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.20`, `APP_VERSION: 'v2.20'`, `finanzas-lcd-v28` y `render.js?v=2.20`.
+- Commit `8e51e6b` (`Animar aves y redisenar tarjetas de futuro`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.20` / `finanzas-lcd-v28`; `render.js?v=2.20` y `forms.js?v=2.20` estan referenciados.
 
 ### Pendientes
 - Verificar visualmente el aleteo en el celular instalado despues de actualizar cache.

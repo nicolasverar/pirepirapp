@@ -531,24 +531,44 @@ code {
 
 @keyframes sky-drift {
   0%,
-  10% {
+  6% {
     opacity: 0;
-    transform: translate3d(-56px, 0, 0) scale(var(--sky-scale));
+    transform: translate3d(-86px, 0, 0) scale(var(--sky-scale));
   }
-  18%,
-  72% {
+  14%,
+  78% {
     opacity: var(--sky-opacity);
   }
   50% {
     transform: translate3d(180px, var(--sky-y), 0) scale(var(--sky-scale));
   }
-  88% {
+  90% {
     opacity: calc(var(--sky-opacity) * 0.75);
-    transform: translate3d(350px, calc(var(--sky-y) * -1), 0) scale(var(--sky-scale));
+    transform: translate3d(360px, calc(var(--sky-y) * -1), 0) scale(var(--sky-scale));
   }
   100% {
     opacity: 0;
-    transform: translate3d(440px, 0, 0) scale(var(--sky-scale));
+    transform: translate3d(510px, 0, 0) scale(var(--sky-scale));
+  }
+}
+
+@keyframes bird-left-flap {
+  0%,
+  100% {
+    transform: rotate(-28deg) translate3d(0, -3px, 0);
+  }
+  50% {
+    transform: rotate(24deg) translate3d(-1px, 5px, 0);
+  }
+}
+
+@keyframes bird-right-flap {
+  0%,
+  100% {
+    transform: rotate(28deg) translate3d(0, -3px, 0);
+  }
+  50% {
+    transform: rotate(-24deg) translate3d(1px, 5px, 0);
   }
 }
 
@@ -785,7 +805,8 @@ code {
 }
 
 .future-card {
-  min-height: 78px;
+  min-height: 116px;
+  padding: 9px;
   background: var(--lcd-bg-2);
   border: 2px solid var(--lcd-line);
   box-shadow: 2px 2px 0 var(--lcd-dark);
@@ -922,9 +943,12 @@ code {
   --sky-scale: 1;
   --sky-y: -3px;
   --sky-opacity: 0.86;
-  width: 31px;
-  height: 18px;
-  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.28));
+  --flap-speed: 0.62s;
+  --flap-delay: 0s;
+  width: 46px;
+  height: 30px;
+  color: var(--lcd-ink);
+  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.34));
 }
 
 .sky-bird i,
@@ -941,87 +965,74 @@ code {
 
 .sky-bird i,
 .sky-ave i {
-  left: 12px;
-  top: 8px;
-  width: 9px;
-  height: 4px;
+  left: 18px;
+  top: 14px;
+  width: 12px;
+  height: 5px;
   box-shadow:
-    7px -2px 0 currentColor,
-    -5px 2px 0 currentColor;
+    8px 1px 0 currentColor,
+    -6px 2px 0 currentColor;
 }
 
 .sky-bird i::before,
 .sky-ave i::before {
   content: "";
   position: absolute;
-  right: -5px;
-  top: -1px;
-  width: 4px;
-  height: 3px;
+  right: -7px;
+  top: -2px;
+  width: 6px;
+  height: 4px;
   background: currentColor;
+  box-shadow: 4px -1px 0 currentColor;
 }
 
 .sky-bird i::after,
 .sky-ave i::after {
   content: "";
   position: absolute;
-  left: -8px;
+  left: -12px;
   top: 2px;
-  width: 5px;
-  height: 3px;
+  width: 8px;
+  height: 4px;
   background: currentColor;
+  box-shadow:
+    -4px 2px 0 currentColor,
+    -8px 3px 0 currentColor;
 }
 
 .sky-bird b,
 .sky-ave b {
-  left: 5px;
-  top: 3px;
-  width: 11px;
-  height: 3px;
+  left: 2px;
+  top: 9px;
+  width: 18px;
+  height: 5px;
+  transform-origin: 18px 4px;
+  animation: bird-left-flap var(--flap-speed) steps(2, end) infinite;
+  animation-delay: var(--flap-delay);
   box-shadow:
-    -4px 3px 0 currentColor,
-    18px 5px 0 currentColor,
-    22px 8px 0 currentColor;
-}
-
-.sky-bird b::before,
-.sky-bird b::after,
-.sky-ave b::before,
-.sky-ave b::after {
-  content: "";
-  position: absolute;
-  background: currentColor;
-}
-
-.sky-bird b::before,
-.sky-ave b::before {
-  left: 4px;
-  top: -3px;
-  width: 7px;
-  height: 3px;
-}
-
-.sky-bird b::after,
-.sky-ave b::after {
-  right: -9px;
-  top: 7px;
-  width: 8px;
-  height: 3px;
+    -5px 4px 0 currentColor,
+    -10px 8px 0 currentColor,
+    5px -3px 0 currentColor;
 }
 
 .sky-bird em,
 .sky-ave em {
-  right: 0;
-  top: 6px;
-  width: 4px;
-  height: 2px;
+  left: 27px;
+  top: 9px;
+  width: 18px;
+  height: 5px;
+  transform-origin: 0 4px;
+  animation: bird-right-flap var(--flap-speed) steps(2, end) infinite;
+  animation-delay: var(--flap-delay);
   box-shadow:
-    -23px 4px 0 currentColor,
-    -27px 5px 0 currentColor;
+    5px 4px 0 currentColor,
+    10px 8px 0 currentColor,
+    -5px -3px 0 currentColor;
 }
 
 .sky-bird-a {
   top: 5px;
+  --flap-delay: -0.1s;
   animation-delay: -4.1s;
   animation-duration: 11.5s;
 }
@@ -1029,32 +1040,111 @@ code {
 .sky-bird-b {
   --sky-scale: 0.78;
   --sky-y: 4px;
+  --flap-delay: -0.35s;
   top: 20px;
   animation-delay: -7.6s;
   animation-duration: 12.8s;
+}
+
+.sky-bird-c {
+  --sky-scale: 0.68;
+  --sky-y: -5px;
+  --sky-opacity: 0.72;
+  --flap-delay: -0.22s;
+  top: 12px;
+  animation-delay: -10.2s;
+  animation-duration: 14.6s;
 }
 
 .sky-ave-a {
   --sky-scale: 1.24;
   --sky-y: 2px;
   --sky-opacity: 0.78;
+  --flap-speed: 0.74s;
+  --flap-delay: -0.42s;
   top: 17px;
   animation-delay: -1.2s;
   animation-duration: 15.2s;
 }
 
-.sky-ave-a b {
-  width: 14px;
-  box-shadow:
-    -5px 4px 0 currentColor,
-    19px 5px 0 currentColor,
-    24px 9px 0 currentColor;
+.sky-ave-b {
+  --sky-scale: 1.08;
+  --sky-y: -1px;
+  --sky-opacity: 0.82;
+  --flap-speed: 0.7s;
+  --flap-delay: -0.18s;
+  top: 2px;
+  animation-delay: -12.4s;
+  animation-duration: 16.8s;
 }
 
 .data-block {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 6px;
+}
+
+.data-block.future-card {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.future-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(96px, auto);
+  align-items: start;
+  gap: 8px;
+}
+
+.future-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.15;
+}
+
+.future-monthly {
+  justify-self: end;
+  max-width: 150px;
+  color: var(--lcd-dark);
+  text-align: right;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.future-accumulated {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  text-align: center;
+}
+
+.future-accumulated strong {
+  font-size: 1.18rem;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.future-accumulated span {
+  color: var(--lcd-dark);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.future-card.is-accumulated-hidden {
+  min-height: 82px;
+}
+
+.future-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.future-card-actions .tiny-key {
+  min-width: 68px;
 }
 
 .data-block p,
@@ -1474,6 +1564,22 @@ dd {
   text-transform: uppercase;
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.check-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 8px;
+}
+
+.check-field input {
+  justify-self: end;
+  width: 28px;
+  min-height: 28px;
+  height: 28px;
+  padding: 0;
+  accent-color: var(--lcd-ink);
 }
 
 .field-row {

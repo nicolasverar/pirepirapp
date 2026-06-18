@@ -2,6 +2,7 @@
   'use strict';
 
   var utils = window.FinanzasUtils;
+  var FUTURE_PREFS_KEY = 'finanzasFutureSavingsPrefs';
 
   function render() {
     var state = window.FinanzasState.getState();
@@ -220,11 +221,16 @@
       return '<p class="empty-state">Todavia no hay ahorros para el futuro.</p>';
     }
     return '<div class="block-list">' + items.map(function (item) {
+      var prefs = futureDisplayPrefs(item);
+      var cardClass = prefs.mostrarAcumulado ? 'data-block future-card' : 'data-block future-card is-accumulated-hidden';
       return [
-        '<article class="data-block future-card">',
-        '<div><strong>' + utils.escapeHtml(item.titulo) + '</strong><p>' + utils.escapeHtml(item.descripcion || '') + '</p></div>',
-        '<dl><dt>Mensual</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</dd><dt>Acumulado</dt><dd>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</dd></dl>',
-        '<button class="tiny-key js-edit-future" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',
+        '<article class="' + cardClass + '">',
+        '<div class="future-card-head">',
+        '<strong class="future-title">' + utils.escapeHtml(item.titulo) + '</strong>',
+        '<span class="future-monthly">' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + ' mensual</span>',
+        '</div>',
+        prefs.mostrarAcumulado ? '<div class="future-accumulated"><strong>' + utils.escapeHtml(utils.formatMoney(prefs.montoAcumulado)) + '</strong><span>acumulado</span></div>' : '',
+        '<div class="future-card-actions"><button class="tiny-key js-edit-future" data-id="' + utils.escapeHtml(item.id) + '" type="button">Editar</button></div>',
         '</article>'
       ].join('');
     }).join('') + '</div>';
@@ -298,9 +304,64 @@
       '<span class="pixel-cloud pixel-cloud-c"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
       '<span class="sky-bird sky-bird-a"><i></i><b></b><em></em></span>',
       '<span class="sky-bird sky-bird-b"><i></i><b></b><em></em></span>',
+      '<span class="sky-bird sky-bird-c"><i></i><b></b><em></em></span>',
       '<span class="sky-ave sky-ave-a"><i></i><b></b><em></em></span>',
+      '<span class="sky-ave sky-ave-b"><i></i><b></b><em></em></span>',
       '</span>'
     ].join('');
+  }
+
+  function readFuturePrefs() {
+    try {
+      return JSON.parse(localStorage.getItem(FUTURE_PREFS_KEY) || '{}') || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeFuturePrefs(prefs) {
+    try {
+      localStorage.setItem(FUTURE_PREFS_KEY, JSON.stringify(prefs || {}));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function toBoolean(value, fallback) {
+    if (value === undefined || value === null || value === '') {
+      return fallback;
+    }
+    return !(value === false || value === 'false' || value === '0' || value === 0);
+  }
+
+  function futureDisplayPrefs(item) {
+    var source = item || {};
+    var saved = source.id ? (readFuturePrefs()[String(source.id)] || {}) : {};
+    var visible = source.mostrarAcumulado !== undefined
+      ? toBoolean(source.mostrarAcumulado, true)
+      : toBoolean(saved.mostrarAcumulado, true);
+    var accumulated = saved.montoAcumulado !== undefined
+      ? utils.normalizeAmount(saved.montoAcumulado)
+      : utils.normalizeAmount(source.montoAcumulado);
+
+    return {
+      mostrarAcumulado: visible,
+      montoAcumulado: accumulated
+    };
+  }
+
+  function saveFutureDisplayPrefs(id, patch) {
+    if (!id) {
+      return;
+    }
+    var key = String(id);
+    var prefs = readFuturePrefs();
+    var current = prefs[key] || {};
+    prefs[key] = Object.assign({}, current, {
+      mostrarAcumulado: toBoolean(patch.mostrarAcumulado, true),
+      montoAcumulado: utils.normalizeAmount(patch.montoAcumulado)
+    });
+    writeFuturePrefs(prefs);
   }
 
   function renderSharpSparkles() {
@@ -514,5 +575,10 @@
 
   window.FinanzasRender = {
     render: render
+  };
+
+  window.FinanzasFuturePrefs = {
+    get: futureDisplayPrefs,
+    save: saveFutureDisplayPrefs
   };
 }());

@@ -152,3 +152,50 @@ quiero que todo se pueda leer bienlas tarjetas se cortan los textos en gastos po
 ### Resumen operativo
 - Se ajusta el CSS de movimientos para que las tarjetas de gastos no corten motivo, fecha, monto ni tipo.
 - Se estabiliza la altura del contenedor principal y se elimina el espacio inferior extra que elevaba la botonera.
+
+### Prompt 16 - Usuario
+
+```text
+Tarea: Corrección de aves animadas y rediseño de tarjeta "Metas en el futuro"
+Contexto del proyecto: PWA de finanzas personales (Pirepirapp). Frontend en HTML/CSS/JS puro, estética LCD verde. Las aves se renderizan en render.js y los estilos en main.css.
+
+Cambio 1 — Aves animadas
+Las aves actuales no se mueven ni aletean. Reemplazá la implementación actual por aves que:
+
+Usen como referencia visual la imagen aves.jpg del proyecto local.
+Se muevan horizontalmente por la pantalla de forma continua.
+Tengan animación de aleteo (las alas suben y bajan cíclicamente) usando CSS keyframes o canvas.
+Mantengan la paleta de colores LCD verde del resto de la app.
+
+
+Cambio 2 — Rediseño de tarjeta "Metas en el futuro" (AhorrosFuturo)
+Rediseñá cada tarjeta con este layout:
+[ Título de la meta                    Gs. XXXX mensual ]
+[                                                       ]
+[              Gs. XXXXXX acumulado (grande)            ]
+[                                                       ]
+[                              [ Editar ]               ]
+Reglas:
+
+Eliminá el campo descripción de la tarjeta (no mostrarlo, no borrarlo del modelo de datos).
+El título va a la izquierda, el monto mensual va a la derecha en la misma fila.
+El monto acumulado va centrado abajo, en tipografía más grande que el resto.
+El botón Editar va alineado a la derecha debajo del acumulado.
+
+
+Cambio 3 — Opción de visibilidad del acumulado en el formulario de edición
+En el modal o formulario que se abre al presionar Editar:
+
+Agregá un toggle o checkbox que diga "Mostrar acumulado" (activado por defecto).
+Si está desactivado, la tarjeta oculta el monto acumulado.
+El valor acumulado sigue siendo editable en el formulario independientemente de si se muestra o no en la tarjeta.
+Guardá la preferencia de visibilidad en el objeto de la meta (campo nuevo mostrarAcumulado: true/false), sin modificar el esquema de Sheets.
+
+
+No modifiques el modelo de datos en Google Sheets ni los servicios del backend. Los cambios son exclusivamente de frontend (render.js, forms.js, main.css).
+```
+
+### Resumen operativo
+- Se redibujan las aves como siluetas pixeladas con alas animadas por CSS y desplazamiento horizontal continuo.
+- Se rediseñan las tarjetas de `AhorrosFuturo` sin descripcion visible, con acumulado centrado y boton `Editar` alineado a la derecha.
+- Se agrega `Mostrar acumulado` y edicion local del acumulado en el formulario, guardando la preferencia frontend sin cambiar Sheets.

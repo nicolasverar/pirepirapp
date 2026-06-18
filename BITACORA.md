@@ -281,6 +281,32 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Aves animadas y tarjetas de futuro
+
+### Objetivo
+- Reemplazar las aves estaticas por siluetas pixeladas animadas con aleteo y movimiento horizontal continuo, tomando `aves.jpg` como referencia visual.
+- Redisenar las tarjetas de `AhorrosFuturo` para mostrar titulo, monto mensual, acumulado grande centrado y boton `Editar`.
+- Agregar una preferencia frontend para ocultar o mostrar el acumulado sin modificar Sheets ni backend.
+
+### Cambios
+- `frontend/scripts/render.js`: se agregaron mas aves en la escena, se expuso un helper frontend para preferencias de futuro y se redibujo la tarjeta sin descripcion visible.
+- `frontend/scripts/forms.js`: el formulario de ahorro futuro ahora incluye `Monto acumulado` y `Mostrar acumulado`, guardando la preferencia por ID en `localStorage`.
+- `frontend/styles/main.css`: se reemplazo la silueta de aves por cuerpo y alas animadas con keyframes, se ajusto el vuelo horizontal y se agrego el layout nuevo de tarjetas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.20` y cache a `finanzas-lcd-v28`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- Busqueda en frontend de `v2.19` y `finanzas-lcd-v27`: sin referencias activas.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.20`, `APP_VERSION: 'v2.20'`, `finanzas-lcd-v28` y `render.js?v=2.20`.
+
+### Pendientes
+- Verificar visualmente el aleteo en el celular instalado despues de actualizar cache.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

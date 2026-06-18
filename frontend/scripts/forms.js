@@ -64,6 +64,15 @@
     ].join('');
   }
 
+  function checkbox(label, name, checked, attrs) {
+    return [
+      '<label class="field check-field">',
+      '<span>' + utils.escapeHtml(label) + '</span>',
+      '<input name="' + utils.escapeHtml(name) + '" type="checkbox" value="true" ' + (checked ? 'checked ' : '') + (attrs || '') + '>',
+      '</label>'
+    ].join('');
+  }
+
   function formActions(saveLabel) {
     return [
       '<div class="form-actions">',
@@ -398,11 +407,17 @@
 
   function openFutureSavingForm(existing) {
     var item = existing || {};
+    var prefs = window.FinanzasFuturePrefs ? window.FinanzasFuturePrefs.get(item) : {
+      mostrarAcumulado: item.mostrarAcumulado !== false,
+      montoAcumulado: item.montoAcumulado || 0
+    };
     var html = [
       '<form class="lcd-form" id="future-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"'),
+      field('Monto acumulado', 'montoAcumulado', 'number', prefs.montoAcumulado || 0, 'min="0" step="1" inputmode="numeric"'),
+      checkbox('Mostrar acumulado', 'mostrarAcumulado', prefs.mostrarAcumulado),
       textarea('Descripcion', 'descripcion', item.descripcion || '', 'maxlength="500" rows="3"'),
       formActions(existing ? 'Actualizar' : 'Guardar'),
       '</form>'
@@ -410,13 +425,36 @@
     openModal('AHORRO FUTURO', html, function (root) {
       bindForm(root, '#future-form', function (form) {
         var payload = utils.formDataToObject(form);
+        var showAccumulated = Boolean(utils.qs('[name="mostrarAcumulado"]', form).checked);
         payload.montoMensual = utils.normalizeAmount(payload.montoMensual);
+        payload.montoAcumulado = utils.normalizeAmount(payload.montoAcumulado);
+        payload.mostrarAcumulado = showAccumulated;
         if (existing) {
           payload.id = existing.id;
+          existing.montoAcumulado = payload.montoAcumulado;
+          existing.mostrarAcumulado = showAccumulated;
+          saveFuturePrefs(payload.id, payload);
         }
         return window.FinanzasApp.mutate(existing ? 'updateFutureSaving' : 'createFutureSaving', payload)
-          .then(closeModal);
+          .then(function (result) {
+            var id = (result && result.id) || payload.id;
+            saveFuturePrefs(id, payload);
+            if (window.FinanzasState) {
+              window.FinanzasState.setState({});
+            }
+            closeModal();
+          });
       });
+    });
+  }
+
+  function saveFuturePrefs(id, payload) {
+    if (!id || !window.FinanzasFuturePrefs) {
+      return;
+    }
+    window.FinanzasFuturePrefs.save(id, {
+      mostrarAcumulado: payload.mostrarAcumulado,
+      montoAcumulado: payload.montoAcumulado
     });
   }
 

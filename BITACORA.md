@@ -275,6 +275,8 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda en frontend activo de `v2.18`, `finanzas-lcd-v26` y `100dvh`: sin resultados.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.19`, `APP_VERSION: 'v2.19'`, `finanzas-lcd-v27` y `main.css?v=2.19`.
+- Commit `9147bda` (`Mejorar legibilidad de gastos y panel inferior`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.19` / `finanzas-lcd-v27`; `main.css?v=2.19` esta referenciado.
 
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.

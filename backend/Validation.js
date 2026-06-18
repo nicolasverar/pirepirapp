@@ -105,8 +105,8 @@ function appDefaultCategories_() {
 
 function appDefaultFixedExpenses_() {
   return [
-    { categoria: 'Alimentacion', monto: 0 },
-    { categoria: 'Transporte', monto: 0 }
+    { categoria: 'Alimentacion', nombre: 'Alimentacion', monto: 0, porcentajeSueldo: 0 },
+    { categoria: 'Transporte', nombre: 'Transporte', monto: 0, porcentajeSueldo: 0 }
   ];
 }
 
@@ -523,11 +523,26 @@ function sanitizeFixedExpenses_(value) {
   }
 
   return list.map(function (item) {
+    var name = requireText_(item.nombre || item.name || item.categoria || item.category, 'Nombre de gasto fijo', 80);
+    var percentValue = item.porcentajeSueldo !== undefined ? item.porcentajeSueldo : item.salaryPercent;
     return {
-      categoria: requireText_(item.categoria || item.category, 'Categoria', 80),
-      monto: normalizeAmount_(item.monto !== undefined ? item.monto : item.amount, 'Monto de gasto fijo', true)
+      categoria: name,
+      nombre: name,
+      monto: normalizeAmount_(item.monto !== undefined ? item.monto : item.amount, 'Monto de gasto fijo', true),
+      porcentajeSueldo: normalizePercent_(percentValue)
     };
   });
+}
+
+function normalizePercent_(value) {
+  if (value === undefined || value === null || value === '') {
+    return 0;
+  }
+  var number = Number(String(value).replace(',', '.'));
+  if (!isFinite(number) || number < 0) {
+    validationError_('El porcentaje del sueldo debe ser un numero positivo.');
+  }
+  return Math.round(number * 100) / 100;
 }
 
 function calculateGoalPercent_(accumulated, target) {

@@ -151,7 +151,8 @@
 
     openModal('MOVIMIENTO', [
       '<div class="menu-grid">',
-      '<button class="menu-item" type="button" data-form-action="expense">Registrar gasto</button>',
+      '<button class="menu-item" type="button" data-form-action="fixed-expense">Gasto fijo</button>',
+      '<button class="menu-item" type="button" data-form-action="expense">Gasto corriente</button>',
       '<button class="menu-item" type="button" data-form-action="income">Registrar ingreso</button>',
       '</div>'
     ].join(''), bindActionMenu);
@@ -186,6 +187,9 @@
         if (action === 'expense') {
           openMovementForm('Gasto');
         }
+        if (action === 'fixed-expense') {
+          openFixedExpensePicker();
+        }
         if (action === 'income') {
           openMovementForm('Ingreso');
         }
@@ -202,14 +206,13 @@
     });
   }
 
-  function openMovementForm(defaultType, existing) {
+  function openMovementForm(defaultType, existing, defaults) {
     var data = window.FinanzasState.getState().data;
     var config = data.config || {};
-    var categories = categoryOptions(config);
-    var movement = existing || {};
+    var movement = Object.assign({}, defaults || {}, existing || {});
     var defaultDate = movement.fecha || defaultDateForActiveMonth(config.mesActual);
     var isIncome = defaultType === 'Ingreso' || movement.tipo === 'Ingreso';
-    var defaultCategory = movement.categoria || (isIncome ? 'Otros' : categories[0]);
+    var defaultCategory = movement.categoria || (isIncome ? 'Ingreso' : 'Otros');
     if (!isIncome && movement.tipo === 'Compra de wishlist') {
       defaultCategory = 'Wishlist';
     }
@@ -229,7 +232,6 @@
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
-      select('Categoria', 'categoria', categories, defaultCategory, 'data-category-select'),
       select('Seleccionar', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
@@ -242,32 +244,20 @@
 
     openModal(isIncome ? 'INGRESO' : 'GASTO', html, function (root) {
       var typeSelect = utils.qs('[data-movement-type]', root);
-      var categorySelect = utils.qs('[data-category-select]', root);
       var relatedSelect = utils.qs('[data-related-select]', root);
-      updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, movement.idRelacionado || '');
-      updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
+      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, movement.idRelacionado || '');
+      updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
       typeSelect.addEventListener('change', function () {
-        if (typeSelect.value === 'Compra de wishlist') {
-          categorySelect.value = 'Wishlist';
-        }
-        updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, relatedSelect.value);
-        updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
-      });
-      categorySelect.addEventListener('change', function () {
-        if (!isWishlistCategory(categorySelect.value) && typeSelect.value === 'Compra de wishlist') {
-          typeSelect.value = 'Gasto';
-        }
-        updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, relatedSelect.value);
-        updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
+        var currentCategory = typeSelect.value === 'Compra de wishlist' ? 'Wishlist' : defaultCategory;
+        updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, relatedSelect.value);
+        updateRelatedVisibility(typeSelect, { value: currentCategory }, relatedSelect);
       });
 
       bindForm(root, '#movement-form', function (form) {
         var payload = utils.formDataToObject(form);
         payload.monto = utils.normalizeAmount(payload.monto);
         payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
-        if (isWishlistCategory(payload.categoria) && payload.idRelacionado && payload.tipo === 'Gasto') {
-          payload.tipo = 'Compra de wishlist';
-        }
+        payload.categoria = categoryForMovementPayload(payload.tipo, defaultCategory, isIncome);
         if (!payload.idRelacionado) {
           delete payload.idRelacionado;
         }
@@ -276,6 +266,60 @@
         }
         return window.FinanzasApp.mutate(existing ? 'updateMovement' : 'createMovement', payload)
           .then(closeModal);
+      });
+    });
+  }
+
+  function categoryForMovementPayload(type, fallbackCategory, isIncome) {
+    if (type === 'Compra de wishlist') {
+      return 'Wishlist';
+    }
+    if (type === 'Aporte a ahorro') {
+      return 'Ahorros';
+    }
+    if (type === 'Aporte a meta') {
+      return 'Metas';
+    }
+    if (isIncome || type === 'Ingreso') {
+      return 'Ingreso';
+    }
+    return fallbackCategory || 'Otros';
+  }
+
+  function openFixedExpensePicker() {
+    var config = window.FinanzasState.getState().data.config || {};
+    var items = utils.normalizeFixedExpenses(config.gastosFijos || [], config.sueldoMensual || 0);
+    if (!items.length) {
+      if (window.FinanzasApp && window.FinanzasApp.toast) {
+        window.FinanzasApp.toast('Primero carga un gasto fijo en Configuracion.');
+      }
+      return;
+    }
+
+    openModal('GASTO FIJO', [
+      '<div class="fixed-picker-list">',
+      items.map(function (item) {
+        return [
+          '<button class="menu-item fixed-picker-item" type="button" data-fixed-name="' + utils.escapeHtml(utils.fixedExpenseName(item)) + '" data-fixed-amount="' + utils.escapeHtml(utils.fixedExpenseAmount(item)) + '">',
+          '<strong>' + utils.escapeHtml(utils.fixedExpenseName(item)) + '</strong>',
+          '<span>' + utils.escapeHtml(utils.formatMoney(utils.fixedExpenseAmount(item))) + '</span>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join(''), function (root) {
+      utils.qsa('.fixed-picker-item', root).forEach(function (button) {
+        button.addEventListener('click', function () {
+          var defaults = {
+            tipo: 'Gasto',
+            motivo: button.getAttribute('data-fixed-name') || 'Gasto fijo',
+            monto: button.getAttribute('data-fixed-amount') || '',
+            categoria: 'Gasto fijo',
+            descripcion: 'Gasto fijo'
+          };
+          closeModal();
+          openMovementForm('Gasto', null, defaults);
+        });
       });
     });
   }
@@ -576,6 +620,7 @@
     actionMenu: actionMenu,
     openAccessForm: openAccessForm,
     openMovementForm: openMovementForm,
+    openFixedExpensePicker: openFixedExpensePicker,
     openFutureSavingForm: openFutureSavingForm,
     openGoalForm: openGoalForm,
     openWishlistForm: openWishlistForm,

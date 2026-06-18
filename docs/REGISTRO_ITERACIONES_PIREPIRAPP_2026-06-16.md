@@ -199,3 +199,63 @@ No modifiques el modelo de datos en Google Sheets ni los servicios del backend. 
 - Se redibujan las aves como siluetas pixeladas con alas animadas por CSS y desplazamiento horizontal continuo.
 - Se rediseñan las tarjetas de `AhorrosFuturo` sin descripcion visible, con acumulado centrado y boton `Editar` alineado a la derecha.
 - Se agrega `Mostrar acumulado` y edicion local del acumulado en el formulario, guardando la preferencia frontend sin cambiar Sheets.
+
+### Prompt 17 - Usuario
+
+```text
+Cambio 1 — Sección "Mes actual" en Configuración
+El selector de mes actual es confuso e innesesario ya que deberia de ser automatico la seleccion de mes y todo el preparado de contenendores de datos aka carpetas etc tambien deberia de ser autmatico
+
+Cambio 2 — Botón "¡Cobré!"
+En la sección de sueldo mensual donde tepermiteponer cuanto dinero cobras de Configuración, agregá un botón prominente que diga "¡Cobré!". Al presionarlo debe:
+
+Crear automáticamente un movimiento de tipo ingreso con monto igual al sueldo mensual configurado, fecha de hoy y motivo "Sueldo".
+Mostrar una confirmación breve antes de registrar y una explosion de confeti en pixel art divertido que sale de los costados inferiores derecho e izquierdo y xplotan y se caen como confeti
+No abrir ningún formulario, la acción debe ser inmediata.
+
+
+Cambio 3 — Eliminación de Categorías y simplificación del formulario de carga
+
+Eliminá la sección de categorías de Configuración.
+En el formulario de carga de gasto, eliminá el campo Categoría. Solo quedan Motivo y los demás campos existentes.
+En el panel de Resumen, la sección "Gastaste más en:" debe dejar de usar categoría y pasar a agrupar por Motivo.
+Para normalizar motivos similares (ej. "uber", "Uber", "UBER ride"), implementá comparación por similitud de strings usando el algoritmo de distancia de Levenshtein o trigram similarity. Agrupá motivos cuya similitud supere un umbral configurable (sugerido: 80%) bajo el motivo más frecuente del grupo.
+
+
+Cambio 4 — Gastos fijos reestructurados con partición de sueldo
+Reemplazá el campo de texto plano de gastos fijos por un formulario estructurado. Cada gasto fijo debe tener:
+
+Nombre (ej. "Alquiler")
+Monto fijo mensual
+Porcentaje del sueldo (calculado automáticamente en base al sueldo configurado, y también editable manualmente)
+Botones de editar y eliminar por ítem.
+
+La suma total de gastos fijos debe mostrarse al pie de la lista junto con el porcentaje total del sueldo que representan.
+
+Cambio 5 — Visualización de partición de sueldo en Resumen
+Agregá una sección nueva en la pestaña de Resumen que muestre visualmente cómo está distribuido el sueldo mensual. Debe incluir:
+
+Un gráfico de barras o de torta con estética LCD verde (SVG puro o canvas, sin librerías externas).
+Cada segmento representa un gasto fijo con su nombre y porcentaje.
+Un segmento "Disponible" que muestre lo que resta después de los gastos fijos.
+Si el total de gastos fijos supera el sueldo, resaltá el exceso visualmente.
+
+
+Cambio 6 — Dos botones en la pantalla de carga de gastos
+Reemplazá el botón único de añadir gasto por dos botones:
+
+"Gasto fijo": pre-completa el formulario con los datos del gasto fijo seleccionado (abre un selector con la lista de gastos fijos configurados) y lo registra como movimiento.
+"Gasto corriente": abre el formulario estándar actual.
+```
+
+### Prompt 18 - Usuario
+
+```text
+RETOMA LO QUE ESTABAS HACIENDO
+```
+
+### Resumen operativo
+- Se elimina de la PWA la edicion manual de mes y categorias.
+- Se agrega `¡Cobré!` con confirmacion, movimiento `Ingreso/Sueldo` y confeti pixel art.
+- Se agrupa `Gastaste mas en` por motivo similar con Levenshtein/trigramas y umbral 80%.
+- Se redisenan los gastos fijos como filas estructuradas y se agrega particion visual del sueldo en Resumen.

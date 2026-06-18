@@ -309,6 +309,37 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente el aleteo en el celular instalado despues de actualizar cache.
 
+## 2026-06-18 - Configuracion automatica, sueldo y particion
+
+### Objetivo
+- Eliminar la edicion manual de mes y categorias en la PWA.
+- Agregar `¡Cobré!` para registrar sueldo como ingreso directo con confeti pixel art.
+- Agrupar `Gastaste mas en` por motivo similar en vez de categoria.
+- Reestructurar gastos fijos y mostrar la particion del sueldo en Resumen.
+- Separar carga de `Gasto fijo` y `Gasto corriente`.
+
+### Cambios
+- `frontend/scripts/render.js`: se rehizo Configuracion con sueldo y gastos fijos estructurados; se agrego particion SVG del sueldo; `Gastaste mas en` ahora agrupa por motivo con Levenshtein/trigramas y umbral 80%.
+- `frontend/scripts/forms.js`: se elimino el campo visible `Categoria` del movimiento; se agrego selector de gasto fijo que precarga el formulario.
+- `frontend/scripts/app.js`: se agrego `claimSalary` para registrar `Ingreso/Sueldo` con fecha/hora actual y confeti pixel art.
+- `frontend/scripts/utils.js`: se agregaron helpers para normalizar gastos fijos con nombre, monto y porcentaje.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: estilos para editor de gastos fijos, particion de sueldo, boton `¡Cobré!` y confeti.
+- `backend/SummaryService.js`: los movimientos `Ingreso/Sueldo` quedan registrados, pero no duplican el sueldo mensual en el resumen.
+- `backend/Validation.js`: los gastos fijos conservan `nombre` y `porcentajeSueldo` dentro del JSON de configuracion sin cambiar el esquema de Sheets.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.21` y cache a `finanzas-lcd-v29`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.21`, `APP_VERSION: 'v2.21'`, `finanzas-lcd-v29`, `app.js?v=2.21` y `render.js?v=2.21`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Desplegar backend con `clasp` y verificar GitHub Pages publico tras el commit.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

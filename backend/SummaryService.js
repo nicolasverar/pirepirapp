@@ -31,7 +31,7 @@ function getMonthlySummary_(payload) {
       totals.comprasWishlist += amount;
       categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
     }
-    if (type === types.income) {
+    if (type === types.income && !isSalaryIncomeRecord_(record)) {
       totals.ingresosExtra += amount;
     }
     if (type === types.futureSaving) {
@@ -74,6 +74,10 @@ function getMonthlySummary_(payload) {
     metas: listGoals_({ includeInactive: false }),
     wishlist: listWishlist_({ includeInactive: false, order: 'asc' })
   };
+}
+
+function isSalaryIncomeRecord_(record) {
+  return normalizeText_((record || {}).Motivo).toLowerCase() === 'sueldo';
 }
 
 function movementCalendarMonth_(record) {

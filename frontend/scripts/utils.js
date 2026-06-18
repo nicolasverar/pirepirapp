@@ -160,6 +160,43 @@
       .join('\n');
   }
 
+  function fixedExpenseName(item) {
+    return String((item || {}).nombre || (item || {}).name || (item || {}).categoria || (item || {}).category || '').trim();
+  }
+
+  function fixedExpenseAmount(item) {
+    var source = item || {};
+    return normalizeAmount(source.monto !== undefined ? source.monto : source.amount);
+  }
+
+  function fixedExpensePercent(item, salary) {
+    var source = item || {};
+    var explicit = source.porcentajeSueldo !== undefined ? source.porcentajeSueldo : source.salaryPercent;
+    if (explicit !== undefined && explicit !== null && explicit !== '') {
+      return Math.max(0, Number(String(explicit).replace(',', '.')) || 0);
+    }
+    var sueldo = normalizeAmount(salary);
+    if (!sueldo) {
+      return 0;
+    }
+    return Math.round((fixedExpenseAmount(source) / sueldo) * 10000) / 100;
+  }
+
+  function normalizeFixedExpenses(items, salary) {
+    return (Array.isArray(items) ? items : [])
+      .map(function (item) {
+        return {
+          nombre: fixedExpenseName(item),
+          categoria: fixedExpenseName(item),
+          monto: fixedExpenseAmount(item),
+          porcentajeSueldo: fixedExpensePercent(item, salary)
+        };
+      })
+      .filter(function (item) {
+        return item.nombre || item.monto > 0;
+      });
+  }
+
   function debounce(fn, delay) {
     var timer = 0;
     return function () {
@@ -188,6 +225,10 @@
     splitLines: splitLines,
     fixedExpensesFromText: fixedExpensesFromText,
     fixedExpensesToText: fixedExpensesToText,
+    fixedExpenseName: fixedExpenseName,
+    fixedExpenseAmount: fixedExpenseAmount,
+    fixedExpensePercent: fixedExpensePercent,
+    normalizeFixedExpenses: normalizeFixedExpenses,
     debounce: debounce
   };
 }());

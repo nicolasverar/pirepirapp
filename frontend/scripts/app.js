@@ -139,6 +139,67 @@
       });
   }
 
+  function claimSalary(amount) {
+    var config = window.FinanzasState.getState().data.config || {};
+    var salary = utils.normalizeAmount(amount !== undefined && amount !== null && amount !== '' ? amount : config.sueldoMensual || 0);
+    if (!salary) {
+      toast('Carga tu sueldo mensual primero.');
+      return Promise.resolve();
+    }
+    if (!window.confirm('Registrar ingreso de sueldo por ' + utils.formatMoney(salary) + '?')) {
+      return Promise.resolve();
+    }
+    return mutate('createMovement', {
+      tipo: 'Ingreso',
+      motivo: 'Sueldo',
+      categoria: 'Ingreso',
+      monto: salary,
+      fecha: utils.toInputDate(),
+      hora: utils.toInputTime() + ':00',
+      descripcion: ''
+    }).then(function (result) {
+      launchPixelConfetti();
+      toast('Sueldo registrado');
+      return result;
+    });
+  }
+
+  function launchPixelConfetti() {
+    var root = document.createElement('div');
+    root.className = 'pixel-confetti-layer';
+    root.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(root);
+
+    ['left', 'right'].forEach(function (side) {
+      var count = 24;
+      var index;
+      for (index = 0; index < count; index += 1) {
+        root.appendChild(confettiPiece(side, index));
+      }
+    });
+
+    window.setTimeout(function () {
+      if (root.parentNode) {
+        root.parentNode.removeChild(root);
+      }
+    }, 1800);
+  }
+
+  function confettiPiece(side, index) {
+    var piece = document.createElement('i');
+    var angle = (side === 'left' ? -1 : 1) * (28 + Math.random() * 58);
+    var distance = 78 + Math.random() * 112;
+    var dx = Math.cos(angle * Math.PI / 180) * distance;
+    var dy = -68 - Math.random() * 102;
+    piece.className = 'pixel-confetti-piece pixel-confetti-' + side + ' confetti-tone-' + (index % 5);
+    piece.style.setProperty('--dx', dx.toFixed(0) + 'px');
+    piece.style.setProperty('--dy', dy.toFixed(0) + 'px');
+    piece.style.setProperty('--rot', String((Math.random() * 540) - 270) + 'deg');
+    piece.style.setProperty('--delay', String(Math.random() * 0.16) + 's');
+    piece.style.setProperty('--duration', String(1.05 + Math.random() * 0.55) + 's');
+    return piece;
+  }
+
   function applyOptimisticMutation(action, payload) {
     var route = String(action || '').toLowerCase();
     if (route === 'deletemovement' && payload && payload.id) {
@@ -208,7 +269,7 @@
         next.gastosNormales = Math.max(0, Number(summary.gastosNormales || 0) - amount);
       }
       next.disponible = Number(summary.disponible || 0) + amount;
-    } else if (type === 'Ingreso') {
+    } else if (type === 'Ingreso' && !isSalaryMovement(item)) {
       next.ingresosExtra = Math.max(0, Number(summary.ingresosExtra || 0) - amount);
       next.totalIngresos = Math.max(0, Number(summary.totalIngresos || 0) - amount);
       next.disponible = Number(summary.disponible || 0) - amount;
@@ -225,6 +286,10 @@
       ? Math.max(0, Math.min(100, Math.round((Number(next.disponible || 0) / Number(next.totalIngresos || 0)) * 10000) / 100))
       : 0;
     return next;
+  }
+
+  function isSalaryMovement(item) {
+    return String((item || {}).tipo || '') === 'Ingreso' && String((item || {}).motivo || '').trim().toLowerCase() === 'sueldo';
   }
 
   function movementMonth(item) {
@@ -543,6 +608,7 @@
     init: init,
     refresh: refresh,
     mutate: mutate,
+    claimSalary: claimSalary,
     toast: toast,
     updateApp: updateApp,
     version: version,

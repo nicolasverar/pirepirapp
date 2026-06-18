@@ -97,8 +97,16 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.23`, `APP_VERSION: 'v2.23'`, `finanzas-lcd-v31`, `app.js?v=2.23` y `render.js?v=2.23`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `10ce175` (`Actualizar resumen al guardar movimientos`) subido a `origin/main`.
+- `clasp push`: 13 archivos backend publicados.
+- `clasp version "Pirepirapp v2.23 resumen inmediato movimientos"`: version `21`.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 21`: redeploy publico `@21`.
+- Ping backend publico: `{"ok":true}`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.23` sirve `v2.23`, `APP_VERSION: 'v2.23'`, `finanzas-lcd-v31`, `app.js?v=2.23` y `render.js?v=2.23`.
+
 ### Pendientes
-- Validar, commitear, desplegar backend y verificar URL publica.
+- Verificar en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

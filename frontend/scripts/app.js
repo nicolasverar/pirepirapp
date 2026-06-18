@@ -4,6 +4,7 @@
   var utils = window.FinanzasUtils;
   var movementGuardCounter = 0;
   var movementRefreshTimer = 0;
+  var movementSyncGuards = {};
   var MOVEMENT_GUARD_TTL_MS = 15000;
 
   function init() {

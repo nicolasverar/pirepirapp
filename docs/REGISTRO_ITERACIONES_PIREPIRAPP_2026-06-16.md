@@ -291,3 +291,15 @@ cuando ingreso un gasto nuevo necesito que de inmediato se actualice todo, cuant
 - Se corrige el flujo de movimientos para recalcular el resumen local apenas se crea, edita o elimina un gasto.
 - Se agrega proteccion temporal contra refresh silencioso viejo para que una lectura atrasada de Sheets no borre el movimiento recien guardado.
 - Backend fuerza `SpreadsheetApp.flush()` antes de devolver resumen de movimientos.
+
+### Prompt 21 - Usuario
+
+```text
+LAS AVES NO PARECEN AVES LAS NUBES PARECEN HUMO MAS BIEN
+EL ICONO DEBE SER MAS GRANDE MENOS ESPACIO BLANCO EN LOS MARCOS
+```
+
+### Resumen operativo
+- Se redibuja la escena de `EL FUTURO` con nubes pixel art mas compactas y aves con cuerpo, cabeza, pico, cola y alas separadas.
+- Se agrandan los iconos de navegacion dentro de sus botones.
+- Se regeneran `icon-192.png` e `icon-512.png` desde `icono.jpeg` con recorte mas cerrado para reducir fondo libre.

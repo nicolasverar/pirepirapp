@@ -704,20 +704,20 @@ code {
 @keyframes bird-left-flap {
   0%,
   100% {
-    transform: rotate(-28deg) translate3d(0, -3px, 0);
+    transform: rotate(-18deg) translate3d(0, -7px, 0);
   }
   50% {
-    transform: rotate(24deg) translate3d(-1px, 5px, 0);
+    transform: rotate(10deg) translate3d(0, 5px, 0);
   }
 }
 
 @keyframes bird-right-flap {
   0%,
   100% {
-    transform: rotate(28deg) translate3d(0, -3px, 0);
+    transform: rotate(16deg) translate3d(0, -6px, 0);
   }
   50% {
-    transform: rotate(-24deg) translate3d(1px, 5px, 0);
+    transform: rotate(-12deg) translate3d(0, 5px, 0);
   }
 }
 
@@ -878,17 +878,17 @@ code {
 
 .nav-key {
   display: grid;
-  grid-template-rows: 24px auto;
+  grid-template-rows: 28px auto;
   place-items: center;
   min-width: 0;
-  min-height: 58px;
-  padding: 5px 2px;
+  min-height: 60px;
+  padding: 4px 2px;
   font-size: 0.68rem;
 }
 
 .nav-icon {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   display: block;
   background: currentColor;
   image-rendering: pixelated;
@@ -898,12 +898,12 @@ code {
 
 .nav-icon-summary {
   --nav-icon: url("../icons/nav/resumen.png");
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
 }
 
 .nav-key[data-view="resumen"] {
-  grid-template-rows: 28px auto;
+  grid-template-rows: 32px auto;
 }
 
 .nav-icon-expenses {
@@ -1062,14 +1062,14 @@ code {
 
 .future-window .block-list,
 .future-window .empty-state {
-  margin-top: 48px;
+  margin-top: 56px;
 }
 
 .sky-scene {
   position: absolute;
   inset: 24px 8px auto;
   z-index: 1;
-  height: 50px;
+  height: 58px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -1087,69 +1087,74 @@ code {
 .pixel-cloud {
   --sky-scale: 1;
   --sky-y: 2px;
-  --sky-opacity: 0.5;
-  width: 62px;
-  height: 27px;
+  --sky-opacity: 0.82;
+  width: 72px;
+  height: 34px;
+  color: var(--lcd-line);
   background:
-    linear-gradient(currentColor 0 0) 0 14px / 7px 7px no-repeat,
-    linear-gradient(currentColor 0 0) 7px 9px / 7px 14px no-repeat,
-    linear-gradient(currentColor 0 0) 14px 5px / 7px 18px no-repeat,
-    linear-gradient(currentColor 0 0) 21px 2px / 14px 21px no-repeat,
-    linear-gradient(currentColor 0 0) 35px 7px / 7px 16px no-repeat,
-    linear-gradient(currentColor 0 0) 42px 11px / 14px 12px no-repeat,
-    linear-gradient(currentColor 0 0) 56px 16px / 7px 7px no-repeat;
-  box-shadow:
-    0 23px 0 rgba(25, 45, 24, 0.22),
-    7px 23px 0 rgba(25, 45, 24, 0.22),
-    14px 23px 0 rgba(25, 45, 24, 0.22),
-    21px 23px 0 rgba(25, 45, 24, 0.22),
-    28px 23px 0 rgba(25, 45, 24, 0.22),
-    35px 23px 0 rgba(25, 45, 24, 0.22);
-  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.32));
+    linear-gradient(currentColor 0 0) 4px 20px / 64px 8px no-repeat,
+    linear-gradient(currentColor 0 0) 10px 14px / 14px 14px no-repeat,
+    linear-gradient(currentColor 0 0) 22px 8px / 20px 20px no-repeat,
+    linear-gradient(currentColor 0 0) 40px 12px / 16px 16px no-repeat,
+    linear-gradient(currentColor 0 0) 55px 17px / 12px 11px no-repeat,
+    linear-gradient(currentColor 0 0) 14px 28px / 48px 4px no-repeat;
+  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.2));
 }
 
 .pixel-cloud i {
   position: absolute;
   display: block;
-  width: 3px;
-  height: 3px;
-  background: var(--lcd-bg);
-  opacity: 0.5;
+  background: var(--lcd-surface-hi);
+  opacity: 0.94;
 }
 
 .pixel-cloud i:nth-child(1) {
-  left: 8px;
-  top: 15px;
+  left: 9px;
+  top: 22px;
+  width: 58px;
+  height: 3px;
 }
 
 .pixel-cloud i:nth-child(2) {
-  left: 18px;
-  top: 9px;
+  left: 13px;
+  top: 16px;
+  width: 8px;
+  height: 8px;
 }
 
 .pixel-cloud i:nth-child(3) {
-  left: 29px;
-  top: 6px;
+  left: 25px;
+  top: 10px;
+  width: 14px;
+  height: 14px;
 }
 
 .pixel-cloud i:nth-child(4) {
-  left: 39px;
-  top: 12px;
+  left: 42px;
+  top: 14px;
+  width: 10px;
+  height: 10px;
 }
 
 .pixel-cloud i:nth-child(5) {
-  left: 51px;
-  top: 17px;
+  left: 56px;
+  top: 19px;
+  width: 8px;
+  height: 5px;
 }
 
 .pixel-cloud i:nth-child(6) {
-  left: 22px;
-  top: 20px;
+  left: 18px;
+  top: 26px;
+  width: 38px;
+  height: 2px;
 }
 
 .pixel-cloud i:nth-child(7) {
-  left: 44px;
-  top: 21px;
+  left: 28px;
+  top: 7px;
+  width: 8px;
+  height: 3px;
 }
 
 .pixel-cloud-a {
@@ -1161,7 +1166,7 @@ code {
 .pixel-cloud-b {
   --sky-scale: 0.78;
   --sky-y: -4px;
-  --sky-opacity: 0.3;
+  --sky-opacity: 0.68;
   top: 26px;
   animation-delay: -10.5s;
   animation-duration: 22s;
@@ -1170,7 +1175,7 @@ code {
 .pixel-cloud-c {
   --sky-scale: 0.58;
   --sky-y: 3px;
-  --sky-opacity: 0.22;
+  --sky-opacity: 0.56;
   top: 4px;
   animation-delay: -15.5s;
   animation-duration: 26s;
@@ -1180,13 +1185,13 @@ code {
 .sky-ave {
   --sky-scale: 1;
   --sky-y: -3px;
-  --sky-opacity: 0.86;
+  --sky-opacity: 0.92;
   --flap-speed: 0.62s;
   --flap-delay: 0s;
-  width: 46px;
-  height: 30px;
+  width: 54px;
+  height: 34px;
   color: var(--lcd-ink);
-  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.34));
+  filter: drop-shadow(1px 1px 0 rgba(25, 45, 24, 0.28));
 }
 
 .sky-bird i,
@@ -1204,68 +1209,71 @@ code {
 .sky-bird i,
 .sky-ave i {
   left: 18px;
-  top: 14px;
-  width: 12px;
-  height: 5px;
+  top: 16px;
+  width: 17px;
+  height: 7px;
   box-shadow:
-    8px 1px 0 currentColor,
-    -6px 2px 0 currentColor;
+    -5px 2px 0 currentColor,
+    7px 1px 0 currentColor;
 }
 
 .sky-bird i::before,
 .sky-ave i::before {
   content: "";
   position: absolute;
-  right: -7px;
-  top: -2px;
-  width: 6px;
-  height: 4px;
+  right: -10px;
+  top: -4px;
+  width: 9px;
+  height: 7px;
   background: currentColor;
-  box-shadow: 4px -1px 0 currentColor;
+  box-shadow:
+    8px 3px 0 -2px currentColor,
+    4px -3px 0 -3px currentColor;
 }
 
 .sky-bird i::after,
 .sky-ave i::after {
   content: "";
   position: absolute;
-  left: -12px;
-  top: 2px;
-  width: 8px;
-  height: 4px;
+  left: -14px;
+  top: 1px;
+  width: 9px;
+  height: 5px;
   background: currentColor;
   box-shadow:
-    -4px 2px 0 currentColor,
-    -8px 3px 0 currentColor;
+    -5px -3px 0 -1px currentColor,
+    -5px 4px 0 -1px currentColor;
 }
 
 .sky-bird b,
 .sky-ave b {
-  left: 2px;
-  top: 9px;
-  width: 18px;
+  left: 15px;
+  top: 13px;
+  width: 16px;
   height: 5px;
-  transform-origin: 18px 4px;
+  transform-origin: 13px 8px;
   animation: bird-left-flap var(--flap-speed) steps(2, end) infinite;
   animation-delay: var(--flap-delay);
   box-shadow:
-    -5px 4px 0 currentColor,
-    -10px 8px 0 currentColor,
-    5px -3px 0 currentColor;
+    4px -5px 0 currentColor,
+    8px -9px 0 currentColor,
+    13px -6px 0 currentColor,
+    -4px 4px 0 -1px currentColor;
 }
 
 .sky-bird em,
 .sky-ave em {
-  left: 27px;
-  top: 9px;
-  width: 18px;
+  left: 22px;
+  top: 20px;
+  width: 14px;
   height: 5px;
-  transform-origin: 0 4px;
+  transform-origin: 3px -1px;
   animation: bird-right-flap var(--flap-speed) steps(2, end) infinite;
   animation-delay: var(--flap-delay);
   box-shadow:
-    5px 4px 0 currentColor,
-    10px 8px 0 currentColor,
-    -5px -3px 0 currentColor;
+    4px 4px 0 currentColor,
+    8px 8px 0 currentColor,
+    -4px -3px 0 -1px currentColor;
 }
 
 .sky-bird-a {
@@ -1287,7 +1295,7 @@ code {
 .sky-bird-c {
   --sky-scale: 0.68;
   --sky-y: -5px;
-  --sky-opacity: 0.72;
+  --sky-opacity: 0.78;
   --flap-delay: -0.22s;
   top: 12px;
   animation-delay: -10.2s;
@@ -1297,7 +1305,7 @@ code {
 .sky-ave-a {
   --sky-scale: 1.24;
   --sky-y: 2px;
-  --sky-opacity: 0.78;
+  --sky-opacity: 0.9;
   --flap-speed: 0.74s;
   --flap-delay: -0.42s;
   top: 17px;
@@ -1308,12 +1316,40 @@ code {
 .sky-ave-b {
   --sky-scale: 1.08;
   --sky-y: -1px;
-  --sky-opacity: 0.82;
+  --sky-opacity: 0.88;
   --flap-speed: 0.7s;
   --flap-delay: -0.18s;
   top: 2px;
   animation-delay: -12.4s;
   animation-duration: 16.8s;
+}
+
+.sky-ave i {
+  width: 19px;
+  height: 8px;
+}
+
+.sky-ave i::before {
+  width: 10px;
+  height: 8px;
+  right: -11px;
+}
+
+.sky-ave b {
+  width: 19px;
+  box-shadow:
+    5px -6px 0 currentColor,
+    10px -11px 0 currentColor,
+    16px -7px 0 currentColor,
+    -5px 5px 0 -1px currentColor;
+}
+
+.sky-ave em {
+  width: 16px;
+  box-shadow:
+    5px 5px 0 currentColor,
+    10px 9px 0 currentColor,
+    -5px -3px 0 -1px currentColor;
 }
 
 .data-block {

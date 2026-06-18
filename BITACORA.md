@@ -108,6 +108,33 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Pixel art de aves, nubes e icono ampliado
+
+### Objetivo
+- Lograr que las aves de `EL FUTURO` se lean como aves y no como siluetas abstractas.
+- Hacer que las nubes se lean como nubes pixel art, no como humo.
+- Agrandar el icono de la app y reducir el fondo libre dentro del marco.
+
+### Cambios
+- `frontend/styles/main.css`: se redibujaron nubes con base plana, borde definido y relleno LCD; se redibujaron aves con cuerpo, cabeza, pico, cola y alas animadas.
+- `frontend/styles/responsive.css`: se agrandaron los iconos de navegacion en mobile manteniendo la barra estable.
+- `frontend/icons/icon-192.png` y `frontend/icons/icon-512.png`: regenerados desde `icono.jpeg` con recorte mas cerrado.
+- `frontend/scripts/app.js`: se declaro `movementSyncGuards`, faltante del flujo de proteccion de movimientos recientes.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.24` y cache a `finanzas-lcd-v32`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt registrado.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `backend/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, cache `finanzas-lcd-v32`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.24`, `APP_VERSION: 'v2.24'`, `finanzas-lcd-v32`, `app.js?v=2.24` y `main.css?v=2.24`.
+- PNGs de icono validados: `icon-192.png` mide `192x192`; `icon-512.png` mide `512x512`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Validar, commitear, publicar GitHub Pages y verificar la URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

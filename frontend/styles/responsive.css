@@ -76,22 +76,22 @@
 
   .nav-key {
     min-height: 48px;
-    grid-template-rows: 20px auto;
+    grid-template-rows: 23px auto;
     font-size: 0.56rem;
   }
 
   .nav-icon {
-    width: 19px;
-    height: 19px;
+    width: 22px;
+    height: 22px;
   }
 
   .nav-icon-summary {
-    width: 23px;
-    height: 23px;
+    width: 26px;
+    height: 26px;
   }
 
   .nav-key[data-view="resumen"] {
-    grid-template-rows: 23px auto;
+    grid-template-rows: 26px auto;
   }
 
   .wish-grid {

@@ -142,3 +142,13 @@ quiero que cuando elimino un gasto desaparezca de inmediato del panel de gastos 
 - Se agrega borrado optimista de movimientos para actualizar el panel de gastos al instante.
 - Se cambia el formulario de gasto para que `Cosas que quiero` muestre una seleccion concreta de wishlist.
 - Se refuerza backend para convertir esa seleccion en compra reversible de wishlist.
+
+### Prompt 15 - Usuario
+
+```text
+quiero que todo se pueda leer bienlas tarjetas se cortan los textos en gastos por ejemplo, ademas sucede algo raro con l aapp despues de navegar uun rato el panel inferior se eleva como 1,5 cm y se queda ahi para siempre
+```
+
+### Resumen operativo
+- Se ajusta el CSS de movimientos para que las tarjetas de gastos no corten motivo, fecha, monto ni tipo.
+- Se estabiliza la altura del contenedor principal y se elimina el espacio inferior extra que elevaba la botonera.

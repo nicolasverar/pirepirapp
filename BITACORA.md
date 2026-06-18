@@ -255,6 +255,30 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-18 - Legibilidad de gastos y panel inferior estable
+
+### Objetivo
+- Evitar que las tarjetas de gastos corten textos largos.
+- Corregir la elevacion persistente del panel inferior despues de navegar.
+
+### Cambios
+- `frontend/styles/main.css`: el contenedor principal deja de depender de `100dvh`, elimina el padding inferior extra y bloquea overflow externo; las tarjetas de movimientos pasan a una distribucion interna en una columna con texto multilinea.
+- `frontend/styles/responsive.css`: se aplica el mismo criterio de altura estable en pantallas grandes y se mantiene la tarjeta de movimientos legible en pantallas angostas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.19` y cache a `finanzas-lcd-v27`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- Busqueda en frontend activo de `v2.18`, `finanzas-lcd-v26` y `100dvh`: sin resultados.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.19`, `APP_VERSION: 'v2.19'`, `finanzas-lcd-v27` y `main.css?v=2.19`.
+
+### Pendientes
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
+
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 
 ### Objetivo

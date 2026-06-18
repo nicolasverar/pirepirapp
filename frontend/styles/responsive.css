@@ -4,8 +4,8 @@
   }
 
   .device-shell {
+    height: calc(100vh - 36px);
     height: calc(100svh - 36px);
-    height: calc(100dvh - 36px);
     border: 3px solid #070a07;
     box-shadow: 8px 8px 0 #060806;
   }
@@ -106,12 +106,11 @@
 
   .movement-main {
     grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
-    min-height: 58px;
+    gap: 5px;
+    min-height: 66px;
   }
 
   .movement-value {
-    justify-items: start;
     text-align: left;
   }
 

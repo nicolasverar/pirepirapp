@@ -141,6 +141,33 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Rediseño de tarjetas del resumen
+
+### Objetivo
+- Renderizar la fecha principal con estetica LCD pixel siguiendo `fecprincipal.png`.
+- Rehacer la tarjeta `Gastaste mas en` sin el fondo anterior, usando un recuadro delineado.
+- Mantener intacta la tarjeta `Disponible`.
+- Reemplazar la barra de particion de sueldo por una caja principal con subcajas proporcionales inspirada en `particionddesueldo.jpg`.
+
+### Cambios
+- `frontend/scripts/render.js`: se separo la fecha en bloque LCD, se agrego texto `Este mes gastaste`, y la particion de sueldo ahora calcula un treemap de cajas proporcionales.
+- `frontend/styles/main.css`: estilos nuevos para fecha pixel, recuadro de mayor gasto y caja contenedora de sueldo con subcajas tramadas.
+- `frontend/styles/responsive.css`: ajustes para fecha y treemap en pantallas angostas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.25` y cache a `finanzas-lcd-v33`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt registrado con rutas locales limpiadas.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `backend/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, cache `finanzas-lcd-v33`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.25`, `APP_VERSION: 'v2.25'`, `finanzas-lcd-v33`, `render.js?v=2.25` y `main.css?v=2.25`.
+- Busqueda de referencias viejas `v2.24`, `v=2.24` y `finanzas-lcd-v32`: sin resultados en archivos de version/cache.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Validar, commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

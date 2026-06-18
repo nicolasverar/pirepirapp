@@ -253,19 +253,61 @@ code {
 }
 
 .summary-primary {
-  min-height: 150px;
+  min-height: 154px;
   display: grid;
   align-content: center;
+  gap: 9px;
 }
 
-.summary-date-line {
+.summary-date-block {
+  display: grid;
+  gap: 5px;
+}
+
+.summary-date-kicker {
+  display: block;
   margin: 0;
-  font-size: clamp(1.12rem, 5.2vw, 1.5rem);
-  line-height: 1.1;
+  color: var(--lcd-dark);
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  font-weight: 900;
 }
 
-.summary-date-line strong {
+.summary-date-display {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 6px 8px;
+  color: var(--lcd-dark);
+  background: var(--lcd-surface-hi);
+  border: 2px solid var(--lcd-line);
+  box-shadow: inset 0 -4px 0 var(--lcd-bg-2), 2px 2px 0 var(--lcd-dark);
+  image-rendering: pixelated;
+}
+
+.summary-date-display span,
+.summary-date-display strong {
+  display: block;
+  text-transform: uppercase;
   font-weight: 900;
+  line-height: 0.95;
+}
+
+.summary-date-display span {
+  min-width: 44px;
+  padding-right: 7px;
+  border-right: 3px solid var(--lcd-line);
+  font-size: 1.08rem;
+}
+
+.summary-date-display strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 1.28rem;
+  transform: scaleX(0.92);
+  transform-origin: left center;
 }
 
 .summary-subline {
@@ -274,23 +316,46 @@ code {
   font-weight: 700;
 }
 
+.summary-spent-line {
+  margin: 0;
+  padding: 6px 8px;
+  color: var(--lcd-ink);
+  background: rgba(192, 218, 138, 0.35);
+  border-left: 3px solid var(--lcd-line);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.summary-spent-line strong {
+  display: inline;
+  color: var(--lcd-ink);
+  overflow-wrap: anywhere;
+}
+
 .summary-metrics-card {
   position: relative;
-  overflow: hidden;
-  padding: 10px 8px 8px;
-  background:
-    repeating-linear-gradient(0deg, transparent 0, transparent 11px, rgba(32, 57, 30, 0.18) 11px, rgba(32, 57, 30, 0.18) 12px),
-    linear-gradient(180deg, var(--lcd-bg-2), var(--lcd-surface-lo));
-  border: 3px double var(--lcd-line);
-  box-shadow: 3px 3px 0 var(--lcd-ink);
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .summary-metrics-card::before {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border: 1px dotted rgba(25, 45, 24, 0.55);
-  pointer-events: none;
+  content: none;
+}
+
+.top-spend-box {
+  padding: 10px 9px 9px;
+  background: rgba(174, 203, 124, 0.28);
+  border: 2px solid var(--lcd-line);
+  box-shadow: 3px 3px 0 var(--lcd-dark);
+}
+
+.top-spend-box .text-key {
+  margin-top: 4px;
 }
 
 .top-spend-line {
@@ -352,7 +417,7 @@ code {
 
 .salary-partition-card {
   display: grid;
-  gap: 8px;
+  gap: 9px;
 }
 
 .salary-partition-card.is-over-budget {
@@ -366,6 +431,99 @@ code {
   image-rendering: pixelated;
   background: var(--lcd-bg-2);
   border: 2px solid var(--lcd-line);
+}
+
+.salary-box-map {
+  position: relative;
+  width: 100%;
+  min-height: 184px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(25, 45, 24, 0.13) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(0deg, rgba(25, 45, 24, 0.13) 1px, transparent 1px) 0 0 / 20px 20px,
+    var(--lcd-bg-2);
+  border: 3px solid var(--lcd-line);
+  box-shadow: inset 2px 2px 0 var(--lcd-surface-hi), 3px 3px 0 var(--lcd-dark);
+}
+
+.salary-box-map::before {
+  content: "CAJA ENTERA";
+  position: absolute;
+  z-index: 3;
+  right: 5px;
+  top: 4px;
+  padding: 2px 4px;
+  color: var(--lcd-bg);
+  background: var(--lcd-ink);
+  border: 1px solid var(--lcd-line);
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.partition-box {
+  position: absolute;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 5px;
+  color: var(--lcd-ink);
+  border: 2px solid var(--lcd-line);
+  background:
+    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
+    var(--lcd-surface-hi);
+  box-shadow: inset -2px -2px 0 rgba(25, 45, 24, 0.16);
+  text-align: center;
+}
+
+.partition-box span,
+.partition-box b,
+.partition-box small {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.partition-box span {
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.partition-box b {
+  font-size: 0.74rem;
+  line-height: 1;
+}
+
+.partition-box small {
+  color: var(--lcd-dark);
+  font-size: 0.56rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.partition-box.segment-0 small,
+.partition-box.segment-1 small,
+.partition-box.segment-3 small,
+.partition-box.segment-5 small {
+  color: var(--lcd-bg);
+}
+
+.partition-box.is-small {
+  padding: 3px;
+  gap: 1px;
+}
+
+.partition-box.is-small span {
+  font-size: 0.52rem;
+}
+
+.partition-box.is-small small {
+  display: none;
 }
 
 .partition-bg {
@@ -418,6 +576,52 @@ code {
 .partition-legend .segment-available {
   fill: var(--lcd-bg);
   background: var(--lcd-bg);
+}
+
+.partition-box.segment-0 {
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.18) 0, rgba(174, 203, 124, 0.18) 2px, transparent 2px, transparent 7px),
+    var(--lcd-ink);
+}
+
+.partition-box.segment-1 {
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.18) 0, rgba(174, 203, 124, 0.18) 2px, transparent 2px, transparent 7px),
+    var(--lcd-dark);
+}
+
+.partition-box.segment-2 {
+  background:
+    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.2) 0, rgba(25, 45, 24, 0.2) 2px, transparent 2px, transparent 7px),
+    var(--lcd-mid);
+}
+
+.partition-box.segment-3 {
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.14) 0, rgba(174, 203, 124, 0.14) 2px, transparent 2px, transparent 7px),
+    var(--case-mid);
+}
+
+.partition-box.segment-4 {
+  background:
+    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
+    var(--case-hi);
+}
+
+.partition-box.segment-5 {
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.14) 0, rgba(174, 203, 124, 0.14) 2px, transparent 2px, transparent 7px),
+    #526b36;
+}
+
+.partition-box.segment-available {
+  background:
+    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
+    var(--lcd-bg);
 }
 
 .partition-legend .segment-excess {

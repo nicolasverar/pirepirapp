@@ -303,3 +303,31 @@ EL ICONO DEBE SER MAS GRANDE MENOS ESPACIO BLANCO EN LOS MARCOS
 - Se redibuja la escena de `EL FUTURO` con nubes pixel art mas compactas y aves con cuerpo, cabeza, pico, cola y alas separadas.
 - Se agrandan los iconos de navegacion dentro de sus botones.
 - Se regeneran `icon-192.png` e `icon-512.png` desde `icono.jpeg` con recorte mas cerrado para reducir fondo libre.
+
+### Prompt 22 - Usuario
+
+```text
+## INSTRUCCIONES DE DISEÑO POR TARJETA
+
+### 1. Tarjeta de Fecha y Gasto Mensual ("Estamos al...")
+* **Elemento Fecha:** Debes renderizar la fecha actual utilizando estrictamente el estilo visual, fuente y estética que se encuentra en la ruta local: `<ruta-local>\fecprincipal.png`.
+* **Elemento Gasto:** Justo debajo de la fecha, perfectamente alineado y con una excelente proporción de espaciado (padding/margin), debe figurar el texto estático/dinámico: *"Este mes gastaste: [X] Guaraníes"*.
+
+### 2. Tarjeta de Mayor Gasto ("Gastaste más en...")
+* **Modificación Visual:** Elimina por completo el fondo actual de esta tarjeta (el diseño previo no es estético).
+* **Nuevo Formato:** Envuelve el contenido y la categoría de mayor gasto dentro de un **recuadro estilizado (border/card delineada)** con un fondo neutro o transparente que resalte sin saturar la vista.
+
+### 3. Tarjeta de Disponible
+* **Estado:** Mantener el diseño actual. Está validado y funciona bien visualmente. No aplicar cambios decorativos.
+
+### 4. Tarjeta de Partición de Sueldo (Rediseño Completo)
+* **Concepto:** El sueldo total debe ser representado visualmente como una **"Caja Contenedora Principal" (Caja Entera)**.
+* **Lógica de Distribución:** Dentro de esta gran caja, se deben acomodar de forma fluida y proporcional **"Cajas Más Pequeñas"**, donde el tamaño y la disposición de cada una correspondan directamente al porcentaje asignado de la partición del sueldo.
+* **Referencia Visual:** Para la distribución, el ordenamiento de los bloques y la inspiración visual, debes replicar la estructura conceptual de la imagen local: `<ruta-local>\particionddesueldo.jpg`.
+```
+
+### Resumen operativo
+- Se rediseña la tarjeta primaria de resumen con fecha LCD pixel y gasto mensual debajo.
+- La tarjeta de mayor gasto pasa a un recuadro delineado sin fondo pesado.
+- Disponible se mantiene sin cambios decorativos.
+- La particion de sueldo pasa de barra SVG a caja principal con subcajas proporcionales tipo treemap.

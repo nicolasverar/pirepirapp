@@ -95,15 +95,22 @@
     return [
       '<section class="summary-stack">',
       '<article class="system-window total-window summary-primary">',
-      '<p class="summary-date-line"><strong>Estamos el ' + utils.escapeHtml(utils.friendlyDate()) + '</strong></p>',
-      '<p class="summary-subline">este mes gastaste:</p>',
-      '<strong class="big-money">' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + '</strong>',
+      '<div class="summary-date-block">',
+      '<span class="summary-date-kicker">Estamos al</span>',
+      '<div class="summary-date-display">',
+      '<span>' + utils.escapeHtml(summaryDayLabel()) + '</span>',
+      '<strong>' + utils.escapeHtml(summaryDateLabel()) + '</strong>',
+      '</div>',
+      '</div>',
+      '<p class="summary-spent-line">Este mes gastaste: <strong>' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + ' Guaraníes</strong></p>',
       '</article>',
       '<article class="system-window summary-metrics-card">',
+      '<div class="top-spend-box">',
       '<p class="top-spend-line">Gastaste mas en: <strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
       top.mensaje ? '<p class="lcd-muted top-spend-detail">' + utils.escapeHtml(top.mensaje) + '</p>' : '',
       renderRecent(recent),
       '<button class="text-key js-view-full" type="button">Ver completo</button>',
+      '</div>',
       '</article>',
       '<article class="system-window availability-card">',
       '<div class="window-title">DISPONIBLE</div>',
@@ -113,6 +120,17 @@
       renderSalaryPartition(config),
       '</section>'
     ].join('');
+  }
+
+  function summaryDayLabel() {
+    var days = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+    return days[new Date().getDay()] || '';
+  }
+
+  function summaryDateLabel() {
+    var months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+    var now = new Date();
+    return String(now.getDate()).padStart(2, '0') + '/' + months[now.getMonth()] + '/' + now.getFullYear();
   }
 
   function ledgerLine(label, value) {
@@ -467,7 +485,7 @@
     return [
       '<article class="system-window salary-partition-card' + (excess > 0 ? ' is-over-budget' : '') + '">',
       '<div class="window-title">PARTICION SUELDO</div>',
-      salary ? renderSalaryPartitionSvg(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
+      salary ? renderSalaryPartitionBoxes(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       '<div class="partition-summary">',
       '<span>Fijos: <b>' + utils.escapeHtml(utils.formatMoney(total)) + '</b></span>',
       '<span>' + utils.escapeHtml(formatPercentInput(totalPercent) || '0') + '% del sueldo</span>',
@@ -478,30 +496,115 @@
     ].join('');
   }
 
-  function renderSalaryPartitionSvg(fixed, salary, total, available, excess) {
+  function renderSalaryPartitionBoxes(fixed, salary, total, available, excess) {
     var base = Math.max(salary, total, 1);
-    var x = 0;
-    var segments = fixed.map(function (item, index) {
+    var boxes = fixed.map(function (item, index) {
       var amount = utils.fixedExpenseAmount(item);
-      var width = Math.max(0, (amount / base) * 100);
-      var rect = '<rect class="partition-segment segment-' + (index % 6) + '" x="' + x.toFixed(2) + '" y="2" width="' + width.toFixed(2) + '" height="14"></rect>';
-      x += width;
-      return rect;
+      return {
+        label: utils.fixedExpenseName(item) || 'Gasto fijo',
+        amount: amount,
+        percent: salary ? Math.round((amount / salary) * 10000) / 100 : 0,
+        className: 'segment-' + (index % 6)
+      };
+    }).filter(function (item) {
+      return item.amount > 0;
     });
     if (available > 0) {
-      var availableWidth = Math.max(0, (available / base) * 100);
-      segments.push('<rect class="partition-segment segment-available" x="' + x.toFixed(2) + '" y="2" width="' + availableWidth.toFixed(2) + '" height="14"></rect>');
+      boxes.push({
+        label: 'Disponible',
+        amount: available,
+        percent: salary ? Math.round((available / salary) * 10000) / 100 : 0,
+        className: 'segment-available'
+      });
     }
-    if (excess > 0) {
-      var limitX = Math.max(0, Math.min(100, (salary / base) * 100));
-      segments.push('<line class="partition-limit" x1="' + limitX.toFixed(2) + '" y1="0" x2="' + limitX.toFixed(2) + '" y2="18"></line>');
-    }
+    boxes.sort(function (left, right) {
+      return right.amount - left.amount;
+    });
+    var layout = partitionTreemapLayout(boxes, base);
     return [
-      '<svg class="salary-partition-chart" viewBox="0 0 100 18" role="img" aria-label="Particion del sueldo">',
-      '<rect class="partition-bg" x="0" y="2" width="100" height="14"></rect>',
-      segments.join(''),
-      '</svg>'
+      '<div class="salary-box-map" role="img" aria-label="Particion del sueldo">',
+      layout.map(renderPartitionBox).join(''),
+      '</div>'
     ].join('');
+  }
+
+  function renderPartitionBox(box) {
+    var area = box.w * box.h;
+    var tinyClass = area < 450 || box.w < 18 || box.h < 18 ? ' is-small' : '';
+    return [
+      '<div class="partition-box ' + utils.escapeHtml(box.className) + tinyClass + '" style="left:' + box.x.toFixed(2) + '%;top:' + box.y.toFixed(2) + '%;width:' + box.w.toFixed(2) + '%;height:' + box.h.toFixed(2) + '%">',
+      '<span>' + utils.escapeHtml(box.label) + '</span>',
+      '<b>' + utils.escapeHtml(formatPercentInput(box.percent) || '0') + '%</b>',
+      area >= 900 ? '<small>' + utils.escapeHtml(utils.formatMoney(box.amount)) + '</small>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function partitionTreemapLayout(items, base) {
+    var source = items.map(function (item) {
+      return {
+        label: item.label,
+        amount: item.amount,
+        percent: item.percent,
+        className: item.className
+      };
+    });
+    var result = [];
+    splitPartitionRect(source, base, 0, 0, 100, 100, true, result);
+    return result;
+  }
+
+  function splitPartitionRect(items, total, x, y, w, h, vertical, result) {
+    if (!items.length || total <= 0 || w <= 0 || h <= 0) {
+      return;
+    }
+    if (items.length === 1) {
+      result.push({
+        label: items[0].label,
+        amount: items[0].amount,
+        percent: items[0].percent,
+        className: items[0].className,
+        x: x,
+        y: y,
+        w: w,
+        h: h
+      });
+      return;
+    }
+
+    var half = total / 2;
+    var group = [];
+    var groupTotal = 0;
+    var index;
+    for (index = 0; index < items.length; index += 1) {
+      if (group.length && groupTotal + items[index].amount > half) {
+        break;
+      }
+      group.push(items[index]);
+      groupTotal += items[index].amount;
+    }
+    if (!group.length) {
+      group.push(items[0]);
+      groupTotal = items[0].amount;
+      index = 1;
+    }
+
+    var rest = items.slice(index);
+    var restTotal = Math.max(0, total - groupTotal);
+    if (!rest.length || restTotal <= 0) {
+      splitPartitionRect(group, groupTotal, x, y, w, h, !vertical, result);
+      return;
+    }
+
+    if (vertical) {
+      var groupW = w * (groupTotal / total);
+      splitPartitionRect(group, groupTotal, x, y, groupW, h, false, result);
+      splitPartitionRect(rest, restTotal, x + groupW, y, w - groupW, h, false, result);
+    } else {
+      var groupH = h * (groupTotal / total);
+      splitPartitionRect(group, groupTotal, x, y, w, groupH, true, result);
+      splitPartitionRect(rest, restTotal, x, y + groupH, w, h - groupH, true, result);
+    }
   }
 
   function renderSalaryPartitionLegend(fixed, salary, available, excess) {

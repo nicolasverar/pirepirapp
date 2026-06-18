@@ -249,9 +249,11 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `clasp version "Pirepirapp v2.18 borrado wishlist reversible"`: creo version 18.
 - `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 18 --description "Pirepirapp v2.18 borrado wishlist reversible"`: Web App redeployado.
 - `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: devuelve `{"ok":true}`.
+- Commit `3bc14c9` (`Agilizar borrado y compra wishlist reversible`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.18` / `finanzas-lcd-v26`; `forms.js?v=2.18` y `app.js?v=2.18` estan referenciados.
 
 ### Pendientes
-- Commit, push y verificacion publica en GitHub Pages.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

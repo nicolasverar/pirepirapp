@@ -116,6 +116,7 @@
     }
 
     window.FinanzasState.setState({ syncStatus: 'Guardando', error: '' });
+    var rollback = applyOptimisticMutation(action, payload || {});
     return window.FinanzasApi.request(action, payload || {})
       .then(function (data) {
         applyMutationResult(action, data);
@@ -125,6 +126,9 @@
         return data;
       })
       .catch(function (error) {
+        if (rollback) {
+          rollback();
+        }
         window.FinanzasState.setState({ syncStatus: 'Error', error: error.message });
         if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
@@ -133,6 +137,102 @@
         toast(error.message);
         throw error;
       });
+  }
+
+  function applyOptimisticMutation(action, payload) {
+    var route = String(action || '').toLowerCase();
+    if (route === 'deletemovement' && payload && payload.id) {
+      return applyOptimisticMovementDelete(payload.id);
+    }
+    return null;
+  }
+
+  function applyOptimisticMovementDelete(id) {
+    var current = window.FinanzasState.getState().data;
+    var snapshot = cloneData(current);
+    var source = current.movimientos || {};
+    var item = movementItemsFromData(source).filter(function (movement) {
+      return String(movement.id) === String(id);
+    })[0];
+    if (!item) {
+      return null;
+    }
+
+    var items = movementItemsFromData(source).filter(function (movement) {
+      return String(movement.id) !== String(id);
+    });
+    var nextMovements = Array.isArray(source)
+      ? items
+      : Object.assign({}, source, { movimientos: items });
+
+    window.FinanzasState.setData({
+      config: current.config,
+      resumen: optimisticSummaryAfterDelete(current.resumen, current.config, item),
+      movimientos: nextMovements,
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: current.metas,
+      wishlist: current.wishlist
+    });
+    saveCurrentBootstrap();
+
+    return function () {
+      window.FinanzasState.setData(snapshot);
+      saveCurrentBootstrap();
+    };
+  }
+
+  function optimisticSummaryAfterDelete(summary, config, item) {
+    if (!summary) {
+      return summary;
+    }
+    var summaryMonth = String(summary.mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
+    var itemMonth = movementMonth(item);
+    var next = Object.assign({}, summary, {
+      actividadReciente: (summary.actividadReciente || []).filter(function (recent) {
+        return String(recent.id) !== String(item.id);
+      })
+    });
+    if (itemMonth !== summaryMonth) {
+      return next;
+    }
+
+    var amount = Number(item.monto || 0);
+    var type = String(item.tipo || '');
+    next.cantidadMovimientos = Math.max(0, Number(summary.cantidadMovimientos || 0) - 1);
+
+    if (type === 'Gasto' || type === 'Compra de wishlist') {
+      next.totalGastado = Math.max(0, Number(summary.totalGastado || 0) - amount);
+      if (type === 'Compra de wishlist') {
+        next.comprasWishlist = Math.max(0, Number(summary.comprasWishlist || 0) - amount);
+      } else {
+        next.gastosNormales = Math.max(0, Number(summary.gastosNormales || 0) - amount);
+      }
+      next.disponible = Number(summary.disponible || 0) + amount;
+    } else if (type === 'Ingreso') {
+      next.ingresosExtra = Math.max(0, Number(summary.ingresosExtra || 0) - amount);
+      next.totalIngresos = Math.max(0, Number(summary.totalIngresos || 0) - amount);
+      next.disponible = Number(summary.disponible || 0) - amount;
+    } else if (type === 'Aporte a ahorro' || type === 'Aporte a meta') {
+      next.totalApartado = Math.max(0, Number(summary.totalApartado || 0) - amount);
+      if (type === 'Aporte a ahorro') {
+        next.aportesAhorro = Math.max(0, Number(summary.aportesAhorro || 0) - amount);
+      } else {
+        next.aportesMeta = Math.max(0, Number(summary.aportesMeta || 0) - amount);
+      }
+      next.disponible = Number(summary.disponible || 0) + amount;
+    }
+    next.porcentajeDisponible = Number(next.totalIngresos || 0) > 0
+      ? Math.max(0, Math.min(100, Math.round((Number(next.disponible || 0) / Number(next.totalIngresos || 0)) * 10000) / 100))
+      : 0;
+    return next;
+  }
+
+  function movementMonth(item) {
+    var date = String((item || {}).fecha || '');
+    if (/^\d{4}-\d{2}/.test(date)) {
+      return date.slice(0, 7);
+    }
+    return String((item || {}).mes || '').slice(0, 7);
   }
 
   function applyMutationResult(action, data) {
@@ -218,9 +318,9 @@
       config: nextConfig,
       resumen: nextSummary,
       movimientos: nextMovements,
-      ahorrosFuturo: (summaryMonth === activeMonth && result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
-      metas: (summaryMonth === activeMonth && result.resumen && result.resumen.metas) || current.metas,
-      wishlist: (summaryMonth === activeMonth && result.resumen && result.resumen.wishlist) || current.wishlist
+      ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
+      metas: (result.resumen && result.resumen.metas) || current.metas,
+      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
     });
     saveCurrentBootstrap();
   }
@@ -302,6 +402,10 @@
     var result = {};
     result[key] = value;
     return result;
+  }
+
+  function cloneData(data) {
+    return JSON.parse(JSON.stringify(data || {}));
   }
 
   function isActiveItem(item) {

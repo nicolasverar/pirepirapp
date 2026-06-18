@@ -131,3 +131,14 @@ No modifiques la arquitectura general ni el flujo de autenticación existente. N
 ### Resumen operativo
 - Se refuerza autenticacion de Apps Script con rate limit simulado, comparacion timing-safe y respuesta ping minima.
 - Se limpian rutas locales de documentacion y se documenta la entropia minima del token.
+
+### Prompt 14 - Usuario
+
+```text
+quiero que cuando elimino un gasto desaparezca de inmediato del panel de gastos totales y todo se actualice con rapidez y fluidez, en el formulario de carga de gasto no entiendo que es el campo destino, ademas quiero que si la categroia es cosas a que quiero que aparezca otra que me permita seleccionar lo que quiero entre las cosass que quiero y por ende desaparezca de cosas que quiero todo esto siendo reversible
+```
+
+### Resumen operativo
+- Se agrega borrado optimista de movimientos para actualizar el panel de gastos al instante.
+- Se cambia el formulario de gasto para que `Cosas que quiero` muestre una seleccion concreta de wishlist.
+- Se refuerza backend para convertir esa seleccion en compra reversible de wishlist.

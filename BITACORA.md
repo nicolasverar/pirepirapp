@@ -218,7 +218,40 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: devuelve `{"ok":true}`.
 
 ### Pendientes
-- Commit, push y verificacion de estado remoto.
+- Sin pendientes tecnicos; revisar logs de Apps Script si se sospechan bloqueos legitimos por rate limit.
+
+## 2026-06-18 - Borrado inmediato y compra reversible de wishlist
+
+### Objetivo
+- Hacer que al eliminar un gasto desaparezca de inmediato del panel `Gastos totales`.
+- Actualizar el resumen local con mas rapidez al borrar movimientos.
+- Reemplazar la idea confusa de `Destino` por una seleccion contextual.
+- Si la categoria es `Cosas que quiero`, permitir seleccionar una cosa de wishlist y marcarla como comprada de forma reversible.
+
+### Cambios
+- `frontend/scripts/app.js`: se agrego borrado optimista de movimientos; al confirmar `DEL`, el item sale del estado local y el resumen se ajusta antes de esperar la respuesta de red. Si falla el backend, se revierte el estado previo.
+- `frontend/scripts/app.js`: las listas globales (`ahorrosFuturo`, `metas`, `wishlist`) ahora se actualizan con el resultado del backend aunque el movimiento sea de otro mes.
+- `frontend/scripts/forms.js`: el campo `Destino` se reemplazo por una seleccion contextual `Seleccionar`; si la categoria es `Cosas que quiero`, aparece `Cosa que quiero` con los items de wishlist.
+- `frontend/scripts/forms.js`: si se elige una cosa de wishlist dentro de un gasto, el movimiento se envia como `Compra de wishlist`; si se cambia la categoria fuera de wishlist, vuelve a `Gasto`.
+- `backend/Validation.js`: si llega un gasto con categoria `Wishlist`/`Cosas que quiero` e item relacionado, se normaliza como `Compra de wishlist`; si falta item, se rechaza con validacion.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.18` y cache a `finanzas-lcd-v26`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, sin faltantes.
+- Busqueda de `applyOptimisticMovementDelete`, `optimisticSummaryAfterDelete`, `relatedMode`, `isWishlistCategory`, `Elegir cosa que quiero`, `Selecciona la cosa`, `markWishlistPurchased_`, `v2.18` y `finanzas-lcd-v26`: referencias esperadas presentes.
+- Busqueda en `frontend` de `v2.17`, `finanzas-lcd-v25`, `select('Destino'`, `Ahorro destino`, `Meta destino` y `return 'Destino'`: sin resultados.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.18`, `APP_VERSION: 'v2.18'`, `finanzas-lcd-v26`, `forms.js?v=2.18` y `app.js?v=2.18`.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp v2.18 borrado wishlist reversible"`: creo version 18.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 18 --description "Pirepirapp v2.18 borrado wishlist reversible"`: Web App redeployado.
+- `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: devuelve `{"ok":true}`.
+
+### Pendientes
+- Commit, push y verificacion publica en GitHub Pages.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

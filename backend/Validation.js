@@ -333,6 +333,11 @@ function normalizeCategory_(value) {
   return normalizeOptionalText_(value, 80) || 'Otros';
 }
 
+function isWishlistCategory_(value) {
+  var text = normalizeText_(value).toLowerCase();
+  return text === 'wishlist' || text === 'cosas que quiero' || text === 'cosa que quiero';
+}
+
 function isExpenseLikeMovement_(type) {
   var types = movementTypes_();
   return type === types.expense || type === types.wishlistPurchase;
@@ -388,6 +393,14 @@ function validateMovementRecordInput_(payload, existing) {
     validationError_('El movimiento requiere un ID relacionado.');
   }
 
+  if (type === movementTypes_().expense && isWishlistCategory_(categoria) && !relatedId) {
+    validationError_('Selecciona la cosa que queres comprar.');
+  }
+
+  if (type === movementTypes_().expense && isWishlistCategory_(categoria) && relatedId) {
+    type = movementTypes_().wishlistPurchase;
+  }
+
   if (type === movementTypes_().futureSaving) {
     relatedType = relatedTypes_().futureSaving;
     categoria = 'Ahorros';
@@ -398,7 +411,7 @@ function validateMovementRecordInput_(payload, existing) {
   }
   if (type === movementTypes_().wishlistPurchase) {
     relatedType = relatedTypes_().wishlist;
-    categoria = categoria || 'Wishlist';
+    categoria = 'Wishlist';
   }
 
   return {

@@ -201,6 +201,9 @@
     var defaultDate = movement.fecha || defaultDateForActiveMonth(config.mesActual);
     var isIncome = defaultType === 'Ingreso' || movement.tipo === 'Ingreso';
     var defaultCategory = movement.categoria || (isIncome ? 'Otros' : categories[0]);
+    if (!isIncome && movement.tipo === 'Compra de wishlist') {
+      defaultCategory = 'Wishlist';
+    }
     var typeOptions = isIncome
       ? [{ value: 'Ingreso', label: 'Ingreso' }]
       : [
@@ -210,15 +213,15 @@
         { value: 'Compra de wishlist', label: 'Compra cosa que quiero' }
       ];
 
-    var relatedOptions = relatedSelectOptions(data, movement.tipo || defaultType);
+    var relatedOptions = relatedSelectOptions(data, relatedMode(movement.tipo || defaultType, defaultCategory));
     var html = [
       '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
-      select('Categoria', 'categoria', categories, defaultCategory),
-      select('Destino', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
+      select('Categoria', 'categoria', categories, defaultCategory, 'data-category-select'),
+      select('Seleccionar', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
       field('Fecha', 'fecha', 'date', defaultDate, 'required'),
@@ -230,19 +233,32 @@
 
     openModal(isIncome ? 'INGRESO' : 'GASTO', html, function (root) {
       var typeSelect = utils.qs('[data-movement-type]', root);
+      var categorySelect = utils.qs('[data-category-select]', root);
       var relatedSelect = utils.qs('[data-related-select]', root);
-      updateRelatedVisibility(typeSelect, relatedSelect);
+      updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, movement.idRelacionado || '');
+      updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
       typeSelect.addEventListener('change', function () {
-        relatedSelect.innerHTML = relatedSelectOptions(data, typeSelect.value).map(function (option) {
-          return '<option value="' + utils.escapeHtml(option.value) + '">' + utils.escapeHtml(option.label) + '</option>';
-        }).join('');
-        updateRelatedVisibility(typeSelect, relatedSelect);
+        if (typeSelect.value === 'Compra de wishlist') {
+          categorySelect.value = 'Wishlist';
+        }
+        updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, relatedSelect.value);
+        updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
+      });
+      categorySelect.addEventListener('change', function () {
+        if (!isWishlistCategory(categorySelect.value) && typeSelect.value === 'Compra de wishlist') {
+          typeSelect.value = 'Gasto';
+        }
+        updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, relatedSelect.value);
+        updateRelatedVisibility(typeSelect, categorySelect, relatedSelect);
       });
 
       bindForm(root, '#movement-form', function (form) {
         var payload = utils.formDataToObject(form);
         payload.monto = utils.normalizeAmount(payload.monto);
         payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
+        if (isWishlistCategory(payload.categoria) && payload.idRelacionado && payload.tipo === 'Gasto') {
+          payload.tipo = 'Compra de wishlist';
+        }
         if (!payload.idRelacionado) {
           delete payload.idRelacionado;
         }
@@ -270,7 +286,7 @@
     var result = list.map(function (item) {
       return String(item || '').trim();
     }).filter(function (item) {
-      var key = item.toLowerCase();
+      var key = isWishlistCategory(item) ? 'wishlist' : item.toLowerCase();
       if (!item || seen[key]) {
         return false;
       }
@@ -279,30 +295,52 @@
     });
 
     ['Ahorros', 'Metas', 'Wishlist', 'Otros'].forEach(function (item) {
-      var key = item.toLowerCase();
+      var key = isWishlistCategory(item) ? 'wishlist' : item.toLowerCase();
       if (!seen[key]) {
         seen[key] = true;
         result.push(item);
       }
     });
 
-    return result.length ? result : ['Otros'];
+    return (result.length ? result : ['Otros']).map(function (item) {
+      if (isWishlistCategory(item)) {
+        return { value: 'Wishlist', label: 'Cosas que quiero' };
+      }
+      return item;
+    });
   }
 
-  function relatedSelectOptions(data, type) {
-    var normalized = String(type || '').toLowerCase();
-    var blank = [{ value: '', label: relatedBlankLabel(type) }];
-    if (normalized.indexOf('ahorro') !== -1) {
+  function isWishlistCategory(value) {
+    var text = String(value || '').toLowerCase();
+    return text === 'wishlist' || text === 'cosas que quiero' || text === 'cosa que quiero';
+  }
+
+  function relatedMode(type, category) {
+    if (/ahorro/i.test(type)) {
+      return 'ahorro';
+    }
+    if (/meta/i.test(type)) {
+      return 'meta';
+    }
+    if (/wishlist/i.test(type) || (type === 'Gasto' && isWishlistCategory(category))) {
+      return 'wishlist';
+    }
+    return '';
+  }
+
+  function relatedSelectOptions(data, mode) {
+    var blank = [{ value: '', label: relatedBlankLabel(mode) }];
+    if (mode === 'ahorro') {
       return blank.concat((data.ahorrosFuturo || []).map(function (item) {
         return { value: item.id, label: item.titulo };
       }));
     }
-    if (normalized.indexOf('meta') !== -1) {
+    if (mode === 'meta') {
       return blank.concat((data.metas || []).map(function (item) {
         return { value: item.id, label: item.titulo };
       }));
     }
-    if (normalized.indexOf('wishlist') !== -1) {
+    if (mode === 'wishlist') {
       return blank.concat((data.wishlist || []).map(function (item) {
         return { value: item.id, label: item.titulo };
       }));
@@ -310,40 +348,47 @@
     return blank;
   }
 
-  function relatedBlankLabel(type) {
-    var normalized = String(type || '').toLowerCase();
-    if (normalized.indexOf('ahorro') !== -1) {
+  function relatedBlankLabel(mode) {
+    if (mode === 'ahorro') {
       return 'Elegir ahorro';
     }
-    if (normalized.indexOf('meta') !== -1) {
+    if (mode === 'meta') {
       return 'Elegir meta';
     }
-    if (normalized.indexOf('wishlist') !== -1) {
-      return 'Elegir cosa';
+    if (mode === 'wishlist') {
+      return 'Elegir cosa que quiero';
     }
-    return 'Sin destino';
+    return 'Sin seleccion';
   }
 
-  function relatedFieldLabel(type) {
-    var normalized = String(type || '').toLowerCase();
-    if (normalized.indexOf('ahorro') !== -1) {
-      return 'Ahorro destino';
+  function relatedFieldLabel(mode) {
+    if (mode === 'ahorro') {
+      return 'Ahorro';
     }
-    if (normalized.indexOf('meta') !== -1) {
-      return 'Meta destino';
+    if (mode === 'meta') {
+      return 'Meta';
     }
-    if (normalized.indexOf('wishlist') !== -1) {
+    if (mode === 'wishlist') {
       return 'Cosa que quiero';
     }
-    return 'Destino';
+    return 'Seleccionar';
   }
 
-  function updateRelatedVisibility(typeSelect, relatedSelect) {
-    var needsRelated = /ahorro|meta|wishlist/i.test(typeSelect.value);
+  function updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, selectedValue) {
+    var mode = relatedMode(typeSelect.value, categorySelect.value);
+    relatedSelect.innerHTML = relatedSelectOptions(data, mode).map(function (option) {
+      var selected = String(option.value) === String(selectedValue || '') ? ' selected' : '';
+      return '<option value="' + utils.escapeHtml(option.value) + '"' + selected + '>' + utils.escapeHtml(option.label) + '</option>';
+    }).join('');
+  }
+
+  function updateRelatedVisibility(typeSelect, categorySelect, relatedSelect) {
+    var mode = relatedMode(typeSelect.value, categorySelect.value);
+    var needsRelated = Boolean(mode);
     var fieldBox = relatedSelect.closest('.field');
     var label = fieldBox && utils.qs('span', fieldBox);
     if (label) {
-      label.textContent = relatedFieldLabel(typeSelect.value);
+      label.textContent = relatedFieldLabel(mode);
     }
     if (fieldBox) {
       fieldBox.hidden = !needsRelated;

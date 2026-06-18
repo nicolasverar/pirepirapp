@@ -21,6 +21,8 @@ Los datos se protegen en Apps Script:
 - Las acciones de datos requieren ese token.
 - La PWA guarda la URL y, si elegis recordarlo, el token solo en el dispositivo instalado.
 
+`FINANZAS_API_TOKEN` debe tener al menos 32 caracteres aleatorios. Nunca debe ser una palabra, frase, nombre, fecha ni ningun valor predecible.
+
 Usa una clave larga y no la subas a GitHub.
 
 ## Instalacion En El Celular

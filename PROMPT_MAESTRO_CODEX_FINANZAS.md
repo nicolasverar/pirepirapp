@@ -2,7 +2,7 @@
 
 Trabajá dentro de la carpeta actualmente abierta en VS Code:
 
-`C:\Users\pc\Desktop\Coding\Finanzas`
+`<ruta-local>`
 
 ## Estado actual del proyecto
 

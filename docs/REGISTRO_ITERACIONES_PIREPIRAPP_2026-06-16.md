@@ -91,7 +91,7 @@ nubes y aves aun mas definidos 32bit art por ahi, dmas la tabla resumen no levan
 ### Prompt 11 - Usuario
 
 ```text
-cambia el iocno por C:\Users\pc\Desktop\Coding\Finanzas\icono.jpeg
+cambia el iocno por <ruta-local>\icono.jpeg
 ```
 
 ### Resumen operativo
@@ -109,3 +109,25 @@ sigue sin salir cuanto gate este mesen total y debe ser coherente con el mes  en
 - Se corrige la fuente del mes mensual: el resumen suma por fecha real del movimiento y no por la columna `Mes` si quedo inconsistente.
 - Se evita enviar/usar un mes forzado al crear movimientos.
 - Se ajusta el flujo de configuracion para sincronizar con el mes calendario actual.
+
+### Prompt 13 - Usuario
+
+```text
+Implementá las siguientes mejoras de seguridad:
+
+Rate limiting por IP simulado: en Router.js, usando CacheService.getScriptCache(), registrá el número de requests fallidos por IP (disponible en event.parameter o headers). Si supera 10 intentos fallidos en 60 segundos, devolvé un error genérico sin revelar si el token existe o no.
+
+Token timing-safe comparison: en assertAuthorizedRequest_, reemplazá la comparación directa providedToken !== configuredToken por una comparación carácter a carácter de longitud fija para evitar timing attacks.
+
+Ping no revela metadata: en el handler de ping dentro de Router.js, eliminá los campos app y timezone de la respuesta pública. Solo devolvé { ok: true }.
+
+Limpiar paths locales en docs: en PROMPT_MAESTRO_CODEX_FINANZAS.md y docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md, reemplazá todas las ocurrencias de rutas absolutas tipo <ruta-local>\... por el placeholder <ruta-local>.
+
+Agregar advertencia en README: en la sección de Seguridad del README.md, agregá un párrafo que indique explícitamente que FINANZAS_API_TOKEN debe tener al menos 32 caracteres aleatorios y nunca debe ser una palabra o frase predecible.
+
+No modifiques la arquitectura general ni el flujo de autenticación existente. No agregues dependencias externas. Mantené el estilo de código actual (ES5, funciones con sufijo _, sin clases)
+```
+
+### Resumen operativo
+- Se refuerza autenticacion de Apps Script con rate limit simulado, comparacion timing-safe y respuesta ping minima.
+- Se limpian rutas locales de documentacion y se documenta la entropia minima del token.

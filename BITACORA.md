@@ -180,9 +180,45 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `clasp version "Pirepirapp v2.17 mes actual coherente"`: creo version 16.
 - `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 16 --description "Pirepirapp v2.17 mes actual coherente"`: Web App redeployado.
 - `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: `200 OK`.
+- Commit `ab41ce0` (`Corregir total del mes actual`) y push a `origin/main`.
+- Verificacion publica en `https://nicolasverar.github.io/pirepirapp/`: `index.html`, `scripts/config.js` y `service-worker.js` sirven `v2.17` / `finanzas-lcd-v25`.
 
 ### Pendientes
-- Commit, push y verificacion publica en GitHub Pages.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
+
+## 2026-06-18 - Hardening de autenticacion y limpieza de docs
+
+### Objetivo
+- Agregar rate limiting simulado por IP para fallos de autenticacion.
+- Reemplazar comparacion directa de token por comparacion timing-safe.
+- Evitar que `ping` exponga metadata publica.
+- Limpiar rutas locales absolutas en documentacion.
+- Documentar requisito minimo de entropia para `FINANZAS_API_TOKEN`.
+
+### Cambios
+- `backend/Router.js`: se agrego rate limiting simulado por IP con `CacheService.getScriptCache()` para fallos de autenticacion; se extrae IP desde headers/event.parameter/body cuando existe.
+- `backend/Router.js`: `assertAuthorizedRequest_` usa mensaje generico de autenticacion y comparacion timing-safe de longitud fija mediante `timingSafeTokenEquals_`.
+- `backend/Router.js`: `ping` publico sale sin wrapper y devuelve solo `{ ok: true }`.
+- `backend/Code.js`: `ping()` auxiliar devuelve solo `{ ok: true }`.
+- `README.md`: se agrego advertencia de que `FINANZAS_API_TOKEN` debe tener al menos 32 caracteres aleatorios y no ser predecible.
+- `PROMPT_MAESTRO_CODEX_FINANZAS.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: rutas absolutas locales reemplazadas por `<ruta-local>`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt nuevo.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest ok`.
+- Busqueda de comparacion directa `providedToken !== configuredToken`, mensajes antiguos de token y metadata `app` en `Router.js`/`Code.js`: sin resultados.
+- Busqueda de `CacheService`, `getScriptCache`, `timingSafeTokenEquals_`, `genericAuthErrorMessage_`, `registerFailedAuthAttempt_` y `requestClientIp_`: presentes en `backend/Router.js`.
+- Busqueda de rutas `C:\Users\pc`, `C:/Users/pc` y `C:\` en los dos documentos solicitados: sin rutas locales absolutas.
+- Busqueda en `README.md`: advertencia de `32 caracteres aleatorios`, palabra/frase/predecible y `FINANZAS_API_TOKEN` presente.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp seguridad auth rate limit"`: creo version 17.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 17 --description "Pirepirapp seguridad auth rate limit"`: Web App redeployado.
+- `Invoke-WebRequest` a `https://script.google.com/macros/s/AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu/exec?action=ping`: devuelve `{"ok":true}`.
+
+### Pendientes
+- Commit, push y verificacion de estado remoto.
 
 ## 2026-06-17 - Ajuste de brillo y silueta de aves
 

@@ -71,9 +71,6 @@ function doPost(event) {
 
 function ping() {
   return {
-    ok: true,
-    app: 'FinanzasPersonales',
-    timezone: appTimezone_(),
-    timestamp: timestampString_()
+    ok: true
   };
 }

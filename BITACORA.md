@@ -165,8 +165,13 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda de referencias viejas `v2.24`, `v=2.24` y `finanzas-lcd-v32`: sin resultados en archivos de version/cache.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `3c7d2b6` (`Redisenar tarjetas del resumen`) subido a `origin/main`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.25b` sirve `v2.25`, `APP_VERSION: 'v2.25'`, `finanzas-lcd-v33`, `render.js?v=2.25` y `main.css?v=2.25`.
+
 ### Pendientes
-- Validar, commitear, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

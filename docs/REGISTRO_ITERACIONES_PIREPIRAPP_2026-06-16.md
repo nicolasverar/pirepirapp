@@ -280,3 +280,14 @@ La app actualmente usa un verde de fondo prácticamente plano. Rediseñá la pal
 - Se agrega conversion optimista: meta temporal local, check inline en tarjeta y rollback si falla el servidor.
 - Backend permite convertir wishlist sin pedir monto mensual, usando titulo/costo como titulo/objetivo.
 - Se incorporan dos variantes verdes adicionales a la paleta LCD para dar profundidad visual.
+
+### Prompt 20 - Usuario
+
+```text
+cuando ingreso un gasto nuevo necesito que de inmediato se actualice todo, cuanto gaste en el mes, que aparezca en el resumen, que baje el porcentaje de mi dinero disponible etc porque hasta ahora lo que pasa es añado gasto, no se actualiza nada en resumen, me muevo en gastos aparece el registro recien cargado luego vuelvo a resumen sigue sin haber nada vuelvo a gasto y ya desaparecio el gasto recién cargado que salía antes
+```
+
+### Resumen operativo
+- Se corrige el flujo de movimientos para recalcular el resumen local apenas se crea, edita o elimina un gasto.
+- Se agrega proteccion temporal contra refresh silencioso viejo para que una lectura atrasada de Sheets no borre el movimiento recien guardado.
+- Backend fuerza `SpreadsheetApp.flush()` antes de devolver resumen de movimientos.

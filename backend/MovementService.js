@@ -24,6 +24,7 @@ function listMovements_(payload) {
 function createMovement_(payload) {
   return withScriptLock_(function () {
     var record = createMovementUnlocked_(payload);
+    SpreadsheetApp.flush();
     return {
       movimiento: movementToApi_(record),
       resumen: getMonthlySummary_({ mes: record.Mes })
@@ -53,6 +54,7 @@ function updateMovement_(payload) {
     applyMovementImpact_(existing, -1);
     var stored = updateMovementRecordById_(id, updatedRecord, existing.Mes);
     applyMovementImpact_(stored, 1);
+    SpreadsheetApp.flush();
 
     return {
       movimiento: movementToApi_(stored),
@@ -72,6 +74,7 @@ function deleteMovement_(payload) {
 
     applyMovementImpact_(existing, -1);
     var deleted = deleteMovementRecordById_(id, existing.Mes);
+    SpreadsheetApp.flush();
     return {
       movimiento: movementToApi_(deleted),
       resumen: getMonthlySummary_({ mes: deleted.Mes })

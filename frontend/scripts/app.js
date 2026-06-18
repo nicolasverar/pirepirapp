@@ -2,6 +2,9 @@
   'use strict';
 
   var utils = window.FinanzasUtils;
+  var movementGuardCounter = 0;
+  var movementRefreshTimer = 0;
+  var MOVEMENT_GUARD_TTL_MS = 15000;
 
   function init() {
     window.FinanzasRouter.bind();
@@ -78,9 +81,10 @@
     });
     return window.FinanzasApi.request('bootstrap', {})
       .then(function (data) {
-        window.FinanzasState.setData(data);
+        var reconciled = reconcileBootstrapData(data);
+        window.FinanzasState.setData(reconciled);
         if (window.FinanzasLocalCache) {
-          window.FinanzasLocalCache.saveBootstrap(data);
+          window.FinanzasLocalCache.saveBootstrap(reconciled);
         }
         window.FinanzasState.setState({ loading: false, syncStatus: 'Sincronizado', error: '' });
       })
@@ -122,7 +126,11 @@
         applyMutationResult(action, data);
         window.FinanzasState.setState({ syncStatus: 'Sincronizado', error: '' });
         toast('Guardado');
-        refresh({ background: true, silent: true });
+        if (isMovementRoute(action)) {
+          scheduleMovementRefresh();
+        } else {
+          refresh({ background: true, silent: true });
+        }
         return data;
       })
       .catch(function (error) {
@@ -202,6 +210,12 @@
 
   function applyOptimisticMutation(action, payload) {
     var route = String(action || '').toLowerCase();
+    if (route === 'createmovement') {
+      return applyOptimisticMovementCreate(payload || {});
+    }
+    if (route === 'updatemovement' && payload && payload.id) {
+      return applyOptimisticMovementUpdate(payload);
+    }
     if (route === 'deletemovement' && payload && payload.id) {
       return applyOptimisticMovementDelete(payload.id);
     }
@@ -209,6 +223,17 @@
       return applyOptimisticWishlistConversion(payload.wishlistId || payload.id);
     }
     return null;
+  }
+
+  function isMovementRoute(action) {
+    return String(action || '').toLowerCase().indexOf('movement') !== -1;
+  }
+
+  function scheduleMovementRefresh() {
+    window.clearTimeout(movementRefreshTimer);
+    movementRefreshTimer = window.setTimeout(function () {
+      refresh({ background: true, silent: true });
+    }, 1400);
   }
 
   function convertWishlistInstant(id) {
@@ -295,6 +320,58 @@
     saveCurrentBootstrap();
   }
 
+  function applyOptimisticMovementCreate(payload) {
+    var current = window.FinanzasState.getState().data;
+    var snapshot = cloneData(current);
+    var source = current.movimientos || {};
+    var movement = movementFromPayload(payload, null, nextOptimisticMovementId());
+    movement.optimisticAction = 'createMovement';
+    movement.optimisticKey = movementClientKey(movement);
+
+    var items = movementItemsFromData(source).filter(function (item) {
+      return String(item.id) !== String(movement.id);
+    });
+    items.push(movement);
+    sortMovementItems(items);
+
+    applyMovementItemsToState(current, source, items, current.resumen, current.config);
+    saveCurrentBootstrap();
+
+    return function () {
+      window.FinanzasState.setData(snapshot);
+      saveCurrentBootstrap();
+    };
+  }
+
+  function applyOptimisticMovementUpdate(payload) {
+    var current = window.FinanzasState.getState().data;
+    var snapshot = cloneData(current);
+    var source = current.movimientos || {};
+    var existing = movementItemsFromData(source).filter(function (item) {
+      return String(item.id) === String(payload.id);
+    })[0];
+    if (!existing) {
+      return null;
+    }
+
+    var movement = movementFromPayload(payload, existing, existing.id);
+    var items = movementItemsFromData(source).filter(function (item) {
+      return String(item.id) !== String(movement.id);
+    });
+    items.push(movement);
+    sortMovementItems(items);
+
+    applyMovementItemsToState(current, source, items, current.resumen, current.config);
+    rememberMovementUpsert(movement);
+    saveCurrentBootstrap();
+
+    return function () {
+      forgetMovementGuard(movement.id);
+      window.FinanzasState.setData(snapshot);
+      saveCurrentBootstrap();
+    };
+  }
+
   function applyOptimisticMovementDelete(id) {
     var current = window.FinanzasState.getState().data;
     var snapshot = cloneData(current);
@@ -315,64 +392,20 @@
 
     window.FinanzasState.setData({
       config: current.config,
-      resumen: optimisticSummaryAfterDelete(current.resumen, current.config, item),
+      resumen: recalculateSummary(current.resumen, current.config, items),
       movimientos: nextMovements,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: current.metas,
       wishlist: current.wishlist
     });
+    rememberMovementDelete(id);
     saveCurrentBootstrap();
 
     return function () {
+      forgetMovementGuard(id);
       window.FinanzasState.setData(snapshot);
       saveCurrentBootstrap();
     };
-  }
-
-  function optimisticSummaryAfterDelete(summary, config, item) {
-    if (!summary) {
-      return summary;
-    }
-    var summaryMonth = String(summary.mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
-    var itemMonth = movementMonth(item);
-    var next = Object.assign({}, summary, {
-      actividadReciente: (summary.actividadReciente || []).filter(function (recent) {
-        return String(recent.id) !== String(item.id);
-      })
-    });
-    if (itemMonth !== summaryMonth) {
-      return next;
-    }
-
-    var amount = Number(item.monto || 0);
-    var type = String(item.tipo || '');
-    next.cantidadMovimientos = Math.max(0, Number(summary.cantidadMovimientos || 0) - 1);
-
-    if (type === 'Gasto' || type === 'Compra de wishlist') {
-      next.totalGastado = Math.max(0, Number(summary.totalGastado || 0) - amount);
-      if (type === 'Compra de wishlist') {
-        next.comprasWishlist = Math.max(0, Number(summary.comprasWishlist || 0) - amount);
-      } else {
-        next.gastosNormales = Math.max(0, Number(summary.gastosNormales || 0) - amount);
-      }
-      next.disponible = Number(summary.disponible || 0) + amount;
-    } else if (type === 'Ingreso' && !isSalaryMovement(item)) {
-      next.ingresosExtra = Math.max(0, Number(summary.ingresosExtra || 0) - amount);
-      next.totalIngresos = Math.max(0, Number(summary.totalIngresos || 0) - amount);
-      next.disponible = Number(summary.disponible || 0) - amount;
-    } else if (type === 'Aporte a ahorro' || type === 'Aporte a meta') {
-      next.totalApartado = Math.max(0, Number(summary.totalApartado || 0) - amount);
-      if (type === 'Aporte a ahorro') {
-        next.aportesAhorro = Math.max(0, Number(summary.aportesAhorro || 0) - amount);
-      } else {
-        next.aportesMeta = Math.max(0, Number(summary.aportesMeta || 0) - amount);
-      }
-      next.disponible = Number(summary.disponible || 0) + amount;
-    }
-    next.porcentajeDisponible = Number(next.totalIngresos || 0) > 0
-      ? Math.max(0, Math.min(100, Math.round((Number(next.disponible || 0) / Number(next.totalIngresos || 0)) * 10000) / 100))
-      : 0;
-    return next;
   }
 
   function isSalaryMovement(item) {
@@ -385,6 +418,310 @@
       return date.slice(0, 7);
     }
     return String((item || {}).mes || '').slice(0, 7);
+  }
+
+  function movementFromPayload(payload, existing, id) {
+    var source = payload || {};
+    var base = existing || {};
+    var type = source.tipo !== undefined ? source.tipo : (base.tipo || 'Gasto');
+    var category = source.categoria !== undefined ? source.categoria : (base.categoria || defaultCategoryForMovement(type));
+    var relatedId = source.idRelacionado !== undefined ? source.idRelacionado : (base.idRelacionado || '');
+    if (type === 'Gasto' && isWishlistCategory(category) && relatedId) {
+      type = 'Compra de wishlist';
+      category = 'Wishlist';
+    }
+    if (type === 'Aporte a ahorro') {
+      category = 'Ahorros';
+    }
+    if (type === 'Aporte a meta') {
+      category = 'Metas';
+    }
+    if (type === 'Compra de wishlist') {
+      category = 'Wishlist';
+    }
+    if (type === 'Ingreso') {
+      category = 'Ingreso';
+    }
+
+    var date = source.fecha !== undefined ? source.fecha : (base.fecha || utils.toInputDate());
+    var time = source.hora !== undefined ? source.hora : (base.hora || utils.toInputTime() + ':00');
+    return {
+      id: id || base.id || nextOptimisticMovementId(),
+      fecha: String(date || utils.toInputDate()).slice(0, 10),
+      hora: normalizeMovementTime(time),
+      mes: String(date || utils.toInputDate()).slice(0, 7),
+      tipo: type,
+      motivo: source.motivo !== undefined ? source.motivo : (base.motivo || ''),
+      categoria: category,
+      monto: utils.normalizeAmount(source.monto !== undefined ? source.monto : base.monto),
+      idRelacionado: relatedId,
+      tipoRelacionado: source.tipoRelacionado !== undefined ? source.tipoRelacionado : (base.tipoRelacionado || relatedTypeForMovement(type)),
+      descripcion: source.descripcion !== undefined ? source.descripcion : (base.descripcion || ''),
+      fechaCreacion: base.fechaCreacion || new Date().toISOString(),
+      fechaModificacion: new Date().toISOString()
+    };
+  }
+
+  function normalizeMovementTime(value) {
+    var text = String(value || utils.toInputTime());
+    if (/^\d{2}:\d{2}$/.test(text)) {
+      return text + ':00';
+    }
+    return text;
+  }
+
+  function defaultCategoryForMovement(type) {
+    if (type === 'Ingreso') {
+      return 'Ingreso';
+    }
+    if (type === 'Aporte a ahorro') {
+      return 'Ahorros';
+    }
+    if (type === 'Aporte a meta') {
+      return 'Metas';
+    }
+    if (type === 'Compra de wishlist') {
+      return 'Wishlist';
+    }
+    return 'Otros';
+  }
+
+  function relatedTypeForMovement(type) {
+    if (type === 'Aporte a ahorro') {
+      return 'ahorro';
+    }
+    if (type === 'Aporte a meta') {
+      return 'meta';
+    }
+    if (type === 'Compra de wishlist') {
+      return 'wishlist';
+    }
+    return '';
+  }
+
+  function isWishlistCategory(value) {
+    var text = String(value || '').toLowerCase();
+    return text === 'wishlist' || text === 'cosas que quiero' || text === 'cosa que quiero';
+  }
+
+  function nextOptimisticMovementId() {
+    movementGuardCounter += 1;
+    return 'optimistic-mov-' + Date.now() + '-' + movementGuardCounter;
+  }
+
+  function applyMovementItemsToState(current, source, items, summary, config) {
+    window.FinanzasState.setData({
+      config: config || current.config,
+      resumen: recalculateSummary(summary || current.resumen, config || current.config, items),
+      movimientos: movementDataWithItems(source, items),
+      ahorrosFuturo: current.ahorrosFuturo,
+      metas: current.metas,
+      wishlist: current.wishlist
+    });
+  }
+
+  function movementDataWithItems(source, items) {
+    if (Array.isArray(source)) {
+      return items;
+    }
+    var result = copyObject(source || {});
+    result.movimientos = items;
+    return result;
+  }
+
+  function sortMovementItems(items) {
+    items.sort(function (left, right) {
+      var leftKey = String(left.fecha || '') + ' ' + String(left.hora || '');
+      var rightKey = String(right.fecha || '') + ' ' + String(right.hora || '');
+      if (leftKey === rightKey) {
+        return 0;
+      }
+      return leftKey < rightKey ? 1 : -1;
+    });
+    return items;
+  }
+
+  function recalculateSummary(summary, config, movements) {
+    var base = copyObject(summary || {});
+    var appConfig = config || {};
+    var month = String(base.mes || appConfig.mesActual || utils.currentMonth()).slice(0, 7);
+    var monthlySalary = utils.normalizeAmount(appConfig.sueldoMensual !== undefined ? appConfig.sueldoMensual : base.sueldoMensual);
+    var totals = {
+      gastos: 0,
+      comprasWishlist: 0,
+      ingresosExtra: 0,
+      aportesAhorro: 0,
+      aportesMeta: 0
+    };
+    var categoryTotals = {};
+    var count = 0;
+
+    (movements || []).forEach(function (item) {
+      var type = String((item || {}).tipo || '');
+      var amount = utils.normalizeAmount((item || {}).monto);
+      var category = String((item || {}).categoria || 'Otros') || 'Otros';
+      if (movementMonth(item) !== month) {
+        return;
+      }
+      count += 1;
+      if (type === 'Gasto') {
+        totals.gastos += amount;
+        categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+      }
+      if (type === 'Compra de wishlist') {
+        totals.comprasWishlist += amount;
+        categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
+      }
+      if (type === 'Ingreso' && !isSalaryMovement(item)) {
+        totals.ingresosExtra += amount;
+      }
+      if (type === 'Aporte a ahorro') {
+        totals.aportesAhorro += amount;
+      }
+      if (type === 'Aporte a meta') {
+        totals.aportesMeta += amount;
+      }
+    });
+
+    var totalGastado = totals.gastos + totals.comprasWishlist;
+    var totalIngresos = monthlySalary + totals.ingresosExtra;
+    var totalApartado = totals.aportesAhorro + totals.aportesMeta;
+    var disponible = totalIngresos - totalGastado - totalApartado;
+    base.mes = month;
+    base.moneda = appConfig.moneda || base.moneda || 'PYG';
+    base.sueldoMensual = monthlySalary;
+    base.ingresosExtra = totals.ingresosExtra;
+    base.totalIngresos = totalIngresos;
+    base.totalGastado = totalGastado;
+    base.gastosNormales = totals.gastos;
+    base.comprasWishlist = totals.comprasWishlist;
+    base.aportesAhorro = totals.aportesAhorro;
+    base.aportesMeta = totals.aportesMeta;
+    base.totalApartado = totalApartado;
+    base.disponible = disponible;
+    base.porcentajeDisponible = totalIngresos > 0
+      ? Math.max(0, Math.min(100, Math.round((disponible / totalIngresos) * 10000) / 100))
+      : 0;
+    base.categoriaMayorGasto = topCategoryFromTotals(categoryTotals);
+    base.actividadReciente = sortMovementItems((movements || []).slice()).slice(0, 5);
+    base.cantidadMovimientos = count;
+    return base;
+  }
+
+  function topCategoryFromTotals(categoryTotals) {
+    var names = Object.keys(categoryTotals || {});
+    if (!names.length) {
+      return {
+        categoria: '',
+        monto: 0,
+        mensaje: 'Todavia no registraste gastos este mes.'
+      };
+    }
+    names.sort(function (left, right) {
+      return Number(categoryTotals[right] || 0) - Number(categoryTotals[left] || 0);
+    });
+    return {
+      categoria: names[0],
+      monto: Number(categoryTotals[names[0]] || 0),
+      mensaje: 'Resumen local recalculado por categoria.'
+    };
+  }
+
+  function copyObject(source) {
+    var result = {};
+    Object.keys(source || {}).forEach(function (key) {
+      result[key] = source[key];
+    });
+    return result;
+  }
+
+  function movementClientKey(item) {
+    return [
+      String((item || {}).tipo || ''),
+      String((item || {}).motivo || ''),
+      String((item || {}).fecha || ''),
+      String((item || {}).hora || ''),
+      String(utils.normalizeAmount((item || {}).monto)),
+      String((item || {}).idRelacionado || '')
+    ].join('|');
+  }
+
+  function rememberMovementUpsert(movement) {
+    if (!movement || !movement.id || String(movement.id).indexOf('optimistic-mov-') === 0) {
+      return;
+    }
+    movementSyncGuards[movement.id] = {
+      action: 'upsert',
+      movement: cloneData(movement),
+      expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
+    };
+  }
+
+  function rememberMovementDelete(id) {
+    if (!id) {
+      return;
+    }
+    movementSyncGuards[id] = {
+      action: 'delete',
+      id: id,
+      movement: null,
+      expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
+    };
+  }
+
+  function forgetMovementGuard(id) {
+    if (id && movementSyncGuards[id]) {
+      delete movementSyncGuards[id];
+    }
+  }
+
+  function activeMovementGuards() {
+    var now = Date.now();
+    return Object.keys(movementSyncGuards).map(function (id) {
+      var guard = movementSyncGuards[id];
+      if (!guard || guard.expiresAt < now) {
+        delete movementSyncGuards[id];
+        return null;
+      }
+      return guard;
+    }).filter(Boolean);
+  }
+
+  function reconcileBootstrapData(data) {
+    var next = data || {};
+    var guards = activeMovementGuards();
+    if (!guards.length) {
+      return next;
+    }
+
+    var current = window.FinanzasState.getState().data || {};
+    var source = next.movimientos || current.movimientos || {};
+    var items = movementItemsFromData(source);
+    guards.forEach(function (guard) {
+      if (guard.action === 'delete') {
+        items = items.filter(function (item) {
+          return String(item.id) !== String(guard.id);
+        });
+        return;
+      }
+      if (guard.action === 'upsert' && guard.movement) {
+        items = items.filter(function (item) {
+          return String(item.id) !== String(guard.movement.id);
+        });
+        items.push(guard.movement);
+      }
+    });
+    sortMovementItems(items);
+
+    var config = next.config || current.config;
+    return {
+      config: config,
+      resumen: recalculateSummary(next.resumen || current.resumen, config, items),
+      movimientos: movementDataWithItems(source, items),
+      ahorrosFuturo: next.ahorrosFuturo || current.ahorrosFuturo,
+      metas: next.metas || current.metas,
+      wishlist: next.wishlist || current.wishlist
+    };
   }
 
   function applyMutationResult(action, data) {
@@ -439,19 +776,18 @@
       return String(item.id) !== String(result.movimiento.id);
     });
     var movementMonth = String(result.movimiento.mes || activeMonth).slice(0, 7);
+    if (route === 'createmovement') {
+      var resultKey = movementClientKey(result.movimiento);
+      items = items.filter(function (item) {
+        return !(item.optimisticAction === 'createMovement' && item.optimisticKey === resultKey);
+      });
+    }
 
     if (route !== 'deletemovement' && (showingAllMonths || movementMonth === activeMonth)) {
       items.push(result.movimiento);
     }
 
-    items.sort(function (left, right) {
-      var leftKey = String(left.fecha || '') + ' ' + String(left.hora || '');
-      var rightKey = String(right.fecha || '') + ' ' + String(right.hora || '');
-      if (leftKey === rightKey) {
-        return 0;
-      }
-      return leftKey < rightKey ? 1 : -1;
-    });
+    sortMovementItems(items);
 
     var nextMovements = Array.isArray(source)
       ? items
@@ -465,15 +801,23 @@
     var nextConfig = result.resumen && result.resumen.mes
       ? Object.assign({}, current.config, { mesActual: summaryMonth })
       : current.config;
-
-    window.FinanzasState.setData({
+    var nextData = {
       config: nextConfig,
       resumen: nextSummary,
       movimientos: nextMovements,
       ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
       metas: (result.resumen && result.resumen.metas) || current.metas,
       wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
-    });
+    };
+    nextData.resumen = recalculateSummary(nextData.resumen, nextData.config, items);
+
+    if (route === 'deletemovement') {
+      rememberMovementDelete(result.movimiento.id);
+    } else {
+      rememberMovementUpsert(result.movimiento);
+    }
+
+    window.FinanzasState.setData(nextData);
     saveCurrentBootstrap();
   }
 

@@ -77,6 +77,29 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-18 - Resumen inmediato tras cargar gastos
+
+### Objetivo
+- Hacer que un gasto nuevo actualice de inmediato el total gastado del mes, actividad reciente y porcentaje disponible.
+- Evitar que un refresh silencioso con lectura atrasada de Sheets borre de la UI el movimiento recien guardado.
+
+### Cambios
+- `frontend/scripts/app.js`: se agrego alta/edicion/baja optimista de movimientos, recalculo local de resumen mensual y proteccion temporal contra bootstrap viejo.
+- `backend/MovementService.js`: se fuerza `SpreadsheetApp.flush()` antes de calcular el resumen devuelto por create/update/delete.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.23` y cache a `finanzas-lcd-v31`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `backend/*.js`, `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 23 assets, cache `finanzas-lcd-v31`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.23`, `APP_VERSION: 'v2.23'`, `finanzas-lcd-v31`, `app.js?v=2.23` y `render.js?v=2.23`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Validar, commitear, desplegar backend y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

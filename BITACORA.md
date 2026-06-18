@@ -132,8 +132,14 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - PNGs de icono validados: `icon-192.png` mide `192x192`; `icon-512.png` mide `512x512`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `d991713` (`Redibujar escena futuro e icono`) subido a `origin/main`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.24` sirve `v2.24`, `APP_VERSION: 'v2.24'`, `finanzas-lcd-v32`, `app.js?v=2.24` y `main.css?v=2.24`.
+- Iconos publicos verificados: `icon-192.png` mide `192x192` y pesa `69856` bytes; `icon-512.png` mide `512x512` y pesa `387214` bytes.
+
 ### Pendientes
-- Validar, commitear, publicar GitHub Pages y verificar la URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

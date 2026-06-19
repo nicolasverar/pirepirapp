@@ -294,9 +294,13 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Sprite validado con ImageMagick: `aves-flight-sprite.png` mide `1536x56`.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.29`, `APP_VERSION: 'v2.29'`, `finanzas-lcd-v37`, `main.css?v=2.29` y sprite cacheado.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit principal `9613193` (`Suavizar aleteo de aves MP4`) enviado a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.29` sirve `v2.29`, `APP_VERSION: 'v2.29'`, `finanzas-lcd-v37`, `main.css?v=2.29` y sprite cacheado.
+- Sprite publico `https://nicolasverar.github.io/pirepirapp/assets/aves-flight-sprite.png?v=2.29`: `200 OK`, `image/png`, `5720` bytes.
+- Backend sin cambios; no se ejecuto despliegue de Apps Script.
 
 ### Pendientes
-- Commitear, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

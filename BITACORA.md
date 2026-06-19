@@ -19,8 +19,13 @@
 - Servidor local existente `http://127.0.0.1:4173/`: sirve `v2.34`.
 - `scripts/render.js?v=2.34` servido localmente contiene `salary-hatch-5` y `salaryPieFrontSidePieces`, y ya no contiene `addPieSideLine`.
 
+### Despliegue
+- Commit principal: `fdfb0fc` (`Integrar torta dinamica de sueldo`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.34` sirve `v2.34`, `APP_VERSION: 'v2.34'`, cache `finanzas-lcd-v42` y `render.js` con `salaryPieFrontSidePieces`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la URL publica despues del push.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-16 - Ajuste visual de tarjetas y progreso
 

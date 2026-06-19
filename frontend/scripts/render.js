@@ -548,9 +548,10 @@
       return sum + item.amount;
     }, 0), 1);
     var cx = 120;
-    var cy = 70;
+    var cy = 58;
     var rx = 88;
-    var ry = 48;
+    var ry = 42;
+    var depth = 34;
     var start = -Math.PI / 2;
     var sides = [];
     var tops = [];
@@ -561,8 +562,9 @@
       var end = start + sweep;
       var full = sweep >= Math.PI * 2 - 0.0001;
       var d = partitionPiePath(cx, cy, rx, ry, start, end, full);
+      var sideD = partitionPieSidePath(cx, cy, rx, ry, start, end, depth, full);
       var className = utils.escapeHtml(item.className);
-      sides.push('<path class="salary-pie-side ' + className + '" d="' + d + '"></path>');
+      sides.push('<path class="salary-pie-side ' + className + '" d="' + sideD + '"></path>');
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
       tops.push('<path class="salary-pie-hatch hatch-' + (index % 3) + '" d="' + d + '"></path>');
       if ((item.amount / chartTotal) >= 0.08) {
@@ -573,23 +575,20 @@
 
     return [
       '<div class="salary-pie-stage' + (excess > 0 ? ' is-over-budget' : '') + '" role="img" aria-label="Particion del sueldo en diagrama de torta">',
-      '<img class="salary-pie-reference" src="./assets/torta.pmg.png?v=2.31" alt="" aria-hidden="true">',
       '<svg class="salary-pie-svg" viewBox="0 0 240 158" focusable="false" aria-hidden="true">',
       '<defs>',
       '<pattern id="salary-hatch-a" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8"></line></pattern>',
       '<pattern id="salary-hatch-b" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="7"></line></pattern>',
       '<pattern id="salary-dots" width="7" height="7" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="2" height="2"></rect></pattern>',
       '</defs>',
-      '<ellipse class="salary-pie-shadow" cx="120" cy="98" rx="94" ry="42"></ellipse>',
+      '<ellipse class="salary-pie-shadow" cx="120" cy="106" rx="94" ry="34"></ellipse>',
+      '<ellipse class="salary-pie-bottom-rim" cx="' + cx + '" cy="' + (cy + depth) + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
       sides.join(''),
       tops.join(''),
-      '<ellipse class="salary-pie-glass" cx="120" cy="70" rx="88" ry="48"></ellipse>',
+      '<ellipse class="salary-pie-top-rim" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
+      '<path class="salary-pie-front-rim" d="M ' + svgNumber(cx - rx) + ' ' + svgNumber(cy) + ' A ' + svgNumber(rx) + ' ' + svgNumber(ry) + ' 0 0 0 ' + svgNumber(cx + rx) + ' ' + svgNumber(cy) + '"></path>',
+      '<ellipse class="salary-pie-glass" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
       labels.join(''),
-      '<g class="salary-pie-center">',
-      '<ellipse class="salary-pie-center-bg" cx="120" cy="70" rx="38" ry="22"></ellipse>',
-      '<text class="salary-pie-center-caption" x="120" y="66">DISP.</text>',
-      '<text class="salary-pie-center-value' + (excess > 0 ? ' salary-pie-center-alert' : '') + '" x="120" y="80">' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</text>',
-      '</g>',
       '</svg>',
       excess > 0 ? '<span class="salary-pie-over">EXCESO ' + utils.escapeHtml(utils.formatMoney(excess)) + '</span>' : '',
       '</div>'
@@ -647,6 +646,30 @@
     ].join(' ');
   }
 
+  function partitionPieSidePath(cx, cy, rx, ry, start, end, depth, full) {
+    if (full) {
+      return [
+        'M', svgNumber(cx - rx), svgNumber(cy),
+        'A', svgNumber(rx), svgNumber(ry), '0 0 0', svgNumber(cx + rx), svgNumber(cy),
+        'L', svgNumber(cx + rx), svgNumber(cy + depth),
+        'A', svgNumber(rx), svgNumber(ry), '0 0 1', svgNumber(cx - rx), svgNumber(cy + depth),
+        'Z'
+      ].join(' ');
+    }
+    var first = ellipsePoint(cx, cy, rx, ry, start);
+    var last = ellipsePoint(cx, cy, rx, ry, end);
+    var firstBottom = { x: first.x, y: first.y + depth };
+    var lastBottom = { x: last.x, y: last.y + depth };
+    var largeArc = end - start > Math.PI ? 1 : 0;
+    return [
+      'M', svgNumber(first.x), svgNumber(first.y),
+      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '1', svgNumber(last.x), svgNumber(last.y),
+      'L', svgNumber(lastBottom.x), svgNumber(lastBottom.y),
+      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '0', svgNumber(firstBottom.x), svgNumber(firstBottom.y),
+      'Z'
+    ].join(' ');
+  }
+
   function ellipsePoint(cx, cy, rx, ry, angle) {
     return {
       x: cx + Math.cos(angle) * rx,
@@ -655,7 +678,7 @@
   }
 
   function renderPieLabel(cx, cy, rx, ry, angle, percent) {
-    var point = ellipsePoint(cx, cy, rx * 0.62, ry * 0.62, angle);
+    var point = ellipsePoint(cx, cy, rx * 0.58, ry * 0.58, angle);
     return '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</text>';
   }
 

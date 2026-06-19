@@ -428,10 +428,10 @@ code {
 .salary-pie-stage {
   position: relative;
   width: 100%;
-  min-height: 194px;
+  min-height: 204px;
   display: grid;
   place-items: center;
-  padding: 8px 4px 2px;
+  padding: 8px 4px 4px;
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(25, 45, 24, 0.12) 1px, transparent 1px) 0 0 / 18px 18px,
@@ -441,25 +441,10 @@ code {
   box-shadow: inset 2px 2px 0 var(--lcd-surface-hi), 3px 3px 0 var(--lcd-dark);
 }
 
-.salary-pie-reference {
-  position: absolute;
-  z-index: 0;
-  left: 50%;
-  top: 50%;
-  width: min(76%, 226px);
-  height: auto;
-  opacity: 0.28;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: multiply;
-  image-rendering: auto;
-  filter: contrast(1.25) saturate(0.55);
-  pointer-events: none;
-}
-
 .salary-pie-svg {
   position: relative;
   z-index: 1;
-  width: min(100%, 260px);
+  width: min(100%, 280px);
   height: auto;
   overflow: visible;
   image-rendering: pixelated;
@@ -476,23 +461,30 @@ code {
   fill: rgba(25, 45, 24, 0.22);
 }
 
-.salary-pie-side {
-  opacity: 0.42;
+.salary-pie-bottom-rim {
+  fill: rgba(25, 45, 24, 0.16);
   stroke: var(--lcd-dark);
-  stroke-width: 1.6;
-  transform: translateY(15px);
+  stroke-width: 2;
+}
+
+.salary-pie-side {
+  opacity: 0.74;
+  stroke: var(--lcd-dark);
+  stroke-width: 1.9;
+  paint-order: stroke fill;
+  filter: saturate(0.85) brightness(0.82);
 }
 
 .salary-pie-slice {
   stroke: var(--lcd-line);
-  stroke-width: 2.2;
+  stroke-width: 2.4;
   paint-order: stroke fill;
-  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.28));
+  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.34));
 }
 
 .salary-pie-hatch {
   pointer-events: none;
-  opacity: 0.34;
+  opacity: 0.42;
   stroke: var(--lcd-line);
   stroke-width: 0.35;
 }
@@ -515,6 +507,17 @@ code {
   stroke-width: 2;
 }
 
+.salary-pie-top-rim,
+.salary-pie-front-rim {
+  fill: none;
+  stroke: var(--lcd-ink);
+  stroke-width: 2.2;
+}
+
+.salary-pie-front-rim {
+  stroke-width: 2.8;
+}
+
 .salary-pie-label {
   fill: var(--lcd-bg);
   stroke: var(--lcd-ink);
@@ -525,39 +528,6 @@ code {
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 0;
-}
-
-.salary-pie-center-bg {
-  fill: var(--lcd-bg-2);
-  stroke: var(--lcd-line);
-  stroke-width: 2;
-  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.24));
-}
-
-.salary-pie-center-caption,
-.salary-pie-center-value {
-  text-anchor: middle;
-  dominant-baseline: middle;
-  font-weight: 900;
-  letter-spacing: 0;
-}
-
-.salary-pie-center-caption {
-  fill: var(--lcd-dark);
-  font-size: 8px;
-}
-
-.salary-pie-center-value {
-  fill: var(--lcd-ink);
-  font-size: 13px;
-}
-
-.salary-pie-center-alert {
-  fill: var(--lcd-alert);
-}
-
-.salary-pie-stage.is-over-budget .salary-pie-center-bg {
-  stroke: var(--lcd-alert);
 }
 
 .salary-pie-over {

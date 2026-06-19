@@ -368,6 +368,30 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-19 - Torta isometrica sin superposicion
+
+### Objetivo
+- Corregir que la particion anterior apareciera encima de la torta.
+- Redibujar `Particion sueldo` como torta 3D isometrica, no como grafico plano superpuesto.
+
+### Cambios
+- `frontend/scripts/render.js`: se elimino la imagen visible `salary-pie-reference`; la torta ahora se renderiza como un solo SVG isometrico con costados, tapa, borde frontal y sectores dinamicos.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: se ajusto profundidad, tramas, contornos y tamano responsive del grafico.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.32` y cache a `finanzas-lcd-v40`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Busqueda en `frontend` de `salary-pie-reference`, `<img class="salary-pie`, `v=2.31`, `v2.31` y `finanzas-lcd-v39`: sin resultados.
+- Validacion de render/cache: `partitionPieSidePath`, `salary-pie-bottom-rim`, `v2.32`, `APP_VERSION: 'v2.32'`, `finanzas-lcd-v40` y `torta.pmg.png?v=2.32` presentes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.32`, `APP_VERSION: 'v2.32'`, `finanzas-lcd-v40`, `render.js?v=2.32` y `main.css?v=2.32`.
+- Asset local `http://127.0.0.1:4173/assets/torta.pmg.png?v=2.32`: `200 OK`, `image/png`, `81701` bytes.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

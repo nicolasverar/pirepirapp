@@ -414,3 +414,14 @@ quiero que uses esto para la trta de particion de sueldo <ruta-local>\torta.pmg.
 - La particion de sueldo queda basada solo en `Configuracion` (`sueldoMensual` y `gastosFijos`), no en movimientos efectuados.
 - `totalGastado` y `porcentajeDisponible` excluyen los gastos fijos configurados del calculo variable; el porcentaje usa como base la plata posterior a particiones.
 - Se eliminaron del render y CSS las aves/nubes de `EL FUTURO` y se quito el confeti de `¡Cobré!`.
+
+### Prompt 29 - Usuario
+
+```text
+sigue saliendo la particion anterior encima de la torta y no se ve bien ademas la torta debe ser 3d isometrica
+```
+
+### Resumen operativo
+- Se elimino la imagen `torta.pmg.png` como capa visible debajo del grafico para que no quede la particion anterior superpuesta.
+- La particion se redibuja como un unico SVG de torta isometrica con costados, tapa, borde frontal y tramas LCD.
+- Se actualizo cache/version a `v2.32` para forzar limpieza del diseño anterior.

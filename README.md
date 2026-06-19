@@ -39,7 +39,7 @@ La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en
 - `Gastos` muestra todos los movimientos disponibles en Drive/Sheets; el mes se sincroniza automaticamente con el calendario, las altas/bajas se mantienen visibles aun durante refreshes silenciosos y la lista se puede filtrar por tipo.
 - Los gastos fijos se administran en `Configuracion`; la app los registra automaticamente como movimientos del mes en Sheets y ya no se cargan manualmente desde `Gastos`.
 - `Configuracion` permite cargar sueldo mensual, registrar `¡Cobré!` como ingreso de sueldo y administrar gastos fijos estructurados.
-- `Resumen` calcula `Disponible` desde el sueldo menos gastos fijos configurados, excluye esos fijos del ranking `Gastaste mas en` y muestra la particion del sueldo como torta LCD basada en la configuracion de sueldo/gastos fijos.
+- `Resumen` calcula `Disponible` desde el sueldo menos gastos fijos configurados, excluye esos fijos del ranking `Gastaste mas en` y muestra la particion del sueldo como torta LCD isometrica basada en la configuracion de sueldo/gastos fijos.
 - El porcentaje disponible se calcula sobre la plata que queda despues de las particiones fijas, no sobre el sueldo completo.
 - En movimientos de tipo `Compra cosa que quiero`, el motivo se toma de la cosa seleccionada para evitar cargar el mismo texto dos veces.
 - `Cosas que quiero` no usa descripcion. `Convertir en meta` crea la meta al instante con el titulo y costo aproximado del item.

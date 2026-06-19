@@ -21,8 +21,13 @@
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.36`.
 
+### Despliegue
+- Commit principal: `b7d09cc` (`Redisenar resumen v3`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.36` sirve `v2.36`, `APP_VERSION: 'v2.36'`, cache `finanzas-lcd-v44`, `Hoy es:`, `summaryVariableSpent` y etiquetas porcentuales de torta.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la URL publica despues del push.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-19 - Rediseño LCD oliva y torta elevada
 

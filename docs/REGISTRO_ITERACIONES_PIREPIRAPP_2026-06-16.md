@@ -437,3 +437,71 @@ se ve horrible y para nada igual como la foto qUE TE PASE DE isnpiracion
 - Las porciones ahora muestran numeros como la referencia; los nombres/montos quedan en la leyenda inferior.
 - Se redibujo el costado como una sola pared frontal de torta cilindrica, con hachurado vertical y separadores visibles.
 - Se actualizo cache/version a `v2.33`.
+
+### Prompt 31 - Usuario
+
+```text
+quiero que los pedazos cambien dinamicamente y se siga viendo similar obviamente no igual pero en estilo
+```
+
+### Resumen operativo
+- Se freno la implementacion en produccion hasta aprobacion visual del usuario.
+- Se creo `docs/torta_preview_dinamica.html` como prototipo aislado con controles de sueldo y gastos fijos.
+- El prototipo usa porciones SVG proporcionales, volumen isometrico, contorno tecnico, tramas y paleta LCD verde.
+
+### Prompt 32 - Usuario
+
+```text
+los bordes no son choerentes solo eso falta
+
+con bordes me refiero al contorno de la torta es decir se ven como dos discos flotando nada mas
+```
+
+### Resumen operativo
+- Se ajusto solo `docs/torta_preview_dinamica.html`.
+- Se elimino el disco inferior visible que generaba la lectura de dos elipses flotantes.
+- El prototipo ahora dibuja paredes laterales delanteras y caras radiales conectadas a la tapa superior para que la torta se lea como una sola pieza con volumen.
+
+### Prompt 33 - Usuario
+
+```text
+mejor pero necesito que esten coloreados con e mismo aptron que el disco superior
+```
+
+### Resumen operativo
+- Se ajusto solo `docs/torta_preview_dinamica.html`.
+- Las paredes laterales y caras radiales ahora usan la misma trama SVG que su porcion superior.
+- Se agrego un sombreado leve sobre los laterales para conservar lectura de volumen sin perder el patron.
+
+### Prompt 34 - Usuario
+
+```text
+sigue sin tener una coloracion solida y coherente
+```
+
+### Resumen operativo
+- Se ajusto solo `docs/torta_preview_dinamica.html`.
+- Cada porcion ahora pinta primero una base solida en tapa, pared lateral y caras de corte.
+- La trama paso a ser una capa transparente superior, para conservar textura sin romper la coherencia del color.
+
+### Prompt 35 - Usuario
+
+```text
+necesitoque se vean como piezas solidas sin ninugna forma de ver que hay dentro es decir otras porciones
+```
+
+### Resumen operativo
+- Se ajusto solo `docs/torta_preview_dinamica.html`.
+- Se quitaron las caras radiales verticales que mostraban cortes internos desde el centro hacia el borde.
+- La torta conserva divisiones en la tapa y paredes exteriores por porcion, pero ya no muestra superficies internas.
+
+### Prompt 36 - Usuario
+
+```text
+PERFECTO AHORA SI INCORPORA ALA APP
+```
+
+### Resumen operativo
+- Se integro en `frontend/scripts/render.js` la torta dinamica aprobada: porciones proporcionales, tapa dividida, paredes exteriores por segmento, color solido y textura superior.
+- Se ajusto `frontend/styles/main.css` para usar colores verdes solidos coherentes en tapa, lateral, leyenda y numeracion.
+- Se subio la version frontend a `v2.34` y el cache PWA a `finanzas-lcd-v42`.

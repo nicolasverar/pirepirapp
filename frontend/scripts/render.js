@@ -555,7 +555,7 @@
     var start = -Math.PI / 2;
     var tops = [];
     var labels = [];
-    var sideLines = [];
+    var sides = [];
 
     segments.forEach(function (item, index) {
       var sweep = (item.amount / chartTotal) * Math.PI * 2;
@@ -563,10 +563,15 @@
       var full = sweep >= Math.PI * 2 - 0.0001;
       var d = partitionPiePath(cx, cy, rx, ry, start, end, full);
       var className = utils.escapeHtml(item.className);
+      var hatchClass = 'hatch-' + (index % 6);
+      salaryPieFrontSidePieces(start, end).forEach(function (piece) {
+        var sideD = salaryPieSidePath(cx, cy, rx, ry, depth, piece.start, piece.end);
+        sides.push('<path class="salary-pie-side-fill ' + className + '" d="' + sideD + '"></path>');
+        sides.push('<path class="salary-pie-side-texture ' + hatchClass + '" d="' + sideD + '"></path>');
+        sides.push('<path class="salary-pie-side-shade" d="' + sideD + '"></path>');
+      });
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
-      tops.push('<path class="salary-pie-hatch hatch-' + (index % 3) + '" d="' + d + '"></path>');
-      addPieSideLine(sideLines, cx, cy, rx, ry, start, depth);
-      addPieSideLine(sideLines, cx, cy, rx, ry, end, depth);
+      tops.push('<path class="salary-pie-hatch ' + hatchClass + '" d="' + d + '"></path>');
       if ((item.amount / chartTotal) >= 0.055) {
         labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, index + 1));
       }
@@ -577,19 +582,18 @@
       '<div class="salary-pie-stage' + (excess > 0 ? ' is-over-budget' : '') + '" role="img" aria-label="Particion del sueldo en diagrama de torta">',
       '<svg class="salary-pie-svg" viewBox="0 0 282 223" focusable="false" aria-hidden="true">',
       '<defs>',
-      '<pattern id="salary-hatch-a" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8"></line></pattern>',
-      '<pattern id="salary-hatch-b" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="7"></line></pattern>',
-      '<pattern id="salary-dots" width="7" height="7" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="2" height="2"></rect></pattern>',
-      '<pattern id="salary-side-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>',
+      '<pattern id="salary-hatch-0" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>',
+      '<pattern id="salary-hatch-1" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>',
+      '<pattern id="salary-hatch-2" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><line x1="0" y1="0" x2="0" y2="9"></line><line x1="4.5" y1="0" x2="4.5" y2="9"></line></pattern>',
+      '<pattern id="salary-hatch-3" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="9"></line><line x1="0" y1="0" x2="9" y2="0"></line></pattern>',
+      '<pattern id="salary-hatch-4" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>',
+      '<pattern id="salary-hatch-5" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9"></line><line x1="4.5" y1="0" x2="4.5" y2="9"></line></pattern>',
       '</defs>',
       '<ellipse class="salary-pie-shadow" cx="' + cx + '" cy="' + (cy + depth + 12) + '" rx="' + (rx + 9) + '" ry="32"></ellipse>',
-      '<path class="salary-pie-side" d="' + salaryPieFrontSidePath(cx, cy, rx, ry, depth) + '"></path>',
-      '<path class="salary-pie-side-hatch" d="' + salaryPieFrontSidePath(cx, cy, rx, ry, depth) + '"></path>',
-      sideLines.join(''),
-      tops.join(''),
+      '<g class="salary-pie-sides">' + sides.join('') + '</g>',
+      '<g class="salary-pie-tops">' + tops.join('') + '</g>',
+      '<path class="salary-pie-front-rim" d="' + salaryPieSidePath(cx, cy, rx, ry, depth, 0, Math.PI) + '"></path>',
       '<ellipse class="salary-pie-top-rim" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
-      '<path class="salary-pie-front-rim" d="M ' + svgNumber(cx - rx) + ' ' + svgNumber(cy) + ' A ' + svgNumber(rx) + ' ' + svgNumber(ry) + ' 0 0 0 ' + svgNumber(cx + rx) + ' ' + svgNumber(cy) + '"></path>',
-      '<ellipse class="salary-pie-glass" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
       labels.join(''),
       '</svg>',
       excess > 0 ? '<span class="salary-pie-over">EXCESO ' + utils.escapeHtml(utils.formatMoney(excess)) + '</span>' : '',
@@ -648,22 +652,26 @@
     ].join(' ');
   }
 
-  function salaryPieFrontSidePath(cx, cy, rx, ry, depth) {
+  function salaryPieSidePath(cx, cy, rx, ry, depth, start, end) {
+    var first = ellipsePoint(cx, cy, rx, ry, start);
+    var last = ellipsePoint(cx, cy, rx, ry, end);
+    var largeArc = end - start > Math.PI ? 1 : 0;
     return [
-      'M', svgNumber(cx - rx), svgNumber(cy),
-      'A', svgNumber(rx), svgNumber(ry), '0 0 0', svgNumber(cx + rx), svgNumber(cy),
-      'L', svgNumber(cx + rx), svgNumber(cy + depth),
-      'A', svgNumber(rx), svgNumber(ry), '0 0 1', svgNumber(cx - rx), svgNumber(cy + depth),
+      'M', svgNumber(first.x), svgNumber(first.y),
+      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '1', svgNumber(last.x), svgNumber(last.y),
+      'L', svgNumber(last.x), svgNumber(last.y + depth),
+      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '0', svgNumber(first.x), svgNumber(first.y + depth),
       'Z'
     ].join(' ');
   }
 
-  function addPieSideLine(lines, cx, cy, rx, ry, angle, depth) {
-    if (Math.sin(angle) < 0.08) {
-      return;
+  function salaryPieFrontSidePieces(start, end) {
+    var pieceStart = Math.max(start, 0);
+    var pieceEnd = Math.min(end, Math.PI);
+    if (pieceEnd - pieceStart <= 0.0001) {
+      return [];
     }
-    var point = ellipsePoint(cx, cy, rx, ry, angle);
-    lines.push('<line class="salary-pie-side-line" x1="' + svgNumber(point.x) + '" y1="' + svgNumber(point.y) + '" x2="' + svgNumber(point.x) + '" y2="' + svgNumber(point.y + depth) + '"></line>');
+    return [{ start: pieceStart, end: pieceEnd }];
   }
 
   function ellipsePoint(cx, cy, rx, ry, angle) {
@@ -675,7 +683,10 @@
 
   function renderPieLabel(cx, cy, rx, ry, angle, number) {
     var point = ellipsePoint(cx, cy, rx * 0.56, ry * 0.56, angle);
-    return '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(number) + '</text>';
+    return [
+      '<circle class="salary-pie-label-bg" cx="' + svgNumber(point.x) + '" cy="' + svgNumber(point.y) + '" r="11"></circle>',
+      '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(number) + '</text>'
+    ].join('');
   }
 
   function svgNumber(value) {

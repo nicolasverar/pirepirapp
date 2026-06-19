@@ -1,5 +1,27 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Torta dinamica de particion de sueldo
+
+### Objetivo
+- Incorporar a la app la torta dinamica aprobada visualmente en el preview local.
+- Mantener porciones proporcionales al sueldo/gastos fijos, con estilo isometrico LCD similar a la referencia.
+
+### Cambios
+- `frontend/scripts/render.js`: la torta de particion ahora dibuja porciones dinamicas con tapa superior, paredes exteriores por segmento y sin caras internas que muestren el interior.
+- `frontend/styles/main.css`: se aplicaron colores verdes solidos coherentes por porcion, textura de trama como capa superior y numeracion en circulo.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.34` y cache a `finanzas-lcd-v42`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro la aprobacion del preview y la integracion.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `backend/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Servidor local existente `http://127.0.0.1:4173/`: sirve `v2.34`.
+- `scripts/render.js?v=2.34` servido localmente contiene `salary-hatch-5` y `salaryPieFrontSidePieces`, y ya no contiene `addPieSideLine`.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la URL publica despues del push.
+
 ## 2026-06-16 - Ajuste visual de tarjetas y progreso
 
 ### Objetivo

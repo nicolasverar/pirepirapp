@@ -450,84 +450,99 @@ code {
   image-rendering: pixelated;
 }
 
-.salary-pie-svg pattern line,
-.salary-pie-svg pattern rect {
-  stroke: rgba(25, 45, 24, 0.82);
-  fill: rgba(25, 45, 24, 0.82);
-  stroke-width: 1;
+.salary-pie-svg pattern line {
+  stroke: rgba(7, 21, 11, 0.82);
+  stroke-width: 1.15;
 }
 
 .salary-pie-shadow {
   fill: rgba(25, 45, 24, 0.18);
 }
 
-.salary-pie-side {
-  fill: rgba(151, 176, 103, 0.5);
+.salary-pie-sides,
+.salary-pie-tops {
+  pointer-events: none;
+}
+
+.salary-pie-side-fill {
   stroke: var(--lcd-ink);
-  stroke-width: 2.4;
+  stroke-width: 2.3;
   paint-order: stroke fill;
 }
 
-.salary-pie-side-hatch {
-  fill: url("#salary-side-hatch");
-  opacity: 0.38;
+.salary-pie-side-texture {
+  opacity: 0.56;
   stroke: none;
 }
 
-.salary-pie-side-line {
-  stroke: var(--lcd-ink);
-  stroke-width: 2;
-  shape-rendering: crispEdges;
+.salary-pie-side-shade {
+  fill: var(--lcd-ink);
+  opacity: 0.1;
+  stroke: none;
 }
 
 .salary-pie-slice {
-  fill: rgba(174, 203, 124, 0.46);
   stroke: var(--lcd-ink);
-  stroke-width: 2.6;
+  stroke-width: 2.7;
   paint-order: stroke fill;
 }
 
 .salary-pie-hatch {
   pointer-events: none;
-  opacity: 0.55;
-  stroke: var(--lcd-ink);
-  stroke-width: 0.45;
+  opacity: 0.66;
+  stroke: none;
 }
 
-.salary-pie-hatch.hatch-0 {
-  fill: url("#salary-hatch-a");
+.salary-pie-hatch.hatch-0,
+.salary-pie-side-texture.hatch-0 {
+  fill: url("#salary-hatch-0");
 }
 
-.salary-pie-hatch.hatch-1 {
-  fill: url("#salary-hatch-b");
+.salary-pie-hatch.hatch-1,
+.salary-pie-side-texture.hatch-1 {
+  fill: url("#salary-hatch-1");
 }
 
-.salary-pie-hatch.hatch-2 {
-  fill: url("#salary-dots");
+.salary-pie-hatch.hatch-2,
+.salary-pie-side-texture.hatch-2 {
+  fill: url("#salary-hatch-2");
 }
 
-.salary-pie-glass {
-  fill: none;
-  stroke: rgba(222, 239, 173, 0.22);
-  stroke-width: 1.4;
+.salary-pie-hatch.hatch-3,
+.salary-pie-side-texture.hatch-3 {
+  fill: url("#salary-hatch-3");
+}
+
+.salary-pie-hatch.hatch-4,
+.salary-pie-side-texture.hatch-4 {
+  fill: url("#salary-hatch-4");
+}
+
+.salary-pie-hatch.hatch-5,
+.salary-pie-side-texture.hatch-5 {
+  fill: url("#salary-hatch-5");
 }
 
 .salary-pie-top-rim,
 .salary-pie-front-rim {
   fill: none;
   stroke: var(--lcd-ink);
-  stroke-width: 2.7;
+  stroke-width: 3;
+  stroke-linejoin: round;
 }
 
 .salary-pie-front-rim {
-  stroke-width: 3.1;
+  stroke-width: 3.3;
+}
+
+.salary-pie-label-bg {
+  fill: #9baa6d;
+  stroke: var(--lcd-ink);
+  stroke-width: 1.6;
 }
 
 .salary-pie-label {
   fill: var(--lcd-ink);
-  stroke: rgba(174, 203, 124, 0.8);
-  stroke-width: 1.4;
-  paint-order: stroke fill;
   text-anchor: middle;
   dominant-baseline: middle;
   font-size: 14px;
@@ -536,13 +551,38 @@ code {
 }
 
 .salary-pie-slice.segment-0,
+.salary-pie-side-fill.segment-0 {
+  fill: #87985d;
+}
+
 .salary-pie-slice.segment-1,
+.salary-pie-side-fill.segment-1 {
+  fill: #9baa6d;
+}
+
 .salary-pie-slice.segment-2,
+.salary-pie-side-fill.segment-2 {
+  fill: #73834f;
+}
+
 .salary-pie-slice.segment-3,
+.salary-pie-side-fill.segment-3 {
+  fill: #aebd7a;
+}
+
 .salary-pie-slice.segment-4,
+.salary-pie-side-fill.segment-4 {
+  fill: #68794a;
+}
+
 .salary-pie-slice.segment-5,
-.salary-pie-slice.segment-available {
-  fill: rgba(174, 203, 124, 0.42);
+.salary-pie-side-fill.segment-5 {
+  fill: #9daf70;
+}
+
+.salary-pie-slice.segment-available,
+.salary-pie-side-fill.segment-available {
+  fill: #68794a;
 }
 
 .salary-pie-over {
@@ -561,44 +601,44 @@ code {
 
 .segment-0,
 .partition-legend .segment-0 {
-  fill: var(--lcd-ink);
-  background: var(--lcd-ink);
+  fill: #87985d;
+  background: #87985d;
 }
 
 .segment-1,
 .partition-legend .segment-1 {
-  fill: var(--lcd-dark);
-  background: var(--lcd-dark);
+  fill: #9baa6d;
+  background: #9baa6d;
 }
 
 .segment-2,
 .partition-legend .segment-2 {
-  fill: var(--lcd-mid);
-  background: var(--lcd-mid);
+  fill: #73834f;
+  background: #73834f;
 }
 
 .segment-3,
 .partition-legend .segment-3 {
-  fill: var(--case-mid);
-  background: var(--case-mid);
+  fill: #aebd7a;
+  background: #aebd7a;
 }
 
 .segment-4,
 .partition-legend .segment-4 {
-  fill: var(--case-hi);
-  background: var(--case-hi);
+  fill: #68794a;
+  background: #68794a;
 }
 
 .segment-5,
 .partition-legend .segment-5 {
-  fill: #526b36;
-  background: #526b36;
+  fill: #9daf70;
+  background: #9daf70;
 }
 
 .segment-available,
 .partition-legend .segment-available {
-  fill: var(--lcd-bg);
-  background: var(--lcd-bg);
+  fill: #68794a;
+  background: #68794a;
 }
 
 .partition-legend .segment-excess {

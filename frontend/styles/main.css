@@ -905,6 +905,12 @@ code {
   }
 }
 
+@keyframes mp4-bird-flap {
+  100% {
+    background-position: -576px 0;
+  }
+}
+
 @keyframes bird-left-flap {
   0%,
   100% {
@@ -1293,6 +1299,7 @@ code {
 }
 
 .pixel-cloud,
+.mp4-bird,
 .sky-bird,
 .sky-ave {
   position: absolute;
@@ -1411,6 +1418,67 @@ code {
   top: 4px;
   animation-delay: -15.5s;
   animation-duration: 26s;
+}
+
+.mp4-bird {
+  --sky-scale: 0.72;
+  --sky-y: 0;
+  --sky-opacity: 0.8;
+  --flap-speed: 0.72s;
+  left: -96px;
+  top: 6px;
+  width: 96px;
+  height: 56px;
+  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.28));
+}
+
+.mp4-bird::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../assets/aves-flight-sprite.png") 0 0 / 576px 56px no-repeat;
+  image-rendering: pixelated;
+  animation: mp4-bird-flap var(--flap-speed) steps(6) infinite;
+}
+
+.mp4-bird-a {
+  top: 0;
+  --sky-scale: 0.62;
+  --sky-y: -5px;
+  --sky-opacity: 0.7;
+  --flap-speed: 0.68s;
+  animation-delay: -2.4s;
+  animation-duration: 11.8s;
+}
+
+.mp4-bird-b {
+  top: 16px;
+  --sky-scale: 0.5;
+  --sky-y: 4px;
+  --sky-opacity: 0.58;
+  --flap-speed: 0.76s;
+  animation-delay: -6.8s;
+  animation-duration: 13.4s;
+}
+
+.mp4-bird-c {
+  top: 8px;
+  --sky-scale: 0.42;
+  --sky-y: -3px;
+  --sky-opacity: 0.5;
+  --flap-speed: 0.82s;
+  animation-delay: -9.6s;
+  animation-duration: 15.6s;
+}
+
+.mp4-bird-d {
+  top: 24px;
+  --sky-scale: 0.56;
+  --sky-y: 2px;
+  --sky-opacity: 0.62;
+  --flap-speed: 0.72s;
+  animation-delay: -12.7s;
+  animation-duration: 16.8s;
 }
 
 .sky-bird,

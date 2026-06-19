@@ -327,11 +327,10 @@
       '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
       '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
       '<span class="pixel-cloud pixel-cloud-c"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="sky-bird sky-bird-a"><i></i><b></b><em></em></span>',
-      '<span class="sky-bird sky-bird-b"><i></i><b></b><em></em></span>',
-      '<span class="sky-bird sky-bird-c"><i></i><b></b><em></em></span>',
-      '<span class="sky-ave sky-ave-a"><i></i><b></b><em></em></span>',
-      '<span class="sky-ave sky-ave-b"><i></i><b></b><em></em></span>',
+      '<span class="mp4-bird mp4-bird-a"></span>',
+      '<span class="mp4-bird mp4-bird-b"></span>',
+      '<span class="mp4-bird mp4-bird-c"></span>',
+      '<span class="mp4-bird mp4-bird-d"></span>',
       '</span>'
     ].join('');
   }

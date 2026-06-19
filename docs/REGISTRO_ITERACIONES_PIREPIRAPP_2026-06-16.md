@@ -363,3 +363,15 @@ ah el calculo de lo que te queda disponible que sea de la parte del sueldo que s
 - Se regeneran `icon-192.png` e `icon-512.png` con recorte mas cerrado desde `icono.jpeg`.
 - Se elimina la carga manual visible de `Gasto fijo`; los fijos configurados se sincronizan automaticamente a movimientos de Sheets.
 - `Disponible` pasa a calcularse desde sueldo menos gastos fijos configurados, y `Gastaste mas en` excluye movimientos de categoria `Gasto fijo`.
+
+### Prompt 25 - Usuario
+
+```text
+ahora si reemplace por el que debeser
+```
+
+### Resumen operativo
+- Se tomo `aves.mp4` reemplazado como fuente correcta.
+- Se extrajeron frames del MP4 nuevo y se eligio el ciclo recomendado `01, 04, 06, 07, 10, 13`.
+- Se genero `frontend/assets/aves-flight-sprite.png` como sprite transparente de seis frames.
+- `EL FUTURO` ahora renderiza aves con sprite real del MP4 y aleteo por `steps(6)`.

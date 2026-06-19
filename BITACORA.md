@@ -248,6 +248,32 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-18 - Aves desde MP4 correcto
+
+### Objetivo
+- Reemplazar las aves dibujadas en CSS por una animacion basada en el `aves.mp4` correcto.
+- Usar el ciclo recomendado de frames reales para que el movimiento se lea como ave volando.
+
+### Cambios
+- `frontend/assets/aves-flight-sprite.png`: sprite transparente de seis frames generado desde `aves.mp4` con el ciclo `01, 04, 06, 07, 10, 13`.
+- `frontend/scripts/render.js`: `EL FUTURO` ahora renderiza `mp4-bird` en lugar de las siluetas CSS anteriores.
+- `frontend/styles/main.css`: se agrego `mp4-bird-flap` con `steps(6)` y variantes de escala/velocidad para profundidad.
+- `frontend/styles/responsive.css`: `mp4-bird` respeta `prefers-reduced-motion`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.28` y cache a `finanzas-lcd-v36`; el service worker cachea el sprite.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt registrado.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de `frontend/service-worker.js`: cache `finanzas-lcd-v36`, `main.css?v=2.28` y `assets/aves-flight-sprite.png` presentes.
+- Sprite validado: `aves-flight-sprite.png` mide `576x56`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.28`, `APP_VERSION: 'v2.28'`, `finanzas-lcd-v36`, `render.js?v=2.28` y `main.css?v=2.28`.
+- Busqueda de referencias viejas `v2.27`, `v=2.27` y `finanzas-lcd-v35`: sin resultados en archivos de version/cache.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

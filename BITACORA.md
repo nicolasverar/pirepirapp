@@ -21,8 +21,13 @@
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.35`.
 
+### Despliegue
+- Commit principal: `4feabe0` (`Redisenar interfaz LCD oliva`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.35` sirve `v2.35`, `APP_VERSION: 'v2.35'`, cache `finanzas-lcd-v43` y `render.js` con elevacion de porciones.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la URL publica despues del push.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-19 - Torta dinamica de particion de sueldo
 

@@ -1,5 +1,29 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Rediseño LCD oliva y torta elevada
+
+### Objetivo
+- Rediseñar visualmente la app completa siguiendo la referencia LCD verde oliva con sombreado puntillado, cuadricula y carcasa oscura.
+- Mantener la navegacion y el boton principal abajo.
+- Elevar las porciones de la torta desde menor a mayor, dejando la porcion mas grande en el nivel base.
+
+### Cambios
+- `frontend/styles/lcd-theme.css`: se ajustaron los tokens de color hacia una paleta oliva LCD mas cercana a la referencia.
+- `frontend/styles/main.css`: se agrego una capa visual global con carcasa oscura, pantalla con grano/cuadricula, tarjetas con encabezados solidos, sombreado puntillado y botones inferiores oscuros.
+- `frontend/scripts/render.js`: la torta de sueldo eleva verticalmente cada porcion en funcion de su tamano relativo; la porcion mayor permanece al nivel base.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.35` y cache a `finanzas-lcd-v43`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompts y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.35`.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la URL publica despues del push.
+
 ## 2026-06-19 - Torta dinamica de particion de sueldo
 
 ### Objetivo

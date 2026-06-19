@@ -1918,3 +1918,320 @@ button:focus-visible {
 .toast.is-leaving {
   opacity: 0;
 }
+
+body {
+  background:
+    radial-gradient(circle at 50% -12%, rgba(169, 184, 110, 0.18), transparent 34%),
+    radial-gradient(circle at 82% 18%, rgba(191, 203, 130, 0.07), transparent 18%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0, rgba(255, 255, 255, 0.018) 1px, transparent 1px, transparent 5px),
+    linear-gradient(135deg, #070a07 0, #171d16 45%, #0e130d 100%);
+}
+
+.device-shell {
+  position: relative;
+  max-width: 430px;
+  padding: max(18px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 14%, transparent 80%, rgba(0, 0, 0, 0.42)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0, rgba(255, 255, 255, 0.018) 2px, transparent 2px, transparent 8px),
+    linear-gradient(180deg, #30362d 0, #161d15 44%, #0b0f0a 100%);
+  border: 4px solid #070a07;
+  border-radius: 18px;
+  box-shadow:
+    inset 4px 4px 0 rgba(122, 134, 105, 0.28),
+    inset -6px -8px 0 rgba(0, 0, 0, 0.36),
+    0 16px 34px rgba(0, 0, 0, 0.5);
+}
+
+.device-shell::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(191, 203, 130, 0.18);
+  border-radius: 13px;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.38);
+}
+
+.status-bar {
+  position: relative;
+  z-index: 1;
+  min-height: 42px;
+  padding: 7px;
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(169, 184, 110, 0.12) 0, rgba(169, 184, 110, 0.12) 1px, transparent 1px, transparent 4px),
+    #111810;
+  border: 2px solid #050805;
+  box-shadow: inset 2px 2px 0 rgba(169, 184, 110, 0.22), 0 3px 0 #050805;
+}
+
+.brand-mark strong {
+  font-size: 0.98rem;
+  text-shadow: 1px 1px 0 #050805;
+}
+
+.version-key {
+  color: var(--lcd-bg);
+  background: #121b11;
+  border-color: rgba(169, 184, 110, 0.85);
+}
+
+.lcd-screen {
+  position: relative;
+  z-index: 1;
+  margin: 12px 0;
+  padding: 12px;
+  background:
+    radial-gradient(circle at 35% 2%, rgba(217, 229, 153, 0.22), transparent 24%),
+    linear-gradient(145deg, rgba(191, 203, 130, 0.78), rgba(153, 170, 98, 0.96) 55%, rgba(116, 134, 74, 0.98)),
+    var(--lcd-bg);
+  border: 3px solid #0b1209;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 0 2px rgba(17, 26, 16, 0.34),
+    inset 4px 5px 12px rgba(0, 0, 0, 0.24),
+    inset -5px -5px 10px rgba(191, 203, 130, 0.28),
+    0 0 0 3px rgba(74, 87, 63, 0.42);
+}
+
+.lcd-screen::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  inset: 0;
+  background:
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.12) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, rgba(17, 26, 16, 0.08) 0, rgba(17, 26, 16, 0.08) 1px, transparent 1px, transparent 5px);
+  opacity: 0.38;
+  mix-blend-mode: multiply;
+}
+
+.summary-stack,
+.goals-stack,
+.settings-stack {
+  gap: 11px;
+}
+
+.system-window {
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  background:
+    linear-gradient(180deg, rgba(191, 203, 130, 0.22), transparent 28%),
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.18) 0 1px, transparent 1px 3px),
+    rgba(169, 184, 110, 0.72);
+  border: 2px solid var(--lcd-ink);
+  box-shadow:
+    3px 3px 0 rgba(17, 26, 16, 0.78),
+    inset 1px 1px 0 rgba(191, 203, 130, 0.72),
+    inset -2px -2px 0 rgba(35, 49, 31, 0.28);
+}
+
+.system-window::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: 6px;
+  height: 100%;
+  background: repeating-linear-gradient(180deg, var(--lcd-ink) 0 1px, transparent 1px 3px);
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.window-title {
+  min-height: 25px;
+  margin: -10px -10px 10px;
+  padding: 4px 8px;
+  color: var(--lcd-bg);
+  background:
+    repeating-linear-gradient(135deg, rgba(169, 184, 110, 0.18) 0, rgba(169, 184, 110, 0.18) 1px, transparent 1px, transparent 4px),
+    var(--lcd-ink);
+  border-bottom: 2px solid var(--lcd-ink);
+  font-size: 0.86rem;
+  letter-spacing: 0;
+}
+
+.summary-primary {
+  align-content: start;
+  min-height: 172px;
+}
+
+.summary-date-kicker,
+.ledger-line span,
+.available-line span,
+.partition-summary {
+  color: var(--lcd-ink);
+  font-weight: 900;
+}
+
+.summary-date-display {
+  border: 2px solid var(--lcd-ink);
+  background: rgba(169, 184, 110, 0.62);
+  box-shadow: 3px 3px 0 rgba(17, 26, 16, 0.5);
+}
+
+.summary-date-display span {
+  border-right-color: var(--lcd-ink);
+}
+
+.summary-date-display strong {
+  font-size: clamp(1.16rem, 6.4vw, 1.78rem);
+  letter-spacing: 0;
+}
+
+.summary-spent-line {
+  padding: 7px 9px;
+  background:
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.22) 0 1px, transparent 1px 3px),
+    rgba(153, 170, 98, 0.46);
+  border-left: 2px solid var(--lcd-ink);
+  border-bottom: 2px solid var(--lcd-ink);
+  text-transform: uppercase;
+}
+
+.summary-metrics-card {
+  background:
+    linear-gradient(180deg, rgba(191, 203, 130, 0.12), transparent 30%),
+    rgba(169, 184, 110, 0.66);
+}
+
+.top-spending-box {
+  border: 2px solid var(--lcd-ink);
+  background: rgba(169, 184, 110, 0.46);
+  box-shadow: inset 0 -2px 0 rgba(17, 26, 16, 0.32);
+}
+
+.availability-card .window-title,
+.salary-partition-card .window-title {
+  background:
+    repeating-linear-gradient(90deg, rgba(169, 184, 110, 0.15) 0, rgba(169, 184, 110, 0.15) 1px, transparent 1px, transparent 3px),
+    var(--lcd-ink);
+}
+
+.available-line {
+  padding: 8px 0 10px;
+}
+
+.progress-track {
+  border: 2px solid var(--lcd-ink);
+  background:
+    repeating-linear-gradient(90deg, rgba(17, 26, 16, 0.42) 0 2px, transparent 2px 5px),
+    rgba(153, 170, 98, 0.55);
+}
+
+.progress-fill {
+  background:
+    repeating-linear-gradient(90deg, rgba(169, 184, 110, 0.72) 0 3px, transparent 3px 6px),
+    var(--lcd-ink);
+}
+
+.salary-pie-stage {
+  min-height: 276px;
+  padding: 14px 6px 4px;
+  background:
+    linear-gradient(90deg, rgba(17, 26, 16, 0.62) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(0deg, rgba(17, 26, 16, 0.62) 1px, transparent 1px) 0 0 / 22px 22px,
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.12) 0 1px, transparent 1px 3px),
+    rgba(169, 184, 110, 0.38);
+  border: 2px solid var(--lcd-ink);
+  box-shadow: inset 0 0 0 3px rgba(153, 170, 98, 0.28), 3px 3px 0 rgba(17, 26, 16, 0.55);
+}
+
+.salary-pie-svg {
+  width: min(100%, 318px);
+  filter: drop-shadow(3px 5px 0 rgba(17, 26, 16, 0.22));
+}
+
+.salary-pie-shadow {
+  fill: rgba(17, 26, 16, 0.26);
+}
+
+.salary-pie-top-rim {
+  opacity: 0.32;
+}
+
+.salary-pie-slice,
+.salary-pie-side-fill,
+.salary-pie-front-rim,
+.salary-pie-top-rim {
+  stroke: #0b1209;
+}
+
+.partition-legend li {
+  min-height: 26px;
+  border-bottom: 2px dotted rgba(17, 26, 16, 0.7);
+  font-weight: 700;
+}
+
+.partition-legend i {
+  width: 17px;
+  height: 17px;
+  border: 2px solid var(--lcd-ink);
+  color: var(--lcd-ink);
+}
+
+.key-zone {
+  position: relative;
+  z-index: 1;
+  gap: 8px;
+  padding: 10px 8px 8px;
+  background:
+    repeating-radial-gradient(circle, rgba(169, 184, 110, 0.16) 0 1px, transparent 1px 3px),
+    #111810;
+  border: 2px solid #050805;
+  box-shadow: inset 2px 2px 0 rgba(169, 184, 110, 0.2), 0 -2px 0 rgba(0, 0, 0, 0.34);
+}
+
+.action-key,
+.nav-key,
+.lcd-button,
+.text-key,
+.tiny-key,
+.menu-item {
+  color: var(--lcd-bg);
+  background:
+    linear-gradient(180deg, rgba(169, 184, 110, 0.1), transparent 35%),
+    #152013;
+  border: 2px solid rgba(169, 184, 110, 0.72);
+  box-shadow: 2px 2px 0 #050805, inset 1px 1px 0 rgba(191, 203, 130, 0.18);
+}
+
+.action-key {
+  min-height: 46px;
+  color: var(--lcd-ink);
+  background:
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.62) 0 1px, transparent 1px 3px),
+    var(--lcd-bg);
+  border-color: rgba(191, 203, 130, 0.92);
+}
+
+.nav-key {
+  color: rgba(169, 184, 110, 0.82);
+}
+
+.nav-key.is-active {
+  color: var(--lcd-ink);
+  background: var(--lcd-bg);
+  border-color: var(--lcd-ink);
+}
+
+.nav-key.is-active .nav-icon {
+  filter: none;
+}
+
+input,
+select,
+textarea {
+  color: var(--lcd-ink);
+  background: rgba(169, 184, 110, 0.72);
+  border-color: var(--lcd-ink);
+}
+
+.modal-panel,
+.toast {
+  background:
+    repeating-radial-gradient(circle, rgba(17, 26, 16, 0.13) 0 1px, transparent 1px 3px),
+    var(--lcd-bg);
+  border-color: var(--lcd-ink);
+}

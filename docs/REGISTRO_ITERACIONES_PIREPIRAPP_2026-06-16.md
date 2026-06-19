@@ -505,3 +505,24 @@ PERFECTO AHORA SI INCORPORA ALA APP
 - Se integro en `frontend/scripts/render.js` la torta dinamica aprobada: porciones proporcionales, tapa dividida, paredes exteriores por segmento, color solido y textura superior.
 - Se ajusto `frontend/styles/main.css` para usar colores verdes solidos coherentes en tapa, lateral, leyenda y numeracion.
 - Se subio la version frontend a `v2.34` y el cache PWA a `finanzas-lcd-v42`.
+
+### Prompt 37 - Usuario
+
+```text
+eleva verticalmente los pedazos desde mas chico a mas grande donde el mas grande permanece al nivel del mar
+```
+
+### Resumen operativo
+- Se ajusto `frontend/scripts/render.js` para elevar verticalmente cada porcion de la torta segun su tamano relativo.
+- La porcion mas grande queda al nivel base y las porciones mas pequenas suben mas, manteniendo una base inferior comun.
+
+### Prompt 38 - Usuario
+
+```text
+rediseña POR completo la app e incorpora esos elementos nuevos de esta imagen ytanto tono de verde como elemenos de sombreado puntillado cuadricula etc conserva los botones abajo mejor que arriba
+```
+
+### Resumen operativo
+- Se rediseño globalmente la carcasa, pantalla LCD, tarjetas, encabezados, botones inferiores y fondos con tonos oliva, cuadricula y puntillado inspirados en la referencia.
+- Se conservaron el boton `AGREGAR` y la navegacion principal en la zona inferior.
+- Se subio la version frontend a `v2.35` y el cache PWA a `finanzas-lcd-v43`.

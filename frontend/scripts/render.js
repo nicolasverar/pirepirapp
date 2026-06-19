@@ -547,43 +547,45 @@
     var chartTotal = Math.max(segments.reduce(function (sum, item) {
       return sum + item.amount;
     }, 0), 1);
-    var cx = 120;
-    var cy = 58;
-    var rx = 88;
-    var ry = 42;
-    var depth = 34;
+    var cx = 141;
+    var cy = 82;
+    var rx = 84;
+    var ry = 46;
+    var depth = 54;
     var start = -Math.PI / 2;
-    var sides = [];
     var tops = [];
     var labels = [];
+    var sideLines = [];
 
     segments.forEach(function (item, index) {
       var sweep = (item.amount / chartTotal) * Math.PI * 2;
       var end = start + sweep;
       var full = sweep >= Math.PI * 2 - 0.0001;
       var d = partitionPiePath(cx, cy, rx, ry, start, end, full);
-      var sideD = partitionPieSidePath(cx, cy, rx, ry, start, end, depth, full);
       var className = utils.escapeHtml(item.className);
-      sides.push('<path class="salary-pie-side ' + className + '" d="' + sideD + '"></path>');
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
       tops.push('<path class="salary-pie-hatch hatch-' + (index % 3) + '" d="' + d + '"></path>');
-      if ((item.amount / chartTotal) >= 0.08) {
-        labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, item.percent));
+      addPieSideLine(sideLines, cx, cy, rx, ry, start, depth);
+      addPieSideLine(sideLines, cx, cy, rx, ry, end, depth);
+      if ((item.amount / chartTotal) >= 0.055) {
+        labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, index + 1));
       }
       start = end;
     });
 
     return [
       '<div class="salary-pie-stage' + (excess > 0 ? ' is-over-budget' : '') + '" role="img" aria-label="Particion del sueldo en diagrama de torta">',
-      '<svg class="salary-pie-svg" viewBox="0 0 240 158" focusable="false" aria-hidden="true">',
+      '<svg class="salary-pie-svg" viewBox="0 0 282 223" focusable="false" aria-hidden="true">',
       '<defs>',
       '<pattern id="salary-hatch-a" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8"></line></pattern>',
       '<pattern id="salary-hatch-b" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="7"></line></pattern>',
       '<pattern id="salary-dots" width="7" height="7" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="2" height="2"></rect></pattern>',
+      '<pattern id="salary-side-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>',
       '</defs>',
-      '<ellipse class="salary-pie-shadow" cx="120" cy="106" rx="94" ry="34"></ellipse>',
-      '<ellipse class="salary-pie-bottom-rim" cx="' + cx + '" cy="' + (cy + depth) + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
-      sides.join(''),
+      '<ellipse class="salary-pie-shadow" cx="' + cx + '" cy="' + (cy + depth + 12) + '" rx="' + (rx + 9) + '" ry="32"></ellipse>',
+      '<path class="salary-pie-side" d="' + salaryPieFrontSidePath(cx, cy, rx, ry, depth) + '"></path>',
+      '<path class="salary-pie-side-hatch" d="' + salaryPieFrontSidePath(cx, cy, rx, ry, depth) + '"></path>',
+      sideLines.join(''),
       tops.join(''),
       '<ellipse class="salary-pie-top-rim" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
       '<path class="salary-pie-front-rim" d="M ' + svgNumber(cx - rx) + ' ' + svgNumber(cy) + ' A ' + svgNumber(rx) + ' ' + svgNumber(ry) + ' 0 0 0 ' + svgNumber(cx + rx) + ' ' + svgNumber(cy) + '"></path>',
@@ -646,28 +648,22 @@
     ].join(' ');
   }
 
-  function partitionPieSidePath(cx, cy, rx, ry, start, end, depth, full) {
-    if (full) {
-      return [
-        'M', svgNumber(cx - rx), svgNumber(cy),
-        'A', svgNumber(rx), svgNumber(ry), '0 0 0', svgNumber(cx + rx), svgNumber(cy),
-        'L', svgNumber(cx + rx), svgNumber(cy + depth),
-        'A', svgNumber(rx), svgNumber(ry), '0 0 1', svgNumber(cx - rx), svgNumber(cy + depth),
-        'Z'
-      ].join(' ');
-    }
-    var first = ellipsePoint(cx, cy, rx, ry, start);
-    var last = ellipsePoint(cx, cy, rx, ry, end);
-    var firstBottom = { x: first.x, y: first.y + depth };
-    var lastBottom = { x: last.x, y: last.y + depth };
-    var largeArc = end - start > Math.PI ? 1 : 0;
+  function salaryPieFrontSidePath(cx, cy, rx, ry, depth) {
     return [
-      'M', svgNumber(first.x), svgNumber(first.y),
-      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '1', svgNumber(last.x), svgNumber(last.y),
-      'L', svgNumber(lastBottom.x), svgNumber(lastBottom.y),
-      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '0', svgNumber(firstBottom.x), svgNumber(firstBottom.y),
+      'M', svgNumber(cx - rx), svgNumber(cy),
+      'A', svgNumber(rx), svgNumber(ry), '0 0 0', svgNumber(cx + rx), svgNumber(cy),
+      'L', svgNumber(cx + rx), svgNumber(cy + depth),
+      'A', svgNumber(rx), svgNumber(ry), '0 0 1', svgNumber(cx - rx), svgNumber(cy + depth),
       'Z'
     ].join(' ');
+  }
+
+  function addPieSideLine(lines, cx, cy, rx, ry, angle, depth) {
+    if (Math.sin(angle) < 0.08) {
+      return;
+    }
+    var point = ellipsePoint(cx, cy, rx, ry, angle);
+    lines.push('<line class="salary-pie-side-line" x1="' + svgNumber(point.x) + '" y1="' + svgNumber(point.y) + '" x2="' + svgNumber(point.x) + '" y2="' + svgNumber(point.y + depth) + '"></line>');
   }
 
   function ellipsePoint(cx, cy, rx, ry, angle) {
@@ -677,9 +673,9 @@
     };
   }
 
-  function renderPieLabel(cx, cy, rx, ry, angle, percent) {
-    var point = ellipsePoint(cx, cy, rx * 0.58, ry * 0.58, angle);
-    return '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</text>';
+  function renderPieLabel(cx, cy, rx, ry, angle, number) {
+    var point = ellipsePoint(cx, cy, rx * 0.56, ry * 0.56, angle);
+    return '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(number) + '</text>';
   }
 
   function svgNumber(value) {
@@ -689,9 +685,9 @@
   function renderSalaryPartitionLegend(fixed, salary, available, excess) {
     var items = fixed.map(function (item, index) {
       var percent = salary ? Math.round((utils.fixedExpenseAmount(item) / salary) * 10000) / 100 : 0;
-      return '<li><i class="segment-' + (index % 6) + '"></i><span>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
+      return '<li><i class="segment-' + (index % 6) + '">' + utils.escapeHtml(index + 1) + '</i><span>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
     });
-    items.push('<li><i class="segment-available"></i><span>Disponible</span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
+    items.push('<li><i class="segment-available">' + utils.escapeHtml(items.length + 1) + '</i><span>Disponible</span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
     if (excess > 0) {
       items.push('<li><i class="segment-excess"></i><span>Exceso</span><b>' + utils.escapeHtml(formatPercentInput((excess / salary) * 100) || '0') + '%</b></li>');
     }

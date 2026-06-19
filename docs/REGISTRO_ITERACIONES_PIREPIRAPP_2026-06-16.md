@@ -425,3 +425,15 @@ sigue saliendo la particion anterior encima de la torta y no se ve bien ademas l
 - Se elimino la imagen `torta.pmg.png` como capa visible debajo del grafico para que no quede la particion anterior superpuesta.
 - La particion se redibuja como un unico SVG de torta isometrica con costados, tapa, borde frontal y tramas LCD.
 - Se actualizo cache/version a `v2.32` para forzar limpieza del diseño anterior.
+
+### Prompt 30 - Usuario
+
+```text
+se ve horrible y para nada igual como la foto qUE TE PASE DE isnpiracion
+```
+
+### Resumen operativo
+- Se abandono el estilo de grafico colorido y se paso a una torta monocroma tipo dibujo tecnico, con contorno fuerte y tramas.
+- Las porciones ahora muestran numeros como la referencia; los nombres/montos quedan en la leyenda inferior.
+- Se redibujo el costado como una sola pared frontal de torta cilindrica, con hachurado vertical y separadores visibles.
+- Se actualizo cache/version a `v2.33`.

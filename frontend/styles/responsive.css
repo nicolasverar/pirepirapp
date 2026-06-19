@@ -66,11 +66,11 @@
   }
 
   .salary-pie-stage {
-    min-height: 188px;
+    min-height: 214px;
   }
 
   .salary-pie-svg {
-    width: min(100%, 246px);
+    width: min(100%, 258px);
   }
 
   .movement-filters {

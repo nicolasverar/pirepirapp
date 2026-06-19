@@ -396,6 +396,30 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-19 - Torta monocroma numerada como referencia
+
+### Objetivo
+- Acercar `Particion sueldo` a la referencia `torta.pmg.png`: dibujo tecnico LCD, monocromo, tramado y numerado.
+- Evitar que se lea como grafico colorido moderno.
+
+### Cambios
+- `frontend/scripts/render.js`: la torta usa `viewBox 282x223`, sectores numerados, pared frontal unica, separadores laterales y tramas por porcion.
+- `frontend/styles/main.css`: se neutralizaron los colores fuertes dentro del grafico, se reforzaron contornos, hachurados y aspecto monocromo.
+- `frontend/styles/responsive.css`: se ajusto alto/ancho responsive de la torta.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.33` y cache a `finanzas-lcd-v41`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt registrado.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de render/cache: `viewBox="0 0 282 223"`, `salary-side-hatch`, leyenda numerada, override monocromo, `v2.33`, `APP_VERSION: 'v2.33'` y `finanzas-lcd-v41` presentes.
+- Busqueda en `frontend` de `v=2.32`, `v2.32`, `finanzas-lcd-v40`, `salary-pie-reference` y `<img class="salary-pie`: sin resultados.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.33`, `APP_VERSION: 'v2.33'`, `finanzas-lcd-v41`, `render.js?v=2.33` y `main.css?v=2.33`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

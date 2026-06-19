@@ -428,10 +428,10 @@ code {
 .salary-pie-stage {
   position: relative;
   width: 100%;
-  min-height: 204px;
+  min-height: 238px;
   display: grid;
   place-items: center;
-  padding: 8px 4px 4px;
+  padding: 8px 4px 2px;
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(25, 45, 24, 0.12) 1px, transparent 1px) 0 0 / 18px 18px,
@@ -444,7 +444,7 @@ code {
 .salary-pie-svg {
   position: relative;
   z-index: 1;
-  width: min(100%, 280px);
+  width: min(100%, 292px);
   height: auto;
   overflow: visible;
   image-rendering: pixelated;
@@ -452,41 +452,46 @@ code {
 
 .salary-pie-svg pattern line,
 .salary-pie-svg pattern rect {
-  stroke: rgba(25, 45, 24, 0.72);
-  fill: rgba(25, 45, 24, 0.72);
+  stroke: rgba(25, 45, 24, 0.82);
+  fill: rgba(25, 45, 24, 0.82);
   stroke-width: 1;
 }
 
 .salary-pie-shadow {
-  fill: rgba(25, 45, 24, 0.22);
-}
-
-.salary-pie-bottom-rim {
-  fill: rgba(25, 45, 24, 0.16);
-  stroke: var(--lcd-dark);
-  stroke-width: 2;
+  fill: rgba(25, 45, 24, 0.18);
 }
 
 .salary-pie-side {
-  opacity: 0.74;
-  stroke: var(--lcd-dark);
-  stroke-width: 1.9;
+  fill: rgba(151, 176, 103, 0.5);
+  stroke: var(--lcd-ink);
+  stroke-width: 2.4;
   paint-order: stroke fill;
-  filter: saturate(0.85) brightness(0.82);
+}
+
+.salary-pie-side-hatch {
+  fill: url("#salary-side-hatch");
+  opacity: 0.38;
+  stroke: none;
+}
+
+.salary-pie-side-line {
+  stroke: var(--lcd-ink);
+  stroke-width: 2;
+  shape-rendering: crispEdges;
 }
 
 .salary-pie-slice {
-  stroke: var(--lcd-line);
-  stroke-width: 2.4;
+  fill: rgba(174, 203, 124, 0.46);
+  stroke: var(--lcd-ink);
+  stroke-width: 2.6;
   paint-order: stroke fill;
-  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.34));
 }
 
 .salary-pie-hatch {
   pointer-events: none;
-  opacity: 0.42;
-  stroke: var(--lcd-line);
-  stroke-width: 0.35;
+  opacity: 0.55;
+  stroke: var(--lcd-ink);
+  stroke-width: 0.45;
 }
 
 .salary-pie-hatch.hatch-0 {
@@ -503,31 +508,41 @@ code {
 
 .salary-pie-glass {
   fill: none;
-  stroke: rgba(222, 239, 173, 0.48);
-  stroke-width: 2;
+  stroke: rgba(222, 239, 173, 0.22);
+  stroke-width: 1.4;
 }
 
 .salary-pie-top-rim,
 .salary-pie-front-rim {
   fill: none;
   stroke: var(--lcd-ink);
-  stroke-width: 2.2;
+  stroke-width: 2.7;
 }
 
 .salary-pie-front-rim {
-  stroke-width: 2.8;
+  stroke-width: 3.1;
 }
 
 .salary-pie-label {
-  fill: var(--lcd-bg);
-  stroke: var(--lcd-ink);
-  stroke-width: 2.2;
-  paint-order: stroke;
+  fill: var(--lcd-ink);
+  stroke: rgba(174, 203, 124, 0.8);
+  stroke-width: 1.4;
+  paint-order: stroke fill;
   text-anchor: middle;
   dominant-baseline: middle;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 900;
   letter-spacing: 0;
+}
+
+.salary-pie-slice.segment-0,
+.salary-pie-slice.segment-1,
+.salary-pie-slice.segment-2,
+.salary-pie-slice.segment-3,
+.salary-pie-slice.segment-4,
+.salary-pie-slice.segment-5,
+.salary-pie-slice.segment-available {
+  fill: rgba(174, 203, 124, 0.42);
 }
 
 .salary-pie-over {
@@ -634,9 +649,19 @@ code {
 }
 
 .partition-legend i {
-  width: 12px;
-  height: 12px;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
   border: 1px solid var(--lcd-line);
+  color: var(--lcd-ink);
+  background:
+    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.22) 0, rgba(25, 45, 24, 0.22) 1px, transparent 1px, transparent 4px),
+    rgba(174, 203, 124, 0.42);
+  font-size: 0.54rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .partition-legend span {

@@ -194,12 +194,7 @@
     scroll-behavior: auto !important;
   }
 
-  .pixel-cloud,
-  .mp4-bird,
-  .sky-bird,
-  .sky-ave,
-  .sharp-spark,
-  .pixel-confetti-piece {
+  .sharp-spark {
     opacity: 0 !important;
   }
 }

@@ -402,3 +402,15 @@ pone filtros para filtrar gastos por tipo o ingresos etc y saca esos botones red
 - En el formulario de movimiento, `Compra cosa que quiero` oculta `Motivo` y lo autocompleta con el item seleccionado.
 - `Particion sueldo` deja el mapa de cajas y pasa a un diagrama de torta SVG con base sombreada tipo 3D LCD.
 - `Gastos totales` mantiene solo `Actualizar` arriba, agrega filtros por tipo y deja las altas en el boton global `AGREGAR`.
+
+### Prompt 28 - Usuario
+
+```text
+quiero que uses esto para la trta de particion de sueldo <ruta-local>\torta.pmg.pngy consideres que aca solo muestra como esta distribuido el sueldo en funcion al total y los gastos fijos no debe actualizarse segun ningu gasto efectuado sol se puede modificar en configuraion. uego el porcentaje de plata disponible debe calcularse sobre el total de dinero que sobra de las particiones no asi del total del sueldo de mdo que las particiones quedan fuera del calculo de gastos porque son justamente gastos fijos. elimina los pajaritos y las nubes hasta nuevo aviso  tambien el confeti de que cobre
+```
+
+### Resumen operativo
+- Se agrego `frontend/assets/torta.pmg.png` y se usa como referencia/textura de la torta de particion.
+- La particion de sueldo queda basada solo en `Configuracion` (`sueldoMensual` y `gastosFijos`), no en movimientos efectuados.
+- `totalGastado` y `porcentajeDisponible` excluyen los gastos fijos configurados del calculo variable; el porcentaje usa como base la plata posterior a particiones.
+- Se eliminaron del render y CSS las aves/nubes de `EL FUTURO` y se quito el confeti de `¡Cobré!`.

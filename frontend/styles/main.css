@@ -441,6 +441,21 @@ code {
   box-shadow: inset 2px 2px 0 var(--lcd-surface-hi), 3px 3px 0 var(--lcd-dark);
 }
 
+.salary-pie-reference {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  width: min(76%, 226px);
+  height: auto;
+  opacity: 0.28;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
+  image-rendering: auto;
+  filter: contrast(1.25) saturate(0.55);
+  pointer-events: none;
+}
+
 .salary-pie-svg {
   position: relative;
   z-index: 1;
@@ -448,6 +463,13 @@ code {
   height: auto;
   overflow: visible;
   image-rendering: pixelated;
+}
+
+.salary-pie-svg pattern line,
+.salary-pie-svg pattern rect {
+  stroke: rgba(25, 45, 24, 0.72);
+  fill: rgba(25, 45, 24, 0.72);
+  stroke-width: 1;
 }
 
 .salary-pie-shadow {
@@ -463,9 +485,28 @@ code {
 
 .salary-pie-slice {
   stroke: var(--lcd-line);
-  stroke-width: 1.8;
+  stroke-width: 2.2;
   paint-order: stroke fill;
-  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.22));
+  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.28));
+}
+
+.salary-pie-hatch {
+  pointer-events: none;
+  opacity: 0.34;
+  stroke: var(--lcd-line);
+  stroke-width: 0.35;
+}
+
+.salary-pie-hatch.hatch-0 {
+  fill: url("#salary-hatch-a");
+}
+
+.salary-pie-hatch.hatch-1 {
+  fill: url("#salary-hatch-b");
+}
+
+.salary-pie-hatch.hatch-2 {
+  fill: url("#salary-dots");
 }
 
 .salary-pie-glass {
@@ -827,55 +868,6 @@ code {
   }
 }
 
-@keyframes sky-drift {
-  0%,
-  6% {
-    opacity: 0;
-    transform: translate3d(-86px, 0, 0) scale(var(--sky-scale));
-  }
-  14%,
-  78% {
-    opacity: var(--sky-opacity);
-  }
-  50% {
-    transform: translate3d(180px, var(--sky-y), 0) scale(var(--sky-scale));
-  }
-  90% {
-    opacity: calc(var(--sky-opacity) * 0.75);
-    transform: translate3d(360px, calc(var(--sky-y) * -1), 0) scale(var(--sky-scale));
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(510px, 0, 0) scale(var(--sky-scale));
-  }
-}
-
-@keyframes mp4-bird-flap {
-  100% {
-    background-position: -1536px 0;
-  }
-}
-
-@keyframes bird-left-flap {
-  0%,
-  100% {
-    transform: rotate(-12deg) translate3d(0, -4px, 0);
-  }
-  50% {
-    transform: rotate(8deg) translate3d(0, 3px, 0);
-  }
-}
-
-@keyframes bird-right-flap {
-  0%,
-  100% {
-    transform: rotate(12deg) translate3d(0, -4px, 0);
-  }
-  50% {
-    transform: rotate(-8deg) translate3d(0, 3px, 0);
-  }
-}
-
 @keyframes sharp-sparkle {
   0%,
   62%,
@@ -903,94 +895,6 @@ code {
     transform: translate(1px, 1px);
     box-shadow: 0 0 0 3px var(--lcd-surface-hi), 2px 2px 0 var(--lcd-ink);
   }
-}
-
-@keyframes pixel-confetti-burst {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.4);
-  }
-  8% {
-    opacity: 1;
-  }
-  38% {
-    opacity: 1;
-    transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)) scale(1);
-  }
-  72% {
-    opacity: 0.92;
-    transform: translate3d(calc(var(--dx) + var(--drift)), calc(var(--dy) * 0.18), 0) rotate(calc(var(--rot) + var(--spin))) scale(0.92);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(calc(var(--dx) + var(--drift) * 1.4), 116vh, 0) rotate(calc(var(--rot) + var(--spin) * 1.8)) scale(0.68);
-  }
-}
-
-.pixel-confetti-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.pixel-confetti-piece {
-  position: absolute;
-  bottom: max(12px, env(safe-area-inset-bottom));
-  width: var(--size);
-  height: calc(var(--size) * 1.65);
-  opacity: 0;
-  background: var(--lcd-ink);
-  border-radius: 2px;
-  color: var(--lcd-ink);
-  box-shadow: 0 0 0 1px rgba(25, 45, 24, 0.28);
-  will-change: transform, opacity;
-  animation: pixel-confetti-burst var(--duration) cubic-bezier(0.15, 0.82, 0.26, 1) forwards;
-  animation-delay: var(--delay);
-}
-
-.pixel-confetti-left {
-  left: 4px;
-}
-
-.pixel-confetti-right {
-  right: 4px;
-}
-
-.confetti-tone-0 {
-  background: var(--lcd-ink);
-  color: var(--lcd-ink);
-}
-
-.confetti-tone-1 {
-  background: var(--lcd-dark);
-  color: var(--lcd-dark);
-}
-
-.confetti-tone-2 {
-  background: var(--lcd-mid);
-  color: var(--lcd-mid);
-}
-
-.confetti-tone-3 {
-  background: var(--case-hi);
-  color: var(--case-hi);
-}
-
-.confetti-tone-4 {
-  background: var(--lcd-bg);
-  color: var(--lcd-bg);
-}
-
-.confetti-tone-5 {
-  background: var(--lcd-surface-hi);
-  color: var(--lcd-surface-hi);
-}
-
-.confetti-tone-6 {
-  background: var(--key-face);
-  color: var(--key-face);
 }
 
 .key-zone {
@@ -1285,361 +1189,7 @@ code {
 
 .future-window .block-list,
 .future-window .empty-state {
-  margin-top: 76px;
-}
-
-.sky-scene {
-  position: absolute;
-  inset: 24px 8px auto;
-  z-index: 1;
-  height: 78px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.pixel-cloud,
-.mp4-bird,
-.sky-bird,
-.sky-ave {
-  position: absolute;
-  left: -56px;
-  color: var(--lcd-line);
-  opacity: 0;
-  animation: sky-drift 12s linear infinite;
-}
-
-.pixel-cloud {
-  --sky-scale: 1;
-  --sky-y: 2px;
-  --sky-opacity: 0.5;
-  width: 96px;
-  height: 38px;
-  color: rgba(192, 218, 138, 0.78);
-  background: transparent;
-  filter:
-    drop-shadow(0 1px 0 rgba(25, 45, 24, 0.34))
-    drop-shadow(0 -1px 0 rgba(25, 45, 24, 0.12));
-}
-
-.pixel-cloud i {
-  position: absolute;
-  display: block;
-  background: currentColor;
-  border: 1px solid rgba(25, 45, 24, 0.28);
-  box-shadow: inset 0 2px 0 rgba(222, 239, 173, 0.4);
-  opacity: 1;
-}
-
-.pixel-cloud i:nth-child(1) {
-  left: 8px;
-  top: 21px;
-  width: 72px;
-  height: 13px;
-  border-radius: 5px 5px 7px 7px;
-}
-
-.pixel-cloud i:nth-child(2) {
-  left: 16px;
-  top: 13px;
-  width: 23px;
-  height: 20px;
-  border-radius: 14px 14px 5px 5px;
-}
-
-.pixel-cloud i:nth-child(3) {
-  left: 34px;
-  top: 7px;
-  width: 30px;
-  height: 27px;
-  border-radius: 17px 17px 6px 6px;
-}
-
-.pixel-cloud i:nth-child(4) {
-  left: 60px;
-  top: 15px;
-  width: 24px;
-  height: 18px;
-  border-radius: 13px 13px 6px 6px;
-}
-
-.pixel-cloud i:nth-child(5) {
-  left: 18px;
-  top: 30px;
-  width: 58px;
-  height: 3px;
-  border: 0;
-  background: rgba(25, 45, 24, 0.2);
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.pixel-cloud i:nth-child(6) {
-  left: 42px;
-  top: 14px;
-  width: 16px;
-  height: 2px;
-  border: 0;
-  background: rgba(25, 45, 24, 0.16);
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.pixel-cloud i:nth-child(7) {
-  left: 63px;
-  top: 22px;
-  width: 12px;
-  height: 2px;
-  border: 0;
-  background: rgba(25, 45, 24, 0.16);
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.pixel-cloud-a {
-  top: 9px;
-  animation-delay: -2.2s;
-  animation-duration: 18s;
-}
-
-.pixel-cloud-b {
-  --sky-scale: 0.78;
-  --sky-y: -4px;
-  --sky-opacity: 0.34;
-  top: 26px;
-  animation-delay: -10.5s;
-  animation-duration: 22s;
-}
-
-.pixel-cloud-c {
-  --sky-scale: 0.58;
-  --sky-y: 3px;
-  --sky-opacity: 0.28;
-  top: 4px;
-  animation-delay: -15.5s;
-  animation-duration: 26s;
-}
-
-.mp4-bird {
-  --sky-scale: 0.36;
-  --sky-y: 0;
-  --sky-opacity: 0.68;
-  --flap-speed: 0.86s;
-  left: -120px;
-  top: 0;
-  width: 96px;
-  height: 56px;
-  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.22));
-}
-
-.mp4-bird::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("../assets/aves-flight-sprite.png?v=2.30") 0 0 / 1536px 56px no-repeat;
-  image-rendering: pixelated;
-  animation: mp4-bird-flap var(--flap-speed) steps(16) infinite;
-}
-
-.mp4-bird-a {
-  top: 1px;
-  --sky-scale: 0.34;
-  --sky-y: -1px;
-  --sky-opacity: 0.66;
-  --flap-speed: 0.82s;
-  animation-delay: -1.6s;
-  animation-duration: 12.5s;
-}
-
-.mp4-bird-b {
-  top: 23px;
-  --sky-scale: 0.28;
-  --sky-y: 1px;
-  --sky-opacity: 0.48;
-  --flap-speed: 0.9s;
-  animation-delay: -5.9s;
-  animation-duration: 15.2s;
-}
-
-.mp4-bird-c {
-  top: 42px;
-  --sky-scale: 0.37;
-  --sky-y: 1px;
-  --sky-opacity: 0.58;
-  --flap-speed: 0.78s;
-  animation-delay: -9.4s;
-  animation-duration: 13.8s;
-}
-
-.mp4-bird-d {
-  top: 64px;
-  --sky-scale: 0.22;
-  --sky-y: 0;
-  --sky-opacity: 0.42;
-  --flap-speed: 0.96s;
-  animation-delay: -13.2s;
-  animation-duration: 17.6s;
-}
-
-.sky-bird,
-.sky-ave {
-  --sky-scale: 1;
-  --sky-y: -3px;
-  --sky-opacity: 0.78;
-  --flap-speed: 1.18s;
-  --flap-delay: 0s;
-  width: 68px;
-  height: 38px;
-  color: rgba(15, 35, 18, 0.94);
-  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.28));
-}
-
-.sky-bird i,
-.sky-bird b,
-.sky-bird em,
-.sky-ave i,
-.sky-ave b,
-.sky-ave em {
-  position: absolute;
-  display: block;
-  font-style: normal;
-  background: transparent;
-}
-
-.sky-bird i,
-.sky-ave i {
-  left: 26px;
-  top: 17px;
-  width: 19px;
-  height: 6px;
-  background: currentColor;
-  border-radius: 999px 8px 8px 999px;
-  transform: rotate(2deg);
-}
-
-.sky-bird i::before,
-.sky-ave i::before {
-  content: "";
-  position: absolute;
-  right: -9px;
-  top: -4px;
-  width: 10px;
-  height: 8px;
-  background: currentColor;
-  border-radius: 999px 999px 999px 3px;
-  clip-path: polygon(0 20%, 78% 0, 100% 38%, 72% 70%, 12% 100%);
-}
-
-.sky-bird i::after,
-.sky-ave i::after {
-  content: "";
-  position: absolute;
-  left: -12px;
-  top: -1px;
-  width: 13px;
-  height: 9px;
-  background: currentColor;
-  clip-path: polygon(0 0, 100% 40%, 0 100%, 34% 50%);
-}
-
-.sky-bird b,
-.sky-ave b {
-  left: 3px;
-  top: 6px;
-  width: 36px;
-  height: 18px;
-  background: currentColor;
-  border: 0;
-  border-radius: 0;
-  clip-path: polygon(100% 54%, 74% 12%, 5% 0, 0 20%, 48% 54%, 2% 96%, 54% 86%);
-  transform-origin: 35px 17px;
-  animation: bird-left-flap var(--flap-speed) ease-in-out infinite;
-  animation-delay: var(--flap-delay);
-  box-shadow: none;
-}
-
-.sky-bird em,
-.sky-ave em {
-  left: 37px;
-  top: 6px;
-  width: 36px;
-  height: 18px;
-  background: currentColor;
-  border: 0;
-  border-radius: 0;
-  clip-path: polygon(0 54%, 25% 12%, 95% 0, 100% 20%, 52% 54%, 98% 96%, 46% 86%);
-  transform-origin: 1px 17px;
-  animation: bird-right-flap var(--flap-speed) ease-in-out infinite;
-  animation-delay: var(--flap-delay);
-  box-shadow: none;
-}
-
-.sky-bird-a {
-  top: 5px;
-  --flap-delay: -0.1s;
-  animation-delay: -4.1s;
-  animation-duration: 11.5s;
-}
-
-.sky-bird-b {
-  --sky-scale: 0.78;
-  --sky-y: 4px;
-  --flap-delay: -0.35s;
-  top: 20px;
-  animation-delay: -7.6s;
-  animation-duration: 12.8s;
-}
-
-.sky-bird-c {
-  --sky-scale: 0.68;
-  --sky-y: -5px;
-  --sky-opacity: 0.58;
-  --flap-delay: -0.22s;
-  top: 12px;
-  animation-delay: -10.2s;
-  animation-duration: 14.6s;
-}
-
-.sky-ave-a {
-  --sky-scale: 1.24;
-  --sky-y: 2px;
-  --sky-opacity: 0.68;
-  --flap-speed: 1.28s;
-  --flap-delay: -0.42s;
-  top: 17px;
-  animation-delay: -1.2s;
-  animation-duration: 15.2s;
-}
-
-.sky-ave-b {
-  --sky-scale: 1.08;
-  --sky-y: -1px;
-  --sky-opacity: 0.66;
-  --flap-speed: 1.22s;
-  --flap-delay: -0.18s;
-  top: 2px;
-  animation-delay: -12.4s;
-  animation-duration: 16.8s;
-}
-
-.sky-ave i {
-  width: 23px;
-  height: 7px;
-}
-
-.sky-ave i::before {
-  width: 12px;
-  height: 9px;
-  right: -11px;
-}
-
-.sky-ave b {
-  width: 42px;
-  height: 21px;
-}
-
-.sky-ave em {
-  width: 42px;
-  height: 21px;
+  margin-top: 0;
 }
 
 .data-block {

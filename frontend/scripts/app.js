@@ -239,7 +239,6 @@
     if (!window.confirm('Registrar ingreso de sueldo por ' + utils.formatMoney(salary) + '?')) {
       return Promise.resolve();
     }
-    launchPixelConfetti();
     return mutate('createMovement', {
       tipo: 'Ingreso',
       motivo: 'Sueldo',
@@ -252,51 +251,6 @@
       toast('Sueldo registrado');
       return result;
     });
-  }
-
-  function launchPixelConfetti() {
-    var root = document.createElement('div');
-    var fragment = document.createDocumentFragment();
-    root.className = 'pixel-confetti-layer';
-    root.setAttribute('aria-hidden', 'true');
-
-    ['left', 'right'].forEach(function (side) {
-      var count = 42;
-      var index;
-      for (index = 0; index < count; index += 1) {
-        fragment.appendChild(confettiPiece(side, index));
-      }
-    });
-
-    root.appendChild(fragment);
-    document.body.appendChild(root);
-
-    window.setTimeout(function () {
-      if (root.parentNode) {
-        root.parentNode.removeChild(root);
-      }
-    }, 2600);
-  }
-
-  function confettiPiece(side, index) {
-    var piece = document.createElement('i');
-    var sideFactor = side === 'left' ? 1 : -1;
-    var angle = (side === 'left' ? 1 : -1) * (20 + Math.random() * 64);
-    var distance = 92 + Math.random() * 150;
-    var dx = (side === 'left' ? 1 : -1) * Math.cos(angle * Math.PI / 180) * distance;
-    var dy = -92 - Math.random() * 150;
-    var drift = sideFactor * (22 + Math.random() * 72);
-    var size = 4 + Math.round(Math.random() * 7);
-    piece.className = 'pixel-confetti-piece pixel-confetti-' + side + ' confetti-tone-' + (index % 7);
-    piece.style.setProperty('--dx', dx.toFixed(0) + 'px');
-    piece.style.setProperty('--dy', dy.toFixed(0) + 'px');
-    piece.style.setProperty('--drift', drift.toFixed(0) + 'px');
-    piece.style.setProperty('--rot', String((Math.random() * 760) - 380) + 'deg');
-    piece.style.setProperty('--spin', String((Math.random() * 960) - 480) + 'deg');
-    piece.style.setProperty('--size', size + 'px');
-    piece.style.setProperty('--delay', String(Math.random() * 0.08) + 's');
-    piece.style.setProperty('--duration', String(1.45 + Math.random() * 0.95) + 's');
-    return piece;
   }
 
   function applyOptimisticMutation(action, payload) {
@@ -692,12 +646,13 @@
       }
     });
 
-    var totalGastado = totals.gastos + totals.comprasWishlist;
+    var totalGastado = totals.gastosVariables + totals.comprasWishlist;
     var totalIngresos = monthlySalary + totals.ingresosExtra;
     var totalApartado = totals.aportesAhorro + totals.aportesMeta;
     var fixedConfigured = fixedExpenseTotal(appConfig.gastosFijos, monthlySalary);
     var baseDisponible = monthlySalary - fixedConfigured;
     var disponible = baseDisponible + totals.ingresosExtra - totals.gastosVariables - totals.comprasWishlist - totalApartado;
+    var baseCalculoDisponible = Math.max(0, baseDisponible + totals.ingresosExtra);
     base.mes = month;
     base.moneda = appConfig.moneda || base.moneda || 'PYG';
     base.sueldoMensual = monthlySalary;
@@ -713,9 +668,10 @@
     base.aportesMeta = totals.aportesMeta;
     base.totalApartado = totalApartado;
     base.baseDisponible = baseDisponible;
+    base.baseCalculoDisponible = baseCalculoDisponible;
     base.disponible = disponible;
-    base.porcentajeDisponible = totalIngresos > 0
-      ? Math.max(0, Math.min(100, Math.round((disponible / totalIngresos) * 10000) / 100))
+    base.porcentajeDisponible = baseCalculoDisponible > 0
+      ? Math.max(0, Math.min(100, Math.round((disponible / baseCalculoDisponible) * 10000) / 100))
       : 0;
     base.categoriaMayorGasto = topCategoryFromTotals(categoryTotals);
     base.actividadReciente = sortMovementItems((movements || []).slice()).slice(0, 5);

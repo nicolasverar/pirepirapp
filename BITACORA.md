@@ -331,6 +331,36 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-19 - Torta de referencia, disponible post-particiones y limpieza visual
+
+### Objetivo
+- Usar la imagen local `torta.pmg.png` como referencia visual para `Particion sueldo`.
+- Mantener la particion basada solo en `Configuracion`, sin depender de gastos efectuados.
+- Calcular el porcentaje disponible sobre la plata que queda despues de gastos fijos, no sobre el sueldo total.
+- Eliminar aves, nubes y confeti hasta nuevo aviso.
+
+### Cambios
+- `frontend/assets/torta.pmg.png`: asset agregado desde la referencia local.
+- `frontend/scripts/render.js`: la torta de particion usa `torta.pmg.png` como textura/referencia y conserva segmentos dinamicos por gastos fijos configurados; se elimino el render de aves/nubes.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: se ajusto la torta LCD con tramas, se elimino el espacio reservado para cielo y se limpiaron estilos de aves/nubes/confeti.
+- `frontend/scripts/app.js`: `totalGastado` excluye gastos fijos y `porcentajeDisponible` usa `baseCalculoDisponible` (`sueldo - fijos + ingresos extra`) como base.
+- `backend/SummaryService.js`: se replico el mismo calculo en el resumen inicial del backend.
+- `frontend/scripts/app.js`: el boton `¡Cobré!` ya no dispara confeti.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.31` y cache a `finanzas-lcd-v39`; el service worker cachea `torta.pmg.png` y ya no precarga el sprite de aves.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`, `frontend/service-worker.js` y `backend/*.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets del service worker: 24 assets, sin faltantes; `finanzas-lcd-v39`, `assets/torta.pmg.png?v=2.31` presente y sprite de aves ausente.
+- Busqueda en `frontend` y `backend` de `launchPixelConfetti`, `pixel-confetti`, `confetti`, `renderSkyScene`, `pixel-cloud`, `mp4-bird`, `sky-bird`, `sky-ave`, `aves-flight-sprite`, `v=2.30`, `v2.30` y `finanzas-lcd-v38`: sin resultados.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.31`, `APP_VERSION: 'v2.31'`, `finanzas-lcd-v39`, `app.js?v=2.31`, `render.js?v=2.31` y `torta.pmg.png?v=2.31`.
+- Asset local `http://127.0.0.1:4173/assets/torta.pmg.png?v=2.31`: `200 OK`, `image/png`, `81701` bytes.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Validar frontend/backend, desplegar Apps Script, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

@@ -287,7 +287,6 @@
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
       '<div class="window-title">EL FUTURO</div>',
-      renderSkyScene(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window">',
@@ -382,20 +381,6 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
-  }
-
-  function renderSkyScene() {
-    return [
-      '<span class="sky-scene" aria-hidden="true">',
-      '<span class="pixel-cloud pixel-cloud-a"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="pixel-cloud pixel-cloud-b"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="pixel-cloud pixel-cloud-c"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>',
-      '<span class="mp4-bird mp4-bird-a"></span>',
-      '<span class="mp4-bird mp4-bird-b"></span>',
-      '<span class="mp4-bird mp4-bird-c"></span>',
-      '<span class="mp4-bird mp4-bird-d"></span>',
-      '</span>'
-    ].join('');
   }
 
   function readFuturePrefs() {
@@ -571,7 +556,7 @@
     var tops = [];
     var labels = [];
 
-    segments.forEach(function (item) {
+    segments.forEach(function (item, index) {
       var sweep = (item.amount / chartTotal) * Math.PI * 2;
       var end = start + sweep;
       var full = sweep >= Math.PI * 2 - 0.0001;
@@ -579,6 +564,7 @@
       var className = utils.escapeHtml(item.className);
       sides.push('<path class="salary-pie-side ' + className + '" d="' + d + '"></path>');
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
+      tops.push('<path class="salary-pie-hatch hatch-' + (index % 3) + '" d="' + d + '"></path>');
       if ((item.amount / chartTotal) >= 0.08) {
         labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, item.percent));
       }
@@ -587,7 +573,13 @@
 
     return [
       '<div class="salary-pie-stage' + (excess > 0 ? ' is-over-budget' : '') + '" role="img" aria-label="Particion del sueldo en diagrama de torta">',
+      '<img class="salary-pie-reference" src="./assets/torta.pmg.png?v=2.31" alt="" aria-hidden="true">',
       '<svg class="salary-pie-svg" viewBox="0 0 240 158" focusable="false" aria-hidden="true">',
+      '<defs>',
+      '<pattern id="salary-hatch-a" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8"></line></pattern>',
+      '<pattern id="salary-hatch-b" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="7"></line></pattern>',
+      '<pattern id="salary-dots" width="7" height="7" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="2" height="2"></rect></pattern>',
+      '</defs>',
       '<ellipse class="salary-pie-shadow" cx="120" cy="98" rx="94" ry="42"></ellipse>',
       sides.join(''),
       tops.join(''),

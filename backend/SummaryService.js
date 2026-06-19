@@ -49,14 +49,15 @@ function getMonthlySummary_(payload) {
     }
   });
 
-  var totalGastado = totals.gastos + totals.comprasWishlist;
+  var totalGastado = totals.gastosVariables + totals.comprasWishlist;
   var totalIngresos = monthlySalary + totals.ingresosExtra;
   var totalApartado = totals.aportesAhorro + totals.aportesMeta;
   var fixedConfigured = fixedExpenseConfiguredTotal_(config.gastosFijos);
   var baseDisponible = monthlySalary - fixedConfigured;
   var disponible = baseDisponible + totals.ingresosExtra - totals.gastosVariables - totals.comprasWishlist - totalApartado;
-  var porcentajeDisponible = totalIngresos > 0
-    ? Math.max(0, Math.min(100, Math.round((disponible / totalIngresos) * 10000) / 100))
+  var baseCalculoDisponible = Math.max(0, baseDisponible + totals.ingresosExtra);
+  var porcentajeDisponible = baseCalculoDisponible > 0
+    ? Math.max(0, Math.min(100, Math.round((disponible / baseCalculoDisponible) * 10000) / 100))
     : 0;
 
   var topCategory = topSpendingCategory_(categoryTotals);
@@ -78,6 +79,7 @@ function getMonthlySummary_(payload) {
     aportesMeta: totals.aportesMeta,
     totalApartado: totalApartado,
     baseDisponible: baseDisponible,
+    baseCalculoDisponible: baseCalculoDisponible,
     disponible: disponible,
     porcentajeDisponible: porcentajeDisponible,
     categoriaMayorGasto: topCategory,

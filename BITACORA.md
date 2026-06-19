@@ -324,9 +324,12 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda en `frontend` de `js-new-expense`, `js-new-income`, `salary-box-map`, `partition-box`, `v=2.29` y `finanzas-lcd-v37`: sin resultados.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.30`, `APP_VERSION: 'v2.30'`, `finanzas-lcd-v38`, `forms.js?v=2.30`, `render.js?v=2.30` y `main.css?v=2.30`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit principal `5a3f884` (`Ajustar resumen y filtros de gastos`) enviado a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.30` sirve `v2.30`, `APP_VERSION: 'v2.30'`, `finanzas-lcd-v38`, `forms.js?v=2.30`, `render.js?v=2.30` y `main.css?v=2.30`.
+- Backend sin cambios; no se ejecuto despliegue de Apps Script.
 
 ### Pendientes
-- Commitear, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

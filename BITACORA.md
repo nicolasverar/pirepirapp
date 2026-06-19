@@ -388,9 +388,13 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.32`, `APP_VERSION: 'v2.32'`, `finanzas-lcd-v40`, `render.js?v=2.32` y `main.css?v=2.32`.
 - Asset local `http://127.0.0.1:4173/assets/torta.pmg.png?v=2.32`: `200 OK`, `image/png`, `81701` bytes.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit principal `9e8724e` (`Redibujar torta de sueldo isometrica`) enviado a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.32` sirve `v2.32`, `APP_VERSION: 'v2.32'`, `finanzas-lcd-v40`, `render.js?v=2.32` y `main.css?v=2.32`.
+- Asset publico `https://nicolasverar.github.io/pirepirapp/assets/torta.pmg.png?v=2.32`: `200 OK`, `image/png`, `81701` bytes.
+- Backend sin cambios; no se ejecuto despliegue de Apps Script.
 
 ### Pendientes
-- Commitear, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

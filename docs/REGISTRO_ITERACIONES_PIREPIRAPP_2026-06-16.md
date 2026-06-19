@@ -546,3 +546,16 @@ rediseña POR completo la app e incorpora esos elementos nuevos de esta imagen y
 - La tarjeta de disponible ahora se titula `Plata disponible`.
 - La torta muestra porcentajes sobre las porciones y usa tramados/dithering monocromaticos en vez de diferenciacion por color plano.
 - Se subio la version frontend a `v2.36` y el cache PWA a `finanzas-lcd-v44`.
+
+### Prompt 40 - Usuario
+
+```text
+NO SE VE IGUAL A LA FOTO QUE TE PASE NECESITO QUE TRABAJES ENESOS DETALLES FINOS TAMBIEN SI TE FIJAS EL TONO DE  OLIVA NO ES EL MISMO TAMBIEN BORRA ESOS DESPLAZADOREES GRISES EN OS COSTADOS QUE CORTAN LA ESTETICA Y NO COMBINAN
+```
+
+### Resumen operativo
+- Se ajusto la paleta base hacia un oliva mas grisaceo y menos amarillo, mas cercano a la referencia.
+- Se oscurecieron carcasa, biseles, bordes, titulos y trazos para acercar la lectura de dispositivo LCD analogico.
+- Se reemplazo el overlay fijo por una textura interna de pantalla para evitar capas visuales ajenas a la carcasa.
+- Se ocultaron completamente los scrollbars nativos grises en `html`, `body`, `.device-shell` y `.lcd-screen`.
+- Se subio la version frontend a `v2.37` y el cache PWA a `finanzas-lcd-v45`.

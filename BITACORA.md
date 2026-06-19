@@ -1,5 +1,27 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Ajuste fino LCD oliva y scrollbars
+
+### Objetivo
+- Acercar el tono oliva, biseles y texturas a la referencia visual provista.
+- Eliminar los scrollbars grises nativos que rompian la estetica lateral.
+
+### Cambios
+- `frontend/styles/lcd-theme.css`: paleta base reajustada a oliva mas grisaceo, menos saturado y menos amarillo.
+- `frontend/styles/main.css`: carcasa, pantalla, tarjetas, titulos, bordes y texturas refinadas; la textura de pantalla pasa a ser interna y se ocultan scrollbars en navegador.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.37` y cache a `finanzas-lcd-v45`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.37`.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la URL publica despues del push.
+
 ## 2026-06-19 - Resumen version 3.0
 
 ### Objetivo

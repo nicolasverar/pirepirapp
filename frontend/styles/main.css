@@ -2438,3 +2438,181 @@ textarea {
     repeating-linear-gradient(45deg, rgba(17, 26, 16, 0.72) 0, rgba(17, 26, 16, 0.72) 1px, transparent 1px, transparent 4px),
     #98a865;
 }
+
+html,
+body,
+.device-shell,
+.lcd-screen {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.device-shell::-webkit-scrollbar,
+.lcd-screen::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.device-shell {
+  background:
+    linear-gradient(135deg, rgba(151, 162, 96, 0.1), transparent 16%, transparent 78%, rgba(0, 0, 0, 0.48)),
+    radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.045), transparent 12%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.014) 0, rgba(255, 255, 255, 0.014) 1px, transparent 1px, transparent 7px),
+    linear-gradient(180deg, #30342a 0, #171b14 42%, #090c08 100%);
+  border-color: #050705;
+  box-shadow:
+    inset 5px 5px 0 rgba(132, 140, 107, 0.22),
+    inset -7px -9px 0 rgba(0, 0, 0, 0.46),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.55),
+    0 16px 34px rgba(0, 0, 0, 0.58);
+}
+
+.status-bar,
+.key-zone {
+  background:
+    repeating-radial-gradient(circle, rgba(151, 162, 96, 0.17) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #161f14, #0c120b);
+  border-color: #050705;
+}
+
+.lcd-screen {
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 26% 4%, rgba(188, 198, 125, 0.18), transparent 22%),
+    radial-gradient(circle at 74% 96%, rgba(13, 21, 12, 0.2), transparent 30%),
+    linear-gradient(145deg, rgba(172, 183, 117, 0.66), rgba(141, 153, 90, 0.96) 54%, rgba(111, 124, 73, 0.98)),
+    var(--lcd-bg);
+  border-color: #090f08;
+  box-shadow:
+    inset 0 0 0 2px rgba(13, 21, 12, 0.55),
+    inset 6px 7px 14px rgba(0, 0, 0, 0.32),
+    inset -7px -8px 12px rgba(188, 198, 125, 0.22),
+    0 0 0 4px rgba(35, 40, 30, 0.62);
+}
+
+.lcd-screen::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 9px;
+  background:
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.2) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(0deg, rgba(13, 21, 12, 0.08) 0, rgba(13, 21, 12, 0.08) 1px, transparent 1px, transparent 4px);
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+}
+
+.lcd-screen > * {
+  position: relative;
+  z-index: 1;
+}
+
+.system-window {
+  background:
+    linear-gradient(180deg, rgba(172, 183, 117, 0.16), transparent 30%),
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.22) 0 1px, transparent 1px 3px),
+    rgba(151, 162, 96, 0.72);
+  border-color: #0b1209;
+  box-shadow:
+    3px 3px 0 rgba(13, 21, 12, 0.86),
+    inset 1px 1px 0 rgba(188, 198, 125, 0.56),
+    inset -2px -2px 0 rgba(32, 44, 27, 0.34);
+}
+
+.system-window::after {
+  background: repeating-linear-gradient(180deg, #0b1209 0 1px, transparent 1px 3px);
+  opacity: 0.76;
+}
+
+.window-title {
+  color: #97a260;
+  background:
+    repeating-linear-gradient(90deg, rgba(151, 162, 96, 0.16) 0, rgba(151, 162, 96, 0.16) 1px, transparent 1px, transparent 3px),
+    #111a10;
+}
+
+.summary-embedded {
+  background:
+    linear-gradient(145deg, rgba(13, 21, 12, 0.2), transparent 42%),
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.18) 0 1px, transparent 1px 3px),
+    rgba(151, 162, 96, 0.26);
+  box-shadow:
+    inset 5px 5px 0 rgba(13, 21, 12, 0.58),
+    inset -4px -4px 0 rgba(172, 183, 117, 0.36),
+    4px 5px 0 rgba(13, 21, 12, 0.28);
+}
+
+.summary-embedded .summary-date-display,
+.summary-kpi-badge,
+.top-spend-box,
+.progress-track,
+.salary-pie-stage {
+  border-color: #0b1209;
+}
+
+.summary-embedded .summary-date-display {
+  background:
+    linear-gradient(180deg, rgba(172, 183, 117, 0.3), transparent 52%),
+    rgba(151, 162, 96, 0.52);
+}
+
+.summary-embedded .summary-date-kicker,
+.summary-embedded .summary-spent-line,
+.summary-kpi-badge {
+  background:
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.2) 0 1px, transparent 1px 3px),
+    rgba(141, 153, 90, 0.5);
+}
+
+.salary-pie-stage {
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.72) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.72) 1px, transparent 1px) 0 0 / 22px 22px,
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.16) 0 1px, transparent 1px 3px),
+    rgba(151, 162, 96, 0.34);
+}
+
+.salary-pie-svg pattern line {
+  stroke: rgba(13, 21, 12, 0.92);
+}
+
+.salary-pie-slice.segment-0,
+.salary-pie-side-fill.segment-0 {
+  fill: #89955d;
+}
+
+.salary-pie-slice.segment-1,
+.salary-pie-side-fill.segment-1 {
+  fill: #9aa568;
+}
+
+.salary-pie-slice.segment-2,
+.salary-pie-side-fill.segment-2 {
+  fill: #7c8953;
+}
+
+.salary-pie-slice.segment-3,
+.salary-pie-side-fill.segment-3 {
+  fill: #a7b070;
+}
+
+.salary-pie-slice.segment-4,
+.salary-pie-side-fill.segment-4,
+.salary-pie-slice.segment-available,
+.salary-pie-side-fill.segment-available {
+  fill: #717e4b;
+}
+
+.salary-pie-slice.segment-5,
+.salary-pie-side-fill.segment-5 {
+  fill: #909d60;
+}
+
+.action-key {
+  background:
+    repeating-radial-gradient(circle, rgba(13, 21, 12, 0.64) 0 1px, transparent 1px 3px),
+    #97a260;
+}

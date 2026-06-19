@@ -416,9 +416,12 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda en `frontend` de `v=2.32`, `v2.32`, `finanzas-lcd-v40`, `salary-pie-reference` y `<img class="salary-pie`: sin resultados.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.33`, `APP_VERSION: 'v2.33'`, `finanzas-lcd-v41`, `render.js?v=2.33` y `main.css?v=2.33`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit principal `8507436` (`Acercar torta de sueldo a referencia`) enviado a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.33` sirve `v2.33`, `APP_VERSION: 'v2.33'`, `finanzas-lcd-v41`, `render.js?v=2.33` y `main.css?v=2.33`.
+- Backend sin cambios; no se ejecuto despliegue de Apps Script.
 
 ### Pendientes
-- Commitear, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

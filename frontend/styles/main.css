@@ -907,7 +907,7 @@ code {
 
 @keyframes mp4-bird-flap {
   100% {
-    background-position: -576px 0;
+    background-position: -1536px 0;
   }
 }
 
@@ -1286,14 +1286,14 @@ code {
 
 .future-window .block-list,
 .future-window .empty-state {
-  margin-top: 56px;
+  margin-top: 76px;
 }
 
 .sky-scene {
   position: absolute;
   inset: 24px 8px auto;
   z-index: 1;
-  height: 58px;
+  height: 78px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -1421,64 +1421,64 @@ code {
 }
 
 .mp4-bird {
-  --sky-scale: 0.72;
+  --sky-scale: 0.36;
   --sky-y: 0;
-  --sky-opacity: 0.8;
-  --flap-speed: 0.72s;
-  left: -96px;
-  top: 6px;
+  --sky-opacity: 0.68;
+  --flap-speed: 0.86s;
+  left: -120px;
+  top: 0;
   width: 96px;
   height: 56px;
-  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.28));
+  filter: drop-shadow(0 1px 0 rgba(192, 218, 138, 0.22));
 }
 
 .mp4-bird::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("../assets/aves-flight-sprite.png") 0 0 / 576px 56px no-repeat;
+  background: url("../assets/aves-flight-sprite.png?v=2.29") 0 0 / 1536px 56px no-repeat;
   image-rendering: pixelated;
-  animation: mp4-bird-flap var(--flap-speed) steps(6) infinite;
+  animation: mp4-bird-flap var(--flap-speed) steps(16) infinite;
 }
 
 .mp4-bird-a {
-  top: 0;
-  --sky-scale: 0.62;
-  --sky-y: -5px;
-  --sky-opacity: 0.7;
-  --flap-speed: 0.68s;
-  animation-delay: -2.4s;
-  animation-duration: 11.8s;
+  top: 1px;
+  --sky-scale: 0.34;
+  --sky-y: -1px;
+  --sky-opacity: 0.66;
+  --flap-speed: 0.82s;
+  animation-delay: -1.6s;
+  animation-duration: 12.5s;
 }
 
 .mp4-bird-b {
-  top: 16px;
-  --sky-scale: 0.5;
-  --sky-y: 4px;
-  --sky-opacity: 0.58;
-  --flap-speed: 0.76s;
-  animation-delay: -6.8s;
-  animation-duration: 13.4s;
+  top: 23px;
+  --sky-scale: 0.28;
+  --sky-y: 1px;
+  --sky-opacity: 0.48;
+  --flap-speed: 0.9s;
+  animation-delay: -5.9s;
+  animation-duration: 15.2s;
 }
 
 .mp4-bird-c {
-  top: 8px;
-  --sky-scale: 0.42;
-  --sky-y: -3px;
-  --sky-opacity: 0.5;
-  --flap-speed: 0.82s;
-  animation-delay: -9.6s;
-  animation-duration: 15.6s;
+  top: 42px;
+  --sky-scale: 0.37;
+  --sky-y: 1px;
+  --sky-opacity: 0.58;
+  --flap-speed: 0.78s;
+  animation-delay: -9.4s;
+  animation-duration: 13.8s;
 }
 
 .mp4-bird-d {
-  top: 24px;
-  --sky-scale: 0.56;
-  --sky-y: 2px;
-  --sky-opacity: 0.62;
-  --flap-speed: 0.72s;
-  animation-delay: -12.7s;
-  animation-duration: 16.8s;
+  top: 64px;
+  --sky-scale: 0.22;
+  --sky-y: 0;
+  --sky-opacity: 0.42;
+  --flap-speed: 0.96s;
+  animation-delay: -13.2s;
+  animation-duration: 17.6s;
 }
 
 .sky-bird,

@@ -274,6 +274,30 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Commitear, publicar GitHub Pages y verificar URL publica.
 
+## 2026-06-19 - Aleteo MP4 suavizado y aves en profundidad
+
+### Objetivo
+- Ampliar el ciclo de aleteo porque seis frames se veian raros.
+- Hacer algunas aves mas pequenas para que parezcan lejanas.
+- Separar las trayectorias para evitar superposiciones entre aves.
+
+### Cambios
+- `frontend/assets/aves-flight-sprite.png`: sprite regenerado desde el `aves.mp4` actual con 16 frames y tamano final `1536x56`.
+- `frontend/styles/main.css`: `mp4-bird-flap` pasa a `steps(16)`, usa el sprite `v=2.29`, separa cuatro carriles verticales y reduce escala/opacidad de las aves lejanas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.29` y cache a `finanzas-lcd-v37`; el service worker cachea el sprite con `?v=2.29`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt registrado.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de CSS/cache: `steps(16)`, `1536px 56px`, `finanzas-lcd-v37` y `aves-flight-sprite.png?v=2.29` presentes.
+- Sprite validado con ImageMagick: `aves-flight-sprite.png` mide `1536x56`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.29`, `APP_VERSION: 'v2.29'`, `finanzas-lcd-v37`, `main.css?v=2.29` y sprite cacheado.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

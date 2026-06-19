@@ -375,3 +375,14 @@ ahora si reemplace por el que debeser
 - Se extrajeron frames del MP4 nuevo y se eligio el ciclo recomendado `01, 04, 06, 07, 10, 13`.
 - Se genero `frontend/assets/aves-flight-sprite.png` como sprite transparente de seis frames.
 - `EL FUTURO` ahora renderiza aves con sprite real del MP4 y aleteo por `steps(6)`.
+
+### Prompt 26 - Usuario
+
+```text
+anadi mas frames al aleteo porque se ve raro y hace algunows mas pequeos para que parezcan lejamos y que no se supoerpongan en ningun momento
+```
+
+### Resumen operativo
+- Se amplio `frontend/assets/aves-flight-sprite.png` de 6 a 16 frames reales del MP4.
+- El aleteo pasa a `steps(16)` con sprite de `1536x56`.
+- Se separaron las aves en carriles verticales y escalas distintas para dar profundidad y evitar superposicion visual.

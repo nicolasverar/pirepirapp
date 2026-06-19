@@ -89,31 +89,27 @@
     var config = state.data.config || {};
     var movements = movementItemsFromState_(state);
     var top = topSpendingMotive(movements, config, summary);
-    var recent = (summary.actividadReciente || []).length
-      ? summary.actividadReciente
-      : movements.slice(0, 5);
+    var variableSpent = summaryVariableSpent(movements, config, summary);
+    var currentMonthName = summaryMonthName(summary, config);
     return [
       '<section class="summary-stack">',
-      '<article class="system-window total-window summary-primary">',
+      '<article class="summary-embedded total-window summary-primary">',
       '<div class="summary-date-block">',
-      '<span class="summary-date-kicker">Estamos al</span>',
+      '<span class="summary-date-kicker">Hoy es:</span>',
       '<div class="summary-date-display">',
       '<span>' + utils.escapeHtml(summaryDayLabel()) + '</span>',
       '<strong>' + utils.escapeHtml(summaryDateLabel()) + '</strong>',
       '</div>',
       '</div>',
-      '<p class="summary-spent-line">Este mes gastaste: <strong>' + utils.escapeHtml(utils.formatMoney(summary.totalGastado || 0)) + ' Guaraníes</strong></p>',
+      '<p class="summary-spent-line">En lo que va de ' + utils.escapeHtml(currentMonthName) + ' gastaste: <strong>' + utils.escapeHtml(utils.formatMoney(variableSpent)) + '</strong></p>',
       '</article>',
-      '<article class="system-window summary-metrics-card">',
-      '<div class="top-spend-box">',
-      '<p class="top-spend-line">Gastaste mas en: <strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
-      top.mensaje ? '<p class="lcd-muted top-spend-detail">' + utils.escapeHtml(top.mensaje) + '</p>' : '',
-      renderRecent(recent),
-      '<button class="text-key js-view-full" type="button">Ver completo</button>',
+      '<article class="summary-kpi-card">',
+      '<div class="summary-kpi-badge">',
+      '<p class="top-spend-line">Gastaste más en: <strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
       '</div>',
       '</article>',
       '<article class="system-window availability-card">',
-      '<div class="window-title">DISPONIBLE</div>',
+      '<div class="window-title">PLATA DISPONIBLE</div>',
       '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
       '</article>',
@@ -131,6 +127,26 @@
     var months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
     var now = new Date();
     return String(now.getDate()).padStart(2, '0') + '/' + months[now.getMonth()] + '/' + now.getFullYear();
+  }
+
+  function summaryMonthName(summary, config) {
+    var months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+    var month = String((summary || {}).mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
+    var index = Number(month.slice(5, 7)) - 1;
+    if (index >= 0 && index < months.length) {
+      return months[index];
+    }
+    return months[new Date().getMonth()];
+  }
+
+  function summaryVariableSpent(movements, config, summary) {
+    var month = String((summary || {}).mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
+    return (movements || []).reduce(function (sum, item) {
+      if (!isExpenseMovement(item) || utils.isFixedExpenseMovement(item) || movementMonth(item) !== month) {
+        return sum;
+      }
+      return sum + utils.normalizeAmount(item.monto);
+    }, 0);
   }
 
   function ledgerLine(label, value) {
@@ -578,7 +594,7 @@
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
       tops.push('<path class="salary-pie-hatch ' + hatchClass + '" d="' + d + '"></path>');
       if ((item.amount / chartTotal) >= 0.055) {
-        labels.push(renderPieLabel(cx, cy + shiftY, rx, ry, start + sweep / 2, index + 1));
+        labels.push(renderPieLabel(cx, cy + shiftY, rx, ry, start + sweep / 2, item.percent));
       }
       start = end;
     });
@@ -686,11 +702,12 @@
     };
   }
 
-  function renderPieLabel(cx, cy, rx, ry, angle, number) {
+  function renderPieLabel(cx, cy, rx, ry, angle, percentValue) {
     var point = ellipsePoint(cx, cy, rx * 0.56, ry * 0.56, angle);
+    var label = formatPercentInput(percentValue) || '0';
     return [
-      '<circle class="salary-pie-label-bg" cx="' + svgNumber(point.x) + '" cy="' + svgNumber(point.y) + '" r="11"></circle>',
-      '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(number) + '</text>'
+      '<rect class="salary-pie-label-bg" x="' + svgNumber(point.x - 17) + '" y="' + svgNumber(point.y - 8) + '" width="34" height="16"></rect>',
+      '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(label) + '%</text>'
     ].join('');
   }
 
@@ -701,9 +718,9 @@
   function renderSalaryPartitionLegend(fixed, salary, available, excess) {
     var items = fixed.map(function (item, index) {
       var percent = salary ? Math.round((utils.fixedExpenseAmount(item) / salary) * 10000) / 100 : 0;
-      return '<li><i class="segment-' + (index % 6) + '">' + utils.escapeHtml(index + 1) + '</i><span>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
+      return '<li><i class="segment-' + (index % 6) + '"></i><span>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
     });
-    items.push('<li><i class="segment-available">' + utils.escapeHtml(items.length + 1) + '</i><span>Disponible</span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
+    items.push('<li><i class="segment-available"></i><span>Disponible</span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
     if (excess > 0) {
       items.push('<li><i class="segment-excess"></i><span>Exceso</span><b>' + utils.escapeHtml(formatPercentInput((excess / salary) * 100) || '0') + '%</b></li>');
     }

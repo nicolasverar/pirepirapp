@@ -526,3 +526,23 @@ rediseña POR completo la app e incorpora esos elementos nuevos de esta imagen y
 - Se rediseño globalmente la carcasa, pantalla LCD, tarjetas, encabezados, botones inferiores y fondos con tonos oliva, cuadricula y puntillado inspirados en la referencia.
 - Se conservaron el boton `AGREGAR` y la navegacion principal en la zona inferior.
 - Se subio la version frontend a `v2.35` y el cache PWA a `finanzas-lcd-v43`.
+
+### Prompt 39 - Usuario
+
+```text
+# ESPECIFICACIONES DEL REDISEÑO DE LA SECCION RESUMEN VERSION 3.0
+
+## 1. Tarjeta Principal: Fecha y Gasto Mensual
+...
+## 4. Cuarta Tarjeta: Partición de Sueldo (Gráfico de Torta)
+...
+```
+
+### Resumen operativo
+- La tarjeta principal del Resumen dejo de usar marco tradicional y paso a un bloque incrustado con bajo relieve analogico.
+- El texto de fecha ahora dice `Hoy es:` y el gasto mensual dice `En lo que va de [Mes] gastaste: [Monto]`.
+- El monto se calcula desde movimientos variables del mes, excluyendo gastos fijos, ahorros y metas.
+- Se elimino del Resumen la lista de ultimos gastos y se reemplazo por un badge KPI `Gastaste más en`.
+- La tarjeta de disponible ahora se titula `Plata disponible`.
+- La torta muestra porcentajes sobre las porciones y usa tramados/dithering monocromaticos en vez de diferenciacion por color plano.
+- Se subio la version frontend a `v2.36` y el cache PWA a `finanzas-lcd-v44`.

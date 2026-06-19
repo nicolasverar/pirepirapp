@@ -1,5 +1,29 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Resumen version 3.0
+
+### Objetivo
+- Rediseñar la seccion Resumen segun especificacion v3.0.
+- Reemplazar la tarjeta principal por una zona incrustada con bajo relieve.
+- Quitar la lista de ultimos gastos y dejar solo un KPI compacto de mayor gasto.
+- Hacer que la torta muestre porcentajes y use tramados monocromaticos.
+
+### Cambios
+- `frontend/scripts/render.js`: el Resumen ahora muestra `Hoy es:`, `En lo que va de [Mes] gastaste: [Monto]`, calcula el gasto variable mensual excluyendo fijos/ahorros/metas, reemplaza la lista reciente por un badge KPI y cambia la torta para etiquetar porcentajes.
+- `frontend/styles/main.css`: estilos nuevos para bloque incrustado, badge KPI retro/isometrico, disponible como `Plata disponible` y torta con patrones/dithering monocromatico.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.36` y cache a `finanzas-lcd-v44`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.36`.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la URL publica despues del push.
+
 ## 2026-06-19 - Rediseño LCD oliva y torta elevada
 
 ### Objetivo

@@ -237,8 +237,16 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Busqueda de referencias viejas `v2.26`, `v=2.26` y `finanzas-lcd-v34`: sin resultados en archivos de version/cache.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `33e4529` (`Automatizar gastos fijos y ajustar escena`) subido a `origin/main`.
+- `clasp push`: 13 archivos backend publicados.
+- `clasp version "Pirepirapp v2.27 gastos fijos automaticos"`: version `22`.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 22`: redeploy publico `@22`.
+- Ping backend publico: `{"ok":true}`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.27` sirve `v2.27`, `APP_VERSION: 'v2.27'`, `finanzas-lcd-v35`, `app.js?v=2.27` y `main.css?v=2.27`.
+
 ### Pendientes
-- Commitear, desplegar backend con `clasp`, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

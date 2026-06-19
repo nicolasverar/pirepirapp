@@ -19,8 +19,13 @@
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.37`.
 
+### Despliegue
+- Commit principal: `b6e7a72` (`Afinar estetica LCD oliva`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.37` sirve `v2.37`, `APP_VERSION: 'v2.37'`, cache `finanzas-lcd-v45`, CSS con scrollbars ocultos y tono oliva ajustado.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la URL publica despues del push.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-19 - Resumen version 3.0
 

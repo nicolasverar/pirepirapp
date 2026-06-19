@@ -5,6 +5,7 @@
   var state = {
     currentView: 'resumen',
     wishlistSort: 'asc',
+    movementFilter: 'all',
     syncStatus: 'Sin iniciar',
     loading: false,
     error: '',

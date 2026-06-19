@@ -65,16 +65,16 @@
     font-size: 0.68rem;
   }
 
-  .salary-box-map {
-    min-height: 166px;
+  .salary-pie-stage {
+    min-height: 178px;
   }
 
-  .partition-box span {
-    font-size: 0.54rem;
+  .salary-pie-svg {
+    width: min(100%, 228px);
   }
 
-  .partition-box b {
-    font-size: 0.62rem;
+  .movement-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .goal-top-band {

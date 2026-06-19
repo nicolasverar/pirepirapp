@@ -226,7 +226,7 @@
       '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
-      field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off"'),
+      field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off" data-movement-motive'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
       select('Seleccionar', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
@@ -241,12 +241,18 @@
     openModal(isIncome ? 'INGRESO' : 'GASTO', html, function (root) {
       var typeSelect = utils.qs('[data-movement-type]', root);
       var relatedSelect = utils.qs('[data-related-select]', root);
-      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, movement.idRelacionado || '');
+      var motiveInput = utils.qs('[data-movement-motive]', root);
+      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, movement.idRelacionado || '', movement.motivo || '');
       updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
+      updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
       typeSelect.addEventListener('change', function () {
         var currentCategory = typeSelect.value === 'Compra de wishlist' ? 'Wishlist' : defaultCategory;
-        updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, relatedSelect.value);
+        updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, relatedSelect.value, movement.motivo || '');
         updateRelatedVisibility(typeSelect, { value: currentCategory }, relatedSelect);
+        updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+      });
+      relatedSelect.addEventListener('change', function () {
+        updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
       });
 
       bindForm(root, '#movement-form', function (form) {
@@ -254,6 +260,7 @@
         payload.monto = utils.normalizeAmount(payload.monto);
         payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
         payload.categoria = categoryForMovementPayload(payload.tipo, defaultCategory, isIncome);
+        normalizeWishlistMovementPayload(payload, relatedSelect, movement);
         if (!payload.idRelacionado) {
           delete payload.idRelacionado;
         }
@@ -423,9 +430,18 @@
     return 'Seleccionar';
   }
 
-  function updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, selectedValue) {
+  function updateRelatedOptions(data, typeSelect, categorySelect, relatedSelect, selectedValue, fallbackLabel) {
     var mode = relatedMode(typeSelect.value, categorySelect.value);
-    relatedSelect.innerHTML = relatedSelectOptions(data, mode).map(function (option) {
+    var options = relatedSelectOptions(data, mode);
+    if (mode && selectedValue && !options.some(function (option) {
+      return String(option.value) === String(selectedValue);
+    })) {
+      options.push({
+        value: selectedValue,
+        label: fallbackLabel || 'Seleccion guardada'
+      });
+    }
+    relatedSelect.innerHTML = options.map(function (option) {
       var selected = String(option.value) === String(selectedValue || '') ? ' selected' : '';
       return '<option value="' + utils.escapeHtml(option.value) + '"' + selected + '>' + utils.escapeHtml(option.label) + '</option>';
     }).join('');
@@ -443,6 +459,42 @@
       fieldBox.hidden = !needsRelated;
     }
     relatedSelect.required = needsRelated;
+  }
+
+  function updateMotiveVisibility(typeSelect, relatedSelect, motiveInput) {
+    if (!motiveInput) {
+      return;
+    }
+    var isWishlistPurchase = typeSelect && typeSelect.value === 'Compra de wishlist';
+    var fieldBox = motiveInput.closest('.field');
+    if (fieldBox) {
+      fieldBox.hidden = isWishlistPurchase;
+    }
+    motiveInput.required = !isWishlistPurchase;
+    if (isWishlistPurchase) {
+      motiveInput.value = selectedRelatedLabel(relatedSelect) || motiveInput.value || 'Compra cosa que quiero';
+    }
+  }
+
+  function normalizeWishlistMovementPayload(payload, relatedSelect, movement) {
+    if (!payload || payload.tipo !== 'Compra de wishlist') {
+      return;
+    }
+    payload.motivo = selectedRelatedLabel(relatedSelect)
+      || payload.motivo
+      || (movement || {}).motivo
+      || 'Compra cosa que quiero';
+  }
+
+  function selectedRelatedLabel(relatedSelect) {
+    if (!relatedSelect || relatedSelect.selectedIndex < 0) {
+      return '';
+    }
+    var option = relatedSelect.options[relatedSelect.selectedIndex];
+    if (!option || !option.value) {
+      return '';
+    }
+    return String(option.textContent || option.innerText || '').trim();
   }
 
   function openFutureSavingForm(existing) {

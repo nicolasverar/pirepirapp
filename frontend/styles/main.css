@@ -425,115 +425,112 @@ code {
   box-shadow: 3px 3px 0 var(--lcd-alert);
 }
 
-.salary-partition-chart {
-  width: 100%;
-  height: 54px;
-  image-rendering: pixelated;
-  background: var(--lcd-bg-2);
-  border: 2px solid var(--lcd-line);
-}
-
-.salary-box-map {
+.salary-pie-stage {
   position: relative;
   width: 100%;
-  min-height: 184px;
+  min-height: 194px;
+  display: grid;
+  place-items: center;
+  padding: 8px 4px 2px;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(25, 45, 24, 0.13) 1px, transparent 1px) 0 0 / 20px 20px,
-    linear-gradient(0deg, rgba(25, 45, 24, 0.13) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, rgba(25, 45, 24, 0.12) 1px, transparent 1px) 0 0 / 18px 18px,
+    linear-gradient(0deg, rgba(25, 45, 24, 0.12) 1px, transparent 1px) 0 0 / 18px 18px,
     var(--lcd-bg-2);
   border: 3px solid var(--lcd-line);
   box-shadow: inset 2px 2px 0 var(--lcd-surface-hi), 3px 3px 0 var(--lcd-dark);
 }
 
-.salary-box-map::before {
-  content: "CAJA ENTERA";
-  position: absolute;
-  z-index: 3;
-  right: 5px;
-  top: 4px;
-  padding: 2px 4px;
-  color: var(--lcd-bg);
-  background: var(--lcd-ink);
-  border: 1px solid var(--lcd-line);
-  font-size: 0.56rem;
-  font-weight: 900;
+.salary-pie-svg {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 260px);
+  height: auto;
+  overflow: visible;
+  image-rendering: pixelated;
 }
 
-.partition-box {
-  position: absolute;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 2px;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  padding: 5px;
-  color: var(--lcd-ink);
-  border: 2px solid var(--lcd-line);
-  background:
-    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
-    var(--lcd-surface-hi);
-  box-shadow: inset -2px -2px 0 rgba(25, 45, 24, 0.16);
-  text-align: center;
+.salary-pie-shadow {
+  fill: rgba(25, 45, 24, 0.22);
 }
 
-.partition-box span,
-.partition-box b,
-.partition-box small {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.salary-pie-side {
+  opacity: 0.42;
+  stroke: var(--lcd-dark);
+  stroke-width: 1.6;
+  transform: translateY(15px);
 }
 
-.partition-box span {
-  text-transform: uppercase;
-  font-size: 0.62rem;
-  font-weight: 900;
-  line-height: 1.04;
-}
-
-.partition-box b {
-  font-size: 0.74rem;
-  line-height: 1;
-}
-
-.partition-box small {
-  color: var(--lcd-dark);
-  font-size: 0.56rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.partition-box.segment-0 small,
-.partition-box.segment-1 small,
-.partition-box.segment-3 small,
-.partition-box.segment-5 small {
-  color: var(--lcd-bg);
-}
-
-.partition-box.is-small {
-  padding: 3px;
-  gap: 1px;
-}
-
-.partition-box.is-small span {
-  font-size: 0.52rem;
-}
-
-.partition-box.is-small small {
-  display: none;
-}
-
-.partition-bg {
-  fill: rgba(25, 45, 24, 0.12);
-}
-
-.partition-segment {
+.salary-pie-slice {
   stroke: var(--lcd-line);
-  stroke-width: 0.35;
-  shape-rendering: crispEdges;
+  stroke-width: 1.8;
+  paint-order: stroke fill;
+  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.22));
+}
+
+.salary-pie-glass {
+  fill: none;
+  stroke: rgba(222, 239, 173, 0.48);
+  stroke-width: 2;
+}
+
+.salary-pie-label {
+  fill: var(--lcd-bg);
+  stroke: var(--lcd-ink);
+  stroke-width: 2.2;
+  paint-order: stroke;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.salary-pie-center-bg {
+  fill: var(--lcd-bg-2);
+  stroke: var(--lcd-line);
+  stroke-width: 2;
+  filter: drop-shadow(0 2px 0 rgba(25, 45, 24, 0.24));
+}
+
+.salary-pie-center-caption,
+.salary-pie-center-value {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.salary-pie-center-caption {
+  fill: var(--lcd-dark);
+  font-size: 8px;
+}
+
+.salary-pie-center-value {
+  fill: var(--lcd-ink);
+  font-size: 13px;
+}
+
+.salary-pie-center-alert {
+  fill: var(--lcd-alert);
+}
+
+.salary-pie-stage.is-over-budget .salary-pie-center-bg {
+  stroke: var(--lcd-alert);
+}
+
+.salary-pie-over {
+  position: absolute;
+  z-index: 2;
+  left: 8px;
+  bottom: 7px;
+  padding: 3px 5px;
+  color: var(--lcd-bg);
+  background: var(--lcd-alert);
+  border: 1px solid var(--lcd-line);
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .segment-0,
@@ -578,60 +575,8 @@ code {
   background: var(--lcd-bg);
 }
 
-.partition-box.segment-0 {
-  color: var(--lcd-bg);
-  background:
-    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.18) 0, rgba(174, 203, 124, 0.18) 2px, transparent 2px, transparent 7px),
-    var(--lcd-ink);
-}
-
-.partition-box.segment-1 {
-  color: var(--lcd-bg);
-  background:
-    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.18) 0, rgba(174, 203, 124, 0.18) 2px, transparent 2px, transparent 7px),
-    var(--lcd-dark);
-}
-
-.partition-box.segment-2 {
-  background:
-    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.2) 0, rgba(25, 45, 24, 0.2) 2px, transparent 2px, transparent 7px),
-    var(--lcd-mid);
-}
-
-.partition-box.segment-3 {
-  color: var(--lcd-bg);
-  background:
-    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.14) 0, rgba(174, 203, 124, 0.14) 2px, transparent 2px, transparent 7px),
-    var(--case-mid);
-}
-
-.partition-box.segment-4 {
-  background:
-    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
-    var(--case-hi);
-}
-
-.partition-box.segment-5 {
-  color: var(--lcd-bg);
-  background:
-    repeating-linear-gradient(135deg, rgba(174, 203, 124, 0.14) 0, rgba(174, 203, 124, 0.14) 2px, transparent 2px, transparent 7px),
-    #526b36;
-}
-
-.partition-box.segment-available {
-  background:
-    repeating-linear-gradient(135deg, rgba(25, 45, 24, 0.18) 0, rgba(25, 45, 24, 0.18) 2px, transparent 2px, transparent 7px),
-    var(--lcd-bg);
-}
-
 .partition-legend .segment-excess {
   background: var(--lcd-alert);
-}
-
-.partition-limit {
-  stroke: var(--lcd-alert);
-  stroke-width: 2;
-  shape-rendering: crispEdges;
 }
 
 .partition-summary {
@@ -1159,6 +1104,60 @@ code {
   margin-bottom: 8px;
 }
 
+.movement-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+  gap: 5px;
+  margin: 0 0 9px;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  min-width: 0;
+  min-height: 31px;
+  padding: 4px 6px;
+  color: var(--lcd-ink);
+  background:
+    linear-gradient(180deg, var(--lcd-bg-2), var(--lcd-surface-lo));
+  border: 1px solid var(--lcd-line);
+  box-shadow: 1px 1px 0 var(--lcd-dark);
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.filter-chip span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.filter-chip small {
+  flex: 0 0 auto;
+  min-width: 18px;
+  padding: 1px 3px;
+  color: var(--lcd-bg);
+  background: var(--lcd-dark);
+  text-align: center;
+  font-size: 0.56rem;
+  line-height: 1.2;
+}
+
+.filter-chip.is-active {
+  color: var(--lcd-bg);
+  background: var(--lcd-ink);
+  border-color: var(--lcd-dark);
+  box-shadow: inset 1px 1px 0 rgba(174, 203, 124, 0.18);
+}
+
+.filter-chip.is-active small {
+  color: var(--lcd-ink);
+  background: var(--lcd-bg);
+}
+
 .lcd-button,
 .text-key {
   min-height: 32px;
@@ -1436,7 +1435,7 @@ code {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("../assets/aves-flight-sprite.png?v=2.29") 0 0 / 1536px 56px no-repeat;
+  background: url("../assets/aves-flight-sprite.png?v=2.30") 0 0 / 1536px 56px no-repeat;
   image-rendering: pixelated;
   animation: mp4-bird-flap var(--flap-speed) steps(16) infinite;
 }

@@ -171,6 +171,8 @@
     var movements = movementItemsFromState_(state).slice();
     var config = state.data.config || {};
     var allMonths = !Array.isArray(source) && (source.allMonths || source.mes === null);
+    var activeFilter = state.movementFilter || 'all';
+    var filteredMovements = filterMovementsByType(movements, activeFilter);
     var subtitle = allMonths
       ? 'Mostrando todos los movimientos. Mes actual: ' + (config.mesActual || utils.currentMonth())
       : 'Mes actual: ' + (config.mesActual || utils.currentMonth());
@@ -180,12 +182,73 @@
       '<p class="lcd-muted">' + utils.escapeHtml(subtitle) + '</p>',
       '<div class="toolbar-line">',
       '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
-      '<button class="lcd-button js-new-expense" type="button">Gasto corriente</button>',
-      '<button class="lcd-button js-new-income" type="button">Ingreso</button>',
       '</div>',
-      movements.length ? renderMovementTable(movements, allMonths) : '<p class="empty-state">No hay movimientos cargados.</p>',
+      renderMovementFilters(movements, activeFilter),
+      filteredMovements.length ? renderMovementTable(filteredMovements, allMonths) : '<p class="empty-state">No hay movimientos para este filtro.</p>',
       '</section>'
     ].join('');
+  }
+
+  function renderMovementFilters(movements, activeFilter) {
+    var options = movementFilterOptions();
+    return [
+      '<div class="movement-filters" aria-label="Filtrar movimientos">',
+      options.map(function (option) {
+        var count = movementFilterCount(movements, option.value);
+        var activeClass = option.value === activeFilter ? ' is-active' : '';
+        return [
+          '<button class="filter-chip js-movement-filter' + activeClass + '" type="button" data-filter="' + utils.escapeHtml(option.value) + '">',
+          '<span>' + utils.escapeHtml(option.label) + '</span>',
+          '<small>' + utils.escapeHtml(count) + '</small>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function movementFilterOptions() {
+    return [
+      { value: 'all', label: 'Todo' },
+      { value: 'expense', label: 'Gastos' },
+      { value: 'income', label: 'Ingresos' },
+      { value: 'wishlist', label: 'Cosas' },
+      { value: 'saving', label: 'Ahorro/meta' },
+      { value: 'fixed', label: 'Fijos' }
+    ];
+  }
+
+  function movementFilterCount(movements, filter) {
+    return filterMovementsByType(movements || [], filter).length;
+  }
+
+  function filterMovementsByType(movements, filter) {
+    return (movements || []).filter(function (item) {
+      return matchesMovementFilter(item, filter);
+    });
+  }
+
+  function matchesMovementFilter(item, filter) {
+    var type = String((item || {}).tipo || '');
+    if (!filter || filter === 'all') {
+      return true;
+    }
+    if (filter === 'expense') {
+      return type === 'Gasto' && !utils.isFixedExpenseMovement(item);
+    }
+    if (filter === 'income') {
+      return type === 'Ingreso';
+    }
+    if (filter === 'wishlist') {
+      return type === 'Compra de wishlist';
+    }
+    if (filter === 'saving') {
+      return type === 'Aporte a ahorro' || type === 'Aporte a meta';
+    }
+    if (filter === 'fixed') {
+      return utils.isFixedExpenseMovement(item);
+    }
+    return true;
   }
 
   function movementItemsFromState_(state) {
@@ -483,7 +546,7 @@
     return [
       '<article class="system-window salary-partition-card' + (excess > 0 ? ' is-over-budget' : '') + '">',
       '<div class="window-title">PARTICION SUELDO</div>',
-      salary ? renderSalaryPartitionBoxes(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
+      salary ? renderSalaryPartitionPie(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       '<div class="partition-summary">',
       '<span>Fijos: <b>' + utils.escapeHtml(utils.formatMoney(total)) + '</b></span>',
       '<span>' + utils.escapeHtml(formatPercentInput(totalPercent) || '0') + '% del sueldo</span>',
@@ -494,9 +557,55 @@
     ].join('');
   }
 
-  function renderSalaryPartitionBoxes(fixed, salary, total, available, excess) {
-    var base = Math.max(salary, total, 1);
-    var boxes = fixed.map(function (item, index) {
+  function renderSalaryPartitionPie(fixed, salary, total, available, excess) {
+    var segments = salaryPartitionSegments(fixed, salary, available);
+    var chartTotal = Math.max(segments.reduce(function (sum, item) {
+      return sum + item.amount;
+    }, 0), 1);
+    var cx = 120;
+    var cy = 70;
+    var rx = 88;
+    var ry = 48;
+    var start = -Math.PI / 2;
+    var sides = [];
+    var tops = [];
+    var labels = [];
+
+    segments.forEach(function (item) {
+      var sweep = (item.amount / chartTotal) * Math.PI * 2;
+      var end = start + sweep;
+      var full = sweep >= Math.PI * 2 - 0.0001;
+      var d = partitionPiePath(cx, cy, rx, ry, start, end, full);
+      var className = utils.escapeHtml(item.className);
+      sides.push('<path class="salary-pie-side ' + className + '" d="' + d + '"></path>');
+      tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
+      if ((item.amount / chartTotal) >= 0.08) {
+        labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, item.percent));
+      }
+      start = end;
+    });
+
+    return [
+      '<div class="salary-pie-stage' + (excess > 0 ? ' is-over-budget' : '') + '" role="img" aria-label="Particion del sueldo en diagrama de torta">',
+      '<svg class="salary-pie-svg" viewBox="0 0 240 158" focusable="false" aria-hidden="true">',
+      '<ellipse class="salary-pie-shadow" cx="120" cy="98" rx="94" ry="42"></ellipse>',
+      sides.join(''),
+      tops.join(''),
+      '<ellipse class="salary-pie-glass" cx="120" cy="70" rx="88" ry="48"></ellipse>',
+      labels.join(''),
+      '<g class="salary-pie-center">',
+      '<ellipse class="salary-pie-center-bg" cx="120" cy="70" rx="38" ry="22"></ellipse>',
+      '<text class="salary-pie-center-caption" x="120" y="66">DISP.</text>',
+      '<text class="salary-pie-center-value' + (excess > 0 ? ' salary-pie-center-alert' : '') + '" x="120" y="80">' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</text>',
+      '</g>',
+      '</svg>',
+      excess > 0 ? '<span class="salary-pie-over">EXCESO ' + utils.escapeHtml(utils.formatMoney(excess)) + '</span>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function salaryPartitionSegments(fixed, salary, available) {
+    var segments = fixed.map(function (item, index) {
       var amount = utils.fixedExpenseAmount(item);
       return {
         label: utils.fixedExpenseName(item) || 'Gasto fijo',
@@ -508,101 +617,58 @@
       return item.amount > 0;
     });
     if (available > 0) {
-      boxes.push({
+      segments.push({
         label: 'Disponible',
         amount: available,
         percent: salary ? Math.round((available / salary) * 10000) / 100 : 0,
         className: 'segment-available'
       });
     }
-    boxes.sort(function (left, right) {
-      return right.amount - left.amount;
-    });
-    var layout = partitionTreemapLayout(boxes, base);
-    return [
-      '<div class="salary-box-map" role="img" aria-label="Particion del sueldo">',
-      layout.map(renderPartitionBox).join(''),
-      '</div>'
-    ].join('');
-  }
-
-  function renderPartitionBox(box) {
-    var area = box.w * box.h;
-    var tinyClass = area < 450 || box.w < 18 || box.h < 18 ? ' is-small' : '';
-    return [
-      '<div class="partition-box ' + utils.escapeHtml(box.className) + tinyClass + '" style="left:' + box.x.toFixed(2) + '%;top:' + box.y.toFixed(2) + '%;width:' + box.w.toFixed(2) + '%;height:' + box.h.toFixed(2) + '%">',
-      '<span>' + utils.escapeHtml(box.label) + '</span>',
-      '<b>' + utils.escapeHtml(formatPercentInput(box.percent) || '0') + '%</b>',
-      area >= 900 ? '<small>' + utils.escapeHtml(utils.formatMoney(box.amount)) + '</small>' : '',
-      '</div>'
-    ].join('');
-  }
-
-  function partitionTreemapLayout(items, base) {
-    var source = items.map(function (item) {
-      return {
-        label: item.label,
-        amount: item.amount,
-        percent: item.percent,
-        className: item.className
-      };
-    });
-    var result = [];
-    splitPartitionRect(source, base, 0, 0, 100, 100, true, result);
-    return result;
-  }
-
-  function splitPartitionRect(items, total, x, y, w, h, vertical, result) {
-    if (!items.length || total <= 0 || w <= 0 || h <= 0) {
-      return;
-    }
-    if (items.length === 1) {
-      result.push({
-        label: items[0].label,
-        amount: items[0].amount,
-        percent: items[0].percent,
-        className: items[0].className,
-        x: x,
-        y: y,
-        w: w,
-        h: h
+    if (!segments.length) {
+      segments.push({
+        label: 'Disponible',
+        amount: salary || 1,
+        percent: 100,
+        className: 'segment-available'
       });
-      return;
     }
+    return segments;
+  }
 
-    var half = total / 2;
-    var group = [];
-    var groupTotal = 0;
-    var index;
-    for (index = 0; index < items.length; index += 1) {
-      if (group.length && groupTotal + items[index].amount > half) {
-        break;
-      }
-      group.push(items[index]);
-      groupTotal += items[index].amount;
+  function partitionPiePath(cx, cy, rx, ry, start, end, full) {
+    if (full) {
+      return [
+        'M', svgNumber(cx - rx), svgNumber(cy),
+        'A', svgNumber(rx), svgNumber(ry), '0 1 0', svgNumber(cx + rx), svgNumber(cy),
+        'A', svgNumber(rx), svgNumber(ry), '0 1 0', svgNumber(cx - rx), svgNumber(cy),
+        'Z'
+      ].join(' ');
     }
-    if (!group.length) {
-      group.push(items[0]);
-      groupTotal = items[0].amount;
-      index = 1;
-    }
+    var first = ellipsePoint(cx, cy, rx, ry, start);
+    var last = ellipsePoint(cx, cy, rx, ry, end);
+    var largeArc = end - start > Math.PI ? 1 : 0;
+    return [
+      'M', svgNumber(cx), svgNumber(cy),
+      'L', svgNumber(first.x), svgNumber(first.y),
+      'A', svgNumber(rx), svgNumber(ry), '0', largeArc, '1', svgNumber(last.x), svgNumber(last.y),
+      'Z'
+    ].join(' ');
+  }
 
-    var rest = items.slice(index);
-    var restTotal = Math.max(0, total - groupTotal);
-    if (!rest.length || restTotal <= 0) {
-      splitPartitionRect(group, groupTotal, x, y, w, h, !vertical, result);
-      return;
-    }
+  function ellipsePoint(cx, cy, rx, ry, angle) {
+    return {
+      x: cx + Math.cos(angle) * rx,
+      y: cy + Math.sin(angle) * ry
+    };
+  }
 
-    if (vertical) {
-      var groupW = w * (groupTotal / total);
-      splitPartitionRect(group, groupTotal, x, y, groupW, h, false, result);
-      splitPartitionRect(rest, restTotal, x + groupW, y, w - groupW, h, false, result);
-    } else {
-      var groupH = h * (groupTotal / total);
-      splitPartitionRect(group, groupTotal, x, y, w, groupH, true, result);
-      splitPartitionRect(rest, restTotal, x, y + groupH, w, h - groupH, true, result);
-    }
+  function renderPieLabel(cx, cy, rx, ry, angle, percent) {
+    var point = ellipsePoint(cx, cy, rx * 0.62, ry * 0.62, angle);
+    return '<text class="salary-pie-label" x="' + svgNumber(point.x) + '" y="' + svgNumber(point.y) + '">' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</text>';
+  }
+
+  function svgNumber(value) {
+    return String(Math.round(Number(value || 0) * 100) / 100);
   }
 
   function renderSalaryPartitionLegend(fixed, salary, available, excess) {
@@ -671,19 +737,11 @@
       refresh.addEventListener('click', window.FinanzasApp.refresh);
     }
 
-    var newExpense = utils.qs('.js-new-expense', root);
-    if (newExpense) {
-      newExpense.addEventListener('click', function () {
-        window.FinanzasForms.openMovementForm('Gasto');
+    utils.qsa('.js-movement-filter', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.FinanzasState.setState({ movementFilter: button.getAttribute('data-filter') || 'all' });
       });
-    }
-
-    var newIncome = utils.qs('.js-new-income', root);
-    if (newIncome) {
-      newIncome.addEventListener('click', function () {
-        window.FinanzasForms.openMovementForm('Ingreso');
-      });
-    }
+    });
 
     utils.qsa('.js-edit-movement', root).forEach(function (button) {
       button.addEventListener('click', function () {

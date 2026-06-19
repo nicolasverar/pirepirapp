@@ -302,6 +302,32 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
+## 2026-06-19 - Resumen con torta y filtros de gastos
+
+### Objetivo
+- Evitar que `Compra cosa que quiero` pida `Motivo` cuando el item seleccionado ya define ese texto.
+- Reemplazar la particion de sueldo en cajas por un diagrama de torta con efecto LCD/3D.
+- Agregar filtros en `Gastos totales` y quitar botones redundantes de alta junto a `Actualizar`.
+
+### Cambios
+- `frontend/scripts/forms.js`: el campo `Motivo` se oculta para `Compra cosa que quiero`; el payload usa automaticamente el titulo de la cosa seleccionada.
+- `frontend/scripts/render.js`: `Gastos totales` agrega filtros `Todo`, `Gastos`, `Ingresos`, `Cosas`, `Ahorro/meta` y `Fijos`; arriba queda solo `Actualizar`.
+- `frontend/scripts/render.js`: `Particion sueldo` renderiza una torta SVG con base sombreada, etiquetas porcentuales y aviso de exceso si los fijos superan el sueldo.
+- `frontend/scripts/state.js`: se agrego `movementFilter` local.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: estilos para filtros y torta LCD responsive.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.30` y cache a `finanzas-lcd-v38`.
+- `README.md` y `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: documentacion actualizada.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Busqueda en `frontend` de `js-new-expense`, `js-new-income`, `salary-box-map`, `partition-box`, `v=2.29` y `finanzas-lcd-v37`: sin resultados.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.30`, `APP_VERSION: 'v2.30'`, `finanzas-lcd-v38`, `forms.js?v=2.30`, `render.js?v=2.30` y `main.css?v=2.30`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Commitear, publicar GitHub Pages y verificar URL publica.
+
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 
 ### Objetivo

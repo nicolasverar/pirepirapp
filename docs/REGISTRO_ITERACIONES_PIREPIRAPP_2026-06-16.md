@@ -386,3 +386,19 @@ anadi mas frames al aleteo porque se ve raro y hace algunows mas pequeos para qu
 - Se amplio `frontend/assets/aves-flight-sprite.png` de 6 a 16 frames reales del MP4.
 - El aleteo pasa a `steps(16)` con sprite de `1536x56`.
 - Se separaron las aves en carriles verticales y escalas distintas para dar profundidad y evitar superposicion visual.
+
+### Prompt 27 - Usuario
+
+```text
+seccion resumen
+cuando seleccionno cosa que quiero en realidad no deberia salir motivo en el formulario decarga de gasto ya que es redundante
+las particiones no se ven como las cajas que quiero mejor ponela en diagrama de torta en 3d efecto lcd
+
+seccion gastos totales
+pone filtros para filtrar gastos por tipo o ingresos etc y saca esos botones reduntantes para cargar gastos corriente o ingreso que esta ahi arriba al lado de actualizar si es que en agregar mas abajo ya se ve
+```
+
+### Resumen operativo
+- En el formulario de movimiento, `Compra cosa que quiero` oculta `Motivo` y lo autocompleta con el item seleccionado.
+- `Particion sueldo` deja el mapa de cajas y pasa a un diagrama de torta SVG con base sombreada tipo 3D LCD.
+- `Gastos totales` mantiene solo `Actualizar` arriba, agrega filtros por tipo y deja las altas en el boton global `AGREGAR`.

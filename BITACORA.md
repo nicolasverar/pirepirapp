@@ -357,9 +357,16 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.31`, `APP_VERSION: 'v2.31'`, `finanzas-lcd-v39`, `app.js?v=2.31`, `render.js?v=2.31` y `torta.pmg.png?v=2.31`.
 - Asset local `http://127.0.0.1:4173/assets/torta.pmg.png?v=2.31`: `200 OK`, `image/png`, `81701` bytes.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Commit principal `17e7874` (`Ajustar particion de sueldo y limpiar animaciones`) enviado a `origin/main`.
+- `clasp push`: subio 13 archivos del backend.
+- `clasp version "Pirepirapp v2.31 particion sueldo"`: creo version `23`.
+- `clasp redeploy AKfycbyEhc9Jx-2sJn4ziT_k95IJmP6_hsAEPnrdBFNczOpF4oT8R5sXBxq0dcoBXRK3OfEu --versionNumber 23 --description "Pirepirapp v2.31 particion sueldo"`: Web App redeployado `@23`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.31` sirve `v2.31`, `APP_VERSION: 'v2.31'`, `finanzas-lcd-v39`, `app.js?v=2.31`, `render.js?v=2.31` y cachea `torta.pmg.png?v=2.31`.
+- Asset publico `https://nicolasverar.github.io/pirepirapp/assets/torta.pmg.png?v=2.31`: `200 OK`, `image/png`, `81701` bytes.
+- Ping backend publico: `{"ok":true}`.
 
 ### Pendientes
-- Validar frontend/backend, desplegar Apps Script, publicar GitHub Pages y verificar URL publica.
+- Verificar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-17 - Gastos visibles, wishlist compacta y pixel art definido
 

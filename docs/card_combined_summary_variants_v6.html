@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variantes V6 - Tarjeta resumen legible</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --hi: #c3d08a;
+      --mid: #9eb16a;
+      --low: #73894f;
+      font-family: "Courier New", Consolas, monospace;
+      color: var(--ink);
+      background: #070a06;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      background:
+        linear-gradient(135deg, rgba(190, 203, 134, 0.07), transparent 34%),
+        linear-gradient(180deg, #171d14, #070a06);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      color: #c5d08b;
+      font-size: 19px;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      max-width: 980px;
+      margin: 0 0 18px;
+      color: #98a568;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+      gap: 18px;
+    }
+
+    .option { display: grid; gap: 10px; }
+
+    .option-title {
+      color: #c5d08b;
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .option-title small {
+      display: block;
+      margin-top: 4px;
+      color: #8f9c61;
+      font-size: 11px;
+      line-height: 1.25;
+      text-transform: none;
+    }
+
+    .device {
+      padding: 13px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 74%, rgba(0, 0, 0, 0.52)),
+        linear-gradient(180deg, #30362c, #141a12 48%, #070a06);
+      border: 4px solid #050705;
+      border-radius: 18px;
+      box-shadow:
+        inset 5px 5px 0 rgba(139, 149, 110, 0.18),
+        inset -7px -8px 0 rgba(0, 0, 0, 0.45),
+        0 16px 28px rgba(0, 0, 0, 0.42);
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      padding: 13px;
+      background:
+        linear-gradient(90deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        linear-gradient(0deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        radial-gradient(circle at 50% 18%, rgba(193, 207, 126, 0.46), transparent 42%),
+        linear-gradient(180deg, #8a9a5c, #697d45 62%, #455d31);
+      border: 3px solid #0a1008;
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 2px rgba(12, 18, 10, 0.55),
+        inset 7px 8px 14px rgba(0, 0, 0, 0.32),
+        inset -6px -7px 12px rgba(197, 207, 137, 0.18);
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.21)),
+        repeating-linear-gradient(0deg, rgba(5, 11, 5, 0.07) 0 1px, transparent 1px 3px);
+      mix-blend-mode: multiply;
+      opacity: 0.72;
+    }
+
+    .sample-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 16px;
+    }
+
+    .date-mini {
+      display: grid;
+      gap: 8px;
+      padding: 6px 4px 0;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .date-mini b { font-size: 17px; }
+
+    .date-mini strong {
+      font-size: 30px;
+      line-height: 0.95;
+      text-shadow: 1px 0 0 var(--ink), 0 1px 0 var(--ink);
+    }
+
+    .summary-card {
+      position: relative;
+      display: grid;
+      gap: 11px;
+      min-height: 188px;
+      margin: 0 7px 8px 0;
+      padding: 12px;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      text-transform: uppercase;
+      font-weight: 900;
+      box-shadow:
+        inset 2px 2px 0 rgba(202, 213, 143, 0.42),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.3);
+      image-rendering: pixelated;
+    }
+
+    .summary-card::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 2px;
+      right: -7px;
+      top: 5px;
+      bottom: -6px;
+      border-radius: 7px;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.48) 0 0.75px, transparent 1px) 0 0 / 3px 3px;
+      pointer-events: none;
+    }
+
+    .summary-card::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      z-index: 1;
+      border: 1px solid rgba(7, 16, 7, 0.5);
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .summary-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .spent-block {
+      display: grid;
+      gap: 9px;
+    }
+
+    .label,
+    .meta {
+      line-height: 1.2;
+    }
+
+    .label {
+      font-size: 12px;
+    }
+
+    .meta {
+      font-size: 11px;
+      opacity: 0.95;
+    }
+
+    .divider {
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 6px);
+      opacity: 0.78;
+    }
+
+    .amount {
+      display: block;
+      padding: 8px;
+      overflow-wrap: anywhere;
+      border: 2px solid rgba(7, 16, 7, 0.72);
+      border-radius: 4px;
+      font-size: 24px;
+      line-height: 1;
+      text-align: right;
+      text-shadow: 1px 0 0 var(--ink), 0 1px 0 var(--ink);
+    }
+
+    .top-block {
+      display: grid;
+      gap: 7px;
+      padding: 9px;
+      border: 2px solid rgba(7, 16, 7, 0.76);
+      border-radius: 4px;
+    }
+
+    .top-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.15;
+    }
+
+    .top-line strong {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      text-align: right;
+      font-size: 16px;
+    }
+
+    .sample-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 7px;
+      align-items: center;
+      font-size: 11px;
+      line-height: 1.12;
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 22px;
+      color: #c5d08b;
+      background: var(--ink);
+      border-radius: 3px;
+    }
+
+    .sample-item b {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sample-item em {
+      font-style: normal;
+      text-align: right;
+    }
+
+    .gg .summary-card {
+      background:
+        linear-gradient(180deg, rgba(202, 213, 143, 0.22), transparent 30%),
+        linear-gradient(180deg, rgba(171, 188, 118, 0.82), rgba(113, 139, 82, 0.82));
+    }
+
+    .gg .amount,
+    .gg .top-block {
+      background: rgba(199, 211, 141, 0.24);
+    }
+
+    .hh .summary-card {
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.055) 1px, transparent 1px) 0 0 / 10px 10px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.045) 1px, transparent 1px) 0 0 / 10px 10px,
+        linear-gradient(180deg, rgba(190, 203, 134, 0.76), rgba(119, 145, 86, 0.8));
+    }
+
+    .hh .amount,
+    .hh .top-block {
+      background: rgba(199, 211, 141, 0.2);
+    }
+
+    .ii .summary-card {
+      background:
+        repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.055) 0 1px, transparent 1px 6px),
+        linear-gradient(180deg, rgba(191, 204, 136, 0.78), rgba(116, 142, 82, 0.82));
+    }
+
+    .ii .amount,
+    .ii .top-block {
+      background: rgba(199, 211, 141, 0.22);
+    }
+
+    .jj .summary-card {
+      background:
+        linear-gradient(90deg, rgba(202, 213, 143, 0.14), transparent 48%),
+        linear-gradient(180deg, rgba(177, 193, 124, 0.8), rgba(105, 132, 80, 0.84));
+    }
+
+    .jj .amount,
+    .jj .top-block {
+      background:
+        linear-gradient(180deg, rgba(205, 216, 148, 0.26), rgba(151, 170, 105, 0.2));
+    }
+
+    .kk .summary-card {
+      background:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.08) 0 0.65px, transparent 0.95px) 0 0 / 5px 5px,
+        linear-gradient(180deg, rgba(194, 207, 137, 0.76), rgba(117, 144, 84, 0.82));
+    }
+
+    .kk .amount,
+    .kk .top-block {
+      background: rgba(204, 215, 148, 0.22);
+    }
+
+    .ll .summary-card {
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.075) 1px, transparent 1px) 0 0 / 14px 14px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.06) 1px, transparent 1px) 0 0 / 14px 14px,
+        radial-gradient(circle at 15% 10%, rgba(205, 216, 148, 0.24), transparent 30%),
+        linear-gradient(180deg, rgba(181, 198, 128, 0.78), rgba(108, 136, 82, 0.84));
+    }
+
+    .ll .amount,
+    .ll .top-block {
+      background:
+        linear-gradient(90deg, rgba(205, 216, 148, 0.15), transparent 70%),
+        rgba(199, 211, 141, 0.18);
+    }
+
+    .note {
+      margin: 0;
+      color: #a8b573;
+      font-size: 12px;
+      line-height: 1.32;
+    }
+  </style>
+</head>
+<body>
+  <h1>V6 - Tarjeta resumen mas legible</h1>
+  <p class="intro">La tarjeta sigue fusionando gasto mensual y "Gastaste mas en". Todas las opciones tienen sombra derecha mas ancha: se agrego una columna extra de puntitos hacia la derecha.</p>
+
+  <main class="grid">
+    <section class="option gg">
+      <div class="option-title">GG - Fondo limpio alto contraste<small>Casi sin textura para priorizar lectura.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">La opcion mas legible; el estilo queda en borde y sombra.</p>
+    </section>
+
+    <section class="option hh">
+      <div class="option-title">HH - Cuadricula muy suave<small>Patron LCD amplio y poco contrastado.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">Mantiene estructura LCD sin pelearse con el texto.</p>
+    </section>
+
+    <section class="option ii">
+      <div class="option-title">II - Scanline clara<small>Textura horizontal sutil, buena para lectura rapida.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">Más display que decoracion.</p>
+    </section>
+
+    <section class="option jj">
+      <div class="option-title">JJ - Brillo suave sin ruido<small>Similar al DD, pero mas claro y menos cargado.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">Candidato natural si te gustaba DD pero no su fondo.</p>
+    </section>
+
+    <section class="option kk">
+      <div class="option-title">KK - Micro puntos bajados<small>Puntillismo casi imperceptible para no ensuciar.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">Conserva textura pixel art, pero muy moderada.</p>
+    </section>
+
+    <section class="option ll">
+      <div class="option-title">LL - Cuadricula grande + brillo<small>Mas identidad LCD sin saturar el fondo.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <article class="summary-card">
+          <div class="spent-block"><span class="label">En lo que va de Junio gastaste</span><div class="divider"></div><strong class="amount">Gs. 450.000</strong><span class="meta">Solo gastos variables del mes</span></div>
+          <div class="top-block"><p class="top-line"><span>Gastaste mas en</span><strong>Uber</strong></p><div class="sample-item"><span class="rank">01</span><b>Uber centro</b><em>Gs. 120.000</em></div></div>
+        </article>
+      </div></div></div>
+      <p class="note">Mas visual que GG/JJ, pero con contraste controlado.</p>
+    </section>
+  </main>
+</body>
+</html>

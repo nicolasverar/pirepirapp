@@ -827,3 +827,14 @@ no me gusta cambiaste todo yo solo queria que cambies esa tarejta en especifico 
 - Se fusiono la tarjeta de gasto mensual con `Gastaste mas en` dentro de una unica tarjeta `summary-combined-card`.
 - La estetica DD queda aplicada solo a esa tarjeta fusionada del Resumen.
 - Se subio la version frontend a `v2.47` y el cache PWA a `finanzas-lcd-v55`.
+
+### Prompt 63 - Usuario
+
+```text
+volvamos a trabajar en esa tarjeta de en lo que va del mes porque se ve ilegible conese fondo nuevo presentame variantes de esa tarejta y añádi una columna mas de puntitos a la sombra de la derecha
+```
+
+### Resumen operativo
+- Se creo `docs/card_combined_summary_variants_v6.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina mantiene la tarjeta fusionada de gasto mensual y `Gastaste mas en`, pero propone fondos GG-LL mas legibles.
+- Todas las variantes agregan una columna extra de puntitos hacia la derecha en la sombra.

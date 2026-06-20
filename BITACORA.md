@@ -14,6 +14,7 @@
 - `docs/card_background_shadow_variants_v3.html`: tercera lamina local con variantes I-L, combinando borde de E, fondo de H, puntillismo reducido y sombras menos desplazadas.
 - `docs/card_inner_layout_variants_v4.html`: cuarta lamina local con la base fondo J + sombra I y seis organizaciones internas M-R.
 - `docs/card_combined_summary_variants_v5.html`: quinta lamina local con tarjeta fusionada de gasto mensual y `Gastaste mas en`, comparando fondos AA-FF.
+- `docs/card_combined_summary_variants_v6.html`: sexta lamina local con fondos GG-LL mas legibles para la tarjeta fusionada y sombra derecha con una columna extra de puntitos.
 - `frontend/scripts/render.js`: se fusiono el bloque `En lo que va de ... gastaste` con `Gastaste mas en` en una unica tarjeta `summary-combined-card`.
 - `frontend/styles/main.css`: se retiro el skin DD global y se dejo DD acotado solo a `summary-combined-card`.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.47` y cache a `finanzas-lcd-v55`.
@@ -25,6 +26,7 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
+- Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v6.html`.
 - `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.

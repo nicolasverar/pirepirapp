@@ -1032,3 +1032,14 @@ antes de nada implementa la seccion plaat disponible que ya elegimos y luego sig
 - Se verifico que `Plata disponible` ya esta implementada en la app como `availability-card-b`.
 - Se confirmo en GitHub Pages que `v2.58`, `APP_VERSION: 'v2.58'`, cache `finanzas-lcd-v66`, `availability-card-b`, CSS asociado y `renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large')` estan publicados.
 - No se modifico la app productiva en este paso; queda pendiente seguir iterando `Particion sueldo`.
+
+### Prompt 81 - Usuario
+
+```text
+hace un rato habiamosdefnido cual iba a er eestilo para esa seccion en el momento que te pedi que hagas para esa y para la particion summary_available_partition_variants.html no veo la que elegi de esa que era la ocion B pero sin el ok en la esquina suerior derecha y con el porcentaje incorporado en el progreess bar
+```
+
+### Resumen operativo
+- Se corrigio la lamina `docs/summary_available_partition_variants.html`.
+- La opcion B ahora aparece como la elegida: sin `OK` en la esquina superior derecha y con el porcentaje asociado al progress bar.
+- No se modifico la app productiva porque `Plata disponible` ya estaba publicada con ese criterio en `v2.58`.

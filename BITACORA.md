@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-20 - Pixel font real P6 en Resumen
+
+### Objetivo
+- Implementar la variante P6 elegida para el bloque `Hoy es` / fecha del Resumen.
+- Mantener la fecha dentro del marco con ajuste responsive.
+
+### Cambios
+- `frontend/scripts/render.js`: el bloque de bienvenida ahora usa canvas con glifos bitmap 5x7, pixeles activos y ghost de segmentos apagados.
+- `frontend/styles/main.css`: se agregaron tamanos para `summary-pixel-label` y `summary-pixel-date`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.42` y cache a `finanzas-lcd-v50`.
+- `docs/summary_welcome_pixel_font_options.html` y `docs/summary_welcome_true_pixel_font_options.html`: previews locales usados para la decision visual.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompts y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.41`, `finanzas-lcd-v49` y `APP_VERSION: 'v2.41'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.42`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
+
 ## 2026-06-20 - Preview de fondos LCD
 
 ### Objetivo
@@ -27,10 +54,35 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.41`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `6e8e373` (`Implementar fondo LCD D 2px`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.41` sirve `v2.41`, `APP_VERSION: 'v2.41'`, cache `finanzas-lcd-v49` y CSS con `--lcd-pixel-size: 2px`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
+
+## 2026-06-20 - Preview de pixel font bienvenida
+
+### Objetivo
+- Mostrar variantes visuales del bloque `Hoy es` / fecha de Resumen antes de modificar la app.
+- Rehacer las opciones como pixel font real, porque las primeras variantes no evocaban una fuente pixel.
+
+### Cambios
+- `docs/summary_welcome_pixel_font_options.html`: lamina local con seis variantes de pixel font para el mensaje de bienvenida de Resumen.
+- `docs/summary_welcome_true_pixel_font_options.html`: lamina local con seis variantes P1-P6 renderizadas como matriz de pixeles en canvas, sin fuentes del sistema.
+- `docs/summary_welcome_true_pixel_font_options.html`: se redujo la escala base y se agrego ajuste automatico por ancho/alto para que la fecha no salga del marco.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- Se abrio el preview local con `Start-Process .\docs\summary_welcome_pixel_font_options.html`.
+- Se abrio el preview local con `Start-Process .\docs\summary_welcome_true_pixel_font_options.html`.
+- Se reabrio el preview local corregido con `Start-Process .\docs\summary_welcome_true_pixel_font_options.html`.
+
+### Despliegue
+- No aplica; no se modifico el frontend productivo ni se desplego.
+
+### Pendientes
+- Esperar eleccion del usuario (`P1` a `P6`) para implementar la variante elegida.
 
 ## 2026-06-19 - Grilla LCD y leyenda de particion
 

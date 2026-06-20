@@ -3248,7 +3248,7 @@ body::-webkit-scrollbar,
   background: #c0ca83;
 }
 
-/* Fondo LCD elegido v2.41: opcion D con matriz fina de 2px. */
+/* Fondo LCD elegido: opcion D con matriz fina de 2px. */
 .lcd-screen {
   --lcd-pixel-size: 2px;
   --lcd-grid-alpha: 0.026;
@@ -3306,4 +3306,30 @@ body::-webkit-scrollbar,
     linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
     linear-gradient(180deg, rgba(139, 160, 88, 0.54), rgba(92, 122, 62, 0.5)),
     rgba(126, 148, 82, 0.5);
+}
+
+/* Bienvenida resumen v2.42: pixel font real P6 en canvas. */
+.summary-embedded .summary-date-block {
+  gap: 12px;
+  padding: 2px 3px 0;
+}
+
+.summary-embedded .summary-date-display {
+  display: block;
+  min-height: 48px;
+  white-space: normal;
+}
+
+.summary-pixel-text {
+  display: block;
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+.summary-pixel-label {
+  height: 30px;
+}
+
+.summary-pixel-date {
+  height: 48px;
 }

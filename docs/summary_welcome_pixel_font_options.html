@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opciones pixel font - Bienvenida resumen</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --lcd-a: #7c904f;
+      --lcd-b: #516a38;
+      --lcd-c: #344d29;
+      --lcd-hi: #c1cf7e;
+      --pixel: 2px;
+      font-family: "Courier New", Consolas, monospace;
+      color: var(--ink);
+      background: #070a06;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      background:
+        linear-gradient(135deg, rgba(151, 162, 96, 0.08), transparent 28%),
+        linear-gradient(180deg, #151a13, #070a06);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      color: #b7c47a;
+      font-size: 20px;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      margin: 0 0 18px;
+      color: #8d9a62;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .option {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-title {
+      color: #c0ca83;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .option-title small {
+      display: block;
+      margin-top: 3px;
+      color: #8c9860;
+      font-size: 11px;
+      line-height: 1.25;
+      text-transform: none;
+    }
+
+    .device {
+      padding: 14px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 74%, rgba(0, 0, 0, 0.5)),
+        linear-gradient(180deg, #30362c, #141a12 48%, #070a06);
+      border: 4px solid #050705;
+      border-radius: 18px;
+      box-shadow:
+        inset 5px 5px 0 rgba(139, 149, 110, 0.18),
+        inset -7px -8px 0 rgba(0, 0, 0, 0.45),
+        0 16px 28px rgba(0, 0, 0, 0.42);
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 330px;
+      padding: 12px;
+      background:
+        linear-gradient(90deg, rgba(5, 11, 5, 0.026) 1px, transparent 1px) 0 0 / var(--pixel) var(--pixel),
+        linear-gradient(0deg, rgba(5, 11, 5, 0.026) 1px, transparent 1px) 0 0 / var(--pixel) var(--pixel),
+        radial-gradient(circle at 50% 24%, rgba(193, 207, 126, 0.58), transparent 46%),
+        linear-gradient(180deg, var(--lcd-a), var(--lcd-b) 60%, var(--lcd-c));
+      border: 3px solid #0a1008;
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 2px rgba(12, 18, 10, 0.55),
+        inset 7px 8px 14px rgba(0, 0, 0, 0.32),
+        inset -6px -7px 12px rgba(197, 207, 137, 0.18);
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent 26%, transparent 70%, rgba(0, 0, 0, 0.22)),
+        repeating-linear-gradient(0deg, rgba(5, 11, 5, 0.055) 0 1px, transparent 1px 3px);
+      opacity: 0.72;
+      mix-blend-mode: multiply;
+    }
+
+    .welcome {
+      position: relative;
+      z-index: 1;
+      min-height: 172px;
+      margin-bottom: 12px;
+      padding: 12px;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+        rgba(126, 148, 82, 0.48);
+      border: 2px solid var(--ink);
+      box-shadow:
+        3px 3px 0 rgba(7, 16, 7, 0.72),
+        inset 1px 1px 0 rgba(196, 207, 135, 0.32);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 18px;
+      font-weight: 900;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .date {
+      display: block;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .spent {
+      position: relative;
+      z-index: 1;
+      padding: 10px;
+      color: var(--ink);
+      background: rgba(126, 148, 82, 0.36);
+      border: 2px solid var(--ink);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .v1 .label,
+    .v1 .date {
+      font-family: "Courier New", Consolas, monospace;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow:
+        1px 0 0 var(--ink),
+        0 1px 0 var(--ink);
+    }
+
+    .v1 .label {
+      font-size: 22px;
+    }
+
+    .v1 .date {
+      font-size: 34px;
+    }
+
+    .v2 .label,
+    .v2 .date {
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow:
+        1px 0 0 var(--ink),
+        0 1px 0 var(--ink),
+        2px 0 0 rgba(7, 16, 7, 0.55);
+    }
+
+    .v2 .label {
+      font-size: 20px;
+    }
+
+    .v2 .date {
+      font-size: 31px;
+    }
+
+    .v3 .label,
+    .v3 .date {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-weight: 900;
+      letter-spacing: 1px;
+      transform: scaleY(0.92);
+      transform-origin: left top;
+      text-shadow:
+        1px 0 0 var(--ink),
+        -1px 0 0 var(--ink),
+        0 1px 0 var(--ink);
+    }
+
+    .v3 .label {
+      font-size: 22px;
+    }
+
+    .v3 .date {
+      font-size: 38px;
+    }
+
+    .v4 .label,
+    .v4 .date {
+      font-family: "Courier New", Consolas, monospace;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--ink);
+      text-shadow:
+        2px 2px 0 rgba(7, 16, 7, 0.42),
+        0 0 0 var(--ink);
+    }
+
+    .v4 .label {
+      font-size: 21px;
+    }
+
+    .v4 .date {
+      font-size: 33px;
+    }
+
+    .v5 .label,
+    .v5 .date {
+      font-family: "Courier New", Consolas, monospace;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow:
+        1px 0 0 var(--ink),
+        2px 0 0 var(--ink),
+        0 1px 0 var(--ink),
+        0 2px 0 var(--ink);
+    }
+
+    .v5 .label {
+      font-size: 19px;
+    }
+
+    .v5 .date {
+      font-size: 30px;
+    }
+
+    .v6 .label,
+    .v6 .date {
+      font-family: "Trebuchet MS", "Arial Black", sans-serif;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      filter: contrast(1.25);
+      text-shadow:
+        1px 0 0 var(--ink),
+        0 1px 0 var(--ink),
+        2px 1px 0 rgba(7, 16, 7, 0.36);
+    }
+
+    .v6 .label {
+      font-size: 21px;
+    }
+
+    .v6 .date {
+      font-size: 34px;
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 12px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Pixel font para bienvenida</h1>
+  <p class="intro">Comparacion aislada del bloque de Resumen. Elegi V1-V6 y despues lo aplico a la app.</p>
+  <main class="grid">
+    <section class="option v1">
+      <div class="option-title">V1. Sistema pixel limpio<small>Courier fuerte, sobrio, alta legibilidad.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+    <section class="option v2">
+      <div class="option-title">V2. Terminal compacto<small>Mas tecnico, letras separadas y pantalla de sistema.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+    <section class="option v3">
+      <div class="option-title">V3. Arcade grueso<small>Mas vistoso y pesado, estilo rotulo retro.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+    <section class="option v4">
+      <div class="option-title">V4. Contorno LCD<small>Letra hueca/outline, mas liviana y digital.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+    <section class="option v5">
+      <div class="option-title">V5. Bitmap bloque<small>Pixel muy marcado, compacto y pesado.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+    <section class="option v6">
+      <div class="option-title">V6. Retro redondeado<small>Menos tecnico, mas amable, todavia pixelado.</small></div>
+      <div class="device"><div class="screen"><div class="welcome"><span class="label">Hoy es</span><span class="date">SAB 20/06/26</span></div><div class="spent">En lo que va de junio gastaste<br>Gs. 500.000 Guaranies</div></div></div>
+    </section>
+  </main>
+</body>
+</html>

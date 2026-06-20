@@ -661,3 +661,48 @@ perfecto. me gusta 2px implementalo y luego seguimos
 - Se implemento en la app el fondo LCD opcion D con matriz fina de `2px`.
 - `frontend/styles/main.css` incorpora el fondo Game Boy/LCD oscuro con grilla `2px`, scanline suave y tarjetas coordinadas.
 - Se subio la version frontend a `v2.41` y el cache PWA a `finanzas-lcd-v49`.
+
+### Prompt 48 - Usuario
+
+```text
+ahora trabajemos en el mensaje de bienvenidad de la app esa que dice en la seccion resumen hoy es fecha tal presentame variantes porque sigue viendose mal. quiero probar disntas formas de pixel font para esta seccion
+```
+
+### Resumen operativo
+- Se creo `docs/summary_welcome_pixel_font_options.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina compara seis variantes de pixel font para el bloque `Hoy es` / fecha de la seccion Resumen.
+- Se abrio el preview local para que el usuario elija antes de implementar.
+
+### Prompt 49 - Usuario
+
+```text
+ninguno me gusta porque ninguno evoca pixel font
+```
+
+### Resumen operativo
+- Se creo `docs/summary_welcome_true_pixel_font_options.html` como nueva lamina local de decision, sin modificar el frontend productivo.
+- Las variantes P1-P6 renderizan `Hoy es` y la fecha en canvas como matriz de pixeles, sin depender de fuentes del sistema.
+- Se abrio el preview local para que el usuario elija antes de implementar.
+
+### Prompt 50 - Usuario
+
+```text
+perfecto. me gustan las opciones pero se ven demasiado grandes y la letra sale del marco arreglame el tamaño neceesito que todo se puedea ver\
+```
+
+### Resumen operativo
+- Se ajusto `docs/summary_welcome_true_pixel_font_options.html` para reducir la escala base de los textos pixel.
+- El render en canvas ahora calcula el ancho/alto disponible y achica automaticamente cada texto si excede el marco.
+- Se reabrio el preview local corregido, sin modificar el frontend productivo.
+
+### Prompt 51 - Usuario
+
+```text
+p6 me gusta. implementalo
+```
+
+### Resumen operativo
+- Se implemento P6 en el bloque `Hoy es` / fecha de la seccion Resumen.
+- `frontend/scripts/render.js` reemplaza el texto por canvas con glifos bitmap 5x7, pixeles activos y ghost de segmentos apagados.
+- `frontend/styles/main.css` define los tamanos responsive del canvas para que la fecha entre dentro del marco.
+- Se subio la version frontend a `v2.42` y el cache PWA a `finanzas-lcd-v50`.

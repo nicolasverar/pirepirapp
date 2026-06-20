@@ -35,6 +35,7 @@
     }
 
     bindRenderedActions(screen);
+    hydrateSummaryPixelText(screen);
     window.FinanzasImages.hydrate(screen);
   }
 
@@ -95,10 +96,9 @@
       '<section class="summary-stack">',
       '<article class="summary-embedded total-window summary-primary">',
       '<div class="summary-date-block">',
-      '<span class="summary-date-kicker">Hoy es</span>',
+      '<canvas class="summary-pixel-text summary-pixel-label" width="240" height="30" data-pixel-text="HOY ES" data-pixel-kind="label"></canvas>',
       '<div class="summary-date-display">',
-      '<span>' + utils.escapeHtml(summaryDayLabel()) + '</span>',
-      '<strong>' + utils.escapeHtml(summaryDateLabel()) + '</strong>',
+      '<canvas class="summary-pixel-text summary-pixel-date" width="260" height="48" data-pixel-text="' + utils.escapeHtml(summaryDayLabel() + ' ' + summaryDateLabel()) + '" data-pixel-kind="date"></canvas>',
       '</div>',
       '</div>',
       '<div class="summary-spent-line">',
@@ -129,6 +129,130 @@
   function summaryDateLabel() {
     var now = new Date();
     return String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getFullYear()).slice(-2);
+  }
+
+  var SUMMARY_PIXEL_GLYPHS = {
+    ' ': ['00000', '00000', '00000', '00000', '00000', '00000', '00000'],
+    '/': ['00001', '00010', '00010', '00100', '01000', '01000', '10000'],
+    '0': ['01110', '10001', '10011', '10101', '11001', '10001', '01110'],
+    '1': ['00100', '01100', '00100', '00100', '00100', '00100', '01110'],
+    '2': ['01110', '10001', '00001', '00010', '00100', '01000', '11111'],
+    '3': ['11110', '00001', '00001', '01110', '00001', '00001', '11110'],
+    '4': ['00010', '00110', '01010', '10010', '11111', '00010', '00010'],
+    '5': ['11111', '10000', '10000', '11110', '00001', '00001', '11110'],
+    '6': ['01110', '10000', '10000', '11110', '10001', '10001', '01110'],
+    '7': ['11111', '00001', '00010', '00100', '01000', '01000', '01000'],
+    '8': ['01110', '10001', '10001', '01110', '10001', '10001', '01110'],
+    '9': ['01110', '10001', '10001', '01111', '00001', '00001', '01110'],
+    'A': ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
+    'B': ['11110', '10001', '10001', '11110', '10001', '10001', '11110'],
+    'D': ['11110', '10001', '10001', '10001', '10001', '10001', '11110'],
+    'E': ['11111', '10000', '10000', '11110', '10000', '10000', '11111'],
+    'H': ['10001', '10001', '10001', '11111', '10001', '10001', '10001'],
+    'I': ['11111', '00100', '00100', '00100', '00100', '00100', '11111'],
+    'J': ['00111', '00010', '00010', '00010', '10010', '10010', '01100'],
+    'L': ['10000', '10000', '10000', '10000', '10000', '10000', '11111'],
+    'M': ['10001', '11011', '10101', '10101', '10001', '10001', '10001'],
+    'N': ['10001', '11001', '10101', '10011', '10001', '10001', '10001'],
+    'O': ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
+    'R': ['11110', '10001', '10001', '11110', '10100', '10010', '10001'],
+    'S': ['01111', '10000', '10000', '01110', '00001', '00001', '11110'],
+    'U': ['10001', '10001', '10001', '10001', '10001', '10001', '01110'],
+    'V': ['10001', '10001', '10001', '10001', '10001', '01010', '00100'],
+    'Y': ['10001', '10001', '01010', '00100', '00100', '00100', '00100']
+  };
+
+  var summaryPixelResizeBound = false;
+  var summaryPixelRoot = null;
+
+  function hydrateSummaryPixelText(root) {
+    summaryPixelRoot = root;
+    utils.qsa('.summary-pixel-text', root).forEach(function (canvas) {
+      drawSummaryPixelText(canvas);
+    });
+    if (!summaryPixelResizeBound) {
+      summaryPixelResizeBound = true;
+      window.addEventListener('resize', function () {
+        if (summaryPixelRoot) {
+          hydrateSummaryPixelText(summaryPixelRoot);
+        }
+      });
+    }
+  }
+
+  function drawSummaryPixelText(canvas) {
+    var text = String(canvas.getAttribute('data-pixel-text') || '').toUpperCase();
+    var kind = canvas.getAttribute('data-pixel-kind') || 'date';
+    var style = kind === 'label'
+      ? { cell: 3.1, gap: 0.7, scale: 0.9 }
+      : { cell: 4.15, gap: 0.8, scale: 0.92 };
+    var rect = canvas.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    var ctx = canvas.getContext('2d');
+    if (!ctx || !rect.width || !rect.height) {
+      return;
+    }
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    ctx.imageSmoothingEnabled = false;
+    drawSummaryPixelLine(ctx, text, rect.width, rect.height, style);
+  }
+
+  function drawSummaryPixelLine(ctx, text, width, height, style) {
+    var local = {
+      cell: style.cell * style.scale,
+      gap: style.gap * style.scale,
+      stretchY: 1,
+      ghost: true
+    };
+    var maxWidth = width - 6;
+    var maxHeight = height - 4;
+    var fit = Math.min(1, maxWidth / Math.max(summaryPixelTextWidth(text, local), 1), maxHeight / Math.max(summaryPixelTextHeight(local), 1));
+    if (fit < 1) {
+      local.cell *= fit;
+      local.gap *= fit;
+    }
+    var x = Math.max(0, (width - summaryPixelTextWidth(text, local)) / 2);
+    var y = Math.max(0, (height - summaryPixelTextHeight(local)) / 2);
+    var ink = '#071007';
+    var ghost = 'rgba(7, 16, 7, 0.14)';
+    for (var c = 0; c < text.length; c += 1) {
+      var glyph = summaryPixelGlyph(text.charAt(c));
+      for (var row = 0; row < glyph.length; row += 1) {
+        for (var col = 0; col < glyph[row].length; col += 1) {
+          var active = glyph[row].charAt(col) === '1';
+          if (!active && !local.ghost) {
+            continue;
+          }
+          ctx.fillStyle = active ? ink : ghost;
+          ctx.fillRect(
+            x + col * (local.cell + local.gap),
+            y + row * (local.cell + local.gap) * local.stretchY,
+            local.cell,
+            local.cell * local.stretchY
+          );
+        }
+      }
+      x += glyph[0].length * (local.cell + local.gap) + local.cell * 1.15;
+    }
+  }
+
+  function summaryPixelGlyph(ch) {
+    return SUMMARY_PIXEL_GLYPHS[ch] || SUMMARY_PIXEL_GLYPHS[' '];
+  }
+
+  function summaryPixelTextWidth(text, style) {
+    var width = 0;
+    for (var i = 0; i < text.length; i += 1) {
+      width += summaryPixelGlyph(text.charAt(i))[0].length * (style.cell + style.gap) + style.cell * 1.15;
+    }
+    return width;
+  }
+
+  function summaryPixelTextHeight(style) {
+    return 7 * (style.cell + style.gap) * style.stretchY;
   }
 
   function summaryMonthName(summary, config) {

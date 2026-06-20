@@ -717,3 +717,14 @@ no se ve bien, no es cherente se lee hoy es y agarra solo el 30 porciento del es
 - Se ajusto el escalado del canvas P6 para que `HOY ES` y la fecha crezcan por separado hasta ocupar el ancho util.
 - La fecha queda debajo de `HOY ES`, con altura mayor y contenedor sin borde heredado.
 - Se subio la version frontend a `v2.43` y el cache PWA a `finanzas-lcd-v51`.
+
+### Prompt 53 - Usuario
+
+```text
+solo se lee hoy es mas no la fecha
+```
+
+### Resumen operativo
+- Se reemplazo el render de la bienvenida por SVG de pixeles reales generado en el HTML para evitar fallas de canvas/timing.
+- `HOY ES` y la fecha se renderizan como grupos de rectangulos activos y ghost, visibles sin depender de hidratacion JS posterior.
+- Se subio la version frontend a `v2.44` y el cache PWA a `finanzas-lcd-v52`.

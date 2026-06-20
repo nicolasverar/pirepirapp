@@ -96,9 +96,9 @@
       '<section class="summary-stack">',
       '<article class="summary-embedded total-window summary-primary">',
       '<div class="summary-date-block">',
-      '<canvas class="summary-pixel-text summary-pixel-label" width="240" height="30" data-pixel-text="HOY ES" data-pixel-kind="label"></canvas>',
+      renderSummaryPixelSvg('HOY ES', 'label'),
       '<div class="summary-date-display">',
-      '<canvas class="summary-pixel-text summary-pixel-date" width="260" height="48" data-pixel-text="' + utils.escapeHtml(summaryDayLabel() + ' ' + summaryDateLabel()) + '" data-pixel-kind="date"></canvas>',
+      renderSummaryPixelSvg(summaryDayLabel() + ' ' + summaryDateLabel(), 'date'),
       '</div>',
       '</div>',
       '<div class="summary-spent-line">',
@@ -129,6 +129,46 @@
   function summaryDateLabel() {
     var now = new Date();
     return String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getFullYear()).slice(-2);
+  }
+
+  function renderSummaryPixelSvg(text, kind) {
+    var value = String(text || '').toUpperCase();
+    var cell = 4;
+    var gap = 1;
+    var charGap = kind === 'label' ? 5 : 4;
+    var width = summaryPixelSvgWidth(value, cell, gap, charGap);
+    var height = 7 * (cell + gap) - gap;
+    var active = [];
+    var ghost = [];
+    var x = 0;
+    for (var c = 0; c < value.length; c += 1) {
+      var glyph = summaryPixelGlyph(value.charAt(c));
+      for (var row = 0; row < glyph.length; row += 1) {
+        for (var col = 0; col < glyph[row].length; col += 1) {
+          var rect = '<rect x="' + (x + col * (cell + gap)) + '" y="' + (row * (cell + gap)) + '" width="' + cell + '" height="' + cell + '"></rect>';
+          if (glyph[row].charAt(col) === '1') {
+            active.push(rect);
+          } else {
+            ghost.push(rect);
+          }
+        }
+      }
+      x += glyph[0].length * (cell + gap) + charGap;
+    }
+    return [
+      '<svg class="summary-pixel-svg summary-pixel-' + utils.escapeHtml(kind) + '" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + utils.escapeHtml(value) + '">',
+      '<g class="summary-pixel-ghost">' + ghost.join('') + '</g>',
+      '<g class="summary-pixel-active">' + active.join('') + '</g>',
+      '</svg>'
+    ].join('');
+  }
+
+  function summaryPixelSvgWidth(text, cell, gap, charGap) {
+    var width = 0;
+    for (var i = 0; i < text.length; i += 1) {
+      width += summaryPixelGlyph(text.charAt(i))[0].length * (cell + gap) + charGap;
+    }
+    return Math.max(1, width - charGap);
   }
 
   var SUMMARY_PIXEL_GLYPHS = {

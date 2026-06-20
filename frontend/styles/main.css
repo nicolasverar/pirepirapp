@@ -3308,7 +3308,7 @@ body::-webkit-scrollbar,
     rgba(126, 148, 82, 0.5);
 }
 
-/* Bienvenida resumen: pixel font real P6 en canvas. */
+/* Bienvenida resumen: pixel font real P6 en SVG. */
 .summary-embedded .summary-date-block {
   gap: 10px;
   padding: 2px 0 0;
@@ -3324,7 +3324,8 @@ body::-webkit-scrollbar,
   white-space: normal;
 }
 
-.summary-pixel-text {
+.summary-pixel-text,
+.summary-pixel-svg {
   display: block;
   width: 100%;
   image-rendering: pixelated;
@@ -3336,4 +3337,16 @@ body::-webkit-scrollbar,
 
 .summary-pixel-date {
   height: 64px;
+}
+
+.summary-pixel-svg {
+  overflow: visible;
+}
+
+.summary-pixel-active {
+  fill: #071007;
+}
+
+.summary-pixel-ghost {
+  fill: rgba(7, 16, 7, 0.14);
 }

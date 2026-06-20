@@ -6,12 +6,15 @@
 - Implementar la variante P6 elegida para el bloque `Hoy es` / fecha del Resumen.
 - Mantener la fecha dentro del marco con ajuste responsive.
 - Corregir el escalado para que la fecha quede grande debajo de `HOY ES` y no se vea pequeña o desplazada.
+- Corregir la visibilidad de la fecha reemplazando canvas por SVG de pixeles reales.
 
 ### Cambios
 - `frontend/scripts/render.js`: el bloque de bienvenida ahora usa canvas con glifos bitmap 5x7, pixeles activos y ghost de segmentos apagados.
 - `frontend/scripts/render.js`: el escalado del canvas ahora permite crecer por ancho disponible, separando proporciones de label y fecha.
+- `frontend/scripts/render.js`: `HOY ES` y la fecha ahora se renderizan como SVG de rectangulos pixel, evitando fallas donde solo aparecia el label.
 - `frontend/styles/main.css`: se ampliaron los altos de `summary-pixel-label` y `summary-pixel-date`, y la fecha queda en contenedor limpio sin borde heredado.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.43` y cache a `finanzas-lcd-v51`.
+- `frontend/styles/main.css`: se agregaron estilos para `summary-pixel-svg`, rectangulos activos y ghost.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.44` y cache a `finanzas-lcd-v52`.
 - `docs/summary_welcome_pixel_font_options.html` y `docs/summary_welcome_true_pixel_font_options.html`: previews locales usados para la decision visual.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompts y resumen operativo actualizados.
 
@@ -20,8 +23,8 @@
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Busqueda `rg` de `v2.42`, `finanzas-lcd-v50` y `APP_VERSION: 'v2.42'` en `frontend`: sin resultados.
-- Servidor local `http://127.0.0.1:4173/`: sirve `v2.43`.
+- Busqueda `rg` de `v2.43`, `finanzas-lcd-v51` y `APP_VERSION: 'v2.43'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.44`.
 
 ### Despliegue
 - Pendiente de commit, push y verificacion publica.

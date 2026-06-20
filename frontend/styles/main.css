@@ -3380,9 +3380,7 @@ body::-webkit-scrollbar,
 
 /* Skin GG acotado: solo tarjeta fusionada de gasto mensual y mayor gasto. */
 .lcd-screen.is-summary-screen::after {
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.16));
-  opacity: 0.16;
+  display: none;
 }
 
 .summary-combined-card {
@@ -3396,8 +3394,7 @@ body::-webkit-scrollbar,
   padding: 12px;
   color: #071007;
   background:
-    linear-gradient(180deg, rgba(202, 213, 143, 0.22), transparent 30%),
-    linear-gradient(180deg, rgba(171, 188, 118, 0.82), rgba(113, 139, 82, 0.82));
+    linear-gradient(180deg, #c0cc87 0, #9cae68 22%, #7b9253 100%);
   border: 2px solid #071007;
   border-radius: 6px;
   text-transform: uppercase;
@@ -3455,8 +3452,7 @@ body::-webkit-scrollbar,
   display: block;
   padding: 8px;
   overflow-wrap: anywhere;
-  background:
-    rgba(199, 211, 141, 0.24);
+  background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.72);
   border-radius: 4px;
   font-size: clamp(1.25rem, 6vw, 1.55rem);
@@ -3481,7 +3477,7 @@ body::-webkit-scrollbar,
   display: grid;
   gap: 7px;
   padding: 9px;
-  background: rgba(199, 211, 141, 0.24);
+  background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.76);
   border-radius: 4px;
 }

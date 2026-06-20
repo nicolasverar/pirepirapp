@@ -874,3 +874,14 @@ sigue saliendo asi, no se ve como e que elegi ente las opciones que me diste
 - `frontend/scripts/render.js` ahora agrega la fila inferior del bloque `Gastaste mas en`, con rank y monto del movimiento mas alto del mes.
 - `frontend/styles/main.css` elimina por completo la trama punteada en la capa superior de Resumen y conserva el aislamiento de `summary-combined-card`.
 - Se subio la version frontend a `v2.50` y el cache PWA a `finanzas-lcd-v58`.
+
+### Prompt 67 - Usuario
+
+```text
+SIGUE saliendo puntitos llenando al tarjeta y es ilegible porque te cuesta tanto entender es la tercera vez querepido lo mismo podesasegurarte que ya no salga asi antes ed avanzar
+```
+
+### Resumen operativo
+- Se elimino por completo la capa `lcd-screen::after` en la vista Resumen mediante `display: none`.
+- Los fondos de `summary-combined-card`, `summary-combined-spent strong` y `summary-combined-top` pasaron a ser opacos, sin alpha.
+- Se subio la version frontend a `v2.51` y el cache PWA a `finanzas-lcd-v59`.

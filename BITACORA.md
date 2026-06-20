@@ -57,10 +57,18 @@
 - Busqueda `rg` de `v2.53`, `finanzas-lcd-v61` y `APP_VERSION: 'v2.53'` en `frontend`: sin resultados.
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.54`.
 - Verificacion especifica de tarjeta: sin `<br>GASTASTE`, monto con SVG pixel, sin label `Gastaste mas en`, glifos `G` y `.` presentes.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: assets sin faltantes.
+- Busqueda `rg` de `v2.54`, `finanzas-lcd-v62` y `APP_VERSION: 'v2.54'` en `frontend`: sin resultados.
+- Verificacion especifica `v2.55`: titulo sin salto, monto pixelado, KPI inferior simple y skin compartido en tarjetas de Resumen.
 
 ### Despliegue
 - Commit principal: `87de50a` (`Pixelar monto de tarjeta resumen`) subido a `origin/main`.
 - GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.54` sirve `v2.54`, `APP_VERSION: 'v2.54'`, cache `finanzas-lcd-v62`, titulo sin `<br>GASTASTE`, monto con `renderSummaryPixelSvg(..., 'amount')` y sin label `Gastaste mas en`.
+- Commit principal: `40eaed4` (`Refinar tarjetas de resumen`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.55` sirve `v2.55`, `APP_VERSION: 'v2.55'`, cache `finanzas-lcd-v63`, titulo en una linea, monto pixelado, KPI inferior simple y skin compartido en `Plata disponible` / `Particion sueldo`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

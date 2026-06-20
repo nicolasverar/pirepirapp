@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Particion sueldo - opciones v3</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --deep: #1f3420;
+      --line: #2c472c;
+      --lcd: #a7b875;
+      --hi: #c7d68d;
+      --mid: #91a364;
+      --lo: #718650;
+      --pale: #bdcc84;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.18) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.14) 1px, transparent 1px) 0 0 / 8px 8px,
+        #758951;
+      font-family: "Courier New", monospace;
+      image-rendering: pixelated;
+    }
+
+    main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 18px;
+    }
+
+    .option {
+      display: grid;
+      gap: 8px;
+    }
+
+    .name {
+      justify-self: start;
+      padding: 4px 7px;
+      color: var(--hi);
+      background: var(--ink);
+      border: 2px solid var(--deep);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .card {
+      position: relative;
+      isolation: isolate;
+      min-height: 360px;
+      padding: 12px;
+      background: linear-gradient(180deg, var(--hi), var(--lcd) 28%, var(--lo));
+      border: 2px solid var(--ink);
+      border-radius: 7px;
+      box-shadow:
+        inset 2px 2px 0 rgba(230, 240, 164, 0.32),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.24);
+    }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      background: radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.5) 0 0.75px, transparent 1px) 0 0 / 3px 3px;
+      pointer-events: none;
+    }
+
+    .card::before {
+      top: 5px;
+      right: -7px;
+      bottom: 2px;
+      width: 7px;
+      border-radius: 0 7px 7px 0;
+    }
+
+    .card::after {
+      left: 5px;
+      right: -7px;
+      bottom: -6px;
+      height: 6px;
+      border-radius: 0 0 7px 7px;
+    }
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 7px;
+      border-bottom: 2px solid var(--ink);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .dash {
+      height: 2px;
+      margin: 10px 0;
+      background: repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 6px);
+    }
+
+    .legend {
+      display: grid;
+      gap: 5px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .legend li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      min-height: 24px;
+      border-bottom: 1px dotted var(--ink);
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      align-items: end;
+      min-height: 185px;
+      padding: 10px;
+      border: 2px solid var(--ink);
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.13) 1px, transparent 1px) 0 0 / 12px 12px,
+        var(--pale);
+    }
+
+    .col {
+      display: grid;
+      align-items: end;
+      gap: 5px;
+      min-height: 150px;
+      text-align: center;
+      font-size: 0.64rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .col span {
+      display: block;
+      border: 2px solid var(--ink);
+      background: repeating-linear-gradient(135deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 5px), var(--mid);
+      box-shadow: inset 2px 2px 0 rgba(230, 240, 164, 0.25);
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 3px;
+      padding: 9px;
+      border: 2px solid var(--ink);
+      background: var(--pale);
+    }
+
+    .matrix i {
+      aspect-ratio: 1;
+      border: 1px solid var(--ink);
+      background: #c4d58b;
+    }
+
+    .matrix i:nth-child(-n+18) {
+      background: repeating-linear-gradient(135deg, var(--ink) 0 1px, #8ca161 1px 5px);
+    }
+
+    .matrix i:nth-child(n+19):nth-child(-n+30) {
+      background: radial-gradient(circle at 2px 2px, var(--ink) 0 1px, #aabb78 1px 4px);
+      background-size: 5px 5px;
+    }
+
+    .receipt {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 2px solid var(--ink);
+      background: #bdcc84;
+      box-shadow: inset 0 -4px 0 rgba(7, 16, 7, 0.12);
+    }
+
+    .receipt-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      min-height: 30px;
+      align-items: center;
+      border-bottom: 2px dotted var(--ink);
+      font-size: 0.76rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .receipt-total {
+      padding: 8px;
+      color: var(--hi);
+      background: var(--ink);
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .stairs {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 2px solid var(--ink);
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.13) 1px, transparent 1px) 0 0 / 10px 10px,
+        var(--pale);
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 38px;
+      padding: 5px 7px;
+      border: 2px solid var(--ink);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step.one { width: 42%; background: #83975b; }
+    .step.two { width: 58%; background: #a7b875; }
+    .step.three { width: 100%; background: #c4d58b; }
+
+    .treemap {
+      display: grid;
+      grid-template-columns: 32% 1fr;
+      grid-template-rows: 92px 92px;
+      gap: 5px;
+      padding: 9px;
+      border: 2px solid var(--ink);
+      background: #bdcc84;
+    }
+
+    .tile {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      padding: 7px;
+      border: 2px solid var(--ink);
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .tile.fixed {
+      background: repeating-linear-gradient(135deg, rgba(7, 16, 7, 0.32) 0 1px, transparent 1px 5px), #8ca161;
+    }
+
+    .tile.service {
+      background: radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.6) 0 1px, transparent 1px 4px), #aabb78;
+      background-size: 5px 5px;
+    }
+
+    .tile.free {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      background: repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.22) 0 2px, transparent 2px 6px), #c4d58b;
+      font-size: 1rem;
+    }
+
+    .gauge {
+      display: grid;
+      place-items: center;
+      min-height: 190px;
+      border: 2px solid var(--ink);
+      background:
+        radial-gradient(circle at center, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 4px),
+        var(--pale);
+      background-size: 6px 6px;
+    }
+
+    svg {
+      width: min(260px, 100%);
+      height: auto;
+    }
+
+    .arc-bg {
+      fill: none;
+      stroke: #c4d58b;
+      stroke-width: 22;
+    }
+
+    .arc-used {
+      fill: none;
+      stroke: #657b4a;
+      stroke-width: 22;
+      stroke-dasharray: 82 168;
+    }
+
+    .needle {
+      stroke: var(--ink);
+      stroke-width: 4;
+      stroke-linecap: square;
+    }
+
+    .gauge-text {
+      fill: var(--ink);
+      font: 900 18px "Courier New", monospace;
+      text-anchor: middle;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Particion sueldo - opciones v3</h1>
+    <section class="grid">
+      <article class="option">
+        <span class="name">K - Columnas verticales</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>Visual</span></div>
+          <div class="dash"></div>
+          <div class="columns">
+            <div class="col"><span style="height:46px"></span>Alquiler<br>20%</div>
+            <div class="col"><span style="height:28px"></span>Servicios<br>12%</div>
+            <div class="col"><span style="height:116px"></span>Disponible<br>68%</div>
+          </div>
+          <ul class="legend">
+            <li><span>Fijos</span><b>32%</b></li>
+            <li><span>Disponible</span><b>68%</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">L - Tablero 100 puntos</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>100%</span></div>
+          <div class="dash"></div>
+          <div class="matrix">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <ul class="legend">
+            <li><span>Alquiler + fijos</span><b>30 casillas</b></li>
+            <li><span>Disponible</span><b>70 casillas</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">M - Recibo contable</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>Resumen</span></div>
+          <div class="dash"></div>
+          <div class="receipt">
+            <div class="receipt-row"><span>Sueldo</span><b>Gs. 3.000.000</b></div>
+            <div class="receipt-row"><span>Alquiler</span><b>-20%</b></div>
+            <div class="receipt-row"><span>Servicios</span><b>-12%</b></div>
+            <div class="receipt-total">Disponible 68%</div>
+          </div>
+          <ul class="legend">
+            <li><span>Disponible</span><b>Gs. 2.040.000</b></li>
+            <li><span>Fijos</span><b>Gs. 960.000</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">N - Escalera de particiones</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>Orden</span></div>
+          <div class="dash"></div>
+          <div class="stairs">
+            <div class="step one"><span>Alquiler</span><b>20%</b></div>
+            <div class="step two"><span>Servicios</span><b>12%</b></div>
+            <div class="step three"><span>Disponible</span><b>68%</b></div>
+          </div>
+          <ul class="legend">
+            <li><span>Mayor espacio visual</span><b>Disponible</b></li>
+            <li><span>Lectura</span><b>De chico a grande</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">O - Mapa de cajas proporcional</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>Cajas</span></div>
+          <div class="dash"></div>
+          <div class="treemap">
+            <div class="tile fixed">Alquiler<br>20%</div>
+            <div class="tile service">Servicios<br>12%</div>
+            <div class="tile free">Disponible<br>68%</div>
+          </div>
+          <ul class="legend">
+            <li><span>El area indica peso</span><b>100%</b></li>
+            <li><span>Sin torta</span><b>Mas legible</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">P - Medidor semicircular</span>
+        <div class="card">
+          <div class="title"><span>Particion sueldo</span><span>Libre 68%</span></div>
+          <div class="dash"></div>
+          <div class="gauge">
+            <svg viewBox="0 0 260 170" aria-hidden="true">
+              <path class="arc-bg" d="M48 126 A82 82 0 0 1 212 126"></path>
+              <path class="arc-used" d="M48 126 A82 82 0 0 1 212 126"></path>
+              <line class="needle" x1="130" y1="126" x2="178" y2="72"></line>
+              <circle cx="130" cy="126" r="9" fill="#a7b875" stroke="#071007" stroke-width="3"></circle>
+              <text class="gauge-text" x="130" y="154">68% DISP.</text>
+            </svg>
+          </div>
+          <ul class="legend">
+            <li><span>Fijos usados</span><b>32%</b></li>
+            <li><span>Disponible</span><b>68%</b></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

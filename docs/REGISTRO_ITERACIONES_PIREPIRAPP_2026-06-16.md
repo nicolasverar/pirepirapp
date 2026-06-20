@@ -966,3 +966,69 @@ me gusta B para plata disponible el procentaje lo que quiero que este con el pro
 - `Particion sueldo` no se modifico en la app productiva.
 - Se creo una segunda lamina local `docs/salary_partition_variants_v2.html` con opciones nuevas para trabajar esa tarjeta desde otra base.
 - Se subio la version frontend a `v2.58` y el cache PWA a `finanzas-lcd-v66`.
+
+### Prompt 75 - Usuario
+
+```text
+tira mas opciones distintas
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_variants_v3.html`.
+- La lamina presenta seis alternativas nuevas para `Particion sueldo`: columnas, tablero de puntos, recibo contable, escalera, mapa de cajas y medidor semicircular.
+- No se modifico la app productiva; queda pendiente la eleccion del usuario.
+
+### Prompt 76 - Usuario
+
+```text
+volve a la torta 3d isometrica volumetrica
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_pie3d_variants_v4.html`.
+- La lamina retoma la torta 3D isometrica volumetrica con cuatro variantes Q-T.
+- No se modifico la app productiva; queda pendiente la eleccion del usuario.
+
+### Prompt 77 - Usuario
+
+```text
+se ven huecas todas y cada una de las opciones justo lo que NO queria
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_pie3d_solid_variants_v5.html`.
+- La nueva lamina evita laterales cortados o huecos: el costado se dibuja como una masa continua cerrada y las divisiones quedan solo en la cara superior.
+- No se modifico la app productiva; queda pendiente la validacion visual del usuario.
+
+### Prompt 78 - Usuario
+
+```text
+SIGUWEN VIENDOSE HUECAS
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_pie3d_cylinder_variants_v6.html`.
+- Se abandono el dibujo por porciones SVG cortadas y se probo un cilindro CSS macizo: costado continuo, tapa superior pintada con distribucion y sin lineas radiales de corte.
+- No se modifico la app productiva; queda pendiente validacion visual del usuario.
+
+### Prompt 79 - Usuario
+
+```text
+mira. estas haciendo estupideces mejor inspirate en la ue ya esta impelemtnada la cual es lo que vos no estas logrando y parti de ahi para variar
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_current_based_variants_v7.html`.
+- Esta lamina parte de la torta ya implementada en `frontend/scripts/render.js` y `frontend/styles/main.css`, manteniendo su estructura SVG y variando solo escala, textura, espesor y limpieza visual.
+- No se modifico la app productiva; queda pendiente eleccion del usuario.
+
+### Prompt 80 - Usuario
+
+```text
+antes de nada implementa la seccion plaat disponible que ya elegimos y luego sigamos intentando con la parte de particion
+```
+
+### Resumen operativo
+- Se verifico que `Plata disponible` ya esta implementada en la app como `availability-card-b`.
+- Se confirmo en GitHub Pages que `v2.58`, `APP_VERSION: 'v2.58'`, cache `finanzas-lcd-v66`, `availability-card-b`, CSS asociado y `renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large')` estan publicados.
+- No se modifico la app productiva en este paso; queda pendiente seguir iterando `Particion sueldo`.

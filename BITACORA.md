@@ -6,6 +6,7 @@
 - Proponer variantes visuales para la seccion `En lo que va de ... gastaste` antes de modificar la app.
 - Definir un fondo extrapolable al resto de tarjetas y una sombra mas pixel art, evitando puntas diagonales.
 - Implementar la estetica DD elegida en todas las tarjetas de la app.
+- Corregir el alcance: revertir la aplicacion global y dejar DD solo en la tarjeta fusionada de Resumen.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -13,8 +14,9 @@
 - `docs/card_background_shadow_variants_v3.html`: tercera lamina local con variantes I-L, combinando borde de E, fondo de H, puntillismo reducido y sombras menos desplazadas.
 - `docs/card_inner_layout_variants_v4.html`: cuarta lamina local con la base fondo J + sombra I y seis organizaciones internas M-R.
 - `docs/card_combined_summary_variants_v5.html`: quinta lamina local con tarjeta fusionada de gasto mensual y `Gastaste mas en`, comparando fondos AA-FF.
-- `frontend/styles/main.css`: se agrego el skin final DD como bloque de cascada para tarjetas principales, metas, wishlist, movimientos, configuracion, modales y superficies tipo card.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.46` y cache a `finanzas-lcd-v54`.
+- `frontend/scripts/render.js`: se fusiono el bloque `En lo que va de ... gastaste` con `Gastaste mas en` en una unica tarjeta `summary-combined-card`.
+- `frontend/styles/main.css`: se retiro el skin DD global y se dejo DD acotado solo a `summary-combined-card`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.47` y cache a `finanzas-lcd-v55`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -23,17 +25,10 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
-- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
-- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
-- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
-- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Busqueda `rg` de `v2.45`, `finanzas-lcd-v53` y `APP_VERSION: 'v2.45'` en `frontend`: sin resultados.
-- Servidor local `http://127.0.0.1:4173/`: sirve `v2.46`.
+- Pendiente de validacion tecnica y despliegue publico `v2.47`.
 
 ### Despliegue
-- Commit principal: `6e14bd6` (`Aplicar estetica DD a tarjetas`) subido a `origin/main`.
-- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.46` sirve `v2.46`, `APP_VERSION: 'v2.46'`, cache `finanzas-lcd-v54` y CSS con `--dd-card-bg` / `--dd-dither-shadow`.
-- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+- Pendiente de commit, push y verificacion publica.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

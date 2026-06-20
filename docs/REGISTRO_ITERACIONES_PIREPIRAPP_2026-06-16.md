@@ -815,3 +815,15 @@ DD me gusta, quier que incorpores esa estetica de tarjeta a todas las otras tarj
 - Se implemento el skin visual DD en `frontend/styles/main.css` como reglas finales de cascada.
 - El fondo LCD limpio con brillo suave, borde redondeado y sombra puntillada cercana se aplica a tarjetas principales, tarjetas de metas, wishlist, movimientos, configuracion, modales y elementos tipo card.
 - Se subio la version frontend a `v2.46` y el cache PWA a `finanzas-lcd-v54`.
+
+### Prompt 62 - Usuario
+
+```text
+no me gusta cambiaste todo yo solo queria que cambies esa tarejta en especifico volve al estado anterior porfa y solo esa tarjeta cambia
+```
+
+### Resumen operativo
+- Se retiro el skin DD global que afectaba todas las tarjetas.
+- Se fusiono la tarjeta de gasto mensual con `Gastaste mas en` dentro de una unica tarjeta `summary-combined-card`.
+- La estetica DD queda aplicada solo a esa tarjeta fusionada del Resumen.
+- Se subio la version frontend a `v2.47` y el cache PWA a `finanzas-lcd-v55`.

@@ -55,7 +55,8 @@
 - Verificacion especifica de tarjeta: sin `<br>GASTASTE`, monto con SVG pixel, sin label `Gastaste mas en`, glifos `G` y `.` presentes.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `87de50a` (`Pixelar monto de tarjeta resumen`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.54` sirve `v2.54`, `APP_VERSION: 'v2.54'`, cache `finanzas-lcd-v62`, titulo sin `<br>GASTASTE`, monto con `renderSummaryPixelSvg(..., 'amount')` y sin label `Gastaste mas en`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

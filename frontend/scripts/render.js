@@ -112,7 +112,6 @@
       '</div>',
       '<div class="summary-combined-top">',
       '<p class="summary-combined-top-line"><strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
-      renderSummaryCombinedItem(topMovement),
       '</div>',
       '</article>',
       '<article class="system-window availability-card">',

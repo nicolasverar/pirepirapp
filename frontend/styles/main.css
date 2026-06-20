@@ -3383,13 +3383,12 @@ body::-webkit-scrollbar,
   display: none;
 }
 
-.summary-combined-card {
+.summary-combined-card,
+.summary-stack > .availability-card,
+.summary-stack > .salary-partition-card {
   position: relative;
   z-index: 0;
   isolation: isolate;
-  display: grid;
-  gap: 10px;
-  min-height: 196px;
   margin: 0 7px 8px 0;
   padding: 12px;
   color: #071007;
@@ -3406,7 +3405,15 @@ body::-webkit-scrollbar,
   image-rendering: pixelated;
 }
 
-.summary-combined-card::before {
+.summary-combined-card {
+  display: grid;
+  gap: 10px;
+  min-height: 176px;
+}
+
+.summary-combined-card::before,
+.summary-stack > .availability-card::before,
+.summary-stack > .salary-partition-card::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -3421,7 +3428,9 @@ body::-webkit-scrollbar,
   pointer-events: none;
 }
 
-.summary-combined-card::after {
+.summary-combined-card::after,
+.summary-stack > .availability-card::after,
+.summary-stack > .salary-partition-card::after {
   content: "";
   position: absolute;
   z-index: -1;
@@ -3437,7 +3446,9 @@ body::-webkit-scrollbar,
   pointer-events: none;
 }
 
-.summary-combined-card > * {
+.summary-combined-card > *,
+.summary-stack > .availability-card > *,
+.summary-stack > .salary-partition-card > * {
   position: relative;
   z-index: 2;
 }
@@ -3456,7 +3467,7 @@ body::-webkit-scrollbar,
   display: block;
   overflow: hidden;
   white-space: nowrap;
-  font-size: clamp(0.58rem, 2.7vw, 0.78rem);
+  font-size: clamp(0.68rem, 3.2vw, 0.9rem);
   letter-spacing: 0;
 }
 
@@ -3481,7 +3492,8 @@ body::-webkit-scrollbar,
 
 .summary-combined-top {
   display: grid;
-  gap: 6px;
+  place-items: center;
+  min-height: 52px;
   padding: 8px;
   background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.76);
@@ -3490,7 +3502,7 @@ body::-webkit-scrollbar,
 
 .summary-combined-top-line {
   margin: 0;
-  font-size: 1rem;
+  font-size: clamp(1.02rem, 4vw, 1.28rem);
   line-height: 1.15;
 }
 

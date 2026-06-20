@@ -908,3 +908,15 @@ quiero que en esa tarejjeta quiero que "en lo que va de [mes]" gastaste se lea e
 - El monto mensual ahora se renderiza con el mismo SVG pixel usado por `HOY ES`.
 - El bloque inferior ya no dice `Gastaste mas en`; muestra directamente el elemento principal.
 - Se subio la version frontend a `v2.54` y el cache PWA a `finanzas-lcd-v62`.
+
+### Prompt 70 - Usuario
+
+```text
+en tarjeeta en lo que va de junio hacelo mas gradne ese texto luego la tarjeta que muestra en lo que mas gastaste es confuso , ademas extrae el estilo de esa tarjetay aplicalo a las demas de esa seccion pero sin perder informacion y estructuras
+```
+
+### Resumen operativo
+- Se aumento el tamano responsive del titulo `EN LO QUE VA DE [MES] GASTASTE`.
+- El bloque inferior de mayor gasto quedo como KPI simple: muestra solo el elemento principal para evitar lectura confusa.
+- El mismo fondo, borde redondeado y sombra externa punteada de la tarjeta fusionada se aplico a `Plata disponible` y `Particion sueldo`, sin alterar sus datos internos.
+- Se subio la version frontend a `v2.55` y el cache PWA a `finanzas-lcd-v63`.

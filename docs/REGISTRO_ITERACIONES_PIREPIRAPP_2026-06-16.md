@@ -804,3 +804,14 @@ fusiona con la tarjeta que dice gastaste mas en asi matamos dos pajaros de un ti
 - Se reemplazo la propuesta anterior por `docs/card_combined_summary_variants_v5.html`, una lamina local de decision sin cambios productivos.
 - La nueva lamina fusiona el bloque de gasto mensual estilo M con el KPI `Gastaste mas en`.
 - Se proponen fondos AA-FF para evaluar textura, legibilidad y coherencia LCD en una tarjeta compuesta.
+
+### Prompt 61 - Usuario
+
+```text
+DD me gusta, quier que incorpores esa estetica de tarjeta a todas las otras tarjetas es decri me refiero al fondo, sombra y bordes redondeados
+```
+
+### Resumen operativo
+- Se implemento el skin visual DD en `frontend/styles/main.css` como reglas finales de cascada.
+- El fondo LCD limpio con brillo suave, borde redondeado y sombra puntillada cercana se aplica a tarjetas principales, tarjetas de metas, wishlist, movimientos, configuracion, modales y elementos tipo card.
+- Se subio la version frontend a `v2.46` y el cache PWA a `finanzas-lcd-v54`.

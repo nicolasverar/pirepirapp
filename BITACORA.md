@@ -5,6 +5,7 @@
 ### Objetivo
 - Proponer variantes visuales para la seccion `En lo que va de ... gastaste` antes de modificar la app.
 - Definir un fondo extrapolable al resto de tarjetas y una sombra mas pixel art, evitando puntas diagonales.
+- Implementar la estetica DD elegida en todas las tarjetas de la app.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -12,6 +13,8 @@
 - `docs/card_background_shadow_variants_v3.html`: tercera lamina local con variantes I-L, combinando borde de E, fondo de H, puntillismo reducido y sombras menos desplazadas.
 - `docs/card_inner_layout_variants_v4.html`: cuarta lamina local con la base fondo J + sombra I y seis organizaciones internas M-R.
 - `docs/card_combined_summary_variants_v5.html`: quinta lamina local con tarjeta fusionada de gasto mensual y `Gastaste mas en`, comparando fondos AA-FF.
+- `frontend/styles/main.css`: se agrego el skin final DD como bloque de cascada para tarjetas principales, metas, wishlist, movimientos, configuracion, modales y superficies tipo card.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.46` y cache a `finanzas-lcd-v54`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -20,12 +23,13 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
+- Pendiente de validacion tecnica y despliegue publico `v2.46`.
 
 ### Despliegue
-- No aplica todavia: es una propuesta visual local, sin cambios productivos en `frontend/`.
+- Pendiente de commit, push y verificacion publica.
 
 ### Pendientes
-- El usuario debe elegir una variante para implementarla en la app y extrapolarla a todas las tarjetas.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-20 - Pixel font real P6 en Resumen
 

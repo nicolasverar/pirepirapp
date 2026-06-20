@@ -3377,3 +3377,155 @@ body::-webkit-scrollbar,
 .summary-embedded .summary-pixel-date {
   height: 70px;
 }
+
+/* Skin DD seleccionado: fondo LCD limpio, borde redondeado y sombra pixel puntillada. */
+:root {
+  --dd-card-bg:
+    linear-gradient(90deg, rgba(190, 203, 134, 0.18), transparent 44%),
+    radial-gradient(circle at 12% 18%, rgba(190, 203, 134, 0.28), transparent 28%),
+    linear-gradient(180deg, rgba(159, 178, 108, 0.7), rgba(102, 128, 75, 0.72));
+  --dd-card-fill: rgba(190, 203, 134, 0.2);
+  --dd-card-border: #071007;
+  --dd-card-radius: 6px;
+  --dd-card-shadow:
+    inset 2px 2px 0 rgba(202, 213, 143, 0.42),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.32);
+  --dd-dither-shadow:
+    radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.46) 0 0.75px, transparent 1px) 0 0 / 3px 3px;
+}
+
+.system-window,
+.summary-embedded,
+.summary-kpi-badge,
+.salary-pie-stage,
+.modal-panel,
+.toast,
+.salary-config-panel,
+.fixed-expense-editor,
+.fixed-expense-row,
+.fixed-expense-total,
+.movement-row,
+.future-card,
+.goal-card,
+.wish-card,
+.data-block {
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  border: 2px solid var(--dd-card-border);
+  border-radius: var(--dd-card-radius);
+  background: var(--dd-card-bg);
+  box-shadow: var(--dd-card-shadow);
+}
+
+.system-window,
+.summary-embedded,
+.summary-kpi-badge,
+.salary-pie-stage,
+.modal-panel,
+.toast,
+.salary-config-panel,
+.fixed-expense-editor,
+.fixed-expense-row,
+.fixed-expense-total,
+.movement-row,
+.future-card,
+.goal-card,
+.wish-card,
+.data-block {
+  margin-right: 4px;
+  margin-bottom: 6px;
+}
+
+.system-window::before,
+.summary-embedded::before,
+.summary-kpi-badge::before,
+.salary-pie-stage::before,
+.modal-panel::before,
+.toast::before,
+.salary-config-panel::before,
+.fixed-expense-editor::before,
+.fixed-expense-row::before,
+.fixed-expense-total::before,
+.movement-row::before,
+.future-card::before,
+.goal-card::before,
+.wish-card::before,
+.data-block::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 2px;
+  right: -4px;
+  top: 5px;
+  bottom: -6px;
+  border-radius: calc(var(--dd-card-radius) + 1px);
+  background: var(--dd-dither-shadow);
+  pointer-events: none;
+}
+
+.system-window::after,
+.summary-embedded::after,
+.summary-kpi-badge::after,
+.salary-pie-stage::after,
+.modal-panel::after,
+.toast::after,
+.salary-config-panel::after,
+.fixed-expense-editor::after,
+.fixed-expense-row::after,
+.fixed-expense-total::after,
+.movement-row::after,
+.future-card::after,
+.goal-card::after,
+.wish-card::after,
+.data-block::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 1;
+  border: 1px solid rgba(7, 16, 7, 0.5);
+  border-radius: calc(var(--dd-card-radius) - 2px);
+  pointer-events: none;
+  background: transparent;
+}
+
+.system-window > *,
+.summary-embedded > *,
+.summary-kpi-badge > *,
+.salary-pie-stage > *,
+.modal-panel > *,
+.toast > *,
+.salary-config-panel > *,
+.fixed-expense-editor > *,
+.fixed-expense-row > *,
+.fixed-expense-total > *,
+.movement-row > *,
+.future-card > *,
+.goal-card > *,
+.wish-card > :not(.sharp-spark-layer):not(.wish-convert-check),
+.data-block > * {
+  position: relative;
+  z-index: 2;
+}
+
+.window-title {
+  border-radius: 4px 4px 0 0;
+}
+
+.summary-embedded .summary-spent-line,
+.summary-kpi-badge,
+.top-spend-box,
+.available-line,
+.progress-track,
+.future-accumulated,
+.goal-top-band,
+.wish-card .lcd-photo,
+.wish-card .lcd-photo-placeholder,
+.movement-main,
+.amount-panel,
+.salary-pie-stage .partition-summary {
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, rgba(190, 203, 134, 0.14), transparent 70%),
+    var(--dd-card-fill);
+}

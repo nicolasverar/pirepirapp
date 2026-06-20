@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variantes V3 - Borde E + Fondo H</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --lcd-hi: #b9c883;
+      --lcd-mid: #8fa35f;
+      --lcd-low: #6f8648;
+      --lcd-deep: #41552f;
+      font-family: "Courier New", Consolas, monospace;
+      color: var(--ink);
+      background: #070a06;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      background:
+        linear-gradient(135deg, rgba(185, 200, 131, 0.07), transparent 34%),
+        linear-gradient(180deg, #171d14, #070a06);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      color: #c5d08b;
+      font-size: 19px;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      max-width: 930px;
+      margin: 0 0 18px;
+      color: #98a568;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+      gap: 18px;
+    }
+
+    .option {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-title {
+      color: #c5d08b;
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .option-title small {
+      display: block;
+      margin-top: 4px;
+      color: #8f9c61;
+      font-size: 11px;
+      line-height: 1.25;
+      text-transform: none;
+    }
+
+    .device {
+      padding: 13px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 74%, rgba(0, 0, 0, 0.52)),
+        linear-gradient(180deg, #30362c, #141a12 48%, #070a06);
+      border: 4px solid #050705;
+      border-radius: 18px;
+      box-shadow:
+        inset 5px 5px 0 rgba(139, 149, 110, 0.18),
+        inset -7px -8px 0 rgba(0, 0, 0, 0.45),
+        0 16px 28px rgba(0, 0, 0, 0.42);
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 390px;
+      padding: 13px;
+      background:
+        linear-gradient(90deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        linear-gradient(0deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        radial-gradient(circle at 50% 18%, rgba(193, 207, 126, 0.46), transparent 42%),
+        linear-gradient(180deg, #8a9a5c, #697d45 62%, #455d31);
+      border: 3px solid #0a1008;
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 2px rgba(12, 18, 10, 0.55),
+        inset 7px 8px 14px rgba(0, 0, 0, 0.32),
+        inset -6px -7px 12px rgba(197, 207, 137, 0.18);
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.21)),
+        repeating-linear-gradient(0deg, rgba(5, 11, 5, 0.07) 0 1px, transparent 1px 3px);
+      mix-blend-mode: multiply;
+      opacity: 0.72;
+    }
+
+    .sample-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 16px;
+    }
+
+    .date-mini {
+      display: grid;
+      gap: 8px;
+      padding: 6px 4px 0;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .date-mini b {
+      font-size: 17px;
+    }
+
+    .date-mini strong {
+      font-size: 30px;
+      line-height: 0.95;
+      text-shadow: 1px 0 0 var(--ink), 0 1px 0 var(--ink);
+    }
+
+    .card {
+      --radius: 4px;
+      --shadow-x: 3px;
+      --shadow-y: 6px;
+      --dot: 3px;
+      --dot-alpha: 0.5;
+      position: relative;
+      display: grid;
+      gap: 9px;
+      min-height: 100px;
+      padding: 12px;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, rgba(181, 196, 127, 0.68), rgba(112, 135, 78, 0.72));
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      text-transform: uppercase;
+      font-weight: 900;
+      box-shadow:
+        inset 2px 2px 0 rgba(202, 213, 143, 0.42),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.32);
+      image-rendering: pixelated;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: var(--shadow-x);
+      right: calc(var(--shadow-x) * -1);
+      top: var(--shadow-y);
+      bottom: calc(var(--shadow-y) * -1);
+      border-radius: calc(var(--radius) + 1px);
+      background:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, var(--dot-alpha)) 0 0.75px, transparent 1px) 0 0 / var(--dot) var(--dot);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      pointer-events: none;
+      border: 1px solid rgba(7, 16, 7, 0.5);
+      border-radius: max(0px, calc(var(--radius) - 2px));
+    }
+
+    .card span {
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .card strong {
+      display: block;
+      padding: 8px 8px 7px;
+      font-size: 23px;
+      line-height: 1;
+      text-align: right;
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 5px 5px,
+        rgba(183, 197, 127, 0.28);
+      border: 2px solid rgba(7, 16, 7, 0.72);
+      border-radius: max(0px, calc(var(--radius) - 2px));
+    }
+
+    .small-card {
+      min-height: 74px;
+      padding-top: 16px;
+    }
+
+    .label {
+      display: inline-block;
+      width: fit-content;
+      margin-bottom: 2px;
+      padding: 2px 5px;
+      color: #c5d08b;
+      background: #10170d;
+      border: 1px solid #c5d08b;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .i .card {
+      --radius: 4px;
+      --shadow-x: 2px;
+      --shadow-y: 5px;
+      --dot: 3px;
+      --dot-alpha: 0.48;
+    }
+
+    .j .card {
+      --radius: 6px;
+      --shadow-x: 2px;
+      --shadow-y: 4px;
+      --dot: 2px;
+      --dot-alpha: 0.42;
+    }
+
+    .k .card {
+      --radius: 8px;
+      --shadow-x: 1px;
+      --shadow-y: 5px;
+      --dot: 2px;
+      --dot-alpha: 0.52;
+      border-width: 2px;
+    }
+
+    .k .card::before {
+      background:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, var(--dot-alpha)) 0 0.65px, transparent 0.9px) 0 0 / var(--dot) var(--dot);
+    }
+
+    .l .card {
+      --radius: 10px;
+      --shadow-x: 0px;
+      --shadow-y: 5px;
+      --dot: 2px;
+      --dot-alpha: 0.45;
+      border-width: 3px;
+    }
+
+    .l .card::before {
+      top: auto;
+      height: 8px;
+      bottom: -8px;
+      left: 4px;
+      right: 4px;
+    }
+
+    .note {
+      margin: 0;
+      color: #a8b573;
+      font-size: 12px;
+      line-height: 1.32;
+    }
+  </style>
+</head>
+<body>
+  <h1>V3 - Borde E + fondo H</h1>
+  <p class="intro">Todas las variantes usan el borde delineado de E y el fondo bajo relieve de H. Cambian solo el redondeo, el tamaño del puntillismo y cuanto se desplaza la sombra.</p>
+
+  <main class="grid">
+    <section class="option i">
+      <div class="option-title">I - Casi E, menos desplazada<small>Borde cuadrado leve, puntos chicos y sombra cercana.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">La mas conservadora. Mantiene caracter de tarjeta dura pero corrige desplazamiento.</p>
+    </section>
+
+    <section class="option j">
+      <div class="option-title">J - Redondeo chico + micro puntos<small>Puntillismo 2px, borde apenas redondeado y sombra sobria.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">Probablemente la mas equilibrada para extrapolar a todas las tarjetas.</p>
+    </section>
+
+    <section class="option k">
+      <div class="option-title">K - Redondeo medio + sombra pegada<small>Mas amable visualmente, con la sombra casi debajo de la tarjeta.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">Mas pulida y menos rigida; el puntillismo se lee como profundidad, no como mancha.</p>
+    </section>
+
+    <section class="option l">
+      <div class="option-title">L - Redondeado fuerte + base punteada<small>Solo sombra inferior, sin desplazamiento lateral.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">La mas limpia: sombra solo en la base, pero menos retro-rigida que E.</p>
+    </section>
+  </main>
+</body>
+</html>

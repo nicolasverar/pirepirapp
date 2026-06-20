@@ -761,3 +761,14 @@ NINGUNO DE ELLOS ME GUSTA bordea las tarjetas y trabaja en la sombra puntillism 
 - Se creo `docs/card_background_shadow_variants_v2.html` como segunda lamina local de decision, sin modificar el frontend productivo.
 - La nueva tanda compara opciones E-H con bordes mas definidos, fondos LCD mas contenidos y sombras de puntillismo pixel art mas visibles.
 - Se abrio el preview local para que el usuario elija o pida ajustes antes de implementar.
+
+### Prompt 57 - Usuario
+
+```text
+me gusta el borde de E pero quiero que sea mas pequeño el puntilado y menos desplazado con respecto a la tarejta, crea variaciones con los bordes redondeados y me gusta el fondo de H
+```
+
+### Resumen operativo
+- Se creo `docs/card_background_shadow_variants_v3.html` como lamina local de decision, sin modificar el frontend productivo.
+- Las variantes I-L combinan el borde delineado de E con el fondo bajo relieve de H.
+- Se redujo el puntillismo, se acerco la sombra a la tarjeta y se probaron niveles de borde redondeado.

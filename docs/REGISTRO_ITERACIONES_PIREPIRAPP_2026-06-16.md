@@ -706,3 +706,14 @@ p6 me gusta. implementalo
 - `frontend/scripts/render.js` reemplaza el texto por canvas con glifos bitmap 5x7, pixeles activos y ghost de segmentos apagados.
 - `frontend/styles/main.css` define los tamanos responsive del canvas para que la fecha entre dentro del marco.
 - Se subio la version frontend a `v2.42` y el cache PWA a `finanzas-lcd-v50`.
+
+### Prompt 52 - Usuario
+
+```text
+no se ve bien, no es cherente se lee hoy es y agarra solo el 30 porciento del espacio y lafecha en si se ve pequeñita a la izquierda todo mal debe verse debajo del hoy es bien grande comohoy es
+```
+
+### Resumen operativo
+- Se ajusto el escalado del canvas P6 para que `HOY ES` y la fecha crezcan por separado hasta ocupar el ancho util.
+- La fecha queda debajo de `HOY ES`, con altura mayor y contenedor sin borde heredado.
+- Se subio la version frontend a `v2.43` y el cache PWA a `finanzas-lcd-v51`.

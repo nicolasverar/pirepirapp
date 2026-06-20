@@ -184,8 +184,8 @@
     var text = String(canvas.getAttribute('data-pixel-text') || '').toUpperCase();
     var kind = canvas.getAttribute('data-pixel-kind') || 'date';
     var style = kind === 'label'
-      ? { cell: 3.1, gap: 0.7, scale: 0.9 }
-      : { cell: 4.15, gap: 0.8, scale: 0.92 };
+      ? { cell: 4.2, gap: 0.85, scale: 1, fillWidth: 0.72, maxScale: 3.2 }
+      : { cell: 4.2, gap: 0.75, scale: 1, fillWidth: 0.98, maxScale: 2.6 };
     var rect = canvas.getBoundingClientRect();
     var dpr = window.devicePixelRatio || 1;
     var ctx = canvas.getContext('2d');
@@ -207,10 +207,10 @@
       stretchY: 1,
       ghost: true
     };
-    var maxWidth = width - 6;
+    var maxWidth = (width - 6) * (style.fillWidth || 1);
     var maxHeight = height - 4;
-    var fit = Math.min(1, maxWidth / Math.max(summaryPixelTextWidth(text, local), 1), maxHeight / Math.max(summaryPixelTextHeight(local), 1));
-    if (fit < 1) {
+    var fit = Math.min(style.maxScale || 1, maxWidth / Math.max(summaryPixelTextWidth(text, local), 1), maxHeight / Math.max(summaryPixelTextHeight(local), 1));
+    if (fit !== 1) {
       local.cell *= fit;
       local.gap *= fit;
     }

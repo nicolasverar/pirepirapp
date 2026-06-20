@@ -1,5 +1,28 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Correccion de fecha, patrones y torta solida
+
+### Objetivo
+- Quitar las circunferencias concentricas del bloque de fecha y del boton `AGREGAR`.
+- Hacer que `Hoy es` quede sin marco de tarjeta y con fecha pixelada inspirada en `fecprincipal.png`.
+- Corregir la torta para que se lea como piezas solidas y no como discos flotantes.
+
+### Cambios
+- `frontend/styles/main.css`: se eliminaron patrones radiales/concentricos en los bloques criticados, se dejo `summary-embedded` sin marco ni tarjeta, se reforzo la tipografia pixelada de fecha y se limpio el fondo del boton `AGREGAR`.
+- `frontend/scripts/render.js`: se quitaron los aros/rims globales y la elevacion de porciones de la torta para evitar la lectura de discos flotando.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.38` y cache a `finanzas-lcd-v46`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.38`.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la URL publica despues del push.
+
 ## 2026-06-19 - Ajuste fino LCD oliva y scrollbars
 
 ### Objetivo

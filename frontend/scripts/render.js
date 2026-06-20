@@ -572,21 +572,15 @@
     var tops = [];
     var labels = [];
     var sides = [];
-    var maxAmount = segments.reduce(function (max, item) {
-      return Math.max(max, item.amount);
-    }, 0);
-
     segments.forEach(function (item, index) {
       var sweep = (item.amount / chartTotal) * Math.PI * 2;
       var end = start + sweep;
       var full = sweep >= Math.PI * 2 - 0.0001;
-      var lift = maxAmount ? Math.round((1 - (item.amount / maxAmount)) * 24) : 0;
-      var shiftY = -lift;
-      var d = partitionPiePath(cx, cy + shiftY, rx, ry, start, end, full);
+      var d = partitionPiePath(cx, cy, rx, ry, start, end, full);
       var className = utils.escapeHtml(item.className);
       var hatchClass = 'hatch-' + (index % 6);
       salaryPieFrontSidePieces(start, end).forEach(function (piece) {
-        var sideD = salaryPieSidePath(cx, cy + shiftY, rx, ry, depth + lift, piece.start, piece.end);
+        var sideD = salaryPieSidePath(cx, cy, rx, ry, depth, piece.start, piece.end);
         sides.push('<path class="salary-pie-side-fill ' + className + '" d="' + sideD + '"></path>');
         sides.push('<path class="salary-pie-side-texture ' + hatchClass + '" d="' + sideD + '"></path>');
         sides.push('<path class="salary-pie-side-shade" d="' + sideD + '"></path>');
@@ -594,7 +588,7 @@
       tops.push('<path class="salary-pie-slice ' + className + '" d="' + d + '"></path>');
       tops.push('<path class="salary-pie-hatch ' + hatchClass + '" d="' + d + '"></path>');
       if ((item.amount / chartTotal) >= 0.055) {
-        labels.push(renderPieLabel(cx, cy + shiftY, rx, ry, start + sweep / 2, item.percent));
+        labels.push(renderPieLabel(cx, cy, rx, ry, start + sweep / 2, item.percent));
       }
       start = end;
     });
@@ -612,9 +606,7 @@
       '</defs>',
       '<ellipse class="salary-pie-shadow" cx="' + cx + '" cy="' + (cy + depth + 12) + '" rx="' + (rx + 9) + '" ry="32"></ellipse>',
       '<g class="salary-pie-sides">' + sides.join('') + '</g>',
-      '<ellipse class="salary-pie-top-rim" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"></ellipse>',
       '<g class="salary-pie-tops">' + tops.join('') + '</g>',
-      '<path class="salary-pie-front-rim" d="' + salaryPieSidePath(cx, cy, rx, ry, depth, 0, Math.PI) + '"></path>',
       labels.join(''),
       '</svg>',
       excess > 0 ? '<span class="salary-pie-over">EXCESO ' + utils.escapeHtml(utils.formatMoney(excess)) + '</span>' : '',

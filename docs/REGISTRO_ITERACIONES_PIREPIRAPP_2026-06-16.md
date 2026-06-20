@@ -559,3 +559,16 @@ NO SE VE IGUAL A LA FOTO QUE TE PASE NECESITO QUE TRABAJES ENESOS DETALLES FINOS
 - Se reemplazo el overlay fijo por una textura interna de pantalla para evitar capas visuales ajenas a la carcasa.
 - Se ocultaron completamente los scrollbars nativos grises en `html`, `body`, `.device-shell` y `.lcd-screen`.
 - Se subio la version frontend a `v2.37` y el cache PWA a `finanzas-lcd-v45`.
+
+### Prompt 41 - Usuario
+
+```text
+no me gusta para nada  las circunferencias concentricas como diseño de fondo de la tarejta hoy es viernes tal encima sigue sin aparecer en este estilo la letra  y la fecha <ruta-local>\fecprincipal.png ademas te pedi que sea sin tarjeta es decir que no este en nignu marco, , el boton de agregar se ve ilegible por las cias concentriacs  y la torta se ve mal de vuelta quiero piezas solidas no discos flotando
+```
+
+### Resumen operativo
+- Se eliminaron los patrones radiales/concentricos del bloque `Hoy es`, del boton `AGREGAR` y de las capas principales que cortaban la estetica.
+- El bloque `Hoy es` queda sin marco de tarjeta ni caja exterior; la fecha se renderiza como texto pixelado grande inspirado en `fecprincipal.png`.
+- El boton `AGREGAR` vuelve a tener fondo limpio y texto legible.
+- La torta elimina los aros/rims globales y la elevacion de porciones para que se lea como piezas solidas, no discos flotantes.
+- Se subio la version frontend a `v2.38` y el cache PWA a `finanzas-lcd-v46`.

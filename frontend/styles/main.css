@@ -2616,3 +2616,117 @@ body::-webkit-scrollbar,
     repeating-radial-gradient(circle, rgba(13, 21, 12, 0.64) 0 1px, transparent 1px 3px),
     #97a260;
 }
+
+.summary-embedded {
+  min-height: auto;
+  padding: 4px 2px 8px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.summary-embedded::before,
+.summary-embedded::after {
+  content: none;
+}
+
+.summary-embedded .summary-date-block {
+  display: block;
+}
+
+.summary-embedded .summary-date-kicker {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  color: #0b1209;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: clamp(1.5rem, 8.8vw, 2.56rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: none;
+}
+
+.summary-embedded .summary-date-display {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  color: #0b1209;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.summary-embedded .summary-date-display span,
+.summary-embedded .summary-date-display strong {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  color: #0b1209;
+  border: 0;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(1.5rem, 8.8vw, 2.56rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow:
+    1px 0 0 #0b1209,
+    0 1px 0 #0b1209;
+  transform: none;
+}
+
+.summary-embedded .summary-date-display span::after {
+  content: " | ";
+}
+
+.summary-embedded .summary-spent-line {
+  margin-top: 12px;
+  padding: 7px 8px;
+  background:
+    repeating-linear-gradient(45deg, rgba(13, 21, 12, 0.16) 0, rgba(13, 21, 12, 0.16) 1px, transparent 1px, transparent 4px),
+    rgba(141, 153, 90, 0.42);
+  border: 0;
+  box-shadow:
+    inset 3px 3px 0 rgba(13, 21, 12, 0.34),
+    inset -2px -2px 0 rgba(172, 183, 117, 0.28);
+}
+
+.summary-kpi-badge,
+.system-window,
+.summary-spent-line,
+.salary-pie-stage,
+.key-zone,
+.status-bar,
+.modal-panel,
+.toast {
+  background-image:
+    repeating-linear-gradient(45deg, rgba(13, 21, 12, 0.1) 0, rgba(13, 21, 12, 0.1) 1px, transparent 1px, transparent 5px);
+}
+
+.lcd-screen::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(13, 21, 12, 0.08) 0, rgba(13, 21, 12, 0.08) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(0deg, rgba(13, 21, 12, 0.06) 0, rgba(13, 21, 12, 0.06) 1px, transparent 1px, transparent 4px);
+}
+
+.action-key {
+  color: #0b1209;
+  background:
+    linear-gradient(180deg, rgba(172, 183, 117, 0.55), rgba(141, 153, 90, 0.88)),
+    #97a260;
+  border-color: #0b1209;
+  text-shadow: 1px 1px 0 rgba(172, 183, 117, 0.48);
+}
+
+.action-key-label {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(151, 162, 96, 0.72);
+}
+
+.salary-pie-top-rim,
+.salary-pie-front-rim {
+  display: none;
+}

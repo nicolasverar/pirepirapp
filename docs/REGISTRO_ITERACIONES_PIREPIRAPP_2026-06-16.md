@@ -885,3 +885,14 @@ SIGUE saliendo puntitos llenando al tarjeta y es ilegible porque te cuesta tanto
 - Se elimino por completo la capa `lcd-screen::after` en la vista Resumen mediante `display: none`.
 - Los fondos de `summary-combined-card`, `summary-combined-spent strong` y `summary-combined-top` pasaron a ser opacos, sin alpha.
 - Se subio la version frontend a `v2.51` y el cache PWA a `finanzas-lcd-v59`.
+
+### Prompt 68 - Usuario
+
+```text
+no se ve asi. la tarjeta tiene puntos sobre la misma y eso lo hae iegible por favor soluciona eso
+```
+
+### Resumen operativo
+- Se reemplazo la sombra punteada de rectangulo completo por dos tiras externas: una a la derecha y otra abajo.
+- `summary-combined-card` mantiene fondo solido sin patron de puntos y los puntos solo existen fuera del cuerpo de la tarjeta.
+- Se subio la version frontend a `v2.53` y el cache PWA a `finanzas-lcd-v61`.

@@ -10,6 +10,8 @@
 - Implementar la variante GG para mejorar legibilidad de la tarjeta fusionada.
 - Corregir la trama superior que seguia ensuciando la tarjeta GG.
 - Hacer que la tarjeta real coincida mejor con el preview GG elegido.
+- Eliminar por completo los puntitos sobre la tarjeta de Resumen.
+- Convertir la sombra punteada en tiras externas para que no pueda ocupar el interior de la tarjeta.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -25,7 +27,9 @@
 - `frontend/styles/main.css`: se redujo la superposicion de `lcd-screen::after` solo en Resumen y se aislo `summary-combined-card` para que no reciba puntitos encima.
 - `frontend/scripts/render.js`: la tarjeta fusionada ahora incluye la fila inferior del bloque `Gastaste mas en`, con rank y monto del movimiento mas alto del mes.
 - `frontend/styles/main.css`: la capa superior de Resumen ya no dibuja trama punteada y se agregaron estilos para la fila inferior del bloque superior.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.50` y cache a `finanzas-lcd-v58`.
+- `frontend/styles/main.css`: se desactivo por completo la capa `lcd-screen.is-summary-screen::after` y se volvieron opacos los bloques internos de `summary-combined-card`.
+- `frontend/styles/main.css`: la sombra punteada de `summary-combined-card` ahora son dos tiras externas separadas, derecha e inferior, en vez de un rectangulo detras de toda la tarjeta.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.53` y cache a `finanzas-lcd-v61`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -39,13 +43,10 @@
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Busqueda `rg` de `v2.49`, `finanzas-lcd-v57` y `APP_VERSION: 'v2.49'` en `frontend`: sin resultados.
-- Servidor local `http://127.0.0.1:4173/`: sirve `v2.50`.
+- Pendiente de validacion tecnica `v2.53`.
 
 ### Despliegue
-- Commit principal: `0722764` (`Ajustar tarjeta resumen al preview GG`) subido a `origin/main`.
-- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.50` sirve `v2.50`, `APP_VERSION: 'v2.50'`, cache `finanzas-lcd-v58`, `topSpendingMovement` en render y override `.lcd-screen.is-summary-screen::after` con `opacity: 0.16`.
-- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+- Pendiente de commit, push y verificacion publica.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

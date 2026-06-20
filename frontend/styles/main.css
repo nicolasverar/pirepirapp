@@ -3388,8 +3388,8 @@ body::-webkit-scrollbar,
   z-index: 0;
   isolation: isolate;
   display: grid;
-  gap: 11px;
-  min-height: 188px;
+  gap: 10px;
+  min-height: 196px;
   margin: 0 7px 8px 0;
   padding: 12px;
   color: #071007;
@@ -3436,7 +3436,7 @@ body::-webkit-scrollbar,
 
 .summary-combined-spent {
   display: grid;
-  gap: 9px;
+  gap: 8px;
 }
 
 .summary-combined-spent span,
@@ -3444,27 +3444,24 @@ body::-webkit-scrollbar,
   line-height: 1.2;
 }
 
-.summary-combined-spent span {
+.summary-combined-title {
   font-size: 0.78rem;
+  letter-spacing: 0;
 }
 
 .summary-combined-spent strong {
   display: block;
-  padding: 8px;
+  padding: 10px 8px;
   overflow-wrap: anywhere;
   background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.72);
   border-radius: 4px;
-  font-size: clamp(1.25rem, 6vw, 1.55rem);
+  font-size: clamp(1.55rem, 7vw, 2rem);
   line-height: 1;
-  text-align: right;
+  text-align: center;
   text-shadow:
     1px 0 0 #071007,
     0 1px 0 #071007;
-}
-
-.summary-combined-spent small {
-  font-size: 0.68rem;
 }
 
 .summary-combined-divider {
@@ -3475,8 +3472,8 @@ body::-webkit-scrollbar,
 
 .summary-combined-top {
   display: grid;
-  gap: 7px;
-  padding: 9px;
+  gap: 6px;
+  padding: 8px;
   background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.76);
   border-radius: 4px;
@@ -3486,9 +3483,9 @@ body::-webkit-scrollbar,
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   line-height: 1.15;
 }
 
@@ -3502,20 +3499,20 @@ body::-webkit-scrollbar,
 .summary-combined-item {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 7px;
+  gap: 6px;
   align-items: center;
-  font-size: 0.7rem;
-  line-height: 1.12;
+  font-size: 0.68rem;
+  line-height: 1.08;
 }
 
 .summary-combined-rank {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 22px;
+  width: 22px;
+  height: 20px;
   color: #c5d08b;
   background: #071007;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .summary-combined-item b {

@@ -25,10 +25,17 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
-- Pendiente de validacion tecnica y despliegue publico `v2.47`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.46`, `finanzas-lcd-v54`, `APP_VERSION: 'v2.46'`, `--dd-card-bg` y `Skin DD seleccionado` en `frontend`: sin resultados productivos.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.47`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `bd34d32` (`Acotar estetica DD al resumen`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.47` sirve `v2.47`, `APP_VERSION: 'v2.47'`, cache `finanzas-lcd-v55`, `summary-combined-card` y CSS con `Skin DD acotado`; no contiene el skin DD global.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

@@ -838,3 +838,15 @@ volvamos a trabajar en esa tarjeta de en lo que va del mes porque se ve ilegible
 - Se creo `docs/card_combined_summary_variants_v6.html` como lamina local de decision, sin modificar el frontend productivo.
 - La lamina mantiene la tarjeta fusionada de gasto mensual y `Gastaste mas en`, pero propone fondos GG-LL mas legibles.
 - Todas las variantes agregan una columna extra de puntitos hacia la derecha en la sombra.
+
+### Prompt 64 - Usuario
+
+```text
+implementa GG
+```
+
+### Resumen operativo
+- Se implemento la variante GG en la tarjeta fusionada `summary-combined-card`.
+- El fondo queda mas limpio y legible, con alto contraste y sin textura invasiva.
+- La sombra derecha se amplio para sumar una columna extra de puntitos.
+- Se subio la version frontend a `v2.48` y el cache PWA a `finanzas-lcd-v56`.

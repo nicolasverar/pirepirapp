@@ -1,5 +1,37 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-20 - Preview de fondos LCD
+
+### Objetivo
+- Mostrar alternativas visuales de fondo LCD antes de modificar la app.
+- Refinar la opcion D con cuadrados mas pequenos.
+- Implementar la variante elegida por el usuario: opcion D con pixel de `2px`.
+
+### Cambios
+- `docs/lcd_background_options.html`: lamina local con cinco variantes comparables: LCD limpio, matriz LCD, scanlines, Game Boy y LCD sobrio.
+- `docs/lcd_background_option_d_variants.html`: lamina local con cinco variantes D1-D5 del fondo Game Boy/LCD oscuro, reduciendo progresivamente el tamano de pixel.
+- `docs/lcd_background_option_d_micro_variants.html`: lamina local con variantes micro del fondo D en `3px`, `2.5px`, `2px` y `1px`.
+- `frontend/styles/main.css`: se implemento el fondo LCD opcion D con matriz fina de `2px`, scanline suave y tarjetas coordinadas al tono Game Boy.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.41` y cache a `finanzas-lcd-v49`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- Se abrio el preview local con `Start-Process .\docs\lcd_background_options.html`.
+- Se abrio el preview local con `Start-Process .\docs\lcd_background_option_d_variants.html`.
+- Se abrio el preview local con `Start-Process .\docs\lcd_background_option_d_micro_variants.html`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.40`, `finanzas-lcd-v48` y `APP_VERSION: 'v2.40'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.41`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
+
 ## 2026-06-19 - Grilla LCD y leyenda de particion
 
 ### Objetivo

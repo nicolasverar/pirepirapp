@@ -2904,7 +2904,7 @@ body::-webkit-scrollbar,
   text-shadow: 1px 1px 0 rgba(188, 198, 125, 0.5);
 }
 
-/* Ajustes visuales v2.40: grilla LCD, sombras dither y particion clara. */
+/* Ajustes visuales: grilla LCD, sombras dither y particion clara. */
 .lcd-screen {
   background:
     linear-gradient(90deg, rgba(13, 21, 12, 0.07) 1px, transparent 1px) 0 0 / 12px 12px,
@@ -3246,4 +3246,64 @@ body::-webkit-scrollbar,
 
 .partition-legend .segment-5 {
   background: #c0ca83;
+}
+
+/* Fondo LCD elegido v2.41: opcion D con matriz fina de 2px. */
+.lcd-screen {
+  --lcd-pixel-size: 2px;
+  --lcd-grid-alpha: 0.026;
+  --lcd-scan-alpha: 0.055;
+  color: #071007;
+  background:
+    linear-gradient(90deg, rgba(5, 11, 5, var(--lcd-grid-alpha)) 1px, transparent 1px) 0 0 / var(--lcd-pixel-size) var(--lcd-pixel-size),
+    linear-gradient(0deg, rgba(5, 11, 5, var(--lcd-grid-alpha)) 1px, transparent 1px) 0 0 / var(--lcd-pixel-size) var(--lcd-pixel-size),
+    radial-gradient(circle at 50% 24%, rgba(193, 207, 126, 0.58), transparent 46%),
+    linear-gradient(180deg, #7c904f, #516a38 60%, #344d29);
+  border-color: #0a1008;
+  box-shadow:
+    inset 0 0 0 2px rgba(12, 18, 10, 0.6),
+    inset 7px 8px 14px rgba(0, 0, 0, 0.34),
+    inset -6px -7px 12px rgba(197, 207, 137, 0.18),
+    0 0 0 4px rgba(35, 40, 30, 0.62);
+}
+
+.lcd-screen::after {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent 26%, transparent 70%, rgba(0, 0, 0, 0.22)),
+    repeating-linear-gradient(0deg, rgba(5, 11, 5, var(--lcd-scan-alpha)) 0 1px, transparent 1px calc(var(--lcd-pixel-size) + 1px));
+  opacity: 0.72;
+  mix-blend-mode: multiply;
+}
+
+.system-window,
+.summary-kpi-badge,
+.salary-pie-stage,
+.modal-panel,
+.toast {
+  background-image:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(126, 148, 82, 0.52), rgba(79, 104, 55, 0.28));
+  background-size: 4px 4px, 4px 4px, auto;
+  background-color: rgba(126, 148, 82, 0.48);
+}
+
+.future-window,
+.goals-window,
+.wishlist-window {
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(180deg, rgba(126, 148, 82, 0.54), rgba(79, 104, 55, 0.28)),
+    rgba(126, 148, 82, 0.48);
+}
+
+.future-card,
+.goal-card,
+.wish-card {
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(180deg, rgba(139, 160, 88, 0.54), rgba(92, 122, 62, 0.5)),
+    rgba(126, 148, 82, 0.5);
 }

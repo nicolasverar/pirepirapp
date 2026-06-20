@@ -615,3 +615,49 @@ Rediseña la leyenda por completo para que sea 100% legible y fácil de entender
 - El boton `AGREGAR` pierde el marco claro interno y gana textura de grilla pixel art.
 - `Particion sueldo` recibe paleta verde armonica, patrones menos agresivos y una leyenda nueva con nombre, monto y porcentaje.
 - Se subio la version frontend a `v2.40` y el cache PWA a `finanzas-lcd-v48`.
+
+### Prompt 44 - Usuario
+
+```text
+trabajemos primero que nada en el fondo de la app, se ve horrible yo quiero que de la ilusion de ser un display LCD mandame propustas y yo elijo
+
+mostrame como quedaria cada uno
+```
+
+### Resumen operativo
+- Se creo `docs/lcd_background_options.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina compara cinco fondos LCD: limpio, matriz LCD, scanlines, Game Boy y LCD sobrio.
+- Se abrio el preview local para que el usuario elija antes de implementar.
+
+### Prompt 45 - Usuario
+
+```text
+me gusta la opcion D pero necesito que sean mas pequeños los cuadradtios mandame variaciones del D
+```
+
+### Resumen operativo
+- Se creo `docs/lcd_background_option_d_variants.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina compara cinco variantes D1-D5 del estilo Game Boy/LCD oscuro, reduciendo progresivamente el tamano de pixel.
+- Se abrio el preview local para que el usuario elija antes de implementar.
+
+### Prompt 46 - Usuario
+
+```text
+QUIERO VER como seria mas pequeno que 3x hace 3x 2.5x 2x 1x
+```
+
+### Resumen operativo
+- Se creo `docs/lcd_background_option_d_micro_variants.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina compara el mismo fondo D con pixeles de `3px`, `2.5px`, `2px` y `1px`.
+- Se abrio el preview local para que el usuario elija antes de implementar.
+
+### Prompt 47 - Usuario
+
+```text
+perfecto. me gusta 2px implementalo y luego seguimos
+```
+
+### Resumen operativo
+- Se implemento en la app el fondo LCD opcion D con matriz fina de `2px`.
+- `frontend/styles/main.css` incorpora el fondo Game Boy/LCD oscuro con grilla `2px`, scanline suave y tarjetas coordinadas.
+- Se subio la version frontend a `v2.41` y el cache PWA a `finanzas-lcd-v49`.

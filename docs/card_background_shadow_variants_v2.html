@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variantes V2 - Bordes y sombra pixel art</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --lcd-0: #b7c57f;
+      --lcd-1: #9eae69;
+      --lcd-2: #7f9254;
+      --lcd-3: #5f763d;
+      --lcd-4: #2d3b23;
+      font-family: "Courier New", Consolas, monospace;
+      color: var(--ink);
+      background: #070a06;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      background:
+        linear-gradient(135deg, rgba(183, 197, 127, 0.06), transparent 34%),
+        linear-gradient(180deg, #171d14, #070a06);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      color: #c5d08b;
+      font-size: 19px;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      max-width: 930px;
+      margin: 0 0 18px;
+      color: #98a568;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+      gap: 18px;
+    }
+
+    .option {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-title {
+      color: #c5d08b;
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .option-title small {
+      display: block;
+      margin-top: 4px;
+      color: #8f9c61;
+      font-size: 11px;
+      line-height: 1.25;
+      text-transform: none;
+    }
+
+    .device {
+      padding: 13px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 74%, rgba(0, 0, 0, 0.52)),
+        linear-gradient(180deg, #30362c, #141a12 48%, #070a06);
+      border: 4px solid #050705;
+      border-radius: 18px;
+      box-shadow:
+        inset 5px 5px 0 rgba(139, 149, 110, 0.18),
+        inset -7px -8px 0 rgba(0, 0, 0, 0.45),
+        0 16px 28px rgba(0, 0, 0, 0.42);
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 386px;
+      padding: 13px;
+      background:
+        linear-gradient(90deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        linear-gradient(0deg, rgba(5, 11, 5, 0.038) 1px, transparent 1px) 0 0 / 2px 2px,
+        radial-gradient(circle at 50% 18%, rgba(193, 207, 126, 0.46), transparent 42%),
+        linear-gradient(180deg, #8a9a5c, #697d45 62%, #455d31);
+      border: 3px solid #0a1008;
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 2px rgba(12, 18, 10, 0.55),
+        inset 7px 8px 14px rgba(0, 0, 0, 0.32),
+        inset -6px -7px 12px rgba(197, 207, 137, 0.18);
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.21)),
+        repeating-linear-gradient(0deg, rgba(5, 11, 5, 0.07) 0 1px, transparent 1px 3px);
+      mix-blend-mode: multiply;
+      opacity: 0.72;
+    }
+
+    .sample-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 16px;
+    }
+
+    .date-mini {
+      display: grid;
+      gap: 8px;
+      padding: 6px 4px 0;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .date-mini b {
+      font-size: 17px;
+    }
+
+    .date-mini strong {
+      font-size: 30px;
+      line-height: 0.95;
+      text-shadow: 1px 0 0 var(--ink), 0 1px 0 var(--ink);
+    }
+
+    .card {
+      --card-bg:
+        linear-gradient(180deg, rgba(185, 199, 130, 0.54), rgba(121, 141, 83, 0.58));
+      --shade:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.58) 0 1px, transparent 1.25px) 0 0 / 4px 4px;
+      position: relative;
+      display: grid;
+      gap: 9px;
+      min-height: 100px;
+      padding: 12px;
+      color: var(--ink);
+      background: var(--card-bg);
+      border: 0;
+      text-transform: uppercase;
+      font-weight: 900;
+      image-rendering: pixelated;
+    }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .card::before {
+      z-index: -1;
+      left: 6px;
+      right: -6px;
+      top: 8px;
+      bottom: -10px;
+      background: var(--shade);
+      opacity: 0.92;
+    }
+
+    .card::after {
+      inset: 0;
+      border: 2px solid var(--ink);
+      box-shadow:
+        inset 2px 2px 0 rgba(202, 213, 143, 0.42),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.32);
+    }
+
+    .card span {
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .card strong {
+      display: block;
+      padding: 8px 8px 7px;
+      font-size: 23px;
+      line-height: 1;
+      text-align: right;
+      background: rgba(183, 197, 127, 0.28);
+      border: 2px solid rgba(7, 16, 7, 0.72);
+    }
+
+    .small-card {
+      min-height: 74px;
+      padding-top: 16px;
+    }
+
+    .v1 .card {
+      --card-bg:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 5px 5px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 5px 5px,
+        linear-gradient(180deg, rgba(183, 197, 127, 0.66), rgba(122, 144, 83, 0.68));
+      --shade:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.62) 0 1px, transparent 1.25px) 0 0 / 4px 4px;
+    }
+
+    .v2 .card {
+      --card-bg:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.18) 0 1px, transparent 1.25px) 0 0 / 5px 5px,
+        linear-gradient(180deg, rgba(190, 202, 134, 0.62), rgba(131, 151, 88, 0.68));
+      --shade:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.78) 0 1px, transparent 1.25px) 0 0 / 5px 5px;
+    }
+
+    .v2 .card::after {
+      border-width: 3px;
+    }
+
+    .v3 .card {
+      --card-bg:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.15) 1px, transparent 1px) 0 0 / 10px 10px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.12) 1px, transparent 1px) 0 0 / 10px 10px,
+        radial-gradient(circle at 1px 1px, rgba(183, 197, 127, 0.22) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+        linear-gradient(180deg, rgba(165, 181, 111, 0.72), rgba(103, 126, 73, 0.72));
+      --shade:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.72) 1px, transparent 1px) 0 0 / 4px 4px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.6) 1px, transparent 1px) 0 0 / 4px 4px;
+    }
+
+    .v3 .card::before {
+      left: 4px;
+      right: -8px;
+      bottom: -8px;
+    }
+
+    .v4 .card {
+      --card-bg:
+        repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, rgba(176, 190, 123, 0.68), rgba(112, 135, 78, 0.72));
+      --shade:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.7) 0 1px, transparent 1.25px) 0 0 / 3px 3px;
+    }
+
+    .v4 .card::before {
+      left: 0;
+      right: 0;
+      top: auto;
+      height: 13px;
+      bottom: -13px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 2px;
+      padding: 2px 5px;
+      color: #c5d08b;
+      background: #10170d;
+      border: 1px solid #c5d08b;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .note {
+      margin: 0;
+      color: #a8b573;
+      font-size: 12px;
+      line-height: 1.32;
+    }
+  </style>
+</head>
+<body>
+  <h1>V2 - Bordes, fondo y sombra pixel art</h1>
+  <p class="intro">Estas opciones dan mas presencia al borde de la tarjeta y hacen visible la sombra punteada en la base. La idea es elegir una familia visual para aplicar despues a todas las tarjetas.</p>
+
+  <main class="grid">
+    <section class="option v1">
+      <div class="option-title">E - Borde LCD + sombra puntillada lateral<small>Tarjeta bien delineada, fondo cuadriculado fino y sombra de puntos desplazada.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">La mas parecida a tarjeta LCD clasica: borde fuerte y sombra visible sin ensuciar demasiado.</p>
+    </section>
+
+    <section class="option v2">
+      <div class="option-title">F - Borde grueso + dithering completo<small>Fondo de puntos en la tarjeta y sombra de puntos mas marcada.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">Mas pixel art. Si queres que se note fuerte el puntillismo, esta es la mas directa.</p>
+    </section>
+
+    <section class="option v3">
+      <div class="option-title">G - Marco tecnico + sombra cuadriculada<small>Mas sistema operativo retro; la sombra parece una trama de pixeles densos.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">Menos organico, mas digital. Buena para una UI muy ordenada y cuadriculada.</p>
+    </section>
+
+    <section class="option v4">
+      <div class="option-title">H - Bajo relieve con base punteada<small>La tarjeta queda mas embebida y el puntillismo aparece como sombra inferior.</small></div>
+      <div class="device"><div class="screen"><div class="sample-stack">
+        <div class="date-mini"><b>HOY ES</b><strong>VIE 19/06/26</strong></div>
+        <div class="card"><span>En lo que va de Junio gastaste</span><strong>Gs. 450.000</strong></div>
+        <div class="card small-card"><span class="label">Otra tarjeta</span>Gastaste mas en: Uber</div>
+      </div></div></div>
+      <p class="note">La sombra queda solo abajo, como base pixelada. Es menos puntiaguda y mas limpia.</p>
+    </section>
+  </main>
+</body>
+</html>

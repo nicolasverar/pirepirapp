@@ -750,3 +750,14 @@ ahora trabajemos en la seccion en lo que va del mes gastaste no me gusta como es
 - Se creo `docs/card_background_shadow_variants.html` como lamina local de decision, sin modificar el frontend productivo.
 - La lamina compara cuatro fondos extrapolables a todas las tarjetas: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
 - Las variantes usan sombras pixel art escalonadas y rectas para evitar el aspecto puntiagudo actual.
+
+### Prompt 56 - Usuario
+
+```text
+NINGUNO DE ELLOS ME GUSTA bordea las tarjetas y trabaja en la sombra puntillism pixel art y tambien en el fonod
+```
+
+### Resumen operativo
+- Se creo `docs/card_background_shadow_variants_v2.html` como segunda lamina local de decision, sin modificar el frontend productivo.
+- La nueva tanda compara opciones E-H con bordes mas definidos, fondos LCD mas contenidos y sombras de puntillismo pixel art mas visibles.
+- Se abrio el preview local para que el usuario elija o pida ajustes antes de implementar.

@@ -21,7 +21,9 @@
 - Busqueda `rg` de `v2.38`, `finanzas-lcd-v46`, `Hoy es:` y separador de fecha viejo: sin resultados.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `e1d601b` (`Ajustar resumen compacto y puntillismo`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.39` sirve `v2.39`, `APP_VERSION: 'v2.39'`, cache `finanzas-lcd-v47`, `Hoy es` sin dos puntos, fecha corta, leyenda ampliada y puntillismo en tarjetas.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.

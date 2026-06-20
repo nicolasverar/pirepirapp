@@ -116,7 +116,7 @@
       '<p class="summary-combined-top-line"><strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
       '</div>',
       '</article>',
-      '<article class="system-window availability-card">',
+      '<article class="system-window availability-card availability-card-b">',
       '<div class="window-title">PLATA DISPONIBLE</div>',
       '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),

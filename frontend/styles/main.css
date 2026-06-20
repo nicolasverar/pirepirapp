@@ -894,6 +894,39 @@ code {
   background: var(--lcd-bg);
 }
 
+.availability-card-b .available-line {
+  display: grid;
+  place-items: center;
+  gap: 7px;
+  min-height: 92px;
+  margin: 0 0 10px;
+  padding: 10px;
+  border: 2px solid var(--lcd-ink);
+  border-radius: 5px;
+  background: #bccb84;
+  box-shadow:
+    inset 2px 2px 0 rgba(230, 240, 164, 0.28),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.22);
+  text-align: center;
+}
+
+.availability-card-b .available-line span {
+  font-size: clamp(0.66rem, 2.6vw, 0.78rem);
+  line-height: 1;
+}
+
+.availability-card-b .available-line strong {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(1.58rem, 7.3vw, 2.28rem);
+  line-height: 1;
+}
+
+.availability-card-b .progress-large {
+  min-height: 66px;
+  margin-top: 0;
+}
+
 @keyframes lcd-wave {
   from {
     background-position: 0 0;

@@ -943,3 +943,26 @@ elimina ese marco donde esta lo qu e mas gastaste este mes y con lineas intermit
 - Se agrego una segunda linea intermitente antes del bloque inferior.
 - El texto inferior queda centrado como `EN LO QUE MAS GASTASTE FUE EN` y debajo muestra el gasto principal.
 - Se subio la version frontend a `v2.57` y el cache PWA a `finanzas-lcd-v65`.
+
+### Prompt 73 - Usuario
+
+```text
+ahora trabajemos en las seccoiones  que dicen plata disponible y particion de sueldo quiero que me presentes ocpiones de diseño para esta tarjeta
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/summary_available_partition_variants.html`.
+- La lamina presenta tres variantes para `Plata disponible` y tres para `Particion sueldo`.
+- No se modifico aun la app productiva; queda pendiente que el usuario elija una opcion o combinacion.
+
+### Prompt 74 - Usuario
+
+```text
+me gusta B para plata disponible el procentaje lo que quiero que este con el progress bar no que diga ok en la esqueina suerior derecha luego para particiones tenemos mucho trabajo que hacer poque todo se ve horrible y peor de como esta
+```
+
+### Resumen operativo
+- Se implemento la variante B en `Plata disponible`, sin indicador `OK`; el porcentaje queda asociado al progress bar.
+- `Particion sueldo` no se modifico en la app productiva.
+- Se creo una segunda lamina local `docs/salary_partition_variants_v2.html` con opciones nuevas para trabajar esa tarjeta desde otra base.
+- Se subio la version frontend a `v2.58` y el cache PWA a `finanzas-lcd-v66`.

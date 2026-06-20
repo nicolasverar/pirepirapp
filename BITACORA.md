@@ -16,6 +16,7 @@
 - Agrandar el titulo `EN LO QUE VA DE [MES] GASTASTE`, simplificar el KPI de mayor gasto y extender ese skin a las demas tarjetas de Resumen sin cambiar sus estructuras.
 - Centrar el titulo de gasto mensual y aclarar que el cuadro inferior muestra en que se gasto mas durante el mes.
 - Quitar el marco interno de mayor gasto, separar con linea intermitente y mostrar `EN LO QUE MAS GASTASTE FUE EN` centrado sobre el gasto.
+- Implementar la opcion B de `Plata disponible`, manteniendo el porcentaje junto al progress bar y dejando `Particion sueldo` sin cambios productivos.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -45,6 +46,11 @@
 - `frontend/scripts/render.js`: se agrego una segunda linea `summary-combined-divider` antes del bloque de mayor gasto y la etiqueta paso a `EN LO QUE MAS GASTASTE FUE EN`.
 - `frontend/styles/main.css`: se elimino el fondo/borde del bloque `summary-combined-top` para que quede integrado sin marco interno.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.57` y cache a `finanzas-lcd-v65`.
+- `frontend/scripts/render.js`: `Plata disponible` ahora usa la clase `availability-card-b`.
+- `frontend/styles/main.css`: se agrego el display central de monto para `availability-card-b`; el porcentaje sigue en `renderProgressMeter`.
+- `docs/summary_available_partition_variants.html`: preview de opciones A-F agregado al repositorio.
+- `docs/salary_partition_variants_v2.html`: segunda lamina de opciones G-J para redisenar `Particion sueldo`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.58` y cache a `finanzas-lcd-v66`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion

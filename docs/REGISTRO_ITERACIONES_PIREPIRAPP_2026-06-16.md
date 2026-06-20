@@ -783,3 +783,24 @@ combina el dondo de J mas la sombra de I pero con puntitos tambien hacia la dere
 - Se creo `docs/card_inner_layout_variants_v4.html` como lamina local de decision, sin modificar el frontend productivo.
 - La base visual combina fondo de J, sombra de I y puntillismo tambien hacia la derecha de la tarjeta.
 - Se propusieron seis organizaciones internas M-R para la tarjeta de gasto mensual.
+
+### Prompt 59 - Usuario
+
+```text
+me gusta M pero el fondo sigue siendo el problema cambiemos el fondo y  presenta variaciones
+```
+
+### Resumen operativo
+- Se comenzo a preparar una lamina de fondos con layout M fijo, pero el usuario redirigio el criterio antes de cerrarla.
+- No se modifico el frontend productivo.
+
+### Prompt 60 - Usuario
+
+```text
+fusiona con la tarjeta que dice gastaste mas en asi matamos dos pajaros de un tiro\
+```
+
+### Resumen operativo
+- Se reemplazo la propuesta anterior por `docs/card_combined_summary_variants_v5.html`, una lamina local de decision sin cambios productivos.
+- La nueva lamina fusiona el bloque de gasto mensual estilo M con el KPI `Gastaste mas en`.
+- Se proponen fondos AA-FF para evaluar textura, legibilidad y coherencia LCD en una tarjeta compuesta.

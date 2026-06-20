@@ -11,6 +11,7 @@
 - `docs/card_background_shadow_variants_v2.html`: segunda lamina local con variantes E-H, bordes mas definidos y sombras de puntillismo pixel art mas visibles.
 - `docs/card_background_shadow_variants_v3.html`: tercera lamina local con variantes I-L, combinando borde de E, fondo de H, puntillismo reducido y sombras menos desplazadas.
 - `docs/card_inner_layout_variants_v4.html`: cuarta lamina local con la base fondo J + sombra I y seis organizaciones internas M-R.
+- `docs/card_combined_summary_variants_v5.html`: quinta lamina local con tarjeta fusionada de gasto mensual y `Gastaste mas en`, comparando fondos AA-FF.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -18,6 +19,7 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v2.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
+- Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
 
 ### Despliegue
 - No aplica todavia: es una propuesta visual local, sin cambios productivos en `frontend/`.

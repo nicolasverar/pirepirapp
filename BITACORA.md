@@ -9,7 +9,7 @@
 - Corregir la visibilidad de la fecha reemplazando canvas por SVG de pixeles reales.
 
 ### Cambios
-- `frontend/scripts/render.js`: el bloque de bienvenida ahora usa canvas con glifos bitmap 5x7, pixeles activos y ghost de segmentos apagados.
+- `frontend/scripts/render.js`: el bloque de bienvenida usa glifos bitmap 5x7 con pixeles activos y ghost de segmentos apagados.
 - `frontend/scripts/render.js`: el escalado del canvas ahora permite crecer por ancho disponible, separando proporciones de label y fecha.
 - `frontend/scripts/render.js`: `HOY ES` y la fecha ahora se renderizan como SVG de rectangulos pixel, evitando fallas donde solo aparecia el label.
 - `frontend/styles/main.css`: se ampliaron los altos de `summary-pixel-label` y `summary-pixel-date`, y la fecha queda en contenedor limpio sin borde heredado.
@@ -27,7 +27,9 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.44`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `a3c37c5` (`Renderizar fecha pixel en SVG`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.44` sirve `v2.44`, `APP_VERSION: 'v2.44'`, cache `finanzas-lcd-v52`, `renderSummaryPixelSvg` y estilos `.summary-pixel-svg`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.

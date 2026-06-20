@@ -43,8 +43,8 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.50`.
 
 ### Despliegue
-- Commit principal: pendiente.
-- GitHub Pages publico: pendiente de verificacion `v2.50`.
+- Commit principal: `0722764` (`Ajustar tarjeta resumen al preview GG`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.50` sirve `v2.50`, `APP_VERSION: 'v2.50'`, cache `finanzas-lcd-v58`, `topSpendingMovement` en render y override `.lcd-screen.is-summary-screen::after` con `opacity: 0.16`.
 - No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes

@@ -1,5 +1,33 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Grilla LCD y leyenda de particion
+
+### Objetivo
+- Reordenar el bloque de fecha: `Hoy es` arriba, espacio vertical y fecha pixel art limpia debajo.
+- Eliminar el puntillismo de los fondos y reemplazarlo por cuadricula vintage LCD.
+- Dejar el dithering solo como sombra/base visible de tarjetas, siguiendo `ejemplo.png`.
+- Rediseñar el boton `AGREGAR`, la paleta de particion y la leyenda.
+
+### Cambios
+- `frontend/styles/main.css`: se agrego una capa final `v2.40` con fondos de grilla lineal, fecha con jerarquia vertical, sombras dithered visibles en base/lateral de tarjetas de futuro/metas/wishlist, boton `AGREGAR` sin marco claro y paleta nueva de torta.
+- `frontend/scripts/render.js`: la leyenda de `Particion sueldo` ahora muestra nombre, monto y porcentaje por item.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.40` y cache a `finanzas-lcd-v48`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados con rutas locales sanitizadas.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.39`, `finanzas-lcd-v47` y `APP_VERSION: 'v2.39'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.40`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
+
 ## 2026-06-19 - Fecha compacta y puntillismo retro
 
 ### Objetivo

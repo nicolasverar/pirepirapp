@@ -711,12 +711,13 @@
 
   function renderSalaryPartitionLegend(fixed, salary, available, excess) {
     var items = fixed.map(function (item, index) {
+      var amount = utils.fixedExpenseAmount(item);
       var percent = salary ? Math.round((utils.fixedExpenseAmount(item) / salary) * 10000) / 100 : 0;
-      return '<li><i class="segment-' + (index % 6) + '"></i><span>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
+      return '<li><i class="segment-' + (index % 6) + '"></i><span><strong>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</strong><small>' + utils.escapeHtml(utils.formatMoney(amount)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
     });
-    items.push('<li><i class="segment-available"></i><span>Disponible</span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
+    items.push('<li><i class="segment-available"></i><span><strong>Disponible</strong><small>' + utils.escapeHtml(utils.formatMoney(available)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
     if (excess > 0) {
-      items.push('<li><i class="segment-excess"></i><span>Exceso</span><b>' + utils.escapeHtml(formatPercentInput((excess / salary) * 100) || '0') + '%</b></li>');
+      items.push('<li><i class="segment-excess"></i><span><strong>Exceso</strong><small>' + utils.escapeHtml(utils.formatMoney(excess)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput((excess / salary) * 100) || '0') + '%</b></li>');
     }
     return '<ul class="partition-legend">' + items.join('') + '</ul>';
   }

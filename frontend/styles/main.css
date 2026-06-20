@@ -2731,7 +2731,7 @@ body::-webkit-scrollbar,
   display: none;
 }
 
-/* Ajustes finos v2.39: fecha corta, puntillismo y leyenda legible. */
+/* Ajustes previos: fecha corta y leyenda compacta. */
 .summary-embedded .summary-date-block {
   display: grid;
   gap: 4px;
@@ -2902,4 +2902,348 @@ body::-webkit-scrollbar,
   color: #0b1209;
   background: rgba(169, 184, 110, 0.86);
   text-shadow: 1px 1px 0 rgba(188, 198, 125, 0.5);
+}
+
+/* Ajustes visuales v2.40: grilla LCD, sombras dither y particion clara. */
+.lcd-screen {
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.07) 1px, transparent 1px) 0 0 / 12px 12px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.06) 1px, transparent 1px) 0 0 / 12px 12px,
+    linear-gradient(145deg, rgba(172, 183, 117, 0.7), rgba(141, 153, 90, 0.96) 54%, rgba(111, 124, 73, 0.98)),
+    var(--lcd-bg);
+}
+
+.lcd-screen::after {
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.12) 1px, transparent 1px) 0 0 / 10px 10px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px) 0 0 / 10px 10px;
+  opacity: 0.34;
+}
+
+.status-bar,
+.key-zone {
+  background:
+    linear-gradient(90deg, rgba(151, 162, 96, 0.16) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(0deg, rgba(151, 162, 96, 0.12) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(180deg, #172014, #0c120b);
+}
+
+.system-window,
+.summary-kpi-badge,
+.salary-pie-stage,
+.modal-panel,
+.toast {
+  background-image:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.13) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(188, 198, 125, 0.24), rgba(141, 153, 90, 0.18));
+  background-size: 12px 12px, 12px 12px, auto;
+  background-color: rgba(151, 162, 96, 0.76);
+}
+
+.summary-embedded .summary-date-block {
+  display: grid;
+  gap: 0;
+  padding: 1px 4px 0;
+}
+
+.summary-embedded .summary-date-kicker {
+  display: block;
+  margin: 0 0 14px;
+  font-size: clamp(1.02rem, 4.8vw, 1.46rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow:
+    1px 0 0 #0b1209,
+    0 1px 0 #0b1209;
+}
+
+.summary-embedded .summary-date-display {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(10px, 4.5vw, 18px);
+  white-space: nowrap;
+}
+
+.summary-embedded .summary-date-display span,
+.summary-embedded .summary-date-display strong {
+  font-size: clamp(1.9rem, 9.2vw, 2.74rem);
+  line-height: 0.96;
+  text-shadow:
+    1px 0 0 #0b1209,
+    0 1px 0 #0b1209,
+    1px 1px 0 rgba(13, 21, 12, 0.8);
+}
+
+.summary-embedded .summary-date-display span {
+  min-width: 3ch;
+}
+
+.summary-embedded .summary-spent-line {
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.14) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px) 0 0 / 8px 8px,
+    rgba(141, 153, 90, 0.44);
+}
+
+.summary-embedded .summary-spent-line strong {
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.16) 1px, transparent 1px) 0 0 / 7px 7px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.12) 1px, transparent 1px) 0 0 / 7px 7px,
+    rgba(169, 184, 110, 0.58);
+}
+
+.future-window,
+.goals-window,
+.wishlist-window {
+  overflow: visible;
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.16) 1px, transparent 1px) 0 0 / 12px 12px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.12) 1px, transparent 1px) 0 0 / 12px 12px,
+    linear-gradient(180deg, rgba(188, 198, 125, 0.22), rgba(132, 145, 84, 0.12)),
+    rgba(151, 162, 96, 0.76);
+}
+
+.future-card,
+.goal-card,
+.wish-card {
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  margin: 0 8px 12px 0;
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.18) 1px, transparent 1px) 0 0 / 9px 9px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.13) 1px, transparent 1px) 0 0 / 9px 9px,
+    linear-gradient(180deg, rgba(177, 189, 118, 0.5), rgba(135, 150, 88, 0.54)),
+    rgba(151, 162, 96, 0.82);
+  box-shadow:
+    inset 1px 1px 0 rgba(195, 206, 133, 0.38),
+    inset -2px -2px 0 rgba(13, 21, 12, 0.22);
+}
+
+.future-card::before,
+.goal-card::before,
+.wish-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 7px;
+  right: -8px;
+  bottom: -8px;
+  width: 8px;
+  background:
+    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
+    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
+    rgba(101, 115, 66, 0.9);
+}
+
+.future-card::after,
+.goal-card::after,
+.wish-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 7px;
+  right: -8px;
+  bottom: -8px;
+  height: 8px;
+  background:
+    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
+    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
+    rgba(101, 115, 66, 0.9);
+}
+
+.future-card > *,
+.goal-card > *,
+.wish-card > :not(.sharp-spark-layer):not(.wish-convert-check) {
+  position: relative;
+  z-index: 2;
+}
+
+.action-key {
+  color: #0b1209;
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.2) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.16) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(180deg, rgba(183, 194, 123, 0.62), rgba(130, 144, 84, 0.95)),
+    #97a260;
+  border-color: #0b1209;
+  box-shadow:
+    inset 2px 2px 0 rgba(195, 206, 133, 0.42),
+    inset -3px -3px 0 rgba(13, 21, 12, 0.3),
+    4px 4px 0 rgba(13, 21, 12, 0.72);
+}
+
+.action-key-label {
+  padding: 0;
+  color: #0b1209;
+  background: transparent;
+  text-shadow:
+    1px 0 0 #0b1209,
+    0 1px 0 rgba(195, 206, 133, 0.44);
+}
+
+.salary-pie-svg pattern line {
+  stroke: rgba(13, 21, 12, 0.44);
+  stroke-width: 1;
+}
+
+.salary-pie-hatch {
+  opacity: 0.2;
+}
+
+.salary-pie-side-texture {
+  opacity: 0.14;
+}
+
+.salary-pie-side-shade {
+  fill: rgba(13, 21, 12, 0.16);
+}
+
+.salary-pie-slice.segment-0 {
+  fill: #a6b66f;
+}
+
+.salary-pie-side-fill.segment-0 {
+  fill: #77884f;
+}
+
+.salary-pie-slice.segment-1 {
+  fill: #8fa05f;
+}
+
+.salary-pie-side-fill.segment-1 {
+  fill: #657841;
+}
+
+.salary-pie-slice.segment-2 {
+  fill: #b5c27a;
+}
+
+.salary-pie-side-fill.segment-2 {
+  fill: #829052;
+}
+
+.salary-pie-slice.segment-3 {
+  fill: #7f9256;
+}
+
+.salary-pie-side-fill.segment-3 {
+  fill: #5f713e;
+}
+
+.salary-pie-slice.segment-4,
+.salary-pie-slice.segment-available {
+  fill: #9bad68;
+}
+
+.salary-pie-side-fill.segment-4,
+.salary-pie-side-fill.segment-available {
+  fill: #6f8149;
+}
+
+.salary-pie-slice.segment-5 {
+  fill: #c0ca83;
+}
+
+.salary-pie-side-fill.segment-5 {
+  fill: #8b9659;
+}
+
+.salary-pie-label-bg {
+  fill: rgba(177, 189, 118, 0.94);
+  stroke: #0b1209;
+  stroke-width: 1.4;
+}
+
+.salary-pie-label {
+  fill: #0b1209;
+  font-size: 8.4px;
+  font-weight: 900;
+}
+
+.partition-legend {
+  gap: 7px;
+  padding-top: 7px;
+}
+
+.partition-legend li {
+  grid-template-columns: 30px minmax(0, 1fr) minmax(66px, auto);
+  gap: 9px;
+  min-height: 40px;
+  padding: 6px 8px;
+  color: #0b1209;
+  background:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.12) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px) 0 0 / 8px 8px,
+    rgba(169, 184, 110, 0.5);
+  border: 2px solid #0b1209;
+  box-shadow:
+    inset 1px 1px 0 rgba(195, 206, 133, 0.42),
+    2px 2px 0 rgba(13, 21, 12, 0.34);
+}
+
+.partition-legend i {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #0b1209;
+  box-shadow: inset 1px 1px 0 rgba(195, 206, 133, 0.35);
+}
+
+.partition-legend span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.partition-legend span strong {
+  color: #0b1209;
+  font-size: 0.86rem;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.partition-legend span small {
+  color: rgba(13, 21, 12, 0.78);
+  font-size: 0.66rem;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.partition-legend b {
+  align-self: center;
+  padding: 4px 5px;
+  color: #0b1209;
+  background: rgba(195, 206, 133, 0.42);
+  border: 2px solid #0b1209;
+  font-size: 0.82rem;
+  line-height: 1;
+  text-align: right;
+}
+
+.partition-legend .segment-0 {
+  background: #a6b66f;
+}
+
+.partition-legend .segment-1 {
+  background: #8fa05f;
+}
+
+.partition-legend .segment-2 {
+  background: #b5c27a;
+}
+
+.partition-legend .segment-3 {
+  background: #7f9256;
+}
+
+.partition-legend .segment-4,
+.partition-legend .segment-available {
+  background: #9bad68;
+}
+
+.partition-legend .segment-5 {
+  background: #c0ca83;
 }

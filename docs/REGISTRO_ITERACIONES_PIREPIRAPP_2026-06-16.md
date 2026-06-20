@@ -585,3 +585,33 @@ saca los dos puntos al lado de hoy es y abajo quiero que hagas entrar vie 19/06/
 - Se agregan sombras puntillistas sin circulos concentricos al badge de resumen y a tarjetas de `EL FUTURO`, `METAS` y `COSAS QUE QUIERO`.
 - La leyenda de `Particion sueldo` gana filas mas altas, marcadores mas grandes y texto reforzado para mejorar lectura.
 - Se subio la version frontend a `v2.39` y el cache PWA a `finanzas-lcd-v47`.
+
+### Prompt 43 - Usuario
+
+```text
+Jerarquía y Encabezado:
+
+Ubica el elemento "Hoy es" en la parte superior de su respectiva tarjeta lueg deja un espacio prudente hacia abajo y luego coloca la fecha bien espaciada y aplica a todo este bloque de fecha un estilo pixel art marcado y limpio.
+
+Sección "Metas" y Fondo General (Adiós Puntillismo):
+El puntillismo actual se ve mal y debe ser eliminado de los fondos.
+Las tarjetas de la sección "Metas" deben adoptar este mismo fondo de la app cuadrícula vintage de píxeles bien definida y de alta calidad que da la ilusion de pixeles de LCD
+
+Detalle clave: Aplica una sombra con efecto de puntillismo (dithering) únicamente en la base de cada tarjeta para darles relieve (asegúrate de que sea visible, ya que actualmente no se nota en ninguna tarjeta) como se ve en esta iimagen <ruta-local>\ejemplo.png
+
+Botón de Agregar:
+Elimina el marco claro actual (se ve mal estéticamente).
+Añádele una textura coherente con el estilo pixel art para que se integre mejor.
+
+Partición y Leyenda:
+Corrige la partición actual (el cdistinguido de patrones se ve mal). Aplica una paleta de colores armónica.
+Rediseña la leyenda por completo para que sea 100% legible y fácil de entender.
+```
+
+### Resumen operativo
+- Se consulto `ejemplo.png` como referencia local para convertir el puntillismo en una sombra/base dithered visible, no en fondo.
+- El bloque `Hoy es` queda arriba, con separacion vertical y fecha compacta en estilo pixel art limpio.
+- Los fondos principales pasan a cuadricula LCD vintage sin puntos radiales; las tarjetas de futuro, metas y wishlist usan grilla definida.
+- El boton `AGREGAR` pierde el marco claro interno y gana textura de grilla pixel art.
+- `Particion sueldo` recibe paleta verde armonica, patrones menos agresivos y una leyenda nueva con nombre, monto y porcentaje.
+- Se subio la version frontend a `v2.40` y el cache PWA a `finanzas-lcd-v48`.

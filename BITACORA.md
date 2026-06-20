@@ -23,7 +23,9 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.40`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `444fafd` (`Refinar grilla LCD y particion`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.40` sirve `v2.40`, `APP_VERSION: 'v2.40'`, cache `finanzas-lcd-v48`, sombras dither en base de tarjetas, leyenda nueva y estilos `v2.40`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.

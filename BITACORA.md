@@ -20,8 +20,13 @@
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.38`.
 
+### Despliegue
+- Commit principal: `e615dd0` (`Corregir resumen LCD y torta solida`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.38` sirve `v2.38`, `APP_VERSION: 'v2.38'`, cache `finanzas-lcd-v46`, resumen sin marco, boton `AGREGAR` limpio y torta sin rims flotantes.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la URL publica despues del push.
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-19 - Ajuste fino LCD oliva y scrollbars
 

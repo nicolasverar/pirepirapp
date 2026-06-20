@@ -1043,3 +1043,14 @@ hace un rato habiamosdefnido cual iba a er eestilo para esa seccion en el moment
 - Se corrigio la lamina `docs/summary_available_partition_variants.html`.
 - La opcion B ahora aparece como la elegida: sin `OK` en la esquina superior derecha y con el porcentaje asociado al progress bar.
 - No se modifico la app productiva porque `Plata disponible` ya estaba publicada con ese criterio en `v2.58`.
+
+### Prompt 82 - Usuario
+
+```text
+mentira no se ve asi
+```
+
+### Resumen operativo
+- Se agrego un override final en `frontend/styles/main.css` para blindar la apariencia real de `availability-card-b` despues de toda la cascada CSS.
+- El override fuerza monto centrado, display interno, titulo sin `OK` y porcentaje en `progress-label`.
+- Se subio la version frontend a `v2.59` y el cache PWA a `finanzas-lcd-v67`.

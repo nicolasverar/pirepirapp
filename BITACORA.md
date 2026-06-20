@@ -22,7 +22,9 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.42`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `f74a4f4` (`Implementar pixel font P6 en resumen`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.42` sirve `v2.42`, `APP_VERSION: 'v2.42'`, cache `finanzas-lcd-v50`, render con `summary-pixel-text` y CSS de `summary-pixel-date`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.

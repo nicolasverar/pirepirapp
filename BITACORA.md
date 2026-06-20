@@ -17,6 +17,7 @@
 - Centrar el titulo de gasto mensual y aclarar que el cuadro inferior muestra en que se gasto mas durante el mes.
 - Quitar el marco interno de mayor gasto, separar con linea intermitente y mostrar `EN LO QUE MAS GASTASTE FUE EN` centrado sobre el gasto.
 - Implementar la opcion B de `Plata disponible`, manteniendo el porcentaje junto al progress bar y dejando `Particion sueldo` sin cambios productivos.
+- Ajustar definitivamente `Plata disponible` a la opcion B del preview, retirando la barra `window-title` negra y usando titulo simple interno.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -51,6 +52,9 @@
 - `docs/summary_available_partition_variants.html`: preview de opciones A-F agregado al repositorio.
 - `docs/salary_partition_variants_v2.html`: segunda lamina de opciones G-J para redisenar `Particion sueldo`.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.58` y cache a `finanzas-lcd-v66`.
+- `frontend/scripts/render.js`: `Plata disponible` usa `availability-b-title` y `availability-b-divider` en vez de `window-title`.
+- `frontend/styles/main.css`: override final actualizado para que la tarjeta B no herede la barra negra de `window-title`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.60` y cache a `finanzas-lcd-v68`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion

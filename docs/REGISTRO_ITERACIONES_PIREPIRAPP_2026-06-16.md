@@ -1054,3 +1054,14 @@ mentira no se ve asi
 - Se agrego un override final en `frontend/styles/main.css` para blindar la apariencia real de `availability-card-b` despues de toda la cascada CSS.
 - El override fuerza monto centrado, display interno, titulo sin `OK` y porcentaje en `progress-label`.
 - Se subio la version frontend a `v2.59` y el cache PWA a `finanzas-lcd-v67`.
+
+### Prompt 83 - Usuario
+
+```text
+sigue sin verse como te pedi esa seccion
+```
+
+### Resumen operativo
+- Se cambio la estructura renderizada de `Plata disponible`: se retiro `window-title` y se agrego `availability-b-title`, igualando mejor la opcion B del preview.
+- Se agrego `availability-b-divider` antes del progress bar.
+- Se subio la version frontend a `v2.60` y el cache PWA a `finanzas-lcd-v68`.

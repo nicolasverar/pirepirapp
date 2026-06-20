@@ -3595,21 +3595,27 @@ body::-webkit-scrollbar,
   gap: 10px;
 }
 
-.summary-stack > .availability-card.availability-card-b .window-title {
-  min-height: 25px;
-  margin: -10px -10px 10px;
-  padding: 4px 8px;
-  color: #c0cc87;
-  background:
-    repeating-linear-gradient(90deg, rgba(192, 204, 135, 0.15) 0, rgba(192, 204, 135, 0.15) 1px, transparent 1px, transparent 3px),
-    #071007;
+.summary-stack > .availability-card.availability-card-b .availability-b-title {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 7px;
+  color: #071007;
   border-bottom: 2px solid #071007;
-  font-size: 0;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
-.summary-stack > .availability-card.availability-card-b .window-title::before {
-  content: "PLATA DISPONIBLE";
-  font-size: 0.86rem;
+.summary-stack > .availability-card.availability-card-b .availability-b-title span {
+  display: block;
+}
+
+.summary-stack > .availability-card.availability-card-b .availability-b-divider {
+  height: 2px;
+  margin: 0 0 2px;
+  background: repeating-linear-gradient(90deg, #071007 0 3px, transparent 3px 6px);
 }
 
 .summary-stack > .availability-card.availability-card-b .available-line {

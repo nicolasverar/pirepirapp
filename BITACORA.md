@@ -77,6 +77,12 @@
 - Validacion de assets de `frontend/service-worker.js`: assets sin faltantes.
 - Busqueda `rg` de `v2.55`, `finanzas-lcd-v63` y `APP_VERSION: 'v2.55'` en `frontend`: sin resultados.
 - Verificacion especifica `v2.56`: etiqueta `MAS GASTASTE ESTE MES EN`, titulo centrado, CSS de label y cache `finanzas-lcd-v64`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: assets sin faltantes.
+- Busqueda especifica de `v2.56`, `finanzas-lcd-v64` y `APP_VERSION: 'v2.56'` en `frontend`: sin resultados.
+- Verificacion especifica `v2.57`: label `EN LO QUE MAS GASTASTE FUE EN`, dos lineas intermitentes y bloque inferior sin marco interno.
 
 ### Despliegue
 - Commit principal: `87de50a` (`Pixelar monto de tarjeta resumen`) subido a `origin/main`.
@@ -85,6 +91,8 @@
 - GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.55` sirve `v2.55`, `APP_VERSION: 'v2.55'`, cache `finanzas-lcd-v63`, titulo en una linea, monto pixelado, KPI inferior simple y skin compartido en `Plata disponible` / `Particion sueldo`.
 - Commit principal: `a3aea47` (`Aclarar KPI de mayor gasto`) subido a `origin/main`.
 - GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.56` sirve `v2.56`, `APP_VERSION: 'v2.56'`, cache `finanzas-lcd-v64`, label `MAS GASTASTE ESTE MES EN` y titulo centrado.
+- Commit principal: `43316fb` (`Simplificar bloque de mayor gasto`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.57` sirve `v2.57`, `APP_VERSION: 'v2.57'`, cache `finanzas-lcd-v65`, label `EN LO QUE MAS GASTASTE FUE EN`, dos separadores intermitentes y bloque inferior sin marco interno.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

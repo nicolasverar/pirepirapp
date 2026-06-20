@@ -29,8 +29,8 @@
 - Servidor local `http://127.0.0.1:4173/`: sirve `v2.45`.
 
 ### Despliegue
-- Commit principal: pendiente.
-- GitHub Pages publico: pendiente de verificacion `v2.45`.
+- Commit principal: `d2c864b` (`Corregir fecha debajo de hoy es`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.45` sirve `v2.45`, `APP_VERSION: 'v2.45'`, cache `finanzas-lcd-v53` y CSS con `grid-template-columns: minmax(0, 1fr)` para el bloque de fecha.
 - No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes

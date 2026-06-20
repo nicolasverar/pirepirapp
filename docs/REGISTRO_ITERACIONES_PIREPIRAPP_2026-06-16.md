@@ -850,3 +850,15 @@ implementa GG
 - El fondo queda mas limpio y legible, con alto contraste y sin textura invasiva.
 - La sombra derecha se amplio para sumar una columna extra de puntitos.
 - Se subio la version frontend a `v2.48` y el cache PWA a `finanzas-lcd-v56`.
+
+### Prompt 65 - Usuario
+
+```text
+fijate en la tarjeta salen putitos encima no es la que yo eegi
+```
+
+### Resumen operativo
+- Se detecto que la trama general de `lcd-screen::after` seguia cayendo por encima de la tarjeta de Resumen.
+- `frontend/scripts/render.js` marca la vista Resumen con la clase `is-summary-screen`.
+- `frontend/styles/main.css` reduce la superposicion de trama solo en Resumen y aisa la tarjeta fusionada para respetar mejor el estilo GG.
+- Se subio la version frontend a `v2.49` y el cache PWA a `finanzas-lcd-v57`.

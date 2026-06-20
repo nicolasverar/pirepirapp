@@ -12,6 +12,7 @@
     if (!screen) {
       return;
     }
+    screen.classList.toggle('is-summary-screen', state.currentView !== 'gastos' && state.currentView !== 'metas' && state.currentView !== 'configuracion');
 
     if (!window.FinanzasApi.hasBackend()) {
       screen.innerHTML = renderMissingConfig();

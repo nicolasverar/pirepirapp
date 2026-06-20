@@ -1,5 +1,31 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-19 - Fecha compacta y puntillismo retro
+
+### Objetivo
+- Quitar los dos puntos de `Hoy es` y compactar la fecha para que entre como `VIE 19/06/26`.
+- Separar el texto `En lo que va de [mes] gastaste` del monto en guaranies.
+- Reemplazar sombreados planos por puntillismo retro y mejorar la legibilidad de la leyenda de particion.
+- Dar fondo puntillista a las tarjetas de `EL FUTURO`, `METAS` y `COSAS QUE QUIERO`.
+
+### Cambios
+- `frontend/scripts/render.js`: el resumen renderiza `Hoy es` sin dos puntos, fecha corta `DD/MM/AA`, monto mensual variable en una linea reservada y clases especificas para ventanas de metas/lista.
+- `frontend/styles/main.css`: se agregaron overrides de fecha compacta, monto con caja punteada, badge con puntos, leyenda de particion mas legible y fondos puntillistas para metas/wishlist/futuro.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.39` y cache a `finanzas-lcd-v47`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Busqueda `rg` de `v2.38`, `finanzas-lcd-v46`, `Hoy es:` y separador de fecha viejo: sin resultados.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en el celular instalado despues de tocar `Actualizar app` si mantiene cache anterior.
+
 ## 2026-06-19 - Correccion de fecha, patrones y torta solida
 
 ### Objetivo

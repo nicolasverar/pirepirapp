@@ -2678,7 +2678,7 @@ body::-webkit-scrollbar,
 }
 
 .summary-embedded .summary-date-display span::after {
-  content: " | ";
+  content: "";
 }
 
 .summary-embedded .summary-spent-line {
@@ -2729,4 +2729,177 @@ body::-webkit-scrollbar,
 .salary-pie-top-rim,
 .salary-pie-front-rim {
   display: none;
+}
+
+/* Ajustes finos v2.39: fecha corta, puntillismo y leyenda legible. */
+.summary-embedded .summary-date-block {
+  display: grid;
+  gap: 4px;
+  padding: 0 3px;
+}
+
+.summary-embedded .summary-date-kicker {
+  display: block;
+  padding: 0;
+  color: #0b1209;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(1.02rem, 5.2vw, 1.52rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: none;
+  text-shadow: 1px 0 0 #0b1209;
+}
+
+.summary-embedded .summary-date-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 0;
+  padding: 0;
+  color: #0b1209;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.summary-embedded .summary-date-display span,
+.summary-embedded .summary-date-display strong {
+  display: inline-block;
+  color: #0b1209;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(1.86rem, 9.4vw, 2.84rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow:
+    1px 0 0 #0b1209,
+    0 1px 0 #0b1209;
+}
+
+.summary-embedded .summary-date-display span::after {
+  content: "";
+}
+
+.summary-embedded .summary-spent-line {
+  display: grid;
+  gap: 6px;
+  margin-top: 11px;
+  padding: 7px 8px 8px;
+  color: #0b1209;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.27) 0 1px, transparent 1.35px) 0 0 / 5px 5px,
+    rgba(141, 153, 90, 0.44);
+  border: 0;
+  box-shadow:
+    inset 3px 3px 0 rgba(13, 21, 12, 0.34),
+    inset -2px -2px 0 rgba(172, 183, 117, 0.28);
+}
+
+.summary-embedded .summary-spent-line span {
+  display: block;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(0.72rem, 3.8vw, 0.92rem);
+  font-weight: 900;
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.summary-embedded .summary-spent-line strong {
+  display: block;
+  min-height: 36px;
+  padding: 7px 9px 6px;
+  color: #0b1209;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.32) 0 1px, transparent 1.35px) 0 0 / 4px 4px,
+    rgba(169, 184, 110, 0.58);
+  border: 2px solid #0b1209;
+  box-shadow:
+    inset 2px 2px 0 rgba(13, 21, 12, 0.22),
+    inset -1px -1px 0 rgba(188, 198, 125, 0.38);
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(1rem, 4.9vw, 1.48rem);
+  font-weight: 900;
+  line-height: 1;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.summary-kpi-badge {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.26) 0 1px, transparent 1.35px) 0 0 / 5px 5px,
+    rgba(169, 184, 110, 0.58);
+}
+
+.partition-legend {
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.partition-legend li {
+  grid-template-columns: 24px minmax(0, 1fr) minmax(58px, auto);
+  gap: 8px;
+  min-height: 31px;
+  padding: 4px 6px;
+  color: #0b1209;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.2) 0 1px, transparent 1.35px) 0 0 / 5px 5px,
+    rgba(169, 184, 110, 0.34);
+  border: 2px dotted rgba(13, 21, 12, 0.74);
+  font-size: 0.84rem;
+  line-height: 1.08;
+}
+
+.partition-legend i {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0b1209;
+  font-size: 0.62rem;
+}
+
+.partition-legend span,
+.partition-legend b {
+  color: #0b1209;
+  font-weight: 900;
+}
+
+.partition-legend b {
+  font-size: 0.82rem;
+}
+
+.future-window,
+.goals-window,
+.wishlist-window {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.22) 0 1px, transparent 1.35px) 0 0 / 5px 5px,
+    linear-gradient(180deg, rgba(172, 183, 117, 0.18), transparent 36%),
+    rgba(151, 162, 96, 0.72);
+}
+
+.future-card,
+.goal-card,
+.wish-card {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.24) 0 1px, transparent 1.35px) 0 0 / 5px 5px,
+    linear-gradient(180deg, rgba(172, 183, 117, 0.42), rgba(141, 153, 90, 0.5)),
+    rgba(151, 162, 96, 0.76);
+  box-shadow:
+    2px 2px 0 #0b1209,
+    inset 1px 1px 0 rgba(188, 198, 125, 0.36);
+}
+
+.action-key {
+  background:
+    linear-gradient(180deg, rgba(172, 183, 117, 0.58), rgba(141, 153, 90, 0.9)),
+    #97a260;
+}
+
+.action-key-label {
+  color: #0b1209;
+  background: rgba(169, 184, 110, 0.86);
+  text-shadow: 1px 1px 0 rgba(188, 198, 125, 0.5);
 }

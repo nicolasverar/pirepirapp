@@ -95,13 +95,16 @@
       '<section class="summary-stack">',
       '<article class="summary-embedded total-window summary-primary">',
       '<div class="summary-date-block">',
-      '<span class="summary-date-kicker">Hoy es:</span>',
+      '<span class="summary-date-kicker">Hoy es</span>',
       '<div class="summary-date-display">',
       '<span>' + utils.escapeHtml(summaryDayLabel()) + '</span>',
       '<strong>' + utils.escapeHtml(summaryDateLabel()) + '</strong>',
       '</div>',
       '</div>',
-      '<p class="summary-spent-line">En lo que va de ' + utils.escapeHtml(currentMonthName) + ' gastaste: <strong>' + utils.escapeHtml(utils.formatMoney(variableSpent)) + '</strong></p>',
+      '<div class="summary-spent-line">',
+      '<span>En lo que va de ' + utils.escapeHtml(currentMonthName) + ' gastaste</span>',
+      '<strong>' + utils.escapeHtml(utils.formatMoney(variableSpent) + ' Guaranies') + '</strong>',
+      '</div>',
       '</article>',
       '<article class="summary-kpi-card">',
       '<div class="summary-kpi-badge">',
@@ -124,9 +127,8 @@
   }
 
   function summaryDateLabel() {
-    var months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
     var now = new Date();
-    return String(now.getDate()).padStart(2, '0') + '/' + months[now.getMonth()] + '/' + now.getFullYear();
+    return String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getFullYear()).slice(-2);
   }
 
   function summaryMonthName(summary, config) {
@@ -305,11 +307,11 @@
       '<div class="window-title">EL FUTURO</div>',
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window goals-window">',
       '<div class="window-title">METAS</div>',
       renderGoalCards(data.metas || []),
       '</article>',
-      '<article class="system-window">',
+      '<article class="system-window wishlist-window">',
       '<div class="window-title">COSAS QUE QUIERO</div>',
       renderWishlist(data.wishlist || [], wishlistSort),
       '</article>',

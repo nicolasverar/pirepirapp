@@ -572,3 +572,16 @@ no me gusta para nada  las circunferencias concentricas como diseño de fondo de
 - El boton `AGREGAR` vuelve a tener fondo limpio y texto legible.
 - La torta elimina los aros/rims globales y la elevacion de porciones para que se lea como piezas solidas, no discos flotantes.
 - Se subio la version frontend a `v2.38` y el cache PWA a `finanzas-lcd-v46`.
+
+### Prompt 42 - Usuario
+
+```text
+saca los dos puntos al lado de hoy es y abajo quiero que hagas entrar vie 19/06/26 luego  donde dice en lo que va de junio gastaste quiero que  abajo sea el espacio reservado para la cantidad de guaranies ademas el sombreado quiero que sea con puntos no planola particion del sueldo se ve mejor pero la leyenda es inlegible luego en las tarjetas de metas añádi un fondo con puntillismo retro porque se ve muy plano en el futuro y las cosas que quiero
+```
+
+### Resumen operativo
+- `Hoy es` queda sin dos puntos y la fecha cambia a formato corto `DIA DD/MM/AA`.
+- El gasto mensual variable se divide en etiqueta y monto reservado en una linea inferior con textura de puntos.
+- Se agregan sombras puntillistas sin circulos concentricos al badge de resumen y a tarjetas de `EL FUTURO`, `METAS` y `COSAS QUE QUIERO`.
+- La leyenda de `Particion sueldo` gana filas mas altas, marcadores mas grandes y texto reforzado para mejorar lectura.
+- Se subio la version frontend a `v2.39` y el cache PWA a `finanzas-lcd-v47`.

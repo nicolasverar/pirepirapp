@@ -728,3 +728,14 @@ solo se lee hoy es mas no la fecha
 - Se reemplazo el render de la bienvenida por SVG de pixeles reales generado en el HTML para evitar fallas de canvas/timing.
 - `HOY ES` y la fecha se renderizan como grupos de rectangulos activos y ghost, visibles sin depender de hidratacion JS posterior.
 - Se subio la version frontend a `v2.44` y el cache PWA a `finanzas-lcd-v52`.
+
+### Prompt 54 - Usuario
+
+```text
+LA FECHA SIGUE ESTANDO AL LADO Y NO ABAJO
+```
+
+### Resumen operativo
+- Se corrigio la cascada CSS que mantenia `grid-template-columns` heredado en el bloque de fecha.
+- `frontend/styles/main.css` fuerza una unica columna para `HOY ES` arriba y la fecha debajo, con SVGs a ancho completo.
+- Se subio la version frontend a `v2.45` y el cache PWA a `finanzas-lcd-v53`.

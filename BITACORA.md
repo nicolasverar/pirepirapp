@@ -7,6 +7,7 @@
 - Mantener la fecha dentro del marco con ajuste responsive.
 - Corregir el escalado para que la fecha quede grande debajo de `HOY ES` y no se vea pequeña o desplazada.
 - Corregir la visibilidad de la fecha reemplazando canvas por SVG de pixeles reales.
+- Corregir la cascada CSS para que la fecha no quede al lado de `HOY ES`.
 
 ### Cambios
 - `frontend/scripts/render.js`: el bloque de bienvenida usa glifos bitmap 5x7 con pixeles activos y ghost de segmentos apagados.
@@ -14,7 +15,8 @@
 - `frontend/scripts/render.js`: `HOY ES` y la fecha ahora se renderizan como SVG de rectangulos pixel, evitando fallas donde solo aparecia el label.
 - `frontend/styles/main.css`: se ampliaron los altos de `summary-pixel-label` y `summary-pixel-date`, y la fecha queda en contenedor limpio sin borde heredado.
 - `frontend/styles/main.css`: se agregaron estilos para `summary-pixel-svg`, rectangulos activos y ghost.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.44` y cache a `finanzas-lcd-v52`.
+- `frontend/styles/main.css`: se agrego una regla final para resetear `grid-template-columns` a una sola columna y ubicar la fecha debajo.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.45` y cache a `finanzas-lcd-v53`.
 - `docs/summary_welcome_pixel_font_options.html` y `docs/summary_welcome_true_pixel_font_options.html`: previews locales usados para la decision visual.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompts y resumen operativo actualizados.
 
@@ -23,12 +25,12 @@
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Busqueda `rg` de `v2.43`, `finanzas-lcd-v51` y `APP_VERSION: 'v2.43'` en `frontend`: sin resultados.
-- Servidor local `http://127.0.0.1:4173/`: sirve `v2.44`.
+- Busqueda `rg` de `v2.44`, `finanzas-lcd-v52` y `APP_VERSION: 'v2.44'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.45`.
 
 ### Despliegue
-- Commit principal: `a3c37c5` (`Renderizar fecha pixel en SVG`) subido a `origin/main`.
-- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.44` sirve `v2.44`, `APP_VERSION: 'v2.44'`, cache `finanzas-lcd-v52`, `renderSummaryPixelSvg` y estilos `.summary-pixel-svg`.
+- Commit principal: pendiente.
+- GitHub Pages publico: pendiente de verificacion `v2.45`.
 - No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes

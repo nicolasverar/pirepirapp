@@ -3350,3 +3350,30 @@ body::-webkit-scrollbar,
 .summary-pixel-ghost {
   fill: rgba(7, 16, 7, 0.14);
 }
+
+/* Correccion final: HOY ES arriba y fecha debajo, nunca en columnas. */
+.summary-embedded .summary-date-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px;
+}
+
+.summary-embedded .summary-date-block > .summary-pixel-label,
+.summary-embedded .summary-date-display {
+  grid-column: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.summary-embedded .summary-date-display {
+  display: block;
+}
+
+.summary-embedded .summary-pixel-label {
+  height: 38px;
+}
+
+.summary-embedded .summary-pixel-date {
+  height: 70px;
+}

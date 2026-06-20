@@ -15,6 +15,7 @@
 - Ajustar el contenido de la tarjeta: titulo en una linea, monto pixelado y bloque inferior solo con el elemento principal.
 - Agrandar el titulo `EN LO QUE VA DE [MES] GASTASTE`, simplificar el KPI de mayor gasto y extender ese skin a las demas tarjetas de Resumen sin cambiar sus estructuras.
 - Centrar el titulo de gasto mensual y aclarar que el cuadro inferior muestra en que se gasto mas durante el mes.
+- Quitar el marco interno de mayor gasto, separar con linea intermitente y mostrar `EN LO QUE MAS GASTASTE FUE EN` centrado sobre el gasto.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -41,6 +42,9 @@
 - `frontend/scripts/render.js`: se agrego la etiqueta `MAS GASTASTE ESTE MES EN` en el cuadro inferior de la tarjeta fusionada.
 - `frontend/styles/main.css`: se centro `summary-combined-title` y se agrego estilo compacto para `summary-combined-top-label`.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.56` y cache a `finanzas-lcd-v64`.
+- `frontend/scripts/render.js`: se agrego una segunda linea `summary-combined-divider` antes del bloque de mayor gasto y la etiqueta paso a `EN LO QUE MAS GASTASTE FUE EN`.
+- `frontend/styles/main.css`: se elimino el fondo/borde del bloque `summary-combined-top` para que quede integrado sin marco interno.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.57` y cache a `finanzas-lcd-v65`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion

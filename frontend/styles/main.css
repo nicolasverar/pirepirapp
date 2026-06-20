@@ -3494,12 +3494,12 @@ body::-webkit-scrollbar,
 .summary-combined-top {
   display: grid;
   place-items: center;
-  min-height: 52px;
-  gap: 4px;
-  padding: 8px;
-  background: #becb86;
-  border: 2px solid rgba(7, 16, 7, 0.76);
-  border-radius: 4px;
+  gap: 7px;
+  min-height: 58px;
+  padding: 2px 4px 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .summary-combined-top-label {
@@ -3509,7 +3509,7 @@ body::-webkit-scrollbar,
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: clamp(0.54rem, 2.4vw, 0.68rem);
+  font-size: clamp(0.56rem, 2.55vw, 0.72rem);
   line-height: 1;
 }
 

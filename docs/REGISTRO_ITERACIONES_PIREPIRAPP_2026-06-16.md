@@ -931,3 +931,15 @@ falta especificar que ese cuadro debajo de el monto que se gasto en total es en 
 - Se centro el titulo `EN LO QUE VA DE [MES] GASTASTE` dentro de la tarjeta fusionada.
 - Se agrego la etiqueta `MAS GASTASTE ESTE MES EN` dentro del cuadro inferior para aclarar que el valor mostrado es el item de mayor gasto mensual.
 - Se subio la version frontend a `v2.56` y el cache PWA a `finanzas-lcd-v64`.
+
+### Prompt 72 - Usuario
+
+```text
+elimina ese marco donde esta lo qu e mas gastaste este mes y con lineas intermitentes como debajo de en lo que va de junio gastaste querio que pongas abajo en lo que mas gastaste fue en (centrado) y abajo el gasto en cuestion
+```
+
+### Resumen operativo
+- Se elimino el marco interno del bloque de mayor gasto dentro de la tarjeta fusionada.
+- Se agrego una segunda linea intermitente antes del bloque inferior.
+- El texto inferior queda centrado como `EN LO QUE MAS GASTASTE FUE EN` y debajo muestra el gasto principal.
+- Se subio la version frontend a `v2.57` y el cache PWA a `finanzas-lcd-v65`.

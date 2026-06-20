@@ -920,3 +920,14 @@ en tarjeeta en lo que va de junio hacelo mas gradne ese texto luego la tarjeta q
 - El bloque inferior de mayor gasto quedo como KPI simple: muestra solo el elemento principal para evitar lectura confusa.
 - El mismo fondo, borde redondeado y sombra externa punteada de la tarjeta fusionada se aplico a `Plata disponible` y `Particion sueldo`, sin alterar sus datos internos.
 - Se subio la version frontend a `v2.55` y el cache PWA a `finanzas-lcd-v63`.
+
+### Prompt 71 - Usuario
+
+```text
+falta especificar que ese cuadro debajo de el monto que se gasto en total es en lo que mas se gasto en el mes ademas quiero que en lo que vadel mes de junio gastaste este centrado
+```
+
+### Resumen operativo
+- Se centro el titulo `EN LO QUE VA DE [MES] GASTASTE` dentro de la tarjeta fusionada.
+- Se agrego la etiqueta `MAS GASTASTE ESTE MES EN` dentro del cuadro inferior para aclarar que el valor mostrado es el item de mayor gasto mensual.
+- Se subio la version frontend a `v2.56` y el cache PWA a `finanzas-lcd-v64`.

@@ -14,6 +14,7 @@
 - Convertir la sombra punteada en tiras externas para que no pueda ocupar el interior de la tarjeta.
 - Ajustar el contenido de la tarjeta: titulo en una linea, monto pixelado y bloque inferior solo con el elemento principal.
 - Agrandar el titulo `EN LO QUE VA DE [MES] GASTASTE`, simplificar el KPI de mayor gasto y extender ese skin a las demas tarjetas de Resumen sin cambiar sus estructuras.
+- Centrar el titulo de gasto mensual y aclarar que el cuadro inferior muestra en que se gasto mas durante el mes.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -37,6 +38,9 @@
 - `frontend/scripts/render.js`: el KPI inferior de mayor gasto deja de mostrar la fila secundaria de rank/monto y queda solo con el elemento principal.
 - `frontend/styles/main.css`: el titulo superior de la tarjeta fusionada es mas grande y el skin de fondo/borde/sombra se comparte con `Plata disponible` y `Particion sueldo`.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.55` y cache a `finanzas-lcd-v63`.
+- `frontend/scripts/render.js`: se agrego la etiqueta `MAS GASTASTE ESTE MES EN` en el cuadro inferior de la tarjeta fusionada.
+- `frontend/styles/main.css`: se centro `summary-combined-title` y se agrego estilo compacto para `summary-combined-top-label`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.56` y cache a `finanzas-lcd-v64`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion

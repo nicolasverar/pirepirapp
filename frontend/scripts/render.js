@@ -111,6 +111,7 @@
       '<div class="summary-combined-amount">' + renderSummaryPixelSvg(utils.formatMoney(variableSpent), 'amount') + '</div>',
       '</div>',
       '<div class="summary-combined-top">',
+      '<span class="summary-combined-top-label">MAS GASTASTE ESTE MES EN</span>',
       '<p class="summary-combined-top-line"><strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
       '</div>',
       '</article>',

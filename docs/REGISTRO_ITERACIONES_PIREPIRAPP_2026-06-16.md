@@ -772,3 +772,14 @@ me gusta el borde de E pero quiero que sea mas pequeño el puntilado y menos des
 - Se creo `docs/card_background_shadow_variants_v3.html` como lamina local de decision, sin modificar el frontend productivo.
 - Las variantes I-L combinan el borde delineado de E con el fondo bajo relieve de H.
 - Se redujo el puntillismo, se acerco la sombra a la tarjeta y se probaron niveles de borde redondeado.
+
+### Prompt 58 - Usuario
+
+```text
+combina el dondo de J mas la sombra de I pero con puntitos tambien hacia la derecha, con estabase propone distintas organizzciones del interior
+```
+
+### Resumen operativo
+- Se creo `docs/card_inner_layout_variants_v4.html` como lamina local de decision, sin modificar el frontend productivo.
+- La base visual combina fondo de J, sombra de I y puntillismo tambien hacia la derecha de la tarjeta.
+- Se propusieron seis organizaciones internas M-R para la tarjeta de gasto mensual.

@@ -10,12 +10,14 @@
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
 - `docs/card_background_shadow_variants_v2.html`: segunda lamina local con variantes E-H, bordes mas definidos y sombras de puntillismo pixel art mas visibles.
 - `docs/card_background_shadow_variants_v3.html`: tercera lamina local con variantes I-L, combinando borde de E, fondo de H, puntillismo reducido y sombras menos desplazadas.
+- `docs/card_inner_layout_variants_v4.html`: cuarta lamina local con la base fondo J + sombra I y seis organizaciones internas M-R.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v2.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
+- Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 
 ### Despliegue
 - No aplica todavia: es una propuesta visual local, sin cambios productivos en `frontend/`.

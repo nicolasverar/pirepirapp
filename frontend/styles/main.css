@@ -3453,23 +3453,24 @@ body::-webkit-scrollbar,
 }
 
 .summary-combined-title {
-  font-size: 0.78rem;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: clamp(0.58rem, 2.7vw, 0.78rem);
   letter-spacing: 0;
 }
 
-.summary-combined-spent strong {
+.summary-combined-amount {
   display: block;
-  padding: 10px 8px;
-  overflow-wrap: anywhere;
+  min-height: 50px;
+  padding: 8px;
   background: #becb86;
   border: 2px solid rgba(7, 16, 7, 0.72);
   border-radius: 4px;
-  font-size: clamp(1.55rem, 7vw, 2rem);
-  line-height: 1;
-  text-align: center;
-  text-shadow:
-    1px 0 0 #071007,
-    0 1px 0 #071007;
+}
+
+.summary-pixel-amount {
+  height: 36px;
 }
 
 .summary-combined-divider {
@@ -3488,20 +3489,16 @@ body::-webkit-scrollbar,
 }
 
 .summary-combined-top-line {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.15;
 }
 
 .summary-combined-top strong {
-  min-width: 0;
+  display: block;
   overflow-wrap: anywhere;
-  text-align: right;
-  font-size: 1rem;
+  text-align: center;
+  font-size: inherit;
 }
 
 .summary-combined-item {

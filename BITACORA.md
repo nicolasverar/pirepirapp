@@ -12,6 +12,7 @@
 - Hacer que la tarjeta real coincida mejor con el preview GG elegido.
 - Eliminar por completo los puntitos sobre la tarjeta de Resumen.
 - Convertir la sombra punteada en tiras externas para que no pueda ocupar el interior de la tarjeta.
+- Ajustar el contenido de la tarjeta: titulo en una linea, monto pixelado y bloque inferior solo con el elemento principal.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -29,7 +30,9 @@
 - `frontend/styles/main.css`: la capa superior de Resumen ya no dibuja trama punteada y se agregaron estilos para la fila inferior del bloque superior.
 - `frontend/styles/main.css`: se desactivo por completo la capa `lcd-screen.is-summary-screen::after` y se volvieron opacos los bloques internos de `summary-combined-card`.
 - `frontend/styles/main.css`: la sombra punteada de `summary-combined-card` ahora son dos tiras externas separadas, derecha e inferior, en vez de un rectangulo detras de toda la tarjeta.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.53` y cache a `finanzas-lcd-v61`.
+- `frontend/scripts/render.js`: el titulo superior queda en una sola linea, el monto usa `renderSummaryPixelSvg(..., 'amount')`, y el bloque inferior ya no imprime `Gastaste mas en`.
+- `frontend/styles/main.css`: se agregaron estilos para `summary-combined-amount` y `summary-pixel-amount`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.54` y cache a `finanzas-lcd-v62`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -43,7 +46,13 @@
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Pendiente de validacion tecnica `v2.53`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.53`, `finanzas-lcd-v61` y `APP_VERSION: 'v2.53'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.54`.
+- Verificacion especifica de tarjeta: sin `<br>GASTASTE`, monto con SVG pixel, sin label `Gastaste mas en`, glifos `G` y `.` presentes.
 
 ### Despliegue
 - Pendiente de commit, push y verificacion publica.

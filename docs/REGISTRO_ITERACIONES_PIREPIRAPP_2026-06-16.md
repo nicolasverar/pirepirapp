@@ -896,3 +896,15 @@ no se ve asi. la tarjeta tiene puntos sobre la misma y eso lo hae iegible por fa
 - Se reemplazo la sombra punteada de rectangulo completo por dos tiras externas: una a la derecha y otra abajo.
 - `summary-combined-card` mantiene fondo solido sin patron de puntos y los puntos solo existen fuera del cuerpo de la tarjeta.
 - Se subio la version frontend a `v2.53` y el cache PWA a `finanzas-lcd-v61`.
+
+### Prompt 69 - Usuario
+
+```text
+quiero que en esa tarejjeta quiero que "en lo que va de [mes]" gastaste se lea en una sola linea sin saltos y la cantidad en guaranies se vea con la misma estetica que HOY ES es decir pixelafo luego donde dice gastaste mas en solo diga el elemento en que gaste mas y no asi
+```
+
+### Resumen operativo
+- La linea superior de `summary-combined-card` queda en una sola linea: `EN LO QUE VA DE [MES] GASTASTE`.
+- El monto mensual ahora se renderiza con el mismo SVG pixel usado por `HOY ES`.
+- El bloque inferior ya no dice `Gastaste mas en`; muestra directamente el elemento principal.
+- Se subio la version frontend a `v2.54` y el cache PWA a `finanzas-lcd-v62`.

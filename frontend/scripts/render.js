@@ -91,6 +91,7 @@
     var config = state.data.config || {};
     var movements = movementItemsFromState_(state);
     var top = topSpendingMotive(movements, config, summary);
+    var topMovement = topSpendingMovement(movements, config, summary);
     var variableSpent = summaryVariableSpent(movements, config, summary);
     var currentMonthName = summaryMonthName(summary, config);
     return [
@@ -111,7 +112,8 @@
       '<small>Solo gastos variables del mes</small>',
       '</div>',
       '<div class="summary-combined-top">',
-      '<p>Gastaste más en <strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
+      '<p class="summary-combined-top-line"><span>Gastaste más en</span><strong>' + utils.escapeHtml(top.motivo || 'Sin gastos') + '</strong></p>',
+      renderSummaryCombinedItem(topMovement),
       '</div>',
       '</article>',
       '<article class="system-window availability-card">',
@@ -316,6 +318,33 @@
       }
       return sum + utils.normalizeAmount(item.monto);
     }, 0);
+  }
+
+  function topSpendingMovement(movements, config, summary) {
+    var month = String((summary || {}).mes || (config || {}).mesActual || utils.currentMonth()).slice(0, 7);
+    var filtered = (movements || []).filter(function (item) {
+      return isExpenseMovement(item) && !utils.isFixedExpenseMovement(item) && movementMonth(item) === month;
+    });
+    if (!filtered.length) {
+      return null;
+    }
+    filtered.sort(function (a, b) {
+      return utils.normalizeAmount(b.monto) - utils.normalizeAmount(a.monto);
+    });
+    return filtered[0];
+  }
+
+  function renderSummaryCombinedItem(item) {
+    if (!item) {
+      return '<div class="summary-combined-item"><span class="summary-combined-rank">00</span><b>Sin gastos registrados</b><em>Gs. 0</em></div>';
+    }
+    return [
+      '<div class="summary-combined-item">',
+      '<span class="summary-combined-rank">01</span>',
+      '<b>' + utils.escapeHtml(item.motivo || 'Sin motivo') + '</b>',
+      '<em>' + utils.escapeHtml(utils.formatMoney(item.monto || 0)) + '</em>',
+      '</div>'
+    ].join('');
   }
 
   function ledgerLine(label, value) {

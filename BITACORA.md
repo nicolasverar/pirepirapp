@@ -9,6 +9,7 @@
 - Corregir el alcance: revertir la aplicacion global y dejar DD solo en la tarjeta fusionada de Resumen.
 - Implementar la variante GG para mejorar legibilidad de la tarjeta fusionada.
 - Corregir la trama superior que seguia ensuciando la tarjeta GG.
+- Hacer que la tarjeta real coincida mejor con el preview GG elegido.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -22,7 +23,9 @@
 - `frontend/styles/main.css`: se implemento el fondo GG en `summary-combined-card`, mas limpio y legible, con sombra derecha ampliada para una columna extra de puntitos.
 - `frontend/scripts/render.js`: la vista Resumen ahora marca `#app-screen` con la clase `is-summary-screen`.
 - `frontend/styles/main.css`: se redujo la superposicion de `lcd-screen::after` solo en Resumen y se aislo `summary-combined-card` para que no reciba puntitos encima.
-- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.49` y cache a `finanzas-lcd-v57`.
+- `frontend/scripts/render.js`: la tarjeta fusionada ahora incluye la fila inferior del bloque `Gastaste mas en`, con rank y monto del movimiento mas alto del mes.
+- `frontend/styles/main.css`: la capa superior de Resumen ya no dibuja trama punteada y se agregaron estilos para la fila inferior del bloque superior.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.50` y cache a `finanzas-lcd-v58`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion
@@ -36,12 +39,12 @@
 - `node -e` parseando `frontend/manifest.json`: `manifest OK`.
 - Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
 - Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
-- Busqueda `rg` de `v2.48`, `finanzas-lcd-v56` y `APP_VERSION: 'v2.48'` en `frontend`: sin resultados.
-- Servidor local `http://127.0.0.1:4173/`: sirve `v2.49`.
+- Busqueda `rg` de `v2.49`, `finanzas-lcd-v57` y `APP_VERSION: 'v2.49'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.50`.
 
 ### Despliegue
 - Commit principal: pendiente.
-- GitHub Pages publico: pendiente de verificacion `v2.49`.
+- GitHub Pages publico: pendiente de verificacion `v2.50`.
 - No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes

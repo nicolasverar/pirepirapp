@@ -862,3 +862,15 @@ fijate en la tarjeta salen putitos encima no es la que yo eegi
 - `frontend/scripts/render.js` marca la vista Resumen con la clase `is-summary-screen`.
 - `frontend/styles/main.css` reduce la superposicion de trama solo en Resumen y aisa la tarjeta fusionada para respetar mejor el estilo GG.
 - Se subio la version frontend a `v2.49` y el cache PWA a `finanzas-lcd-v57`.
+
+### Prompt 66 - Usuario
+
+```text
+sigue saliendo asi, no se ve como e que elegi ente las opciones que me diste
+```
+
+### Resumen operativo
+- Se hizo coincidir mejor la tarjeta real con el preview GG.
+- `frontend/scripts/render.js` ahora agrega la fila inferior del bloque `Gastaste mas en`, con rank y monto del movimiento mas alto del mes.
+- `frontend/styles/main.css` elimina por completo la trama punteada en la capa superior de Resumen y conserva el aislamiento de `summary-combined-card`.
+- Se subio la version frontend a `v2.50` y el cache PWA a `finanzas-lcd-v58`.

@@ -3381,9 +3381,8 @@ body::-webkit-scrollbar,
 /* Skin GG acotado: solo tarjeta fusionada de gasto mensual y mayor gasto. */
 .lcd-screen.is-summary-screen::after {
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.21)),
-    repeating-linear-gradient(0deg, rgba(5, 11, 5, 0.05) 0 1px, transparent 1px 4px);
-  opacity: 0.36;
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.16));
+  opacity: 0.16;
 }
 
 .summary-combined-card {
@@ -3487,7 +3486,7 @@ body::-webkit-scrollbar,
   border-radius: 4px;
 }
 
-.summary-combined-top p {
+.summary-combined-top-line {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -3502,4 +3501,34 @@ body::-webkit-scrollbar,
   overflow-wrap: anywhere;
   text-align: right;
   font-size: 1rem;
+}
+
+.summary-combined-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  font-size: 0.7rem;
+  line-height: 1.12;
+}
+
+.summary-combined-rank {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 22px;
+  color: #c5d08b;
+  background: #071007;
+  border-radius: 3px;
+}
+
+.summary-combined-item b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-combined-item em {
+  font-style: normal;
+  text-align: right;
 }

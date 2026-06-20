@@ -29,10 +29,17 @@
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v6.html`.
-- Pendiente de validacion tecnica y despliegue publico `v2.48`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.47`, `finanzas-lcd-v55` y `APP_VERSION: 'v2.47'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.48`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `b8a07e8` (`Implementar GG en tarjeta resumen`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.48` sirve `v2.48`, `APP_VERSION: 'v2.48'`, cache `finanzas-lcd-v56` y CSS con `Skin GG acotado`, `right: -7px` y `summary-combined-card`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

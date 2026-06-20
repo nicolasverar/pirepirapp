@@ -23,10 +23,17 @@
 - Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants_v3.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_inner_layout_variants_v4.html`.
 - Se abrio el preview local con `Start-Process .\docs\card_combined_summary_variants_v5.html`.
-- Pendiente de validacion tecnica y despliegue publico `v2.46`.
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Busqueda `rg` de `v2.45`, `finanzas-lcd-v53` y `APP_VERSION: 'v2.45'` en `frontend`: sin resultados.
+- Servidor local `http://127.0.0.1:4173/`: sirve `v2.46`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `6e14bd6` (`Aplicar estetica DD a tarjetas`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.46` sirve `v2.46`, `APP_VERSION: 'v2.46'`, cache `finanzas-lcd-v54` y CSS con `--dd-card-bg` / `--dd-dither-shadow`.
+- No hubo cambios de backend; no se ejecuto `clasp redeploy`.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

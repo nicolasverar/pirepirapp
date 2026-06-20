@@ -739,3 +739,14 @@ LA FECHA SIGUE ESTANDO AL LADO Y NO ABAJO
 - Se corrigio la cascada CSS que mantenia `grid-template-columns` heredado en el bloque de fecha.
 - `frontend/styles/main.css` fuerza una unica columna para `HOY ES` arriba y la fecha debajo, con SVGs a ancho completo.
 - Se subio la version frontend a `v2.45` y el cache PWA a `finanzas-lcd-v53`.
+
+### Prompt 55 - Usuario
+
+```text
+ahora trabajemos en la seccion en lo que va del mes gastaste no me gusta como esta dispiesta esa tarjeta ni su fondo siendo que es disonante con la estetica de la app en especial porque es puntiagudo  proponeme variantes y concentrate en el fondo (mismo fondo que quiero que extrapoles a todas las tarjetas) asi como tambien en el estilo de la sombra que debe ser mas pixel art
+```
+
+### Resumen operativo
+- Se creo `docs/card_background_shadow_variants.html` como lamina local de decision, sin modificar el frontend productivo.
+- La lamina compara cuatro fondos extrapolables a todas las tarjetas: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
+- Las variantes usan sombras pixel art escalonadas y rectas para evitar el aspecto puntiagudo actual.

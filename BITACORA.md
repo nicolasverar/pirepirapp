@@ -1,5 +1,24 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-20 - Preview de fondos y sombras de tarjetas
+
+### Objetivo
+- Proponer variantes visuales para la seccion `En lo que va de ... gastaste` antes de modificar la app.
+- Definir un fondo extrapolable al resto de tarjetas y una sombra mas pixel art, evitando puntas diagonales.
+
+### Cambios
+- `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
+
+### Verificacion
+- Se abrio el preview local con `Start-Process .\docs\card_background_shadow_variants.html`.
+
+### Despliegue
+- No aplica todavia: es una propuesta visual local, sin cambios productivos en `frontend/`.
+
+### Pendientes
+- El usuario debe elegir una variante para implementarla en la app y extrapolarla a todas las tarjetas.
+
 ## 2026-06-20 - Pixel font real P6 en Resumen
 
 ### Objetivo

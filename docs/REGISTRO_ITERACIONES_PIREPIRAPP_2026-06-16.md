@@ -1087,3 +1087,15 @@ file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/summary_available_partition_var
 - Se creo la lamina local `docs/salary_partition_same_pie_variants_v8.html`.
 - Todas las variantes reutilizan el mismo bloque de torta 3D de la implementacion actual y solo varian estructura de tarjeta, encabezado, resumen y leyenda.
 - No se modifico la app productiva; queda pendiente que el usuario elija una variante.
+
+### Prompt 86 - Usuario
+
+```text
+me gustan las variantes que tienen las cias concentricas de fondo saca el cuadriculado y crea nuevas variantes centrandote en la manera en la que se distribuyen las leyendas para variar
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_same_pie_legend_variants_v9.html`.
+- La torta se mantiene fija y se reemplaza el fondo cuadriculado por circulos concentricos.
+- Las variantes II-MM cambian principalmente la distribucion de la leyenda: lista inferior, chips superiores, dos columnas, lateral y barra segmentada inferior.
+- No se modifico la app productiva; queda pendiente que el usuario elija una distribucion.

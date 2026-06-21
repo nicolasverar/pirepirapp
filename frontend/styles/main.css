@@ -2017,6 +2017,32 @@ button:focus-visible {
   min-height: 54px;
 }
 
+.ticket-form-modal input.is-readonly {
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(196, 208, 139, 0.32), rgba(121, 141, 82, 0.18));
+  cursor: default;
+}
+
+.ticket-form-modal .income-shortcuts {
+  display: grid;
+  padding-bottom: 5px;
+  border-bottom: 2px dotted rgba(7, 16, 7, 0.68);
+}
+
+.ticket-form-modal .salary-inline-button {
+  min-height: 36px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border-color: #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.16),
+    2px 2px 0 rgba(7, 16, 7, 0.34);
+}
+
 .ticket-form-modal .form-error {
   border-color: #071007;
 }

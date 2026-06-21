@@ -108,6 +108,47 @@
     ].join('');
   }
 
+  function incomeSalaryShortcut() {
+    return [
+      '<div class="income-shortcuts">',
+      '<button class="lcd-button salary-inline-button" type="button" data-fill-salary>¡Cobré!</button>',
+      '</div>'
+    ].join('');
+  }
+
+  function bindSalaryShortcut(root, config, motiveInput, amountInput) {
+    var button = utils.qs('[data-fill-salary]', root);
+    if (!button) {
+      return;
+    }
+    button.addEventListener('click', function () {
+      var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
+      if (!salary) {
+        if (window.FinanzasApp && window.FinanzasApp.toast) {
+          window.FinanzasApp.toast('Carga tu sueldo mensual en Configuracion.');
+        }
+        return;
+      }
+      var dateInput = utils.qs('[name="fecha"]', root);
+      var timeInput = utils.qs('[name="hora"]', root);
+      if (motiveInput) {
+        motiveInput.value = 'Sueldo';
+      }
+      if (amountInput) {
+        amountInput.value = salary;
+      }
+      if (dateInput) {
+        dateInput.value = utils.toInputDate();
+      }
+      if (timeInput) {
+        timeInput.value = utils.toInputTime();
+      }
+      if (window.FinanzasApp && window.FinanzasApp.toast) {
+        window.FinanzasApp.toast('Sueldo cargado en el formulario.');
+      }
+    });
+  }
+
   function bindForm(root, selector, handler) {
     var form = utils.qs(selector, root);
     form.addEventListener('submit', function (event) {
@@ -259,23 +300,32 @@
     if (!isIncome && movement.tipo === 'Compra de wishlist') {
       defaultCategory = 'Wishlist';
     }
-    var typeOptions = isIncome
-      ? [{ value: 'Ingreso', label: 'Ingreso' }]
-      : [
+    var initialType = (!isIncome && defaultCategory === 'Gasto fijo')
+      ? 'Gasto fijo'
+      : (movement.tipo || defaultType);
+    var initialRelatedId = movement.idRelacionado || '';
+    if (initialType === 'Gasto fijo' && !initialRelatedId) {
+      initialRelatedId = fixedExpenseValueForMovement(data, movement);
+    }
+    var typeControl = isIncome
+      ? '<input name="tipo" type="hidden" value="Ingreso" data-movement-type>'
+      : select('Tipo', 'tipo', [
         { value: 'Gasto', label: 'Gasto' },
+        { value: 'Gasto fijo', label: 'Gasto fijo' },
         { value: 'Aporte a ahorro', label: 'Aporte a ahorro' },
         { value: 'Aporte a meta', label: 'Aporte a meta' },
         { value: 'Compra de wishlist', label: 'Compra cosa que quiero' }
-      ];
+      ], initialType, 'data-movement-type');
 
-    var relatedOptions = relatedSelectOptions(data, relatedMode(movement.tipo || defaultType, defaultCategory));
+    var relatedOptions = relatedSelectOptions(data, relatedMode(initialType, defaultCategory));
     var html = [
       '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
-      select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
+      typeControl,
+      isIncome ? incomeSalaryShortcut() : '',
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off" data-movement-motive'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric" data-movement-amount'),
-      select('Seleccionar', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
+      select('Seleccionar', 'idRelacionado', relatedOptions, initialRelatedId, 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
       field('Fecha', 'fecha', 'date', defaultDate, 'required'),
@@ -290,19 +340,23 @@
       var relatedSelect = utils.qs('[data-related-select]', root);
       var motiveInput = utils.qs('[data-movement-motive]', root);
       var amountInput = utils.qs('[data-movement-amount]', root);
-      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, movement.idRelacionado || '', movement.motivo || '');
+      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, initialRelatedId, movement.motivo || '');
       updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
       updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
-      typeSelect.addEventListener('change', function () {
-        var currentCategory = typeSelect.value === 'Compra de wishlist' ? 'Wishlist' : defaultCategory;
-        updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, relatedSelect.value, movement.motivo || '');
-        updateRelatedVisibility(typeSelect, { value: currentCategory }, relatedSelect);
-        updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
-        autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput);
-      });
+      autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
+      bindSalaryShortcut(root, config, motiveInput, amountInput);
+      if (typeSelect.tagName === 'SELECT') {
+        typeSelect.addEventListener('change', function () {
+          var currentCategory = typeSelect.value === 'Compra de wishlist' ? 'Wishlist' : defaultCategory;
+          updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, '', movement.motivo || '');
+          updateRelatedVisibility(typeSelect, { value: currentCategory }, relatedSelect);
+          updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+          autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
+        });
+      }
       relatedSelect.addEventListener('change', function () {
         updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
-        autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput);
+        autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
       });
 
       bindForm(root, '#movement-form', function (form) {
@@ -310,8 +364,10 @@
         payload.monto = utils.normalizeAmount(payload.monto);
         payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
         payload.categoria = categoryForMovementPayload(payload.tipo, defaultCategory, isIncome);
-        normalizeWishlistMovementPayload(payload, relatedSelect, movement);
-        if (!payload.idRelacionado) {
+        normalizeRelatedMovementPayload(payload, relatedSelect, movement);
+        if (payload.categoria === 'Gasto fijo') {
+          delete payload.idRelacionado;
+        } else if (!payload.idRelacionado) {
           delete payload.idRelacionado;
         }
         if (existing) {
@@ -333,6 +389,9 @@
     if (type === 'Aporte a meta') {
       return 'Metas';
     }
+    if (type === 'Gasto fijo') {
+      return 'Gasto fijo';
+    }
     if (isIncome || type === 'Ingreso') {
       return 'Ingreso';
     }
@@ -351,9 +410,9 @@
 
     openModal('GASTO FIJO', [
       '<div class="fixed-picker-list">',
-      items.map(function (item) {
+      items.map(function (item, index) {
         return [
-          '<button class="menu-item fixed-picker-item" type="button" data-fixed-name="' + utils.escapeHtml(utils.fixedExpenseName(item)) + '" data-fixed-amount="' + utils.escapeHtml(utils.fixedExpenseAmount(item)) + '">',
+          '<button class="menu-item fixed-picker-item" type="button" data-fixed-index="' + utils.escapeHtml(index) + '" data-fixed-name="' + utils.escapeHtml(utils.fixedExpenseName(item)) + '" data-fixed-amount="' + utils.escapeHtml(utils.fixedExpenseAmount(item)) + '">',
           '<strong>' + utils.escapeHtml(utils.fixedExpenseName(item)) + '</strong>',
           '<span>' + utils.escapeHtml(utils.formatMoney(utils.fixedExpenseAmount(item))) + '</span>',
           '</button>'
@@ -364,9 +423,10 @@
       utils.qsa('.fixed-picker-item', root).forEach(function (button) {
         button.addEventListener('click', function () {
           var defaults = {
-            tipo: 'Gasto',
+            tipo: 'Gasto fijo',
             motivo: button.getAttribute('data-fixed-name') || 'Gasto fijo',
             monto: button.getAttribute('data-fixed-amount') || '',
+            idRelacionado: fixedExpenseOptionValue(button.getAttribute('data-fixed-index') || 0),
             categoria: 'Gasto fijo',
             descripcion: 'Gasto fijo'
           };
@@ -422,6 +482,9 @@
   }
 
   function relatedMode(type, category) {
+    if (type === 'Gasto fijo' || String(category || '').toLowerCase() === 'gasto fijo') {
+      return 'fijo';
+    }
     if (/ahorro/i.test(type)) {
       return 'ahorro';
     }
@@ -451,6 +514,11 @@
         return { value: item.id, label: item.titulo };
       }));
     }
+    if (mode === 'fijo') {
+      return blank.concat(fixedExpenseItems(data).map(function (item, index) {
+        return { value: fixedExpenseOptionValue(index), label: utils.fixedExpenseName(item) || 'Gasto fijo' };
+      }));
+    }
     return blank;
   }
 
@@ -464,6 +532,9 @@
     if (mode === 'wishlist') {
       return 'Elegir cosa que quiero';
     }
+    if (mode === 'fijo') {
+      return 'Elegir gasto fijo';
+    }
     return 'Sin seleccion';
   }
 
@@ -476,6 +547,9 @@
     }
     if (mode === 'wishlist') {
       return 'Cosa que quiero';
+    }
+    if (mode === 'fijo') {
+      return 'Gasto fijo';
     }
     return 'Seleccionar';
   }
@@ -516,35 +590,141 @@
       return;
     }
     var isWishlistPurchase = typeSelect && typeSelect.value === 'Compra de wishlist';
+    var isFixedExpense = typeSelect && typeSelect.value === 'Gasto fijo';
     var fieldBox = motiveInput.closest('.field');
     if (fieldBox) {
-      fieldBox.hidden = isWishlistPurchase;
+      fieldBox.hidden = isWishlistPurchase || isFixedExpense;
     }
-    motiveInput.required = !isWishlistPurchase;
+    motiveInput.required = !(isWishlistPurchase || isFixedExpense);
     if (isWishlistPurchase) {
       motiveInput.value = selectedRelatedLabel(relatedSelect) || motiveInput.value || 'Compra cosa que quiero';
     }
+    if (isFixedExpense) {
+      motiveInput.value = selectedRelatedLabel(relatedSelect) || motiveInput.value || 'Gasto fijo';
+    }
   }
 
-  function normalizeWishlistMovementPayload(payload, relatedSelect, movement) {
-    if (!payload || payload.tipo !== 'Compra de wishlist') {
+  function normalizeRelatedMovementPayload(payload, relatedSelect, movement) {
+    if (!payload) {
       return;
     }
-    payload.motivo = selectedRelatedLabel(relatedSelect)
-      || payload.motivo
-      || (movement || {}).motivo
-      || 'Compra cosa que quiero';
+    if (payload.tipo === 'Compra de wishlist') {
+      payload.motivo = selectedRelatedLabel(relatedSelect)
+        || payload.motivo
+        || (movement || {}).motivo
+        || 'Compra cosa que quiero';
+    }
+    if (payload.tipo === 'Gasto fijo') {
+      payload.motivo = selectedRelatedLabel(relatedSelect)
+        || payload.motivo
+        || (movement || {}).motivo
+        || 'Gasto fijo';
+      payload.descripcion = 'Gasto fijo';
+      payload.tipo = 'Gasto';
+      payload.tipoRelacionado = '';
+    }
   }
 
-  function autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput) {
-    if (!amountInput || !typeSelect || typeSelect.value !== 'Compra de wishlist') {
+  function autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput) {
+    if (!amountInput || !typeSelect) {
       return;
     }
-    var item = findById((data || {}).wishlist || [], relatedSelect && relatedSelect.value);
-    var amount = utils.normalizeAmount(item && item.costoAproximado);
+    var type = typeSelect.value;
+    var item = null;
+    var amount = 0;
+
+    setAmountLocked(amountInput, type === 'Gasto fijo');
+
+    if (type === 'Compra de wishlist') {
+      item = findById((data || {}).wishlist || [], relatedSelect && relatedSelect.value);
+      amount = utils.normalizeAmount(item && item.costoAproximado);
+    }
+    if (type === 'Aporte a ahorro') {
+      item = findById((data || {}).ahorrosFuturo || [], relatedSelect && relatedSelect.value);
+      amount = utils.normalizeAmount(item && item.montoMensual);
+      autofillMotiveIfEmpty(motiveInput, item && item.titulo);
+    }
+    if (type === 'Aporte a meta') {
+      item = findById((data || {}).metas || [], relatedSelect && relatedSelect.value);
+      amount = utils.normalizeAmount(item && item.montoMensual);
+      autofillMotiveIfEmpty(motiveInput, item && item.titulo);
+    }
+    if (type === 'Gasto fijo') {
+      item = fixedExpenseByValue(data, relatedSelect && relatedSelect.value);
+      amount = utils.fixedExpenseAmount(item);
+      if (motiveInput) {
+        motiveInput.value = selectedRelatedLabel(relatedSelect) || utils.fixedExpenseName(item) || 'Gasto fijo';
+      }
+      if (!item) {
+        amountInput.value = '';
+        return;
+      }
+    }
     if (amount > 0) {
       amountInput.value = amount;
     }
+  }
+
+  function setAmountLocked(amountInput, locked) {
+    if (!amountInput) {
+      return;
+    }
+    amountInput.readOnly = Boolean(locked);
+    amountInput.classList.toggle('is-readonly', Boolean(locked));
+    if (locked) {
+      amountInput.setAttribute('aria-readonly', 'true');
+      amountInput.title = 'Este monto se cambia desde Configuracion.';
+    } else {
+      amountInput.removeAttribute('aria-readonly');
+      amountInput.removeAttribute('title');
+    }
+  }
+
+  function autofillMotiveIfEmpty(motiveInput, value) {
+    if (!motiveInput || !value || String(motiveInput.value || '').trim()) {
+      return;
+    }
+    motiveInput.value = value;
+  }
+
+  function fixedExpenseItems(data) {
+    var config = (data || {}).config || {};
+    return utils.normalizeFixedExpenses(config.gastosFijos || [], config.sueldoMensual || 0);
+  }
+
+  function fixedExpenseOptionValue(index) {
+    return 'fixed-' + String(index || 0);
+  }
+
+  function fixedExpenseByValue(data, value) {
+    var match = /^fixed-(\d+)$/.exec(String(value || ''));
+    var index = match ? Number(match[1]) : -1;
+    if (index < 0) {
+      return null;
+    }
+    return fixedExpenseItems(data)[index] || null;
+  }
+
+  function fixedExpenseValueForMovement(data, movement) {
+    var items = fixedExpenseItems(data);
+    var name = normalizeCompareText((movement || {}).motivo || (movement || {}).categoria);
+    var amount = utils.normalizeAmount((movement || {}).monto);
+    for (var index = 0; index < items.length; index += 1) {
+      if (normalizeCompareText(utils.fixedExpenseName(items[index])) === name
+        && utils.fixedExpenseAmount(items[index]) === amount) {
+        return fixedExpenseOptionValue(index);
+      }
+    }
+    for (var fallback = 0; fallback < items.length; fallback += 1) {
+      if (normalizeCompareText(utils.fixedExpenseName(items[fallback])) === name) {
+        return fixedExpenseOptionValue(fallback);
+      }
+    }
+    return '';
+  }
+
+  function normalizeCompareText(value) {
+    return String(value || '').trim().toLowerCase();
   }
 
   function findById(items, id) {

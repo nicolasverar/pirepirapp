@@ -1325,3 +1325,17 @@ cuando seleccionno una cosa que quiero en miformulario de gasto deberia automaic
 - Se generalizo el estilo GF3/GF1 como `ticket-form-modal`.
 - `Ingreso`, `Meta`, `Ahorro futuro` y `Cosa que quiero` ahora usan el mismo estilo visual del formulario de gasto.
 - Se subio el frontend a `v2.67` y el cache PWA a `finanzas-lcd-v75`.
+
+### Prompt 106 - Usuario
+
+```text
+aplica la misma logica a que si agregro meta o ahorro para el futuro o gasto fijo pero este si no puedo modificar si quiero hacerlo debo ir a config luego tambien permiti en registrar ingreso que aca este el boton de cobre! y donde dice tipo no tiene sentido porque es un ingreso ya duhme adjudique el monto de mi sueldo configurable en configuracion
+```
+
+### Resumen operativo
+- El autocompletado de `Monto` se extendio a `Aporte a meta`, `Aporte a ahorro` y `Gasto fijo`.
+- En `Aporte a meta` y `Aporte a ahorro`, al seleccionar el item relacionado se usa su `montoMensual` y, si el motivo esta vacio, se completa con el titulo.
+- En `Gasto fijo`, al seleccionar un fijo configurado se completa el monto, se bloquea el campo y el registro se guarda como `tipo: Gasto` + `categoria: Gasto fijo` para mantener compatibilidad con backend/resumen.
+- En `Registrar ingreso`, el campo visual `Tipo` se elimino y queda un input oculto `Ingreso`.
+- El formulario de ingreso incorpora el boton `¡Cobré!`, que carga `Sueldo`, el monto de `sueldoMensual` configurado y fecha/hora actual.
+- Se subio el frontend a `v2.68` y el cache PWA a `finanzas-lcd-v76`.

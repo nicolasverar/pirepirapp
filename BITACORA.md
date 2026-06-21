@@ -1,5 +1,37 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - Autocomplete de metas, ahorros y gastos fijos en movimientos
+
+### Objetivo
+- Extender la misma logica de autocompletado de wishlist a aportes de metas, ahorros futuros y gastos fijos.
+- Impedir que el monto de gasto fijo se modifique desde el formulario de movimiento.
+- Simplificar el formulario de ingreso quitando el selector visual `Tipo` y agregando un acceso `¡Cobré!`.
+
+### Cambios
+- `frontend/scripts/forms.js`: el formulario de movimiento ahora usa `autocompleteRelatedAmount` para completar `Monto` desde wishlist, metas, ahorros futuros y gastos fijos.
+- `frontend/scripts/forms.js`: `Aporte a meta` y `Aporte a ahorro` toman `montoMensual` del item seleccionado y completan `Motivo` con el titulo si estaba vacio.
+- `frontend/scripts/forms.js`: `Gasto fijo` se muestra como tipo del formulario, carga los fijos configurados, bloquea `Monto` y persiste el movimiento como `tipo: Gasto` + `categoria: Gasto fijo`.
+- `frontend/scripts/forms.js`: el formulario `INGRESO` oculta el campo visual `Tipo` y agrega el boton `¡Cobré!`, que carga `Sueldo`, el sueldo mensual configurado y fecha/hora actual.
+- `frontend/styles/main.css`: se agregaron estilos para el boton `¡Cobré!` y el estado readonly del monto de gasto fijo.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.68` y cache PWA a `finanzas-lcd-v76`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 106 y su resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend`: sin `v2.67`, `finanzas-lcd-v75`, `autocompleteWishlistAmount` ni `normalizeWishlistMovementPayload`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.68`, `APP_VERSION: 'v2.68'`, `finanzas-lcd-v76`, `data-fill-salary`, `autocompleteRelatedAmount`, persistencia de fijo como `Gasto` y CSS `input.is-readonly`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Verificar en el celular instalado que `Actualizar app` descargue `v2.68`.
+
 ## 2026-06-21 - Autocomplete wishlist y estilo unificado de formularios
 
 ### Objetivo

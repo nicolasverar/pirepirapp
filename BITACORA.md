@@ -640,6 +640,7 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.65`, `finanzas-lcd-v73`, `forms.js` con `positionActionMenu`, `app.js` con `finanzasMovementSyncGuards` y CSS con `modal-root.is-action-menu`.
 - `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
 - Se abrio localmente `http://127.0.0.1:4173/index.html`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.65` sirve `v2.65`, `APP_VERSION: 'v2.65'`, `finanzas-lcd-v73`, popup anclado y guards persistentes.
 
 ### Pendientes
 - Validar en uso real con un gasto nuevo desde la PWA instalada.

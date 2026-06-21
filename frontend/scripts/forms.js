@@ -6,6 +6,8 @@
   function openModal(title, content, afterOpen, className) {
     var root = utils.qs('#modal-root');
     var modalClass = className ? ' ' + className : '';
+    var isActionMenu = String(className || '').indexOf('action-menu-modal') !== -1;
+    root.className = 'modal-root' + (isActionMenu ? ' is-action-menu' : '');
     root.hidden = false;
     root.innerHTML = [
       '<div class="modal-backdrop" data-close-modal></div>',
@@ -25,12 +27,35 @@
     if (afterOpen) {
       afterOpen(root);
     }
+    if (isActionMenu) {
+      positionActionMenu(root);
+      window.setTimeout(function () {
+        positionActionMenu(root);
+      }, 0);
+    }
   }
 
   function closeModal() {
     var root = utils.qs('#modal-root');
     root.hidden = true;
+    root.className = 'modal-root';
     root.innerHTML = '';
+  }
+
+  function positionActionMenu(root) {
+    var modal = utils.qs('.system-modal', root);
+    var keyZone = utils.qs('.key-zone');
+    if (!modal || !keyZone) {
+      return;
+    }
+    var rect = keyZone.getBoundingClientRect();
+    var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    var viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    var gap = 8;
+    modal.style.left = (rect.left + (rect.width / 2)) + 'px';
+    modal.style.width = Math.max(260, Math.min(rect.width, viewportWidth - 24)) + 'px';
+    modal.style.bottom = Math.max(8, viewportHeight - rect.top + gap) + 'px';
+    modal.style.maxHeight = Math.max(176, rect.top - 18) + 'px';
   }
 
   function field(label, name, type, value, attrs) {
@@ -138,6 +163,11 @@
   }
 
   function actionMenu() {
+    var root = utils.qs('#modal-root');
+    if (root && !root.hidden && root.className.indexOf('is-action-menu') !== -1) {
+      closeModal();
+      return;
+    }
     var view = window.FinanzasState.getState().currentView;
     if (view === 'metas') {
       openModal('AGREGAR', actionMenuContent('METAS', '3 OPC.', [

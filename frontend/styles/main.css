@@ -3972,8 +3972,14 @@ body::-webkit-scrollbar,
 }
 
 /* Selector AGREGAR: AF3B con fondo AF3A. */
+.modal-root.is-action-menu .modal-backdrop {
+  pointer-events: none;
+  background: transparent;
+}
+
 .action-menu-modal {
   padding: 9px;
+  overflow: visible;
   color: #071007;
   background:
     repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 4px),
@@ -3984,6 +3990,22 @@ body::-webkit-scrollbar,
     inset 2px 2px 0 rgba(218, 228, 157, 0.34),
     inset -3px -3px 0 rgba(7, 16, 7, 0.22),
     5px 5px 0 rgba(7, 16, 7, 0.72);
+}
+
+.action-menu-modal::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 18px;
+  height: 10px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(135deg, #071007 0 50%, transparent 50%),
+    linear-gradient(225deg, #071007 0 50%, transparent 50%);
+  background-size: 9px 10px;
+  background-repeat: no-repeat;
+  background-position: left top, right top;
 }
 
 .action-menu-modal .window-title {

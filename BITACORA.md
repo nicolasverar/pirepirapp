@@ -615,6 +615,35 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Elegir variante de formulario de gasto antes de trabajar formularios de Metas.
 
+## 2026-06-21 - Popup AGREGAR y sincronizacion robusta
+
+### Objetivo
+- Hacer que el menu `AGREGAR` se despliegue encima de los botones inferiores sin tapar toda la pantalla.
+- Corregir inconsistencias donde un gasto recien agregado aparecia y luego desaparecia por refrescos remotos tardios.
+
+### Cambios
+- `frontend/scripts/forms.js`: `AGREGAR` se puede cerrar tocando nuevamente el boton inferior; el menu se posiciona dinamicamente encima de `.key-zone`.
+- `frontend/styles/main.css`: el selector `AGREGAR` ya no usa cortina oscura; queda como popup anclado con punta inferior.
+- `frontend/scripts/app.js`: guards de movimientos persistentes en `localStorage`, TTL extendido a 5 minutos y refresh de movimientos diferido a 10 segundos.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.65` y cache a `finanzas-lcd-v73`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: registro del prompt y resumen operativo.
+
+### Causa raiz
+- El alta/edicion/borrado de movimientos ya se aplicaba de forma optimista, pero un `refresh` en segundo plano podia traer un bootstrap de Sheets aun desactualizado y pisar el estado local. La app tenia guards en memoria, pero eran cortos y no sobrevivian recargas.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `rg` confirmo ausencia de `v2.64` y `finanzas-lcd-v72` en `frontend/`.
+- `rg` confirmo `v2.65`, `finanzas-lcd-v73`, `positionActionMenu`, `is-action-menu`, `finanzasMovementSyncGuards`, `MOVEMENT_GUARD_TTL_MS` y `MOVEMENT_REFRESH_DELAY_MS`.
+- Llaves CSS balanceadas en `main.css`, `responsive.css` y `lcd-theme.css`.
+- Assets declarados en `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.65`, `finanzas-lcd-v73`, `forms.js` con `positionActionMenu`, `app.js` con `finanzasMovementSyncGuards` y CSS con `modal-root.is-action-menu`.
+- `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
+- Se abrio localmente `http://127.0.0.1:4173/index.html`.
+
+### Pendientes
+- Validar en uso real con un gasto nuevo desde la PWA instalada.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

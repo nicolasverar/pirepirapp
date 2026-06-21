@@ -6,7 +6,9 @@
   var movementRefreshTimer = 0;
   var movementSyncGuards = {};
   var fixedExpenseSyncInFlight = false;
-  var MOVEMENT_GUARD_TTL_MS = 15000;
+  var MOVEMENT_GUARD_TTL_MS = 300000;
+  var MOVEMENT_REFRESH_DELAY_MS = 10000;
+  var MOVEMENT_GUARDS_KEY_PREFIX = 'finanzasMovementSyncGuards:';
 
   function init() {
     window.FinanzasRouter.bind();
@@ -14,6 +16,7 @@
     syncVersionLabels();
     bindGlobalActions();
     registerServiceWorker();
+    loadMovementGuards();
     if (!window.FinanzasApi.hasBackend() || !window.FinanzasApi.getAuthToken()) {
       window.FinanzasRender.render();
       setStatus('Conectar');
@@ -278,7 +281,7 @@
     window.clearTimeout(movementRefreshTimer);
     movementRefreshTimer = window.setTimeout(function () {
       refresh({ background: true, silent: true });
-    }, 1400);
+    }, MOVEMENT_REFRESH_DELAY_MS);
   }
 
   function convertWishlistInstant(id) {
@@ -732,6 +735,7 @@
       movement: cloneData(movement),
       expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
     };
+    saveMovementGuards();
   }
 
   function rememberMovementCreate(movement) {
@@ -744,6 +748,7 @@
       movement: cloneData(movement),
       expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
     };
+    saveMovementGuards();
   }
 
   function rememberMovementDelete(id) {
@@ -756,33 +761,82 @@
       movement: null,
       expiresAt: Date.now() + MOVEMENT_GUARD_TTL_MS
     };
+    saveMovementGuards();
   }
 
   function forgetMovementGuard(id) {
     if (id && movementSyncGuards[id]) {
       delete movementSyncGuards[id];
+      saveMovementGuards();
     }
   }
 
   function forgetMovementCreateGuard(key) {
+    var changed = false;
     Object.keys(movementSyncGuards).forEach(function (id) {
       var guard = movementSyncGuards[id];
       if (guard && guard.action === 'create' && guard.key === key) {
         delete movementSyncGuards[id];
+        changed = true;
       }
     });
+    if (changed) {
+      saveMovementGuards();
+    }
   }
 
   function activeMovementGuards() {
     var now = Date.now();
-    return Object.keys(movementSyncGuards).map(function (id) {
+    var changed = false;
+    var guards = Object.keys(movementSyncGuards).map(function (id) {
       var guard = movementSyncGuards[id];
       if (!guard || guard.expiresAt < now) {
         delete movementSyncGuards[id];
+        changed = true;
         return null;
       }
       return guard;
     }).filter(Boolean);
+    if (changed) {
+      saveMovementGuards();
+    }
+    return guards;
+  }
+
+  function movementGuardsStorageKey() {
+    var apiUrl = '';
+    if (window.FinanzasApi && window.FinanzasApi.getApiUrl) {
+      apiUrl = window.FinanzasApi.getApiUrl();
+    }
+    return MOVEMENT_GUARDS_KEY_PREFIX + hashText(apiUrl || window.location.origin);
+  }
+
+  function hashText(value) {
+    var text = String(value || '');
+    var result = 0;
+    for (var index = 0; index < text.length; index += 1) {
+      result = ((result << 5) - result) + text.charCodeAt(index);
+      result |= 0;
+    }
+    return Math.abs(result).toString(36);
+  }
+
+  function loadMovementGuards() {
+    try {
+      var raw = localStorage.getItem(movementGuardsStorageKey());
+      movementSyncGuards = raw ? (JSON.parse(raw) || {}) : {};
+    } catch (error) {
+      movementSyncGuards = {};
+    }
+    activeMovementGuards();
+  }
+
+  function saveMovementGuards() {
+    try {
+      localStorage.setItem(movementGuardsStorageKey(), JSON.stringify(movementSyncGuards || {}));
+    } catch (error) {
+      return;
+    }
   }
 
   function reconcileBootstrapData(data) {

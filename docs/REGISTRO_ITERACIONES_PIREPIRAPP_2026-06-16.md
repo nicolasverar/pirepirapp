@@ -1288,3 +1288,15 @@ me decido por af3b pero con el fondo de afra y que no dia panel compacto  Cambia
 - Se subio el frontend a `v2.64` y el cache PWA a `finanzas-lcd-v72`.
 - Se actualizo la lamina `docs/add_modal_form_af3_variants_v21.html` para reflejar la decision.
 - Se creo la lamina local `docs/expense_form_variants_v22.html` con variantes GF1-GF4 para decidir el formulario de gasto antes de pasar a formularios de Metas.
+
+### Prompt 103 - Usuario
+
+```text
+PERO QUIERO QUE EL MENU SE DESPLIEGUE ENCIMA DE LOS BOTONES no que los tape todo, despues de eso modifca completamente el esquema de actualizacion porque no funciona yo agregro y apraece y desaparece cuadno queire hay inconsitenicas realiza lo qu etengas que hacer para que funcione mejor y solido
+```
+
+### Resumen operativo
+- El selector `AGREGAR` deja de comportarse como modal de pantalla completa: se posiciona dinamicamente encima de `.key-zone` y la capa de fondo queda transparente.
+- `AGREGAR` ahora se puede cerrar tocando nuevamente el boton inferior o usando `CERRAR`.
+- Se endurecio la sincronizacion de movimientos: guards persistentes en `localStorage`, TTL de 5 minutos y refresh diferido para que un bootstrap remoto tardio no borre altas/ediciones/borrados recientes.
+- Se subio el frontend a `v2.65` y el cache PWA a `finanzas-lcd-v73`.

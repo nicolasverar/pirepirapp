@@ -548,6 +548,7 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Assets declarados en `frontend/service-worker.js`: 24 assets, sin faltantes.
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.63`, `finanzas-lcd-v71` y el CSS `botonera inferior fisica`.
 - `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.63` sirve `v2.63`, `APP_VERSION: 'v2.63'`, `finanzas-lcd-v71` y el CSS BTN2.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.

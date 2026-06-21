@@ -1110,3 +1110,27 @@ las cias concentricas las quiero como en la version anterior, suaves y varias pa
 - Se suavizo el fondo de circulos concentricos en `docs/salary_partition_same_pie_legend_variants_v9.html`.
 - Se reemplazaron los anillos grandes y espaciados por capas densas, finas y de bajo contraste para generar textura LCD sin efecto hipnosis.
 - No se modifico la app productiva.
+
+### Prompt 88 - Usuario
+
+```text
+crea variaciones del JJ trabajanod en incorporar mas colores peo que sean coherentes con el lcd y cno cuidado ya que prefiero priorizar armonia estetica sobre otra cosa
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_jj_color_variants_v10.html`.
+- Todas las opciones mantienen la distribucion JJ, el fondo concentrico suave y la misma torta 3D volumetrica; solo varian las paletas.
+- Se agregaron las variantes NN-RR para explorar verdes, oliva y amarillo LCD apagado con prioridad en armonia visual.
+- No se modifico la app productiva.
+
+### Prompt 89 - Usuario
+
+```text
+en una de las iteracines me hiciste una forma de particionar el sueldo como cajas de 10 x 10 a modo de representar cada caja como el 1 porciento , podes probar variaciones de eso otra vez con el mismo fondo concentrico
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_10x10_concentric_variants_v11.html`.
+- Las variantes SS-WW retoman la matriz de 100 casillas, donde cada celda equivale a 1% del sueldo.
+- Se mantuvo el fondo concentrico suave y se probaron organizaciones con leyenda superior, lateral, relieve de cajas, mosaico ancho y barra inferior.
+- No se modifico la app productiva.

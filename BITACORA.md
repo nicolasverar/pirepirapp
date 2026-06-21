@@ -102,6 +102,7 @@
 - Validacion de assets de `frontend/service-worker.js`: assets sin faltantes.
 - Busqueda especifica de `v2.57`, `finanzas-lcd-v65` y `APP_VERSION: 'v2.57'` en `frontend`: sin resultados.
 - Verificacion especifica `v2.58`: clase `availability-card-b`, progress bar sigue renderizando `porcentajeDisponible`, CSS de tarjeta B presente y cache `finanzas-lcd-v66`.
+- Verificacion especifica `v2.61`: GitHub Pages sirve `v2.61`, `APP_VERSION: 'v2.61'`, cache `finanzas-lcd-v69`, `availability-b-title`, sin `window-title` en `Plata disponible`, `min-height: 190px`, monto central de `82px` y progress bar simple.
 
 ### Despliegue
 - Commit principal: `87de50a` (`Pixelar monto de tarjeta resumen`) subido a `origin/main`.
@@ -114,6 +115,8 @@
 - GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.57` sirve `v2.57`, `APP_VERSION: 'v2.57'`, cache `finanzas-lcd-v65`, label `EN LO QUE MAS GASTASTE FUE EN`, dos separadores intermitentes y bloque inferior sin marco interno.
 - Commit principal: `846fbe3` (`Aplicar tarjeta disponible B`) subido a `origin/main`.
 - GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.58` sirve `v2.58`, `APP_VERSION: 'v2.58'`, cache `finanzas-lcd-v66`, tarjeta `availability-card-b` y progress bar con porcentaje disponible.
+- Commit principal: `d36a275` (`Igualar disponible a opcion B`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.61` sirve `v2.61`, `APP_VERSION: 'v2.61'`, cache `finanzas-lcd-v69` y estructura visual de `Plata disponible` alineada a la opcion B del preview.
 
 ### Pendientes
 - Revisar visualmente en el celular instalado despues de tocar `Actualizar app`.

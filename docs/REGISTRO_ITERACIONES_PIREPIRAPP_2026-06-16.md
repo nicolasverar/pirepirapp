@@ -1300,3 +1300,16 @@ PERO QUIERO QUE EL MENU SE DESPLIEGUE ENCIMA DE LOS BOTONES no que los tape todo
 - `AGREGAR` ahora se puede cerrar tocando nuevamente el boton inferior o usando `CERRAR`.
 - Se endurecio la sincronizacion de movimientos: guards persistentes en `localStorage`, TTL de 5 minutos y refresh diferido para que un bootstrap remoto tardio no borre altas/ediciones/borrados recientes.
 - Se subio el frontend a `v2.65` y el cache PWA a `finanzas-lcd-v73`.
+
+### Prompt 104 - Usuario
+
+```text
+del formulario file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/expense_form_variants_v22.html me gusta GF3 implementa ee pero elimina la palabra ticket de la esuina superior derecha ahora anadile el fondo de GF1
+```
+
+### Resumen operativo
+- Se implemento GF3 solo en el formulario productivo de `Gasto`, sin cambiar los formularios de `Ingreso` ni `Metas`.
+- `frontend/scripts/forms.js` marca el modal de gasto con `movement-expense-modal` para encapsular el estilo elegido.
+- `frontend/styles/main.css` aplica filas label/campo, separadores punteados, botones oscuros y fondo GF1 con scanlines verdes al modal de gasto.
+- `docs/expense_form_variants_v22.html` actualiza GF3 para eliminar la palabra `ticket` y usar el fondo GF1.
+- Se subio el frontend a `v2.66` y el cache PWA a `finanzas-lcd-v74`.

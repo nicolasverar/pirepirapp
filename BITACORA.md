@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - Formulario de gasto GF3 con fondo GF1
+
+### Objetivo
+- Implementar en la app el formulario de gasto elegido desde `docs/expense_form_variants_v22.html`: variante GF3 con fondo GF1.
+- Eliminar la palabra `ticket` del encabezado de esa variante.
+- Mantener este cambio acotado al formulario de `Gasto`, sin tocar el formulario de `Ingreso` ni los formularios de `Metas`.
+
+### Cambios
+- `frontend/scripts/forms.js`: el modal de movimiento ahora recibe `movement-expense-modal` cuando se abre como gasto, y `movement-income-modal` cuando se abre como ingreso.
+- `frontend/styles/main.css`: se agrego el estilo encapsulado de `movement-expense-modal` con filas label/campo, separadores punteados, botones oscuros y fondo texturado GF1.
+- `docs/expense_form_variants_v22.html`: GF3 ahora usa el fondo GF1 y ya no muestra `ticket` en la esquina superior derecha.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.66` y cache PWA a `finanzas-lcd-v74`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 104 y su resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend` y `docs/expense_form_variants_v22.html`: sin `ticket`, `v2.65`, `APP_VERSION: 'v2.65'` ni `finanzas-lcd-v73`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.66`, `APP_VERSION: 'v2.66'`, `finanzas-lcd-v74` y CSS con `movement-expense-modal`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Publicar en GitHub Pages y verificar la version publica.
+
 ## 2026-06-20 - Preview de fondos y sombras de tarjetas
 
 ### Objetivo

@@ -317,7 +317,7 @@
         return window.FinanzasApp.mutate(existing ? 'updateMovement' : 'createMovement', payload)
           .then(closeModal);
       });
-    });
+    }, isIncome ? 'movement-income-modal' : 'movement-expense-modal');
   }
 
   function categoryForMovementPayload(type, fallbackCategory, isIncome) {

@@ -1158,3 +1158,15 @@ implementa el AAA
 - `frontend/scripts/render.js`: el resumen `Sueldo distribuido` ahora aparece arriba de la torta, el indicador del encabezado muestra el disponible y la leyenda queda debajo de la torta.
 - `frontend/styles/main.css`: se agrego el skin final `salary-partition-aaa` con fondo concentrico suave en la torta, resumen superior y leyenda compacta legible.
 - Se subio el frontend a `v2.62` y el cache PWA a `finanzas-lcd-v70`.
+
+### Prompt 92 - Usuario
+
+```text
+ahora trabajemos en el marco entero de la app esto incluye el boton de agregar, los botones de gasto eresumen metas y config y el panel superior con el nombre de la app etc, presentame propuestas segun los elementos esteticos que vimosrecientemente
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/app_frame_chrome_variants_v13.html`.
+- Las variantes CCC-GGG exploran el marco completo de la app: carcasa, barra superior, boton `Agregar`, navegacion inferior y panel de estado.
+- Se reutilizaron los criterios esteticos recientes: LCD 2px, sombras puntilladas, bordes redondeados, tonos oliva/verde y relieve pixel art.
+- No se modifico la app productiva.

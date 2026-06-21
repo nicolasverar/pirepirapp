@@ -3,12 +3,13 @@
 
   var utils = window.FinanzasUtils;
 
-  function openModal(title, content, afterOpen) {
+  function openModal(title, content, afterOpen, className) {
     var root = utils.qs('#modal-root');
+    var modalClass = className ? ' ' + className : '';
     root.hidden = false;
     root.innerHTML = [
       '<div class="modal-backdrop" data-close-modal></div>',
-      '<section class="system-modal" role="dialog" aria-modal="true" aria-label="' + utils.escapeHtml(title) + '">',
+      '<section class="system-modal' + utils.escapeHtml(modalClass) + '" role="dialog" aria-modal="true" aria-label="' + utils.escapeHtml(title) + '">',
       '<div class="window-title">',
       '<span>' + utils.escapeHtml(title) + '</span>',
       '<button class="window-close" type="button" data-close-modal>CERRAR</button>',
@@ -139,22 +140,38 @@
   function actionMenu() {
     var view = window.FinanzasState.getState().currentView;
     if (view === 'metas') {
-      openModal('NUEVO', [
-        '<div class="menu-grid">',
-        '<button class="menu-item" type="button" data-form-action="future">Crear ahorro para el futuro</button>',
-        '<button class="menu-item" type="button" data-form-action="goal">Crear meta especifica</button>',
-        '<button class="menu-item" type="button" data-form-action="wish">Agregar algo que quiero</button>',
-        '</div>'
-      ].join(''), bindActionMenu);
+      openModal('AGREGAR', actionMenuContent('METAS', '3 OPC.', [
+        { action: 'future', title: 'Ahorro futuro', detail: 'Mensual' },
+        { action: 'goal', title: 'Meta especifica', detail: 'Objetivo' },
+        { action: 'wish', title: 'Cosa que quiero', detail: 'Wishlist' }
+      ]), bindActionMenu, 'action-menu-modal');
       return;
     }
 
-    openModal('MOVIMIENTO', [
-      '<div class="menu-grid">',
-      '<button class="menu-item" type="button" data-form-action="expense">Gasto corriente</button>',
-      '<button class="menu-item" type="button" data-form-action="income">Registrar ingreso</button>',
+    openModal('AGREGAR', actionMenuContent('RESUMEN', '2 OPC.', [
+      { action: 'expense', title: 'Gasto corriente', detail: 'Salida' },
+      { action: 'income', title: 'Registrar ingreso', detail: 'Entrada' }
+    ]), bindActionMenu, 'action-menu-modal');
+  }
+
+  function actionMenuContent(label, count, options) {
+    return [
+      '<div class="add-action-menu">',
+      '<div class="add-action-context">',
+      '<div class="add-action-context-label"><span>' + utils.escapeHtml(label) + '</span><span>' + utils.escapeHtml(count) + '</span></div>',
+      '<div class="add-action-list">',
+      options.map(function (option, index) {
+        return [
+          '<button class="add-action-item" type="button" data-form-action="' + utils.escapeHtml(option.action) + '">',
+          '<i class="add-action-num">' + utils.escapeHtml(String(index + 1).length === 1 ? '0' + (index + 1) : String(index + 1)) + '</i>',
+          '<span><strong>' + utils.escapeHtml(option.title) + '</strong><span>' + utils.escapeHtml(option.detail) + '</span></span>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '</div>',
       '</div>'
-    ].join(''), bindActionMenu);
+    ].join('');
   }
 
   function openAccessForm() {

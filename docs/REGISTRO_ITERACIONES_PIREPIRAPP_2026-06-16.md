@@ -1275,3 +1275,16 @@ crea variantes de AF3
 - Se creo la lamina local `docs/add_modal_form_af3_variants_v21.html`.
 - Las variantes AF3A-AF3E profundizan la direccion de lista numerada terminal: doble panel limpio, matriz compacta, terminal fisico oscuro, ticket numerado y numero a la derecha.
 - Se mantuvo la logica visual del selector para Resumen y Metas, sin modificar la app productiva.
+
+### Prompt 102 - Usuario
+
+```text
+me decido por af3b pero con el fondo de afra y que no dia panel compacto  Cambia por ese  luego trabajems en cada frmulario  en si por separado  empezando por gasto y una vez que me decida por el formulario de gasto pasamos al de  metas
+```
+
+### Resumen operativo
+- Se interpreto `afra` como AF3A: se implemento AF3B con el fondo claro/scanline de AF3A.
+- El selector `AGREGAR` productivo ahora usa lista numerada compacta para Resumen y Metas, sin el texto `panel compacto`.
+- Se subio el frontend a `v2.64` y el cache PWA a `finanzas-lcd-v72`.
+- Se actualizo la lamina `docs/add_modal_form_af3_variants_v21.html` para reflejar la decision.
+- Se creo la lamina local `docs/expense_form_variants_v22.html` con variantes GF1-GF4 para decidir el formulario de gasto antes de pasar a formularios de Metas.

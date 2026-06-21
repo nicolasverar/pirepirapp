@@ -587,6 +587,33 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Elegir una variante AF3 o pedir ajustes antes de incorporarla a `frontend/`.
 
+## 2026-06-21 - Implementacion AF3B y variantes de formulario gasto
+
+### Objetivo
+- Implementar el selector `AGREGAR` como AF3B con fondo AF3A y continuar el trabajo visual por formularios, empezando por Gasto.
+
+### Cambios
+- `frontend/scripts/forms.js`: `AGREGAR` ahora abre un selector numerado compacto con opciones propias de Resumen o Metas; se agrego clase opcional para modales.
+- `frontend/styles/main.css`: estilos `action-menu-modal` y `add-action-*` para AF3B con fondo claro/scanline AF3A.
+- `frontend/styles/responsive.css`: el selector pasa a una columna en pantallas angostas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.64` y cache a `finanzas-lcd-v72`.
+- `docs/add_modal_form_af3_variants_v21.html`: AF3B actualizado con fondo AF3A y sin `panel compacto`.
+- `docs/expense_form_variants_v22.html`: lamina local con variantes GF1-GF4 del formulario de gasto.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: registro del prompt y resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `rg` confirmo ausencia de `v2.63` y `finanzas-lcd-v71` en `frontend/`.
+- `rg` confirmo `v2.64`, `finanzas-lcd-v72`, `action-menu-modal`, `add-action-menu` y `APP_VERSION` en los archivos esperados.
+- Llaves CSS balanceadas en `main.css`, `responsive.css` y `lcd-theme.css`.
+- Assets declarados en `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.64`, `finanzas-lcd-v72`, `forms.js` con `action-menu-modal` y CSS con `Selector AGREGAR`.
+- `rg` confirmo ausencia de `panel compacto` en `frontend/` y previews relacionados.
+- Se abrieron localmente `docs/add_modal_form_af3_variants_v21.html`, `docs/expense_form_variants_v22.html` y `http://127.0.0.1:4173/index.html`.
+
+### Pendientes
+- Elegir variante de formulario de gasto antes de trabajar formularios de Metas.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

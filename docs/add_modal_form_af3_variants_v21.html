@@ -431,11 +431,10 @@
     }
 
     .af3b .modal {
-      border-radius: 9px;
+      border-radius: 4px;
       background:
-        linear-gradient(90deg, rgba(7,16,7,0.09) 1px, transparent 1px) 0 0 / 8px 8px,
-        linear-gradient(0deg, rgba(7,16,7,0.07) 1px, transparent 1px) 0 0 / 8px 8px,
-        linear-gradient(180deg, #c0cc86, #87995b);
+        repeating-linear-gradient(0deg, rgba(7,16,7,0.08) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, var(--paper-hi), var(--paper-mid) 50%, var(--paper-low));
     }
 
     .af3b .context-grid {
@@ -672,7 +671,7 @@
             <div class="screen-card"><span>Resumen</span><b>MENU RAPIDO</b></div>
             <div class="overlay">
               <div class="modal">
-                <div class="modal-head"><strong>AGREGAR</strong><small>panel compacto</small></div>
+                <div class="modal-head"><strong>AGREGAR</strong><small>elige una accion</small></div>
                 <div class="context-grid">
                   <div class="context">
                     <div class="context-label"><span>RESUMEN</span><span>ACCIONES</span></div>

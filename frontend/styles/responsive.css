@@ -172,6 +172,14 @@
     grid-template-columns: 1fr;
   }
 
+  .add-action-list {
+    grid-template-columns: 1fr;
+  }
+
+  .add-action-list .add-action-item:nth-child(3):last-child {
+    grid-column: auto;
+  }
+
   .salary-config-panel {
     grid-template-columns: 1fr;
   }

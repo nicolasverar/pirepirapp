@@ -1170,3 +1170,15 @@ ahora trabajemos en el marco entero de la app esto incluye el boton de agregar, 
 - Las variantes CCC-GGG exploran el marco completo de la app: carcasa, barra superior, boton `Agregar`, navegacion inferior y panel de estado.
 - Se reutilizaron los criterios esteticos recientes: LCD 2px, sombras puntilladas, bordes redondeados, tonos oliva/verde y relieve pixel art.
 - No se modifico la app productiva.
+
+### Prompt 93 - Usuario
+
+```text
+arriba esta bien, abajo lo que no me gusta trabaja en añádir textura retro a los bototne conservando sus iconos obviamente y lo mismo para el boton de agregar
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/app_bottom_buttons_texture_variants_v14.html`.
+- Se mantuvo el marco superior como referencia estable y se enfocaron las variantes HHH-LLL solo en la botonera inferior.
+- Las propuestas agregan texturas retro al boton `Agregar` y a los botones de navegacion conservando los iconos reales de `frontend/icons/nav`.
+- No se modifico la app productiva.

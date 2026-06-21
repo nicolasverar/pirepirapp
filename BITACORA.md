@@ -523,9 +523,10 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Llaves CSS balanceadas en `main.css`, `responsive.css` y `lcd-theme.css`.
 - Assets declarados en `frontend/service-worker.js`: todos existen.
 - `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.62` sirve `v2.62`, `APP_VERSION: 'v2.62'`, `finanzas-lcd-v70`, `render.js?v=2.62`, `main.css?v=2.62`, `salary-partition-aaa` y el CSS de la variante AAA.
 
 ### Pendientes
-- Verificar publicacion en GitHub Pages y revisar visualmente en el celular instalado.
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 

@@ -1194,3 +1194,49 @@ no me gustan, quieo que los botones tengan ese color gris osculo tambien como el
 - Las variantes MMM-QQQ replantean la botonera inferior con botones gris oscuro/grafito coherentes con el marco general.
 - Se mantuvieron los iconos reales de navegacion y se uso contraste LCD verde solo para bordes, texto, iconos y estado activo.
 - No se modifico la app productiva.
+
+### Prompt 95 - Usuario
+
+```text
+traeme variantes de la version NN pero trabaja mejor la textura vintaage del interior de los botones y con respecto a la parte de arriba incorpora una version digital coherente del logo de la app no de eso que no seque es la vberdad
+```
+
+### Resumen operativo
+- Se preparo una exploracion inicial con logo digital, pero quedo descartada por la siguiente correccion del usuario.
+- La propuesta no se consolido en la app productiva.
+
+### Prompt 96 - Usuario
+
+```text
+da la ilusion de que son botones fisicos luego borra nomas el icono queda horrible ahi solo el nombre de la app y la version
+```
+
+### Resumen operativo
+- Se preparo una exploracion de botones fisicos, pero quedo descartada por la siguiente correccion del usuario.
+- No se modifico la app productiva.
+
+### Prompt 97 - Usuario
+
+```text
+no me gusta para nada rediseñá por completo la idea de los botones y arriba quiero que al lado del nombre diga la version sin el marco y donde estaba la version que vuelva el estado y la conexion como antes
+```
+
+### Resumen operativo
+- Se preparo la lamina local `docs/app_bottom_controls_redesign_variants_v18.html`, pero quedo descartada por la siguiente correccion del usuario.
+- Las variantes CTRL1-CTRL5 redisenaban por completo la botonera inferior como controles integrados oscuros, no como teclas fisicas.
+- El header muestra `PIREPIRAPP` y `v2.62` juntos a la izquierda, sin marco de version.
+- El espacio derecho del header vuelve a mostrar estado/conexion (`Sincronizado`) como referencia del comportamiento original.
+- No se modifico la app productiva.
+
+### Prompt 98 - Usuario
+
+```text
+ni uno solo evoca boton todos pareden interfaces digitles
+```
+
+### Resumen operativo
+- Se descarto la lamina local `docs/app_bottom_controls_redesign_variants_v18.html`.
+- Se creo la lamina local `docs/app_bottom_physical_buttons_variants_v19.html`.
+- Las variantes BTN1-BTN5 buscan evocar botones reales con capuchones separados, cara superior, pared lateral/sombra inferior y textura grafito.
+- El header mantiene `PIREPIRAPP v2.62` a la izquierda y estado/conexion a la derecha.
+- No se modifico la app productiva.

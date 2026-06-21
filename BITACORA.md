@@ -553,6 +553,23 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-21 - Variantes de formulario AGREGAR
+
+### Objetivo
+- Proponer alternativas para el emergente que aparece al presionar `AGREGAR` en Resumen y en Metas, antes de modificar la app productiva.
+
+### Cambios
+- `docs/add_modal_form_variants_v20.html`: lamina local con variantes AF1-AF4 del selector/formulario emergente.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: registro del prompt y resumen operativo.
+
+### Verificacion
+- Se abrio la lamina local con `Start-Process .\docs\add_modal_form_variants_v20.html`.
+- `rg` confirmo la presencia de AF1-AF4, los contextos Resumen/Metas y los iconos reales de navegacion.
+- No se modifico la app productiva ni se desplego nueva version.
+
+### Pendientes
+- Elegir una variante o combinar elementos antes de incorporarla a `frontend/`.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

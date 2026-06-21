@@ -1252,3 +1252,15 @@ btn2 me gusta implementalo
 - El header se ajusto para mostrar `PIREPIRAPP` y la version juntos a la izquierda, manteniendo el estado/conexion a la derecha.
 - Se mantuvo funcional el boton de actualizacion mediante `#update-app-button`, ahora integrado visualmente como version sin marco.
 - Se subio el frontend a `v2.63` y el cache PWA a `finanzas-lcd-v71`.
+
+### Prompt 100 - Usuario
+
+```text
+ahora trabajemos en el formulario que emerge cuando se presiona agregar tanto en resumen como enmetas
+```
+
+### Resumen operativo
+- Se reviso el flujo actual de `AGREGAR`: en Resumen abre `MOVIMIENTO` y en Metas abre `NUEVO`.
+- Se creo la lamina local `docs/add_modal_form_variants_v20.html`.
+- Las variantes AF1-AF4 muestran propuestas para el emergente en ambos contextos: Resumen y Metas.
+- No se modifico la app productiva; queda pendiente elegir una direccion visual.

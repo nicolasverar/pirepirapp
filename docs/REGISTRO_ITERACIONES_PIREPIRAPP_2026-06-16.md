@@ -1146,3 +1146,15 @@ hay algo que no me cuadra volvamos a las particiones en torta
 - Se creo la lamina local `docs/salary_partition_pie_refocus_variants_v12.html`.
 - Las variantes XX-BBB mantienen la torta 3D volumetrica y cambian solo el encuadre, jerarquia, leyenda, resumen y compactacion.
 - No se modifico la app productiva.
+
+### Prompt 91 - Usuario
+
+```text
+implementa el AAA
+```
+
+### Resumen operativo
+- Se implemento la variante AAA en la app real para la tarjeta `Particion sueldo`.
+- `frontend/scripts/render.js`: el resumen `Sueldo distribuido` ahora aparece arriba de la torta, el indicador del encabezado muestra el disponible y la leyenda queda debajo de la torta.
+- `frontend/styles/main.css`: se agrego el skin final `salary-partition-aaa` con fondo concentrico suave en la torta, resumen superior y leyenda compacta legible.
+- Se subio el frontend a `v2.62` y el cache PWA a `finanzas-lcd-v70`.

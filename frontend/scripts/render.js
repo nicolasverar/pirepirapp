@@ -743,17 +743,15 @@
     }, 0);
     var available = Math.max(0, salary - total);
     var excess = Math.max(0, total - salary);
-    var totalPercent = salary ? Math.round((total / salary) * 10000) / 100 : 0;
+    var availablePercent = salary ? Math.round((available / salary) * 10000) / 100 : 0;
+    var titleBadge = excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(availablePercent) || '0') + '%';
 
     return [
-      '<article class="system-window salary-partition-card' + (excess > 0 ? ' is-over-budget' : '') + '">',
-      '<div class="window-title">PARTICION SUELDO</div>',
-      salary ? renderSalaryPartitionPie(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
-      '<div class="partition-summary">',
-      '<span>Fijos: <b>' + utils.escapeHtml(utils.formatMoney(total)) + '</b></span>',
-      '<span>' + utils.escapeHtml(formatPercentInput(totalPercent) || '0') + '% del sueldo</span>',
-      '</div>',
+      '<article class="system-window salary-partition-card salary-partition-aaa' + (excess > 0 ? ' is-over-budget' : '') + '">',
+      '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span><span>' + utils.escapeHtml(titleBadge) + '</span></div>',
+      salary ? '<div class="partition-summary partition-summary-top"><span>Sueldo distribuido</span><b>' + utils.escapeHtml(utils.formatMoney(salary)) + '</b></div>' : '',
       excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(excess)) + '</p>' : '',
+      salary ? renderSalaryPartitionPie(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       salary ? renderSalaryPartitionLegend(fixed, salary, available, excess) : '',
       '</article>'
     ].join('');

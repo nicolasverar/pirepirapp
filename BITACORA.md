@@ -505,6 +505,28 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - El usuario debe elegir o descartar una de las variantes de torta antes de incorporarla a `frontend/`.
 
+## 2026-06-21 - Implementacion AAA en particion sueldo
+
+### Objetivo
+- Incorporar en la app real la variante AAA elegida para `Particion sueldo`.
+
+### Cambios
+- `frontend/scripts/render.js`: la tarjeta ahora muestra encabezado con disponible, resumen `Sueldo distribuido` arriba, torta 3D al centro y leyenda debajo.
+- `frontend/styles/main.css`: nuevo override final `salary-partition-aaa` para reproducir el layout AAA y mejorar legibilidad de leyenda.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.62` y cache a `finanzas-lcd-v70`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt y el resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `rg` confirmo `v2.62`, `finanzas-lcd-v70`, `salary-partition-aaa` y ausencia de `v2.61`/`finanzas-lcd-v69` en `frontend/`.
+- Servidor local `http://127.0.0.1:4173`: `index.html`, `scripts/config.js`, `service-worker.js` y `scripts/render.js` sirven la version nueva.
+- Llaves CSS balanceadas en `main.css`, `responsive.css` y `lcd-theme.css`.
+- Assets declarados en `frontend/service-worker.js`: todos existen.
+- `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
+
+### Pendientes
+- Verificar publicacion en GitHub Pages y revisar visualmente en el celular instalado.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

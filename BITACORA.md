@@ -610,6 +610,7 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.64`, `finanzas-lcd-v72`, `forms.js` con `action-menu-modal` y CSS con `Selector AGREGAR`.
 - `rg` confirmo ausencia de `panel compacto` en `frontend/` y previews relacionados.
 - Se abrieron localmente `docs/add_modal_form_af3_variants_v21.html`, `docs/expense_form_variants_v22.html` y `http://127.0.0.1:4173/index.html`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.64` sirve `v2.64`, `APP_VERSION: 'v2.64'`, `finanzas-lcd-v72`, `forms.js` con `action-menu-modal` y CSS del selector.
 
 ### Pendientes
 - Elegir variante de formulario de gasto antes de trabajar formularios de Metas.

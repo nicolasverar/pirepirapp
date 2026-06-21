@@ -24,8 +24,12 @@
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.66`, `APP_VERSION: 'v2.66'`, `finanzas-lcd-v74` y CSS con `movement-expense-modal`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `a3f6b9f` (`Implementar formulario gasto GF3`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.66` sirve `v2.66`, `APP_VERSION: 'v2.66'`, `finanzas-lcd-v74`, CSS/JS con `movement-expense-modal` y sin `ticket`.
+
 ### Pendientes
-- Publicar en GitHub Pages y verificar la version publica.
+- Revisar visualmente el formulario de gasto en el celular instalado despues de tocar `Actualizar app`.
 
 ## 2026-06-20 - Preview de fondos y sombras de tarjetas
 

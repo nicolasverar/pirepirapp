@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Particion sueldo - misma torta, variantes de tarjeta</title>
+  <style>
+    :root {
+      --lcd-ink: #0b1209;
+      --lcd-bg: #a8b76f;
+      --lcd-bg-2: #b9c57d;
+      --lcd-dark: #213923;
+      --lcd-line: #0b1209;
+      --lcd-surface-hi: #c3ce85;
+      --lcd-alert: #3c1f1f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--lcd-ink);
+      background:
+        linear-gradient(90deg, rgba(13, 21, 12, 0.17) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(0deg, rgba(13, 21, 12, 0.13) 1px, transparent 1px) 0 0 / 8px 8px,
+        #74884f;
+      font-family: "Courier New", monospace;
+      image-rendering: pixelated;
+    }
+
+    main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+    }
+
+    .option {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .name {
+      justify-self: start;
+      padding: 4px 7px;
+      color: #c3ce85;
+      background: var(--lcd-ink);
+      border: 2px solid var(--lcd-dark);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .partition-card {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      gap: 9px;
+      min-height: 430px;
+      margin: 0 7px 8px 0;
+      padding: 12px;
+      color: #071007;
+      background:
+        linear-gradient(180deg, #c0cc87 0, #9cae68 22%, #7b9253 100%);
+      border: 2px solid #071007;
+      border-radius: 6px;
+      text-transform: uppercase;
+      font-weight: 900;
+      box-shadow:
+        inset 0 0 0 1px rgba(7, 16, 7, 0.5),
+        inset 2px 2px 0 rgba(202, 213, 143, 0.42),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.32);
+    }
+
+    .partition-card::before,
+    .partition-card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.46) 0 0.75px, transparent 1px) 0 0 / 3px 3px;
+    }
+
+    .partition-card::before {
+      top: 5px;
+      right: -7px;
+      bottom: 2px;
+      width: 7px;
+      border-radius: 0 7px 7px 0;
+    }
+
+    .partition-card::after {
+      left: 5px;
+      right: -7px;
+      bottom: -6px;
+      height: 6px;
+      border-radius: 0 0 7px 7px;
+    }
+
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 25px;
+      margin: -10px -10px 10px;
+      padding: 4px 8px;
+      color: #c0cc87;
+      background:
+        repeating-linear-gradient(90deg, rgba(192, 204, 135, 0.15) 0, rgba(192, 204, 135, 0.15) 1px, transparent 1px, transparent 3px),
+        #071007;
+      border-bottom: 2px solid #071007;
+      font-size: 0.86rem;
+      line-height: 1;
+    }
+
+    .plain-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0 0 2px;
+      padding: 0 0 7px;
+      border-bottom: 2px solid #071007;
+      font-size: 0.78rem;
+      line-height: 1.1;
+    }
+
+    .dash {
+      height: 2px;
+      background: repeating-linear-gradient(90deg, #071007 0 3px, transparent 3px 6px);
+      opacity: 0.78;
+    }
+
+    .partition-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: #071007;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .partition-summary b {
+      color: #071007;
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 8px;
+      background: #bccb84;
+      border: 2px solid #071007;
+      border-radius: 4px;
+      font-size: 0.74rem;
+      line-height: 1.1;
+    }
+
+    .summary-strip b {
+      font-size: 0.9rem;
+    }
+
+    .salary-pie-stage {
+      position: relative;
+      width: 100%;
+      min-height: 276px;
+      display: grid;
+      place-items: center;
+      padding: 14px 6px 4px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(17, 26, 16, 0.62) 1px, transparent 1px) 0 0 / 22px 22px,
+        linear-gradient(0deg, rgba(17, 26, 16, 0.62) 1px, transparent 1px) 0 0 / 22px 22px,
+        repeating-radial-gradient(circle, rgba(17, 26, 16, 0.12) 0 1px, transparent 1px 3px),
+        rgba(169, 184, 110, 0.38);
+      border: 2px solid #071007;
+      box-shadow: inset 0 0 0 3px rgba(153, 170, 98, 0.28), 3px 3px 0 rgba(17, 26, 16, 0.55);
+    }
+
+    .salary-pie-svg {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 292px);
+      height: auto;
+      overflow: visible;
+      image-rendering: pixelated;
+    }
+
+    .salary-pie-svg pattern line {
+      stroke: rgba(13, 21, 12, 0.44);
+      stroke-width: 1;
+    }
+
+    .salary-pie-shadow {
+      fill: rgba(25, 45, 24, 0.18);
+    }
+
+    .salary-pie-sides,
+    .salary-pie-tops {
+      pointer-events: none;
+    }
+
+    .salary-pie-side-fill {
+      stroke: #0b1209;
+      stroke-width: 2.3;
+      paint-order: stroke fill;
+    }
+
+    .salary-pie-side-texture {
+      opacity: 0.14;
+      stroke: none;
+    }
+
+    .salary-pie-side-shade {
+      fill: rgba(13, 21, 12, 0.16);
+      stroke: none;
+    }
+
+    .salary-pie-slice {
+      stroke: #0b1209;
+      stroke-width: 2.7;
+      paint-order: stroke fill;
+    }
+
+    .salary-pie-hatch {
+      pointer-events: none;
+      opacity: 0.2;
+      stroke: none;
+    }
+
+    .salary-pie-hatch.hatch-0,
+    .salary-pie-side-texture.hatch-0 {
+      fill: url("#salary-hatch-0");
+    }
+
+    .salary-pie-hatch.hatch-1,
+    .salary-pie-side-texture.hatch-1 {
+      fill: url("#salary-hatch-1");
+    }
+
+    .salary-pie-hatch.hatch-2,
+    .salary-pie-side-texture.hatch-2 {
+      fill: url("#salary-hatch-2");
+    }
+
+    .salary-pie-slice.segment-0 {
+      fill: #a6b66f;
+    }
+
+    .salary-pie-side-fill.segment-0 {
+      fill: #77884f;
+    }
+
+    .salary-pie-slice.segment-1 {
+      fill: #8fa05f;
+    }
+
+    .salary-pie-side-fill.segment-1 {
+      fill: #657841;
+    }
+
+    .salary-pie-slice.segment-available {
+      fill: #9bad68;
+    }
+
+    .salary-pie-side-fill.segment-available {
+      fill: #6f8149;
+    }
+
+    .salary-pie-label-bg {
+      fill: rgba(177, 189, 118, 0.94);
+      stroke: #0b1209;
+      stroke-width: 1.4;
+    }
+
+    .salary-pie-label {
+      fill: #0b1209;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-size: 8.4px;
+      font-weight: 900;
+    }
+
+    .partition-legend {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 7px 0 0;
+      list-style: none;
+    }
+
+    .partition-legend li {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr) minmax(66px, auto);
+      gap: 9px;
+      min-height: 40px;
+      align-items: center;
+      padding: 6px 8px;
+      color: #0b1209;
+      background:
+        linear-gradient(90deg, rgba(13, 21, 12, 0.12) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px) 0 0 / 8px 8px,
+        rgba(169, 184, 110, 0.5);
+      border: 2px solid #0b1209;
+      box-shadow:
+        inset 1px 1px 0 rgba(195, 206, 133, 0.42),
+        2px 2px 0 rgba(13, 21, 12, 0.34);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .partition-legend i {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #0b1209;
+      box-shadow: inset 1px 1px 0 rgba(195, 206, 133, 0.35);
+    }
+
+    .partition-legend span {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .partition-legend span strong {
+      color: #0b1209;
+      font-size: 0.86rem;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .partition-legend span small {
+      color: rgba(13, 21, 12, 0.78);
+      font-size: 0.66rem;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .partition-legend b {
+      align-self: center;
+      padding: 4px 5px;
+      color: #0b1209;
+      background: rgba(195, 206, 133, 0.42);
+      border: 2px solid #0b1209;
+      font-size: 0.82rem;
+      line-height: 1;
+      text-align: right;
+    }
+
+    .segment-0 { background: #a6b66f; }
+    .segment-1 { background: #8fa05f; }
+    .segment-available { background: #9bad68; }
+
+    .same-pie-note {
+      display: block;
+      margin: 0;
+      font-size: 0.62rem;
+      font-weight: 900;
+      line-height: 1.15;
+      text-align: center;
+      opacity: 0.76;
+    }
+
+    .ee .partition-summary {
+      margin-top: 2px;
+    }
+
+    .ff .card-title {
+      display: none;
+    }
+
+    .ff .salary-pie-stage {
+      min-height: 260px;
+    }
+
+    .gg .partition-legend {
+      grid-template-columns: 1fr;
+      padding-top: 0;
+    }
+
+    .gg .partition-summary {
+      order: -1;
+    }
+
+    .hh .salary-pie-stage {
+      min-height: 300px;
+      padding-top: 22px;
+      background:
+        linear-gradient(90deg, rgba(17, 26, 16, 0.44) 1px, transparent 1px) 0 0 / 18px 18px,
+        linear-gradient(0deg, rgba(17, 26, 16, 0.44) 1px, transparent 1px) 0 0 / 18px 18px,
+        rgba(169, 184, 110, 0.5);
+    }
+
+    .hh .salary-pie-svg {
+      width: min(100%, 314px);
+    }
+  </style>
+</head>
+<body>
+  <template id="pie-template">
+    <div class="salary-pie-stage" role="img" aria-label="Particion del sueldo en diagrama de torta">
+      <svg class="salary-pie-svg" viewBox="0 0 282 223" focusable="false" aria-hidden="true">
+        <defs>
+          <pattern id="salary-hatch-0" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>
+          <pattern id="salary-hatch-1" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><line x1="0" y1="0" x2="0" y2="9"></line></pattern>
+          <pattern id="salary-hatch-2" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><line x1="0" y1="0" x2="0" y2="9"></line><line x1="4.5" y1="0" x2="4.5" y2="9"></line></pattern>
+        </defs>
+        <ellipse class="salary-pie-shadow" cx="141" cy="148" rx="93" ry="32"></ellipse>
+        <g class="salary-pie-sides">
+          <path class="salary-pie-side-fill segment-0" d="M 214.28 104.5 A 84 46 0 0 1 77.24 117.55 L 77.24 171.55 A 84 46 0 0 0 214.28 158.5 Z"></path>
+          <path class="salary-pie-side-texture hatch-0" d="M 214.28 104.5 A 84 46 0 0 1 77.24 117.55 L 77.24 171.55 A 84 46 0 0 0 214.28 158.5 Z"></path>
+          <path class="salary-pie-side-shade" d="M 214.28 104.5 A 84 46 0 0 1 77.24 117.55 L 77.24 171.55 A 84 46 0 0 0 214.28 158.5 Z"></path>
+          <path class="salary-pie-side-fill segment-1" d="M 77.24 117.55 A 84 46 0 0 1 68.28 104.5 L 68.28 158.5 A 84 46 0 0 0 77.24 171.55 Z"></path>
+          <path class="salary-pie-side-texture hatch-1" d="M 77.24 117.55 A 84 46 0 0 1 68.28 104.5 L 68.28 158.5 A 84 46 0 0 0 77.24 171.55 Z"></path>
+          <path class="salary-pie-side-shade" d="M 77.24 117.55 A 84 46 0 0 1 68.28 104.5 L 68.28 158.5 A 84 46 0 0 0 77.24 171.55 Z"></path>
+        </g>
+        <g class="salary-pie-tops">
+          <path class="salary-pie-slice segment-0" d="M 141 82 L 141 36 A 84 46 0 0 1 214.28 104.5 Z"></path>
+          <path class="salary-pie-hatch hatch-0" d="M 141 82 L 141 36 A 84 46 0 0 1 214.28 104.5 Z"></path>
+          <path class="salary-pie-slice segment-1" d="M 141 82 L 214.28 104.5 A 84 46 0 0 1 77.24 117.55 Z"></path>
+          <path class="salary-pie-hatch hatch-1" d="M 141 82 L 214.28 104.5 A 84 46 0 0 1 77.24 117.55 Z"></path>
+          <path class="salary-pie-slice segment-available" d="M 141 82 L 77.24 117.55 A 84 46 0 1 1 141 36 Z"></path>
+          <path class="salary-pie-hatch hatch-2" d="M 141 82 L 77.24 117.55 A 84 46 0 1 1 141 36 Z"></path>
+        </g>
+        <rect class="salary-pie-label-bg" x="166.5" y="68.5" width="34" height="16"></rect>
+        <text class="salary-pie-label" x="183.5" y="76.5">20%</text>
+        <rect class="salary-pie-label-bg" x="89.5" y="93.5" width="34" height="16"></rect>
+        <text class="salary-pie-label" x="106.5" y="101.5">12%</text>
+        <rect class="salary-pie-label-bg" x="111.5" y="86.5" width="34" height="16"></rect>
+        <text class="salary-pie-label" x="128.5" y="94.5">68%</text>
+      </svg>
+    </div>
+  </template>
+
+  <main>
+    <h1>Particion sueldo - misma torta, variaciones de tarjeta</h1>
+    <section class="grid">
+      <article class="option">
+        <span class="name">EE - Actual con marco LCD</span>
+        <div class="partition-card ee">
+          <div class="card-title"><span>PARTICION SUELDO</span><span>BASE</span></div>
+          <div data-pie></div>
+          <div class="partition-summary"><span>Fijos: <b>Gs. 960.000</b></span><span>32% del sueldo</span></div>
+          <ul class="partition-legend">
+            <li><i class="segment-0"></i><span><strong>Alquiler</strong><small>Gs. 600.000</small></span><b>20%</b></li>
+            <li><i class="segment-1"></i><span><strong>Servicios</strong><small>Gs. 360.000</small></span><b>12%</b></li>
+            <li><i class="segment-available"></i><span><strong>Disponible</strong><small>Gs. 2.040.000</small></span><b>68%</b></li>
+          </ul>
+          <p class="same-pie-note">La torta es la misma en todas las variantes.</p>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">FF - Titulo simple como tarjetas nuevas</span>
+        <div class="partition-card ff">
+          <div class="plain-title"><span>PARTICION SUELDO</span><span>32% FIJOS</span></div>
+          <div class="summary-strip"><span>Disponible despues de fijos</span><b>68%</b></div>
+          <div data-pie></div>
+          <ul class="partition-legend">
+            <li><i class="segment-0"></i><span><strong>Alquiler</strong><small>Gs. 600.000</small></span><b>20%</b></li>
+            <li><i class="segment-1"></i><span><strong>Servicios</strong><small>Gs. 360.000</small></span><b>12%</b></li>
+            <li><i class="segment-available"></i><span><strong>Disponible</strong><small>Gs. 2.040.000</small></span><b>68%</b></li>
+          </ul>
+          <p class="same-pie-note">Solo cambia el contenedor, no la torta.</p>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">GG - Resumen arriba + leyenda limpia</span>
+        <div class="partition-card gg">
+          <div class="card-title"><span>PARTICION SUELDO</span><span>100%</span></div>
+          <div class="partition-summary"><span>Fijos <b>Gs. 960.000</b></span><span>Disponible <b>68%</b></span></div>
+          <div class="dash"></div>
+          <div data-pie></div>
+          <ul class="partition-legend">
+            <li><i class="segment-0"></i><span><strong>Alquiler</strong><small>Fijo mensual</small></span><b>20%</b></li>
+            <li><i class="segment-1"></i><span><strong>Servicios</strong><small>Fijo mensual</small></span><b>12%</b></li>
+            <li><i class="segment-available"></i><span><strong>Disponible</strong><small>Libre para variables</small></span><b>68%</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="name">HH - Torta dominante, datos abajo</span>
+        <div class="partition-card hh">
+          <div class="plain-title"><span>PARTICION SUELDO</span><span>DISP. 68%</span></div>
+          <div data-pie></div>
+          <div class="summary-strip"><span>Fijos: Gs. 960.000</span><b>32%</b></div>
+          <ul class="partition-legend">
+            <li><i class="segment-0"></i><span><strong>Alquiler</strong><small>Gs. 600.000</small></span><b>20%</b></li>
+            <li><i class="segment-1"></i><span><strong>Servicios</strong><small>Gs. 360.000</small></span><b>12%</b></li>
+            <li><i class="segment-available"></i><span><strong>Disponible</strong><small>Gs. 2.040.000</small></span><b>68%</b></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    var template = document.getElementById('pie-template');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pie]'), function (slot) {
+      slot.appendChild(template.content.cloneNode(true));
+    });
+  </script>
+</body>
+</html>

@@ -1076,3 +1076,14 @@ file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/summary_available_partition_var
 - Se ajusto el override final de `availability-card-b` para copiar las medidas y el skin de la opcion B del preview.
 - La tarjeta real ahora usa fondo/radio/sombra de `.lcd-card`, titulo simple, monto en recuadro central de 82px y progress bar sin contenedor grande.
 - Se subio la version frontend a `v2.61` y el cache PWA a `finanzas-lcd-v69`.
+
+### Prompt 85 - Usuario
+
+```text
+ ahora quiero que, considerando exactamente la misma tarjeta que tenemos implementada en la seccion de resumen, la tarjeta de particion de sueldo genera variaciones de esa misma tarjeta pero asegurate que sea la misma logica de torta 3d volumetrica coherente porque las casiones anteriores me cambiabas la torta y yo quiero que cambies todo menos la torta
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/salary_partition_same_pie_variants_v8.html`.
+- Todas las variantes reutilizan el mismo bloque de torta 3D de la implementacion actual y solo varian estructura de tarjeta, encabezado, resumen y leyenda.
+- No se modifico la app productiva; queda pendiente que el usuario elija una variante.

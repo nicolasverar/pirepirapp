@@ -27,7 +27,8 @@
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `82bba3c` (`Extender autocompletado de movimientos`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.68` sirve `v2.68`, `APP_VERSION: 'v2.68'`, `finanzas-lcd-v76`, JS con `data-fill-salary` / `autocompleteRelatedAmount` / persistencia de fijo como `Gasto` y CSS con `input.is-readonly`.
 
 ### Pendientes
 - Verificar en el celular instalado que `Actualizar app` descargue `v2.68`.

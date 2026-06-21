@@ -570,6 +570,23 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Elegir una variante o combinar elementos antes de incorporarla a `frontend/`.
 
+## 2026-06-21 - Variantes especificas AF3
+
+### Objetivo
+- Profundizar la opcion AF3 del emergente `AGREGAR`, manteniendo la idea de lista numerada terminal.
+
+### Cambios
+- `docs/add_modal_form_af3_variants_v21.html`: lamina local con variantes AF3A-AF3E.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: registro del prompt y resumen operativo.
+
+### Verificacion
+- Se abrio la lamina local con `Start-Process .\docs\add_modal_form_af3_variants_v21.html`.
+- `rg` confirmo AF3A-AF3E y el uso de iconos reales de navegacion.
+- No se modifico la app productiva ni se desplego nueva version.
+
+### Pendientes
+- Elegir una variante AF3 o pedir ajustes antes de incorporarla a `frontend/`.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

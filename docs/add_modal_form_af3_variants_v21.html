@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variantes AF3 formulario Agregar v21</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --case-black: #050805;
+      --case-deep: #0b110a;
+      --case-dark: #121a11;
+      --case-mid: #1d271b;
+      --case-hi: #354132;
+      --lcd-bg: #97a260;
+      --lcd-bg-2: #8d995a;
+      --lcd-hi: #c4d08b;
+      --lcd-line: #10180d;
+      --lcd-dim: rgba(196, 208, 139, 0.72);
+      --paper-hi: #bfca84;
+      --paper-mid: #9daa68;
+      --paper-low: #798d52;
+      --cap-top: #2b3725;
+      --cap-mid: #182214;
+      --cap-low: #0a1009;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        repeating-radial-gradient(ellipse at 50% 38%, rgba(13, 21, 12, 0.07) 0 0.75px, transparent 0.75px 5px),
+        repeating-radial-gradient(ellipse at 52% 42%, rgba(195, 206, 133, 0.08) 0 0.75px, transparent 0.75px 7px),
+        radial-gradient(ellipse at 50% 24%, rgba(195, 206, 133, 0.11), transparent 58%),
+        #74884f;
+      font-family: "Courier New", Consolas, monospace;
+      image-rendering: pixelated;
+    }
+
+    main {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      color: var(--lcd-hi);
+      font-size: 1rem;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 0 var(--case-black);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .option {
+      display: grid;
+      gap: 8px;
+    }
+
+    .name {
+      justify-self: start;
+      padding: 4px 7px;
+      color: var(--lcd-hi);
+      background: var(--ink);
+      border: 2px solid var(--case-hi);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .device {
+      display: grid;
+      grid-template-rows: auto minmax(408px, 1fr) auto;
+      min-height: 730px;
+      padding: 12px 10px 11px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.05), transparent 10%, transparent 90%, rgba(0,0,0,0.28)),
+        linear-gradient(180deg, var(--case-hi) 0, var(--case-mid) 26%, var(--case-dark) 68%, var(--case-black) 100%);
+      border: 3px solid var(--case-black);
+      border-radius: 16px;
+      box-shadow:
+        inset 3px 3px 0 rgba(191,203,130,0.13),
+        inset -4px -4px 0 rgba(0,0,0,0.36),
+        5px 6px 0 rgba(13,21,12,0.36);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 42px;
+      padding: 7px 9px;
+      color: var(--lcd-hi);
+      background:
+        linear-gradient(180deg, rgba(191,203,130,0.1), transparent 42%),
+        #0a1008;
+      border: 2px solid var(--case-black);
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      font-weight: 900;
+      box-shadow:
+        inset 2px 2px 0 rgba(191,203,130,0.22),
+        inset -2px -2px 0 rgba(0,0,0,0.45);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      min-width: 0;
+      white-space: nowrap;
+      text-shadow: 1px 1px 0 var(--case-black);
+    }
+
+    .brand strong { font-size: 0.9rem; }
+    .brand small { color: rgba(196,208,139,0.76); font-size: 0.64rem; }
+
+    .sync {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: rgba(196,208,139,0.82);
+      font-size: 0.62rem;
+      white-space: nowrap;
+    }
+
+    .sync::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--lcd-hi);
+      border: 1px solid var(--lcd-hi);
+    }
+
+    .screen {
+      position: relative;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 10px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(5,11,5,0.026) 1px, transparent 1px) 0 0 / 2px 2px,
+        linear-gradient(0deg, rgba(5,11,5,0.026) 1px, transparent 1px) 0 0 / 2px 2px,
+        radial-gradient(circle at 50% 24%, rgba(193,207,126,0.58), transparent 46%),
+        linear-gradient(180deg, #7c904f, #516a38 60%, #344d29);
+      border: 4px solid var(--case-black);
+      box-shadow:
+        inset 0 0 0 2px rgba(12,18,10,0.58),
+        inset 7px 8px 14px rgba(0,0,0,0.34),
+        inset -6px -7px 12px rgba(197,207,137,0.18);
+    }
+
+    .screen-card {
+      display: grid;
+      gap: 7px;
+      min-height: 90px;
+      margin: 0 7px 7px 0;
+      padding: 10px;
+      background:
+        linear-gradient(90deg, rgba(13,21,12,0.08) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(0deg, rgba(13,21,12,0.06) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(180deg, #bccb84 0, #9eae68 50%, #7d9154 100%);
+      border: 2px solid var(--ink);
+      border-radius: 7px;
+      box-shadow:
+        inset 2px 2px 0 rgba(202,213,143,0.42),
+        inset -2px -2px 0 rgba(7,16,7,0.28),
+        4px 4px 0 rgba(7,16,7,0.5);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .screen-card span {
+      border-bottom: 2px dashed rgba(7,16,7,0.72);
+      font-size: 0.7rem;
+    }
+
+    .screen-card b {
+      display: grid;
+      place-items: center;
+      min-height: 38px;
+      border: 2px solid rgba(7,16,7,0.75);
+      border-radius: 4px;
+      background: #bccb84;
+      font-size: 1.04rem;
+    }
+
+    .bottom {
+      display: grid;
+      gap: 10px;
+      padding: 11px 10px 13px;
+      overflow: visible;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(196,208,139,0.08) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+        linear-gradient(180deg, rgba(191,203,130,0.06), transparent 36%),
+        #0b110a;
+      border: 2px solid var(--case-black);
+      box-shadow:
+        inset 2px 2px 0 rgba(191,203,130,0.13),
+        inset -2px -2px 0 rgba(0,0,0,0.46);
+    }
+
+    .add,
+    .nav button {
+      position: relative;
+      isolation: isolate;
+      overflow: visible;
+      min-width: 0;
+      color: var(--lcd-dim);
+      background:
+        linear-gradient(180deg, var(--cap-top) 0, var(--cap-mid) 48%, var(--cap-low) 100%);
+      border: 2px solid rgba(196,208,139,0.44);
+      border-radius: 8px;
+      font: inherit;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow: 1px 1px 0 var(--case-black);
+    }
+
+    .add::before,
+    .nav button::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      z-index: 0;
+      border-radius: 5px;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(196,208,139,0.1) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+        linear-gradient(180deg, rgba(255,255,255,0.05), transparent 38%, rgba(0,0,0,0.12));
+    }
+
+    .add::after,
+    .nav button::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: -5px;
+      bottom: -7px;
+      z-index: -1;
+      height: 7px;
+      background: linear-gradient(180deg, #0c120b, #030503);
+      border: 2px solid #050805;
+      border-top: 0;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .add span,
+    .nav button span,
+    .icon {
+      position: relative;
+      z-index: 2;
+    }
+
+    .add {
+      display: grid;
+      place-items: center;
+      min-height: 48px;
+      color: var(--lcd-hi);
+      box-shadow:
+        inset 3px 3px 0 rgba(196,208,139,0.16),
+        inset -4px -4px 0 rgba(0,0,0,0.5),
+        0 2px 0 rgba(196,208,139,0.05);
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      overflow: visible;
+    }
+
+    .nav button {
+      display: grid;
+      grid-template-rows: 21px auto;
+      place-items: center;
+      gap: 3px;
+      min-height: 57px;
+      padding: 6px 3px 5px;
+      font-size: 0.6rem;
+    }
+
+    .nav button.active {
+      color: var(--lcd-hi);
+      border-color: var(--lcd-hi);
+      background: linear-gradient(180deg, #34422b 0, #172313 50%, #0a1009 100%);
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      -webkit-mask: var(--nav-icon) center / contain no-repeat;
+      mask: var(--nav-icon) center / contain no-repeat;
+    }
+
+    .i-summary { --nav-icon: url("../frontend/icons/nav/resumen.png"); }
+    .i-expenses { --nav-icon: url("../frontend/icons/nav/gastos.png"); }
+    .i-goals { --nav-icon: url("../frontend/icons/nav/metas.png"); }
+    .i-config { --nav-icon: url("../frontend/icons/nav/config.png"); }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-items: end;
+      padding: 9px;
+      background: rgba(5, 8, 5, 0.58);
+    }
+
+    .modal {
+      display: grid;
+      gap: 9px;
+      max-height: 100%;
+      padding: 9px;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, rgba(7,16,7,0.08) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, var(--paper-hi), var(--paper-mid) 50%, var(--paper-low));
+      border: 3px solid var(--lcd-line);
+      border-radius: 4px;
+      box-shadow:
+        inset 2px 2px 0 rgba(218,228,157,0.34),
+        inset -3px -3px 0 rgba(7,16,7,0.22),
+        5px 5px 0 rgba(7,16,7,0.72);
+      text-transform: uppercase;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 7px;
+      border-bottom: 2px dotted rgba(7,16,7,0.78);
+      font-weight: 900;
+    }
+
+    .modal-head strong { font-size: 0.96rem; }
+    .modal-head small { color: rgba(7,16,7,0.68); font-size: 0.62rem; }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .context {
+      display: grid;
+      gap: 7px;
+      align-content: start;
+    }
+
+    .context-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: rgba(7,16,7,0.72);
+      font-size: 0.58rem;
+      font-weight: 900;
+      border-bottom: 2px dashed rgba(7,16,7,0.56);
+    }
+
+    .terminal-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .terminal-item {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: center;
+      gap: 7px;
+      min-height: 52px;
+      padding: 7px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #c2cd88, #87995d);
+      border: 2px solid var(--ink);
+      border-radius: 4px;
+      box-shadow:
+        inset 1px 1px 0 rgba(230,238,166,0.32),
+        inset -2px -2px 0 rgba(7,16,7,0.18);
+      font: inherit;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      color: var(--lcd-hi);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 rgba(7,16,7,0.34);
+      font-size: 0.62rem;
+      font-style: normal;
+      font-weight: 900;
+    }
+
+    .terminal-item strong {
+      display: block;
+      font-size: 0.72rem;
+      line-height: 1.05;
+    }
+
+    .terminal-item span span,
+    .meta-line {
+      display: block;
+      margin-top: 2px;
+      color: rgba(7,16,7,0.66);
+      font-size: 0.56rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .af3b .modal {
+      border-radius: 9px;
+      background:
+        linear-gradient(90deg, rgba(7,16,7,0.09) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(0deg, rgba(7,16,7,0.07) 1px, transparent 1px) 0 0 / 8px 8px,
+        linear-gradient(180deg, #c0cc86, #87995b);
+    }
+
+    .af3b .context-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .af3b .context {
+      padding: 7px;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background: rgba(196, 208, 139, 0.28);
+    }
+
+    .af3b .terminal-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .af3b .terminal-item {
+      min-height: 62px;
+      grid-template-columns: 28px minmax(0, 1fr);
+    }
+
+    .af3b .num {
+      width: 26px;
+      height: 26px;
+      font-size: 0.68rem;
+    }
+
+    .af3c .overlay {
+      align-items: center;
+      background:
+        radial-gradient(circle at 50% 52%, rgba(196,208,139,0.12), transparent 38%),
+        rgba(5,8,5,0.66);
+    }
+
+    .af3c .modal {
+      color: var(--lcd-hi);
+      background:
+        radial-gradient(circle at 1px 1px, rgba(196,208,139,0.09) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+        linear-gradient(180deg, #121b11, #070b06);
+      border-color: rgba(196,208,139,0.48);
+      border-radius: 12px;
+      box-shadow:
+        inset 3px 3px 0 rgba(196,208,139,0.13),
+        inset -4px -5px 0 rgba(0,0,0,0.58),
+        5px 6px 0 rgba(0,0,0,0.58);
+    }
+
+    .af3c .modal-head {
+      border-bottom-color: rgba(196,208,139,0.36);
+    }
+
+    .af3c .context-label,
+    .af3c .terminal-item span span,
+    .af3c .meta-line,
+    .af3c .modal-head small {
+      color: rgba(196,208,139,0.62);
+    }
+
+    .af3c .context-label {
+      border-bottom-color: rgba(196,208,139,0.28);
+    }
+
+    .af3c .terminal-item {
+      color: var(--lcd-hi);
+      background:
+        linear-gradient(180deg, #2b3725 0, #182214 52%, #0a1009 100%);
+      border-color: rgba(196,208,139,0.42);
+      border-radius: 8px;
+      box-shadow:
+        inset 2px 2px 0 rgba(196,208,139,0.12),
+        inset -4px -4px 0 rgba(0,0,0,0.46),
+        3px 3px 0 rgba(0,0,0,0.42);
+    }
+
+    .af3c .num {
+      color: var(--ink);
+      background: var(--lcd-hi);
+      border-color: var(--lcd-hi);
+    }
+
+    .af3d .modal {
+      gap: 7px;
+      border-radius: 0;
+      background:
+        linear-gradient(180deg, #c6d08a, #91a060);
+    }
+
+    .af3d .modal-head {
+      padding: 6px 7px;
+      background: rgba(7,16,7,0.1);
+      border: 2px solid var(--ink);
+    }
+
+    .af3d .context-grid {
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .af3d .context {
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 6px;
+      align-items: stretch;
+      padding: 6px;
+      border: 2px solid var(--ink);
+      background:
+        repeating-linear-gradient(90deg, rgba(7,16,7,0.09) 0 1px, transparent 1px 4px),
+        rgba(151,162,96,0.32);
+    }
+
+    .af3d .context-label {
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: var(--ink);
+      color: var(--lcd-hi);
+      font-size: 0.68rem;
+      text-align: center;
+    }
+
+    .af3d .terminal-list {
+      gap: 5px;
+    }
+
+    .af3d .terminal-item {
+      min-height: 42px;
+      padding: 5px;
+      grid-template-columns: 24px minmax(0, 1fr);
+      background: transparent;
+      border: 0;
+      border-bottom: 2px dotted rgba(7,16,7,0.66);
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .af3e .modal {
+      padding: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--paper-mid);
+    }
+
+    .af3e .modal-head {
+      padding: 9px;
+      color: var(--lcd-hi);
+      background:
+        radial-gradient(circle at 1px 1px, rgba(196,208,139,0.08) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+        #0b110a;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .af3e .context-grid {
+      padding: 9px;
+    }
+
+    .af3e .context {
+      padding: 7px;
+      background:
+        linear-gradient(90deg, rgba(7,16,7,0.09) 1px, transparent 1px) 0 0 / 7px 7px,
+        linear-gradient(0deg, rgba(7,16,7,0.08) 1px, transparent 1px) 0 0 / 7px 7px,
+        rgba(188,198,125,0.34);
+      border: 2px solid var(--ink);
+      border-radius: 7px;
+    }
+
+    .af3e .terminal-item {
+      grid-template-columns: minmax(0, 1fr) 30px;
+      min-height: 50px;
+    }
+
+    .af3e .num {
+      grid-column: 2;
+      grid-row: 1;
+      width: 28px;
+      height: 28px;
+    }
+
+    .af3e .terminal-item > span {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    @media (max-width: 520px) {
+      main { padding: 10px; }
+      .grid { grid-template-columns: 1fr; }
+      .context-grid,
+      .af3b .terminal-list { grid-template-columns: 1fr; }
+      .device { min-height: 780px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Variaciones de AF3 - lista numerada terminal</h1>
+    <div class="grid">
+      <section class="option af3a">
+        <span class="name">AF3A - Terminal doble limpio</span>
+        <div class="device">
+          <div class="top"><div class="brand"><strong>PIREPIRAPP</strong><small>v2.63</small></div><span class="sync">Sincronizado</span></div>
+          <div class="screen">
+            <div class="screen-card"><span>Resumen</span><b>AGREGAR</b></div>
+            <div class="overlay">
+              <div class="modal">
+                <div class="modal-head"><strong>AGREGAR</strong><small>elige una accion</small></div>
+                <div class="context-grid">
+                  <div class="context">
+                    <div class="context-label"><span>RESUMEN</span><span>2 OPC.</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Gasto corriente</strong><span>Salida variable del mes</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Registrar ingreso</strong><span>Entrada manual</span></span></button>
+                    </div>
+                  </div>
+                  <div class="context">
+                    <div class="context-label"><span>METAS</span><span>3 OPC.</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Ahorro futuro</strong><span>Cuota mensual</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Meta especifica</strong><span>Monto objetivo</span></span></button>
+                      <button class="terminal-item"><i class="num">03</i><span><strong>Cosa que quiero</strong><span>Wishlist</span></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom"><button class="add"><span>Agregar</span></button><nav class="nav"><button class="active"><i class="icon i-summary"></i><span>Resumen</span></button><button><i class="icon i-expenses"></i><span>Gastos</span></button><button><i class="icon i-goals"></i><span>Metas</span></button><button><i class="icon i-config"></i><span>Config</span></button></nav></div>
+        </div>
+      </section>
+
+      <section class="option af3b">
+        <span class="name">AF3B - Matriz compacta</span>
+        <div class="device">
+          <div class="top"><div class="brand"><strong>PIREPIRAPP</strong><small>v2.63</small></div><span class="sync">Sincronizado</span></div>
+          <div class="screen">
+            <div class="screen-card"><span>Resumen</span><b>MENU RAPIDO</b></div>
+            <div class="overlay">
+              <div class="modal">
+                <div class="modal-head"><strong>AGREGAR</strong><small>panel compacto</small></div>
+                <div class="context-grid">
+                  <div class="context">
+                    <div class="context-label"><span>RESUMEN</span><span>ACCIONES</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Gasto corriente</strong><span>Salida</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Ingreso</strong><span>Entrada</span></span></button>
+                    </div>
+                  </div>
+                  <div class="context">
+                    <div class="context-label"><span>METAS</span><span>ACCIONES</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Ahorro futuro</strong><span>Mensual</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Meta especifica</strong><span>Objetivo</span></span></button>
+                      <button class="terminal-item"><i class="num">03</i><span><strong>Cosa que quiero</strong><span>Wishlist</span></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom"><button class="add"><span>Agregar</span></button><nav class="nav"><button class="active"><i class="icon i-summary"></i><span>Resumen</span></button><button><i class="icon i-expenses"></i><span>Gastos</span></button><button><i class="icon i-goals"></i><span>Metas</span></button><button><i class="icon i-config"></i><span>Config</span></button></nav></div>
+        </div>
+      </section>
+
+      <section class="option af3c">
+        <span class="name">AF3C - Terminal fisico oscuro</span>
+        <div class="device">
+          <div class="top"><div class="brand"><strong>PIREPIRAPP</strong><small>v2.63</small></div><span class="sync">Sincronizado</span></div>
+          <div class="screen">
+            <div class="screen-card"><span>Metas</span><b>NUEVO</b></div>
+            <div class="overlay">
+              <div class="modal">
+                <div class="modal-head"><strong>AGREGAR</strong><small>botones numerados</small></div>
+                <div class="context-grid">
+                  <div class="context">
+                    <div class="context-label"><span>RESUMEN</span><span>DINERO</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Gasto corriente</strong><span>Movimiento variable</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Registrar ingreso</strong><span>Sueldo u otro ingreso</span></span></button>
+                    </div>
+                  </div>
+                  <div class="context">
+                    <div class="context-label"><span>METAS</span><span>PLANES</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Ahorro futuro</strong><span>Reserva mensual</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Meta especifica</strong><span>Comprar / lograr</span></span></button>
+                      <button class="terminal-item"><i class="num">03</i><span><strong>Cosa que quiero</strong><span>Wishlist</span></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom"><button class="add"><span>Agregar</span></button><nav class="nav"><button><i class="icon i-summary"></i><span>Resumen</span></button><button><i class="icon i-expenses"></i><span>Gastos</span></button><button class="active"><i class="icon i-goals"></i><span>Metas</span></button><button><i class="icon i-config"></i><span>Config</span></button></nav></div>
+        </div>
+      </section>
+
+      <section class="option af3d">
+        <span class="name">AF3D - Ticket numerado</span>
+        <div class="device">
+          <div class="top"><div class="brand"><strong>PIREPIRAPP</strong><small>v2.63</small></div><span class="sync">Sincronizado</span></div>
+          <div class="screen">
+            <div class="screen-card"><span>Resumen</span><b>Seleccionar</b></div>
+            <div class="overlay">
+              <div class="modal">
+                <div class="modal-head"><strong>AGREGAR</strong><small>ticket de acciones</small></div>
+                <div class="context-grid">
+                  <div class="context">
+                    <div class="context-label">RESUMEN</div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Gasto corriente</strong><span>Salida del mes</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Registrar ingreso</strong><span>Entrada manual</span></span></button>
+                    </div>
+                  </div>
+                  <div class="context">
+                    <div class="context-label">METAS</div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Ahorro futuro</strong><span>Cuota mensual</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Meta especifica</strong><span>Monto objetivo</span></span></button>
+                      <button class="terminal-item"><i class="num">03</i><span><strong>Cosa que quiero</strong><span>Wishlist</span></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom"><button class="add"><span>Agregar</span></button><nav class="nav"><button class="active"><i class="icon i-summary"></i><span>Resumen</span></button><button><i class="icon i-expenses"></i><span>Gastos</span></button><button><i class="icon i-goals"></i><span>Metas</span></button><button><i class="icon i-config"></i><span>Config</span></button></nav></div>
+        </div>
+      </section>
+
+      <section class="option af3e">
+        <span class="name">AF3E - Numero a la derecha</span>
+        <div class="device">
+          <div class="top"><div class="brand"><strong>PIREPIRAPP</strong><small>v2.63</small></div><span class="sync">Sincronizado</span></div>
+          <div class="screen">
+            <div class="screen-card"><span>Metas</span><b>AGREGAR</b></div>
+            <div class="overlay">
+              <div class="modal">
+                <div class="modal-head"><strong>AGREGAR</strong><small>lista con codigos</small></div>
+                <div class="context-grid">
+                  <div class="context">
+                    <div class="context-label"><span>RESUMEN</span><span>COD</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Gasto corriente</strong><span>Salida variable</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Registrar ingreso</strong><span>Entrada de plata</span></span></button>
+                    </div>
+                  </div>
+                  <div class="context">
+                    <div class="context-label"><span>METAS</span><span>COD</span></div>
+                    <div class="terminal-list">
+                      <button class="terminal-item"><i class="num">01</i><span><strong>Ahorro futuro</strong><span>Plan mensual</span></span></button>
+                      <button class="terminal-item"><i class="num">02</i><span><strong>Meta especifica</strong><span>Objetivo</span></span></button>
+                      <button class="terminal-item"><i class="num">03</i><span><strong>Cosa que quiero</strong><span>Wishlist</span></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom"><button class="add"><span>Agregar</span></button><nav class="nav"><button><i class="icon i-summary"></i><span>Resumen</span></button><button><i class="icon i-expenses"></i><span>Gastos</span></button><button class="active"><i class="icon i-goals"></i><span>Metas</span></button><button><i class="icon i-config"></i><span>Config</span></button></nav></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

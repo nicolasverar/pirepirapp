@@ -1264,3 +1264,14 @@ ahora trabajemos en el formulario que emerge cuando se presiona agregar tanto en
 - Se creo la lamina local `docs/add_modal_form_variants_v20.html`.
 - Las variantes AF1-AF4 muestran propuestas para el emergente en ambos contextos: Resumen y Metas.
 - No se modifico la app productiva; queda pendiente elegir una direccion visual.
+
+### Prompt 101 - Usuario
+
+```text
+crea variantes de AF3
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/add_modal_form_af3_variants_v21.html`.
+- Las variantes AF3A-AF3E profundizan la direccion de lista numerada terminal: doble panel limpio, matriz compacta, terminal fisico oscuro, ticket numerado y numero a la derecha.
+- Se mantuvo la logica visual del selector para Resumen y Metas, sin modificar la app productiva.

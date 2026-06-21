@@ -1099,3 +1099,14 @@ me gustan las variantes que tienen las cias concentricas de fondo saca el cuadri
 - La torta se mantiene fija y se reemplaza el fondo cuadriculado por circulos concentricos.
 - Las variantes II-MM cambian principalmente la distribucion de la leyenda: lista inferior, chips superiores, dos columnas, lateral y barra segmentada inferior.
 - No se modifico la app productiva; queda pendiente que el usuario elija una distribucion.
+
+### Prompt 87 - Usuario
+
+```text
+las cias concentricas las quiero como en la version anterior, suaves y varias para crear el efecto perfecto de fonod no como estas que son re pocas y espaciadas y parece mas de hiponisis
+```
+
+### Resumen operativo
+- Se suavizo el fondo de circulos concentricos en `docs/salary_partition_same_pie_legend_variants_v9.html`.
+- Se reemplazaron los anillos grandes y espaciados por capas densas, finas y de bajo contraste para generar textura LCD sin efecto hipnosis.
+- No se modifico la app productiva.

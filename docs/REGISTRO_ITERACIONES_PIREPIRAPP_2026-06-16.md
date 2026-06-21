@@ -1182,3 +1182,15 @@ arriba esta bien, abajo lo que no me gusta trabaja en añádir textura retro a l
 - Se mantuvo el marco superior como referencia estable y se enfocaron las variantes HHH-LLL solo en la botonera inferior.
 - Las propuestas agregan texturas retro al boton `Agregar` y a los botones de navegacion conservando los iconos reales de `frontend/icons/nav`.
 - No se modifico la app productiva.
+
+### Prompt 94 - Usuario
+
+```text
+no me gustan, quieo que los botones tengan ese color gris osculo tambien como el marco genreal pero make it work
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/app_bottom_buttons_dark_variants_v15.html`.
+- Las variantes MMM-QQQ replantean la botonera inferior con botones gris oscuro/grafito coherentes con el marco general.
+- Se mantuvieron los iconos reales de navegacion y se uso contraste LCD verde solo para bordes, texto, iconos y estado activo.
+- No se modifico la app productiva.

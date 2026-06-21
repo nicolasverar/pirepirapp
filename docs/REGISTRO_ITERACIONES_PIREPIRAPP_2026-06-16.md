@@ -1313,3 +1313,15 @@ del formulario file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/expense_form_var
 - `frontend/styles/main.css` aplica filas label/campo, separadores punteados, botones oscuros y fondo GF1 con scanlines verdes al modal de gasto.
 - `docs/expense_form_variants_v22.html` actualiza GF3 para eliminar la palabra `ticket` y usar el fondo GF1.
 - Se subio el frontend a `v2.66` y el cache PWA a `finanzas-lcd-v74`.
+
+### Prompt 105 - Usuario
+
+```text
+cuando seleccionno una cosa que quiero en miformulario de gasto deberia automaicamente cargarse el precio con la opcion obvio de toar y modificar pero con opcion me refiero a que el campo se autocomplete  ademas el formulario de ingreso, meta, futuro y cosa que quiero tambien quiero en ese estilo
+```
+
+### Resumen operativo
+- En el formulario de gasto, cuando el tipo es `Compra cosa que quiero` y se selecciona un item de wishlist, el campo `Monto` se autocompleta con `costoAproximado` y queda editable.
+- Se generalizo el estilo GF3/GF1 como `ticket-form-modal`.
+- `Ingreso`, `Meta`, `Ahorro futuro` y `Cosa que quiero` ahora usan el mismo estilo visual del formulario de gasto.
+- Se subio el frontend a `v2.67` y el cache PWA a `finanzas-lcd-v75`.

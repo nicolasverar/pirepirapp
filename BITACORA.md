@@ -1,5 +1,33 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - Autocomplete wishlist y estilo unificado de formularios
+
+### Objetivo
+- Autocompletar el monto del gasto al seleccionar una `Cosa que quiero`, usando su costo aproximado.
+- Mantener ese monto editable despues del autocompletado.
+- Llevar el estilo GF3/GF1 tambien a los formularios de `Ingreso`, `Meta`, `Ahorro futuro` y `Cosa que quiero`.
+
+### Cambios
+- `frontend/scripts/forms.js`: el campo `Monto` de movimientos queda marcado con `data-movement-amount`.
+- `frontend/scripts/forms.js`: se agregaron `autocompleteWishlistAmount` y `findById` para completar el monto desde `wishlist[].costoAproximado` al cambiar el selector relacionado.
+- `frontend/scripts/forms.js`: los modales de gasto, ingreso, meta, ahorro futuro y cosa que quiero ahora reciben la clase compartida `ticket-form-modal`.
+- `frontend/styles/main.css`: el skin GF3/GF1 se generalizo de `movement-expense-modal` a `ticket-form-modal`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.67` y cache PWA a `finanzas-lcd-v75`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 105 y su resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend`: sin `v2.66`, `APP_VERSION: 'v2.66'` ni `finanzas-lcd-v74`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.67`, `APP_VERSION: 'v2.67'`, `finanzas-lcd-v75`, `autocompleteWishlistAmount` y `ticket-form-modal`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Pendientes
+- Verificar visualmente en celular instalado despues de tocar `Actualizar app`.
+
 ## 2026-06-21 - Formulario de gasto GF3 con fondo GF1
 
 ### Objetivo

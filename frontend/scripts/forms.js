@@ -274,7 +274,7 @@
       '<p class="form-error" hidden></p>',
       select('Tipo', 'tipo', typeOptions, movement.tipo || defaultType, 'data-movement-type'),
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off" data-movement-motive'),
-      field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric"'),
+      field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric" data-movement-amount'),
       select('Seleccionar', 'idRelacionado', relatedOptions, movement.idRelacionado || '', 'data-related-select'),
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
@@ -289,6 +289,7 @@
       var typeSelect = utils.qs('[data-movement-type]', root);
       var relatedSelect = utils.qs('[data-related-select]', root);
       var motiveInput = utils.qs('[data-movement-motive]', root);
+      var amountInput = utils.qs('[data-movement-amount]', root);
       updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, movement.idRelacionado || '', movement.motivo || '');
       updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
       updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
@@ -297,9 +298,11 @@
         updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, relatedSelect.value, movement.motivo || '');
         updateRelatedVisibility(typeSelect, { value: currentCategory }, relatedSelect);
         updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+        autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput);
       });
       relatedSelect.addEventListener('change', function () {
         updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+        autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput);
       });
 
       bindForm(root, '#movement-form', function (form) {
@@ -317,7 +320,7 @@
         return window.FinanzasApp.mutate(existing ? 'updateMovement' : 'createMovement', payload)
           .then(closeModal);
       });
-    }, isIncome ? 'movement-income-modal' : 'movement-expense-modal');
+    }, isIncome ? 'ticket-form-modal movement-income-modal' : 'ticket-form-modal movement-expense-modal');
   }
 
   function categoryForMovementPayload(type, fallbackCategory, isIncome) {
@@ -533,6 +536,30 @@
       || 'Compra cosa que quiero';
   }
 
+  function autocompleteWishlistAmount(data, typeSelect, relatedSelect, amountInput) {
+    if (!amountInput || !typeSelect || typeSelect.value !== 'Compra de wishlist') {
+      return;
+    }
+    var item = findById((data || {}).wishlist || [], relatedSelect && relatedSelect.value);
+    var amount = utils.normalizeAmount(item && item.costoAproximado);
+    if (amount > 0) {
+      amountInput.value = amount;
+    }
+  }
+
+  function findById(items, id) {
+    var value = String(id || '');
+    if (!value) {
+      return null;
+    }
+    for (var index = 0; index < items.length; index += 1) {
+      if (String(items[index].id || '') === value) {
+        return items[index];
+      }
+    }
+    return null;
+  }
+
   function selectedRelatedLabel(relatedSelect) {
     if (!relatedSelect || relatedSelect.selectedIndex < 0) {
       return '';
@@ -584,7 +611,7 @@
             closeModal();
           });
       });
-    });
+    }, 'ticket-form-modal future-saving-modal');
   }
 
   function saveFuturePrefs(id, payload) {
@@ -628,7 +655,7 @@
           return window.FinanzasApp.mutate(existing ? 'updateGoal' : 'createGoal', payload);
         }).then(closeModal);
       });
-    });
+    }, 'ticket-form-modal goal-form-modal');
   }
 
   function openWishlistForm(existing) {
@@ -660,7 +687,7 @@
           return window.FinanzasApp.mutate(existing ? 'updateWishlistItem' : 'createWishlistItem', payload);
         }).then(closeModal);
       });
-    });
+    }, 'ticket-form-modal wish-form-modal');
   }
 
   function bindPhotoPreview(root) {

@@ -1930,7 +1930,7 @@ button:focus-visible {
   border: 2px solid var(--lcd-line);
 }
 
-.movement-expense-modal {
+.ticket-form-modal {
   padding: 9px;
   color: #071007;
   background:
@@ -1944,7 +1944,7 @@ button:focus-visible {
     5px 5px 0 rgba(7, 16, 7, 0.72);
 }
 
-.movement-expense-modal .window-title {
+.ticket-form-modal .window-title {
   min-height: 30px;
   margin: 0 0 8px;
   padding: 0 0 7px;
@@ -1955,7 +1955,7 @@ button:focus-visible {
   font-size: 0.96rem;
 }
 
-.movement-expense-modal .window-close {
+.ticket-form-modal .window-close {
   min-height: 25px;
   padding: 2px 6px;
   color: #c4d08b;
@@ -1965,13 +1965,13 @@ button:focus-visible {
   font-size: 0.58rem;
 }
 
-.movement-expense-modal .modal-body,
-.movement-expense-modal .lcd-form {
+.ticket-form-modal .modal-body,
+.ticket-form-modal .lcd-form {
   gap: 7px;
 }
 
-.movement-expense-modal .field,
-.movement-expense-modal .field-row .field {
+.ticket-form-modal .field,
+.ticket-form-modal .field-row .field {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
   gap: 7px;
@@ -1980,25 +1980,25 @@ button:focus-visible {
   border-bottom: 2px dotted rgba(7, 16, 7, 0.68);
 }
 
-.movement-expense-modal .field[hidden] {
+.ticket-form-modal .field[hidden] {
   display: none;
 }
 
-.movement-expense-modal .field-row {
+.ticket-form-modal .field-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 7px;
 }
 
-.movement-expense-modal .field span {
+.ticket-form-modal .field span {
   color: rgba(7, 16, 7, 0.82);
   font-size: 0.66rem;
   line-height: 1.1;
 }
 
-.movement-expense-modal input,
-.movement-expense-modal select,
-.movement-expense-modal textarea {
+.ticket-form-modal input,
+.ticket-form-modal select,
+.ticket-form-modal textarea {
   min-height: 30px;
   padding: 5px 7px;
   color: #071007;
@@ -2013,21 +2013,21 @@ button:focus-visible {
   font-weight: 900;
 }
 
-.movement-expense-modal textarea {
+.ticket-form-modal textarea {
   min-height: 54px;
 }
 
-.movement-expense-modal .form-error {
+.ticket-form-modal .form-error {
   border-color: #071007;
 }
 
-.movement-expense-modal .form-actions {
+.ticket-form-modal .form-actions {
   justify-content: stretch;
   gap: 7px;
   padding-top: 2px;
 }
 
-.movement-expense-modal .form-actions .lcd-button {
+.ticket-form-modal .form-actions .lcd-button {
   flex: 1 1 0;
   min-height: 38px;
   color: #c4d08b;

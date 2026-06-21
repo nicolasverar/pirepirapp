@@ -3811,3 +3811,162 @@ body::-webkit-scrollbar,
   border: 1px solid #071007;
   font-size: 0.78rem;
 }
+
+/* BTN2: botonera inferior fisica, tipo goma redondeada. */
+.status-bar {
+  gap: 10px;
+}
+
+.brand-mark {
+  flex: 1 1 auto;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.brand-mark strong {
+  flex: 0 1 auto;
+}
+
+.brand-version {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 0;
+  color: rgba(196, 208, 139, 0.78);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: 0.66rem;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #050805;
+}
+
+.brand-version:active {
+  transform: translateY(1px);
+  color: var(--lcd-bg);
+}
+
+.status-tools {
+  flex: 0 0 auto;
+}
+
+.key-zone {
+  isolation: isolate;
+  overflow: visible;
+  gap: 10px;
+  padding: 11px 10px 13px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(196, 208, 139, 0.08) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+    linear-gradient(180deg, rgba(191, 203, 130, 0.06), transparent 36%),
+    #0b110a;
+  border: 2px solid #050805;
+  box-shadow:
+    inset 2px 2px 0 rgba(191, 203, 130, 0.13),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.46),
+    0 -2px 0 rgba(0, 0, 0, 0.34);
+}
+
+.key-zone .action-key,
+.key-zone .nav-key {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  color: rgba(196, 208, 139, 0.72);
+  background:
+    linear-gradient(180deg, #2b3725 0, #182214 48%, #0a1009 100%);
+  border: 2px solid rgba(196, 208, 139, 0.44);
+  border-radius: 8px;
+  box-shadow:
+    inset 2px 2px 0 rgba(196, 208, 139, 0.11),
+    inset -4px -4px 0 rgba(0, 0, 0, 0.44);
+  text-shadow: 1px 1px 0 #050805;
+  transform: none;
+}
+
+.key-zone .action-key::before,
+.key-zone .nav-key::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(196, 208, 139, 0.1) 0 0.75px, transparent 1px) 0 0 / 3px 3px,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 38%, rgba(0, 0, 0, 0.12));
+}
+
+.key-zone .action-key::after,
+.key-zone .nav-key::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: -5px;
+  bottom: -7px;
+  z-index: -1;
+  height: 7px;
+  pointer-events: none;
+  background: linear-gradient(180deg, #0c120b, #030503);
+  border: 2px solid #050805;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+.key-zone .action-key-label,
+.key-zone .nav-key > span,
+.key-zone .nav-icon {
+  position: relative;
+  z-index: 2;
+}
+
+.key-zone .action-key {
+  min-height: 48px;
+  color: #c4d08b;
+  font-weight: 900;
+}
+
+.key-zone .action-key-label {
+  color: inherit;
+  background: transparent;
+  text-shadow: 1px 1px 0 #050805;
+}
+
+.bottom-nav {
+  gap: 8px;
+  overflow: visible;
+}
+
+.key-zone .nav-key {
+  grid-template-rows: 23px auto;
+  gap: 4px;
+  min-height: 57px;
+  padding: 6px 3px 5px;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.key-zone .nav-key.is-active {
+  color: #c4d08b;
+  background: linear-gradient(180deg, #34422b 0, #172313 50%, #0a1009 100%);
+  border-color: #c4d08b;
+  box-shadow:
+    inset 3px 3px 0 rgba(196, 208, 139, 0.16),
+    inset -4px -4px 0 rgba(0, 0, 0, 0.5),
+    0 2px 0 rgba(196, 208, 139, 0.05);
+  transform: none;
+}
+
+.key-zone .nav-key.is-active .nav-icon {
+  filter: none;
+}
+
+.key-zone .action-key:active,
+.key-zone .nav-key:active {
+  transform: translate(1px, 2px);
+}
+
+.key-zone .action-key:active::after,
+.key-zone .nav-key:active::after {
+  right: -3px;
+  bottom: -4px;
+  height: 4px;
+}

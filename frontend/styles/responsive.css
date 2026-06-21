@@ -19,19 +19,15 @@
 
   .brand-mark {
     gap: 5px;
+    flex: 1 1 auto;
   }
 
   .brand-mark strong {
-    max-width: 104px;
+    max-width: 118px;
     font-size: 0.76rem;
   }
 
-  .brand-pixel {
-    width: 17px;
-    height: 16px;
-  }
-
-  .version-key {
+  .brand-version {
     font-size: 0.64rem;
   }
 

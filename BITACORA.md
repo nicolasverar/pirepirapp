@@ -528,6 +528,30 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-21 - Implementacion BTN2 en botonera inferior
+
+### Objetivo
+- Incorporar en la app real la variante BTN2 elegida para que la botonera inferior evoque botones fisicos de goma redondeada.
+
+### Cambios
+- `frontend/index.html`: header ajustado para mostrar `PIREPIRAPP` y `v2.63` juntos a la izquierda; el estado/conexion queda a la derecha.
+- `frontend/styles/main.css`: override final BTN2 para `AGREGAR` y navegacion inferior, con capuchon oscuro redondeado, textura grafito, relieve interno y pared inferior.
+- `frontend/styles/responsive.css`: ajuste responsive del header para que nombre, version y estado no se compriman en pantallas chicas.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.63` y cache a `finanzas-lcd-v71`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro la seleccion e implementacion de BTN2.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js` y `frontend/service-worker.js`: sin errores.
+- `rg` confirmo ausencia de `v2.62` y `finanzas-lcd-v70` en `frontend/`.
+- `rg` confirmo `v2.63`, `finanzas-lcd-v71`, `brand-version` y el override BTN2 en los archivos esperados.
+- Llaves CSS balanceadas en `main.css`, `responsive.css` y `lcd-theme.css`.
+- Assets declarados en `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.63`, `finanzas-lcd-v71` y el CSS `botonera inferior fisica`.
+- `git diff --check`: sin errores, solo avisos esperados de CRLF en Windows.
+
+### Pendientes
+- Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

@@ -1065,3 +1065,14 @@ sigue sin verse como te pedi esa seccion
 - Se cambio la estructura renderizada de `Plata disponible`: se retiro `window-title` y se agrego `availability-b-title`, igualando mejor la opcion B del preview.
 - Se agrego `availability-b-divider` antes del progress bar.
 - Se subio la version frontend a `v2.60` y el cache PWA a `finanzas-lcd-v68`.
+
+### Prompt 84 - Usuario
+
+```text
+file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/summary_available_partition_variants.html quiero que se vea exactamente como la opcion B
+```
+
+### Resumen operativo
+- Se ajusto el override final de `availability-card-b` para copiar las medidas y el skin de la opcion B del preview.
+- La tarjeta real ahora usa fondo/radio/sombra de `.lcd-card`, titulo simple, monto en recuadro central de 82px y progress bar sin contenedor grande.
+- Se subio la version frontend a `v2.61` y el cache PWA a `finanzas-lcd-v69`.

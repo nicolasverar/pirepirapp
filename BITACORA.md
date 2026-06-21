@@ -18,6 +18,7 @@
 - Quitar el marco interno de mayor gasto, separar con linea intermitente y mostrar `EN LO QUE MAS GASTASTE FUE EN` centrado sobre el gasto.
 - Implementar la opcion B de `Plata disponible`, manteniendo el porcentaje junto al progress bar y dejando `Particion sueldo` sin cambios productivos.
 - Ajustar definitivamente `Plata disponible` a la opcion B del preview, retirando la barra `window-title` negra y usando titulo simple interno.
+- Igualar `Plata disponible` a la opcion B del preview local, copiando medidas, fondo, recuadro de monto y progress bar simple.
 
 ### Cambios
 - `docs/card_background_shadow_variants.html`: lamina local con cuatro variantes de fondo y sombra: cuadricula LCD limpia, dithering de puntos, scanline bajo relieve y mixto LCD cuadricula + puntos.
@@ -55,6 +56,8 @@
 - `frontend/scripts/render.js`: `Plata disponible` usa `availability-b-title` y `availability-b-divider` en vez de `window-title`.
 - `frontend/styles/main.css`: override final actualizado para que la tarjeta B no herede la barra negra de `window-title`.
 - `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.60` y cache a `finanzas-lcd-v68`.
+- `frontend/styles/main.css`: `availability-card-b` ahora replica los valores de la opcion B del preview: `min-height: 190px`, radio `7px`, fondo `lcd-card`, monto central de `82px` y progress bar sin marco contenedor.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.61` y cache a `finanzas-lcd-v69`.
 - `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: prompt y resumen operativo actualizados.
 
 ### Verificacion

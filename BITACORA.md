@@ -25,6 +25,10 @@
 - Servidor local `http://127.0.0.1:4173`: sirve `v2.67`, `APP_VERSION: 'v2.67'`, `finanzas-lcd-v75`, `autocompleteWishlistAmount` y `ticket-form-modal`.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
+### Despliegue
+- Commit principal: `731b7e6` (`Autocompletar wishlist y unificar formularios`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.67` sirve `v2.67`, `APP_VERSION: 'v2.67'`, `finanzas-lcd-v75`, CSS con `ticket-form-modal` y JS con `autocompleteWishlistAmount` / `data-movement-amount`.
+
 ### Pendientes
 - Verificar visualmente en celular instalado despues de tocar `Actualizar app`.
 

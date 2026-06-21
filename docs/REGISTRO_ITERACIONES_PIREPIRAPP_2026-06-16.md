@@ -1339,3 +1339,15 @@ aplica la misma logica a que si agregro meta o ahorro para el futuro o gasto fij
 - En `Registrar ingreso`, el campo visual `Tipo` se elimino y queda un input oculto `Ingreso`.
 - El formulario de ingreso incorpora el boton `¡Cobré!`, que carga `Sueldo`, el monto de `sueldoMensual` configurado y fecha/hora actual.
 - Se subio el frontend a `v2.68` y el cache PWA a `finanzas-lcd-v76`.
+
+### Prompt 107 - Usuario
+
+```text
+ahora presentame propuestas para la seccion de metas empezando por la tarjeta de  el futuro sabes ya como hacerlo
+```
+
+### Resumen operativo
+- Se reviso la estructura productiva actual de `EL FUTURO`: tarjetas `future-card` con titulo, monto mensual, acumulado opcional y boton `Editar`.
+- Se creo la lamina local `docs/goals_future_card_variants_v23.html`.
+- La lamina presenta seis variantes FT1-FT6 para decidir la estetica de las tarjetas de ahorro futuro antes de modificar la app.
+- No se modifico la app productiva.

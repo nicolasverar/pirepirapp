@@ -1,5 +1,24 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - Propuestas tarjeta El Futuro
+
+### Objetivo
+- Presentar propuestas visuales para la tarjeta `EL FUTURO` de la seccion `Metas` antes de modificar la app productiva.
+
+### Cambios
+- `docs/goals_future_card_variants_v23.html`: nueva lamina con seis variantes FT1-FT6 para tarjetas de ahorro futuro.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 107 y su resumen operativo.
+
+### Verificacion
+- Se verifico la existencia del archivo de preview y la presencia de las variantes FT1-FT6.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Despliegue
+- No aplica: no se modifico la app productiva.
+
+### Pendientes
+- Elegir una variante o pedir ajustes antes de implementar en `render.js` y `main.css`.
+
 ## 2026-06-21 - Autocomplete de metas, ahorros y gastos fijos en movimientos
 
 ### Objetivo

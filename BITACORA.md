@@ -489,6 +489,22 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 ### Pendientes
 - Revisar visualmente en el celular instalado y tocar `Actualizar app` si mantiene cache anterior.
 
+## 2026-06-21 - Variantes de particion sueldo en torta
+
+### Objetivo
+- Volver desde la exploracion 10x10 a particiones con torta 3D para revisar encuadre, leyenda y jerarquia visual.
+
+### Cambios
+- `docs/salary_partition_pie_refocus_variants_v12.html`: nueva lamina local con variantes XX-BBB basadas en torta 3D volumetrica.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: registro del prompt y resumen operativo.
+
+### Verificacion
+- Se valido que la lamina existe y contiene las variantes XX-BBB con `data-pie`.
+- No se modifico la app productiva ni se desplego nueva version.
+
+### Pendientes
+- El usuario debe elegir o descartar una de las variantes de torta antes de incorporarla a `frontend/`.
+
 ## 2026-06-18 - Resumen inmediato tras cargar gastos
 
 ### Objetivo

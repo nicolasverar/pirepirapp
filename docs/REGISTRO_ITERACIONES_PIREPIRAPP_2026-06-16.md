@@ -1134,3 +1134,15 @@ en una de las iteracines me hiciste una forma de particionar el sueldo como caja
 - Las variantes SS-WW retoman la matriz de 100 casillas, donde cada celda equivale a 1% del sueldo.
 - Se mantuvo el fondo concentrico suave y se probaron organizaciones con leyenda superior, lateral, relieve de cajas, mosaico ancho y barra inferior.
 - No se modifico la app productiva.
+
+### Prompt 90 - Usuario
+
+```text
+hay algo que no me cuadra volvamos a las particiones en torta
+```
+
+### Resumen operativo
+- Se dejo de lado la exploracion de tablero 10x10 para volver al grafico de torta.
+- Se creo la lamina local `docs/salary_partition_pie_refocus_variants_v12.html`.
+- Las variantes XX-BBB mantienen la torta 3D volumetrica y cambian solo el encuadre, jerarquia, leyenda, resumen y compactacion.
+- No se modifico la app productiva.

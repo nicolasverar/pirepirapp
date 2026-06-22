@@ -24,7 +24,8 @@
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `0f809fe` (`Implementar FT2E en El Futuro`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.69` sirve `v2.69`, `APP_VERSION: 'v2.69'`, `finanzas-lcd-v77`, `future-bird-track`, CSS FT2E y keyframes `future-title-bird-fly`.
 
 ### Pendientes
 - Revisar en celular instalado si la velocidad y forma de los pajaritos queda agradable.

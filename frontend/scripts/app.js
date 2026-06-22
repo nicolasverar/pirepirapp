@@ -6,6 +6,7 @@
   var movementRefreshTimer = 0;
   var movementSyncGuards = {};
   var fixedExpenseSyncInFlight = false;
+  var toastTimer = 0;
   var MOVEMENT_GUARD_TTL_MS = 300000;
   var MOVEMENT_REFRESH_DELAY_MS = 10000;
   var MOVEMENT_GUARDS_KEY_PREFIX = 'finanzasMovementSyncGuards:';
@@ -1096,17 +1097,19 @@
   }
 
   function toast(message) {
-    var root = utils.qs('#toast-root');
-    var item = document.createElement('div');
-    item.className = 'toast';
-    item.textContent = message;
-    root.appendChild(item);
-    setTimeout(function () {
-      item.classList.add('is-leaving');
-      setTimeout(function () {
-        item.remove();
-      }, 240);
-    }, 2200);
+    var terminal = utils.qs('#status-terminal');
+    var line = utils.qs('#status-terminal span');
+    if (!terminal || !line) {
+      return;
+    }
+    window.clearTimeout(toastTimer);
+    line.textContent = String(message || '');
+    terminal.classList.add('is-notice');
+    toastTimer = window.setTimeout(function () {
+      var state = window.FinanzasState.getState();
+      line.textContent = state.syncStatus || 'Sin iniciar';
+      terminal.classList.remove('is-notice');
+    }, 2600);
   }
 
   function version() {

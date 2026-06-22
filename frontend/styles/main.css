@@ -3947,17 +3947,32 @@ body::-webkit-scrollbar,
 
 /* BTN2: botonera inferior fisica, tipo goma redondeada. */
 .status-bar {
-  gap: 10px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 7px;
 }
 
 .brand-mark {
-  flex: 1 1 auto;
-  gap: 7px;
+  display: inline-grid;
+  grid-template-columns: 24px auto auto;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 5px;
   white-space: nowrap;
+}
+
+.brand-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 #050805);
 }
 
 .brand-mark strong {
   flex: 0 1 auto;
+  font-size: 0.78rem;
 }
 
 .brand-version {
@@ -3979,7 +3994,92 @@ body::-webkit-scrollbar,
 }
 
 .status-tools {
-  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.status-terminal {
+  display: block;
+  min-width: 0;
+  min-height: 26px;
+  padding: 5px 7px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #050805;
+  border-radius: 5px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.13),
+    2px 2px 0 rgba(5, 8, 5, 0.62);
+  overflow: hidden;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #050805;
+}
+
+.status-terminal span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-terminal.is-notice {
+  color: #071007;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.13) 0 1px, transparent 1px 4px),
+    #c4d08b;
+  text-shadow: none;
+}
+
+.toast-root {
+  display: none;
+}
+
+.sync-indicator {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 26px;
+  max-width: none;
+  padding: 0;
+  background:
+    linear-gradient(180deg, #172014, #0a1009);
+  border: 2px solid #050805;
+  border-radius: 5px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.11),
+    2px 2px 0 rgba(5, 8, 5, 0.62);
+}
+
+.sync-dot {
+  width: 11px;
+  height: 11px;
+  border: 1px solid rgba(196, 208, 139, 0.88);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+.sync-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.sync-saving .sync-dot {
+  animation: sync-terminal-pulse 900ms steps(2, end) infinite;
+}
+
+@keyframes sync-terminal-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
 .key-zone {
@@ -4837,20 +4937,11 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin span {
   position: relative;
   display: block;
-  width: 12px;
-  height: 15px;
-  background: currentColor;
-  clip-path: polygon(20% 0, 80% 0, 80% 55%, 100% 55%, 50% 100%, 0 55%, 20% 55%);
-}
-
-.wishlist-window .wish-pin span::before {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 10px;
-  width: 2px;
-  height: 7px;
-  background: currentColor;
+  width: 21px;
+  height: 21px;
+  background: url("../icons/pin-lcd.png") center / contain no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 rgba(7, 16, 7, 0.4));
 }
 
 .wishlist-window .wish-card.is-pinned .wish-pin {

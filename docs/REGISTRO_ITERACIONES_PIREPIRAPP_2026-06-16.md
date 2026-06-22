@@ -1,6 +1,6 @@
 # Registro de iteraciones - Pirepirapp
 
-Ultima edicion: 2026-06-17
+Ultima edicion: 2026-06-22
 
 ## Sesion 2026-06-16
 
@@ -1451,3 +1451,30 @@ file:///<ruta-local>/docs/goals_goal_card_mt1_variants_v26.html MT1C - Barra jun
 - Se mantuvo la fila horizontal `acumulado` / `por mes` debajo.
 - El boton `PIN` de wishlist se simplifico a icono CSS compacto sin texto visible.
 - Se subio el frontend a `v2.74` y el cache PWA a `finanzas-lcd-v82`.
+
+### Prompt 116 - Usuario
+
+```text
+notificaciones emergentes seems odd propuesta que sea como un mini terminal en la parte superior al lado ed pirepirapp vXX de modo que ahi aparezcan notificaciones y estados ya sea sincronizando guardando guardado etc y el indicador de conexión que aparezca cono un cuadradito que cambia de color como siempre pero fuera de la terminal en un pequeño espacio al final del banner superior que este ese indicador entonce alineados en la fila del banner superior quedarían
+PIREPIRAPP + vXXX + Largo terminal de una linea donde salen estados y notis etc + indicador de conexión
+
+además incorpora el LOGO NUEVO de la app   <ruta-local>\docs\logo.png
+```
+
+### Resumen operativo
+- Se reorganiza el banner superior para mostrar logo, `PIREPIRAPP`, version, un mini terminal de una linea y un indicador cuadrado de conexion separado.
+- Las notificaciones de `toast()` dejan de aparecer como popups y se muestran temporalmente dentro del terminal superior.
+- El estado de sincronizacion sigue actualizando el indicador de conexion y el terminal cuando no hay una notificacion temporal activa.
+- Se incorpora `frontend/icons/logo.png` desde el logo nuevo local.
+
+### Prompt 117 - Usuario
+
+```text
+termina lo que hacias  y cambia el pin por este  <ruta-local>\pin.png pero corolealo para que sus colores sean coherentes con la app
+```
+
+### Resumen operativo
+- Se completo el cambio del banner superior y se subio el frontend a `v2.75` con cache PWA `finanzas-lcd-v83`.
+- Se genero `frontend/icons/pin-lcd.png` desde `pin.png`, eliminando el fondo gris, recortando al contenido y recoloreando por luminancia a la paleta LCD.
+- `.wish-pin` ahora usa el PNG recoloreado en vez del icono CSS anterior.
+- `service-worker.js` cachea `logo.png` y `pin-lcd.png`.

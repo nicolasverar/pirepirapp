@@ -44,13 +44,18 @@
   function updateChrome(state) {
     var sectionTitle = utils.qs('#section-title');
     var statusDate = utils.qs('#status-date');
-    var syncLabel = utils.qs('#sync-status span:last-child');
+    var statusTerminalBox = utils.qs('#status-terminal');
+    var statusTerminal = utils.qs('#status-terminal span');
+    var syncLabel = utils.qs('#sync-status .sync-label');
     var syncBox = utils.qs('#sync-status');
     if (sectionTitle) {
       sectionTitle.textContent = window.FinanzasRouter.currentLabel();
     }
     if (statusDate) {
       statusDate.textContent = utils.compactDate();
+    }
+    if (statusTerminal && (!statusTerminalBox || !statusTerminalBox.classList.contains('is-notice'))) {
+      statusTerminal.textContent = state.syncStatus;
     }
     if (syncLabel) {
       syncLabel.textContent = state.syncStatus;
@@ -594,7 +599,7 @@
         '<article class="' + cardClass + '">',
         renderSharpSparkles(),
         item.conversionFeedback ? '<span class="wish-convert-check" aria-hidden="true">OK</span>' : '',
-        '<button class="wish-pin js-pin-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button" aria-pressed="' + (pinned ? 'true' : 'false') + '"><span></span></button>',
+        '<button class="wish-pin js-pin-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button" aria-label="Pinear cosa que quiero" aria-pressed="' + (pinned ? 'true' : 'false') + '"><span aria-hidden="true"></span></button>',
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',

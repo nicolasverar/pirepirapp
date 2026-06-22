@@ -1,5 +1,38 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - Terminal superior, logo y pin LCD
+
+### Objetivo
+- Reemplazar las notificaciones emergentes por un mini terminal en el banner superior.
+- Reorganizar el banner como `PIREPIRAPP + version + terminal + indicador de conexion`.
+- Incorporar el logo nuevo desde `docs/logo.png`.
+- Reemplazar el pin CSS de `COSAS QUE QUIERO` por el asset local `pin.png`, recoloreado a la paleta LCD.
+
+### Cambios
+- `frontend/index.html`: el header ahora contiene logo, nombre, version, terminal de estado y cuadradito de conexion separado.
+- `frontend/scripts/render.js`: `updateChrome` escribe el estado en el terminal superior y mantiene el indicador de conexion como etiqueta accesible.
+- `frontend/scripts/app.js`: `toast()` deja de crear popups y muestra mensajes temporales dentro del terminal superior.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: estilos del banner, terminal, indicador de conexion y layout responsive.
+- `frontend/icons/logo.png`: logo nuevo incorporado a la PWA desde `docs/logo.png`.
+- `frontend/icons/pin-lcd.png`: pin generado desde `pin.png`, con fondo transparente, recortado y recoloreado en verdes LCD.
+- `frontend/styles/main.css`: `.wish-pin` usa `pin-lcd.png` en vez del icono CSS anterior.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.75` y cache PWA a `finanzas-lcd-v83`.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 26 assets, sin faltantes.
+- `rg` en `frontend`: sin referencias activas a `v2.74`, `finanzas-lcd-v82` ni `root.appendChild(item)`.
+- Servidor local `http://127.0.0.1:4173/?v=2.75`: sirve `v2.75`, `APP_VERSION: 'v2.75'`, `finanzas-lcd-v83`, `status-terminal`, `logo.png` y `pin-lcd.png`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en celular instalado que el terminal superior no corte mensajes demasiado largos.
+
 ## 2026-06-22 - MT1C en Metas y pin compacto
 
 ### Objetivo
@@ -22,7 +55,8 @@
 - Servidor local `http://127.0.0.1:4173/?v=2.74`: sirve `v2.74`, `APP_VERSION: 'v2.74'`, `finanzas-lcd-v82`, MT1C en metas, pin iconico y sin clases preparatorias `movements-window`/`settings-window`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `b1c5325` (`Implementar MT1C en metas`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.74` sirvio `v2.74`, `APP_VERSION: 'v2.74'`, `finanzas-lcd-v82`, MT1C en metas, pin iconico y sin clases preparatorias `movements-window`/`settings-window`.
 
 ### Pendientes
 - Retomar luego, si se confirma, el rediseño de `Resumen`, `Gastos` y `Configuracion` con el lenguaje FT2C.
@@ -1411,7 +1445,7 @@ No se usaron imagenes nuevas ni los archivos graficos sueltos de la raiz; quedan
 - `node -e` parseando `frontend/manifest.json`: `manifest ok`.
 - Busqueda de comparacion directa `providedToken !== configuredToken`, mensajes antiguos de token y metadata `app` en `Router.js`/`Code.js`: sin resultados.
 - Busqueda de `CacheService`, `getScriptCache`, `timingSafeTokenEquals_`, `genericAuthErrorMessage_`, `registerFailedAuthAttempt_` y `requestClientIp_`: presentes en `backend/Router.js`.
-- Busqueda de rutas `C:\Users\pc`, `C:/Users/pc` y `C:\` en los dos documentos solicitados: sin rutas locales absolutas.
+- Busqueda de rutas locales absolutas en los dos documentos solicitados: sin rutas locales absolutas.
 - Busqueda en `README.md`: advertencia de `32 caracteres aleatorios`, palabra/frase/predecible y `FINANZAS_API_TOKEN` presente.
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 - `clasp push`: subio 13 archivos del backend.

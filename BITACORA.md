@@ -1,5 +1,24 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - Variaciones FT2 tarjeta El Futuro
+
+### Objetivo
+- Profundizar la variante FT2 elegida como direccion posible para las tarjetas `EL FUTURO`.
+
+### Cambios
+- `docs/goals_future_card_ft2_variants_v24.html`: nueva lamina con seis variaciones FT2A-FT2F basadas en FT2.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 108 y su resumen operativo.
+
+### Verificacion
+- Se verifico la existencia del archivo de preview y la presencia de FT2A-FT2F.
+- `git diff --check`: sin errores.
+
+### Despliegue
+- No aplica: no se modifico la app productiva.
+
+### Pendientes
+- Elegir una variacion FT2 o pedir una mezcla antes de implementar en `render.js` y `main.css`.
+
 ## 2026-06-21 - Propuestas tarjeta El Futuro
 
 ### Objetivo

@@ -1351,3 +1351,15 @@ ahora presentame propuestas para la seccion de metas empezando por la tarjeta de
 - Se creo la lamina local `docs/goals_future_card_variants_v23.html`.
 - La lamina presenta seis variantes FT1-FT6 para decidir la estetica de las tarjetas de ahorro futuro antes de modificar la app.
 - No se modifico la app productiva.
+
+### Prompt 108 - Usuario
+
+```text
+presenta variaciones del FT2
+```
+
+### Resumen operativo
+- Se creo la lamina local `docs/goals_future_card_ft2_variants_v24.html`.
+- La lamina presenta seis variaciones FT2A-FT2F basadas en FT2, manteniendo cabecera punteada, textura LCD y estructura de titulo/mensual/acumulado/editar.
+- Las variaciones exploran acumulado con panel, mensual bajo titulo, acumulado oscuro, layout compacto lateral, doble borde suave y boton integrado.
+- No se modifico la app productiva.

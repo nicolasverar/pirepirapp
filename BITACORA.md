@@ -27,7 +27,8 @@
 - Servidor local `http://127.0.0.1:4173/?v=2.73`: sirve `v2.73`, `APP_VERSION: 'v2.73'`, `finanzas-lcd-v81`, `METAS` y `COSAS QUE QUIERO` sin marco heredado, wishlist FT2C, pin local y sin restos `v2.72`/`finanzas-lcd-v80`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `58dca36` (`Redisenar metas y wishlist FT2C`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.73` sirve `v2.73`, `APP_VERSION: 'v2.73'`, `finanzas-lcd-v81`, `METAS` y `COSAS QUE QUIERO` sin marco heredado, pin local en wishlist, cards FT2C y sin restos `v2.72`/`finanzas-lcd-v80`.
 
 ### Pendientes
 - Revisar visualmente en celular si la altura de foto protagonista y la densidad de las cards de wishlist quedan en el punto justo.

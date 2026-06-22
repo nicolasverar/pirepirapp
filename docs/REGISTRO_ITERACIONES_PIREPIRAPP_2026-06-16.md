@@ -1363,3 +1363,16 @@ presenta variaciones del FT2
 - La lamina presenta seis variaciones FT2A-FT2F basadas en FT2, manteniendo cabecera punteada, textura LCD y estructura de titulo/mensual/acumulado/editar.
 - Las variaciones exploran acumulado con panel, mensual bajo titulo, acumulado oscuro, layout compacto lateral, doble borde suave y boton integrado.
 - No se modifico la app productiva.
+
+### Prompt 109 - Usuario
+
+```text
+quiero la opcion FT2E y ademas en el rectangulo alargado oscuro donde dice "el futuro" quiero que al lado de el texto que dice "el futuro" una linea de puntos verticales del cual van a salir pajaritos cada tanto para volar y desaparecer al final del rectangulo probemos con pajaritos del mismo color que el texto el futuro y que la linea vertical de lpuntitos
+```
+
+### Resumen operativo
+- Se implemento FT2E en la tarjeta productiva `EL FUTURO`.
+- `render.js` ahora renderiza el titulo de futuro con texto, linea vertical punteada y tres pajaritos CSS animados.
+- `main.css` aplica el doble borde suave, fondo LCD punteado, sombra externa punteada y badge mensual de FT2E solo sobre `.future-card`.
+- Los pajaritos salen de la linea punteada, vuelan horizontalmente dentro del rectangulo oscuro y desaparecen al final.
+- Se subio el frontend a `v2.69` y el cache PWA a `finanzas-lcd-v77`.

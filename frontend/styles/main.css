@@ -4252,3 +4252,196 @@ body::-webkit-scrollbar,
   font-weight: 900;
   line-height: 1.1;
 }
+
+/* Metas: tarjeta El Futuro FT2E y pajaritos del titulo. */
+.future-window-title {
+  position: relative;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow: hidden;
+  color: #c4d08b;
+}
+
+.future-window-label {
+  flex: 0 0 auto;
+}
+
+.future-bird-track {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  flex: 1 1 auto;
+  min-width: 80px;
+  overflow: hidden;
+  color: currentColor;
+}
+
+.future-bird-line {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  background:
+    radial-gradient(circle, currentColor 0 1px, transparent 1.3px) 0 0 / 2px 5px;
+  opacity: 0.92;
+}
+
+.future-title-bird {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  width: 15px;
+  height: 9px;
+  --bird-scale: 0.72;
+  --bird-start-y: 2px;
+  --bird-end-y: -3px;
+  color: currentColor;
+  opacity: 0;
+  animation: future-title-bird-fly 8.4s linear infinite;
+}
+
+.future-title-bird::before,
+.future-title-bird::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  width: 8px;
+  height: 5px;
+  border-top: 2px solid currentColor;
+  border-radius: 8px 8px 0 0;
+}
+
+.future-title-bird::before {
+  left: 0;
+  transform-origin: right center;
+  animation: future-title-wing-left 0.56s steps(2, end) infinite;
+}
+
+.future-title-bird::after {
+  right: 0;
+  transform-origin: left center;
+  animation: future-title-wing-right 0.56s steps(2, end) infinite;
+}
+
+.future-title-bird-1 {
+  animation-delay: 0.9s;
+}
+
+.future-title-bird-2 {
+  top: 38%;
+  --bird-scale: 0.62;
+  --bird-start-y: 1px;
+  --bird-end-y: -2px;
+  animation-delay: 3.7s;
+  animation-duration: 9.2s;
+}
+
+.future-title-bird-3 {
+  top: 62%;
+  --bird-scale: 0.52;
+  --bird-start-y: 3px;
+  --bird-end-y: -1px;
+  animation-delay: 6.4s;
+  animation-duration: 10s;
+}
+
+.future-card {
+  min-height: 128px;
+  padding: 10px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.12) 0 1px, transparent 1.2px) 0 0 / 6px 6px,
+    linear-gradient(180deg, #a5b871, #7f9659);
+  border: 3px double #071007;
+  border-radius: 12px;
+}
+
+.future-card::before {
+  top: 6px;
+  right: -5px;
+  bottom: -5px;
+  width: 5px;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+}
+
+.future-card::after {
+  left: 6px;
+  right: -5px;
+  bottom: -5px;
+  height: 5px;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+}
+
+.future-card-head {
+  padding-bottom: 7px;
+  border-bottom: 2px dashed rgba(7, 16, 7, 0.72);
+}
+
+.future-monthly {
+  padding: 4px 6px;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.5), rgba(126, 148, 82, 0.36));
+  border: 2px solid #071007;
+  border-radius: 4px;
+  font-weight: 900;
+}
+
+.future-accumulated {
+  min-height: 48px;
+}
+
+.future-accumulated strong {
+  font-size: 1.24rem;
+  text-shadow:
+    1px 0 0 #071007,
+    0 1px 0 #071007;
+}
+
+@keyframes future-title-bird-fly {
+  0% {
+    left: 3px;
+    opacity: 0;
+    transform: translateY(var(--bird-start-y)) scale(var(--bird-scale));
+  }
+  10% {
+    opacity: 1;
+  }
+  54% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 8px);
+    opacity: 0;
+    transform: translateY(var(--bird-end-y)) scale(var(--bird-scale));
+  }
+}
+
+@keyframes future-title-wing-left {
+  0%,
+  100% {
+    transform: rotate(-24deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+@keyframes future-title-wing-right {
+  0%,
+  100% {
+    transform: rotate(24deg);
+  }
+  50% {
+    transform: rotate(-18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .future-title-bird {
+    animation: none;
+    display: none;
+  }
+}

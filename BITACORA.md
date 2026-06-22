@@ -1,5 +1,34 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-21 - FT2E en El Futuro y pajaritos de titulo
+
+### Objetivo
+- Implementar la variante FT2E en la tarjeta productiva `EL FUTURO`.
+- Agregar en el rectangulo oscuro del titulo una linea vertical punteada con pajaritos del mismo color que vuelan hasta el final del rectangulo.
+
+### Cambios
+- `frontend/scripts/render.js`: el titulo `EL FUTURO` ahora se renderiza con `future-window-title`, texto, pista, linea punteada y tres pajaritos animados.
+- `frontend/styles/main.css`: se agrego el skin FT2E para `.future-card`, con doble borde suave, fondo LCD punteado, sombra externa punteada y badge mensual claro.
+- `frontend/styles/main.css`: se agregaron los pajaritos CSS con aleteo, vuelo horizontal y soporte `prefers-reduced-motion`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.69` y cache PWA a `finanzas-lcd-v77`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 109 y su resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend`: sin `v2.68` ni `finanzas-lcd-v76`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.69`, `APP_VERSION: 'v2.69'`, `finanzas-lcd-v77`, `future-bird-track`, CSS FT2E y keyframes `future-title-bird-fly`.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar en celular instalado si la velocidad y forma de los pajaritos queda agradable.
+
 ## 2026-06-21 - Variaciones FT2 tarjeta El Futuro
 
 ### Objetivo

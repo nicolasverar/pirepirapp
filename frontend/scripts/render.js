@@ -503,7 +503,7 @@
     return [
       '<section class="goals-stack">',
       '<article class="system-window future-window">',
-      '<div class="window-title">EL FUTURO</div>',
+      renderFutureWindowTitle(),
       renderFutureSavings(data.ahorrosFuturo || []),
       '</article>',
       '<article class="system-window goals-window">',
@@ -515,6 +515,20 @@
       renderWishlist(data.wishlist || [], wishlistSort),
       '</article>',
       '</section>'
+    ].join('');
+  }
+
+  function renderFutureWindowTitle() {
+    return [
+      '<div class="window-title future-window-title">',
+      '<span class="future-window-label">EL FUTURO</span>',
+      '<span class="future-bird-track" aria-hidden="true">',
+      '<span class="future-bird-line"></span>',
+      '<span class="future-title-bird future-title-bird-1"></span>',
+      '<span class="future-title-bird future-title-bird-2"></span>',
+      '<span class="future-title-bird future-title-bird-3"></span>',
+      '</span>',
+      '</div>'
     ].join('');
   }
 

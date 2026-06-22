@@ -27,7 +27,8 @@
 - `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `2246cde` (`Ajustar El Futuro a FT2C`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.70` sirve `v2.70`, `APP_VERSION: 'v2.70'`, `finanzas-lcd-v78`, titulo simple `EL FUTURO`, sin `future-bird` y CSS FT2C exacta.
 
 ### Pendientes
 - Elegir una variante MT para implementar el rediseño de tarjetas `METAS`.

@@ -1,5 +1,34 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - Banner sin logo, pin suelto y propuestas Wishlist
+
+### Objetivo
+- Quitar el logo del banner superior porque no corresponde ahi.
+- Mantener el logo como asset de la app, fuera del encabezado visual.
+- Ajustar el pin de `COSAS QUE QUIERO` para que no este encerrado en una caja.
+- Presentar propuestas para reducir el espacio muerto en las tarjetas de `COSAS QUE QUIERO` antes de modificar su estructura productiva.
+
+### Cambios
+- `frontend/index.html`: se elimino el `<img class="brand-logo">` del banner superior.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: el banner vuelve a distribuir `PIREPIRAPP + version + terminal + indicador` sin columna de logo.
+- `frontend/styles/main.css`: `.wish-pin` queda como icono suelto transparente, sin fondo, borde ni sombra de caja; conserva area tactil.
+- `docs/wishlist_card_variants_v27.html`: nueva lamina WQ1-WQ6 con alternativas mas compactas para `COSAS QUE QUIERO`.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.76` y cache PWA a `finanzas-lcd-v84`.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 26 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/?v=2.76`: sirve `v2.76`, header sin `brand-logo`, `APP_VERSION: 'v2.76'`, `finanzas-lcd-v84` y `pin-lcd.png`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Elegir una variante WQ para implementar el rediseño productivo de `COSAS QUE QUIERO`.
+
 ## 2026-06-22 - Terminal superior, logo y pin LCD
 
 ### Objetivo

@@ -19,18 +19,13 @@
   }
 
   .brand-mark {
-    grid-template-columns: 21px auto auto;
+    grid-template-columns: auto auto;
     gap: 4px;
   }
 
-  .brand-logo {
-    width: 21px;
-    height: 21px;
-  }
-
   .brand-mark strong {
-    max-width: 82px;
-    font-size: 0.66rem;
+    max-width: 94px;
+    font-size: 0.68rem;
   }
 
   .brand-version {

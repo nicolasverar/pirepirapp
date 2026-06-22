@@ -3955,19 +3955,11 @@ body::-webkit-scrollbar,
 
 .brand-mark {
   display: inline-grid;
-  grid-template-columns: 24px auto auto;
+  grid-template-columns: auto auto;
   align-items: center;
   flex: 0 0 auto;
   gap: 5px;
   white-space: nowrap;
-}
-
-.brand-logo {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(1px 1px 0 #050805);
 }
 
 .brand-mark strong {
@@ -4914,41 +4906,43 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin {
   position: absolute;
   z-index: 5;
-  top: 7px;
-  right: 7px;
+  top: 4px;
+  right: 4px;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   color: #071007;
-  background:
-    linear-gradient(180deg, rgba(196, 208, 139, 0.64), rgba(143, 160, 95, 0.9)),
-    #8fa05f;
-  border: 2px solid #071007;
-  border-radius: 6px;
-  box-shadow:
-    inset 1px 1px 0 rgba(196, 208, 139, 0.38),
-    inset -2px -2px 0 rgba(7, 16, 7, 0.22),
-    2px 2px 0 rgba(7, 16, 7, 0.55);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   font-family: inherit;
+  opacity: 0.82;
 }
 
 .wishlist-window .wish-pin span {
   position: relative;
   display: block;
-  width: 21px;
-  height: 21px;
+  width: 25px;
+  height: 25px;
   background: url("../icons/pin-lcd.png") center / contain no-repeat;
   image-rendering: pixelated;
-  filter: drop-shadow(1px 1px 0 rgba(7, 16, 7, 0.4));
+  filter:
+    drop-shadow(1px 1px 0 rgba(7, 16, 7, 0.64))
+    drop-shadow(-1px 0 0 rgba(196, 208, 139, 0.2));
 }
 
 .wishlist-window .wish-card.is-pinned .wish-pin {
   color: #c4d08b;
-  background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
-    #071007;
+  opacity: 1;
+  transform: translate(-1px, 1px) rotate(-8deg);
+}
+
+.wishlist-window .wish-pin:focus-visible {
+  outline: 2px solid #071007;
+  outline-offset: 1px;
 }
 
 .wishlist-window .wish-card .lcd-photo,

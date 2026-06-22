@@ -1478,3 +1478,15 @@ termina lo que hacias  y cambia el pin por este  <ruta-local>\pin.png pero corol
 - Se genero `frontend/icons/pin-lcd.png` desde `pin.png`, eliminando el fondo gris, recortando al contenido y recoloreando por luminancia a la paleta LCD.
 - `.wish-pin` ahora usa el PNG recoloreado en vez del icono CSS anterior.
 - `service-worker.js` cachea `logo.png` y `pin-lcd.png`.
+
+### Prompt 118 - Usuario
+
+```text
+saca el logo del banner superioro eso yo nunca te pedi que sea asi, el logo es sol paara la app en si, arregla el pin no me gusta que este encerrado en una cajita y hay muhco espacio muerto en e l diseno de las cosas que quiero presentame propuestas
+```
+
+### Resumen operativo
+- Se elimino el logo del banner superior; queda solo `PIREPIRAPP`, version, terminal de estado e indicador de conexion.
+- El pin de `COSAS QUE QUIERO` deja de tener caja visible y queda como icono suelto sobre la tarjeta con area tactil transparente.
+- Se subio el frontend a `v2.76` y el cache PWA a `finanzas-lcd-v84`.
+- Se creo `docs/wishlist_card_variants_v27.html` con seis propuestas WQ1-WQ6 para reducir el espacio muerto antes de implementar una nueva tarjeta productiva.

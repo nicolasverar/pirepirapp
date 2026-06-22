@@ -4253,195 +4253,158 @@ body::-webkit-scrollbar,
   line-height: 1.1;
 }
 
-/* Metas: tarjeta El Futuro FT2E y pajaritos del titulo. */
-.future-window-title {
-  position: relative;
-  justify-content: flex-start;
-  gap: 8px;
-  overflow: hidden;
-  color: #c4d08b;
-}
-
-.future-window-label {
-  flex: 0 0 auto;
-}
-
-.future-bird-track {
-  position: relative;
-  display: block;
-  align-self: stretch;
-  flex: 1 1 auto;
-  min-width: 80px;
-  overflow: hidden;
-  color: currentColor;
-}
-
-.future-bird-line {
-  position: absolute;
-  left: 0;
-  top: 2px;
-  bottom: 2px;
-  width: 2px;
-  background:
-    radial-gradient(circle, currentColor 0 1px, transparent 1.3px) 0 0 / 2px 5px;
-  opacity: 0.92;
-}
-
-.future-title-bird {
-  position: absolute;
-  left: 3px;
-  top: 50%;
-  width: 15px;
-  height: 9px;
-  --bird-scale: 0.72;
-  --bird-start-y: 2px;
-  --bird-end-y: -3px;
-  color: currentColor;
-  opacity: 0;
-  animation: future-title-bird-fly 8.4s linear infinite;
-}
-
-.future-title-bird::before,
-.future-title-bird::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  width: 8px;
-  height: 5px;
-  border-top: 2px solid currentColor;
-  border-radius: 8px 8px 0 0;
-}
-
-.future-title-bird::before {
-  left: 0;
-  transform-origin: right center;
-  animation: future-title-wing-left 0.56s steps(2, end) infinite;
-}
-
-.future-title-bird::after {
-  right: 0;
-  transform-origin: left center;
-  animation: future-title-wing-right 0.56s steps(2, end) infinite;
-}
-
-.future-title-bird-1 {
-  animation-delay: 0.9s;
-}
-
-.future-title-bird-2 {
-  top: 38%;
-  --bird-scale: 0.62;
-  --bird-start-y: 1px;
-  --bird-end-y: -2px;
-  animation-delay: 3.7s;
-  animation-duration: 9.2s;
-}
-
-.future-title-bird-3 {
-  top: 62%;
-  --bird-scale: 0.52;
-  --bird-start-y: 3px;
-  --bird-end-y: -1px;
-  animation-delay: 6.4s;
-  animation-duration: 10s;
+/* Metas: tarjeta El Futuro FT2C exacta, sin pajaritos. */
+.future-window .block-list {
+  display: grid;
+  gap: 12px;
 }
 
 .future-card {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "head head"
+    "amount amount"
+    "empty edit";
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
   min-height: 128px;
+  margin: 0;
   padding: 10px;
+  color: #071007;
   background:
-    radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.12) 0 1px, transparent 1.2px) 0 0 / 6px 6px,
-    linear-gradient(180deg, #a5b871, #7f9659);
-  border: 3px double #071007;
-  border-radius: 12px;
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+}
+
+.future-card::before,
+.future-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
 }
 
 .future-card::before {
-  top: 6px;
-  right: -5px;
-  bottom: -5px;
-  width: 5px;
-  background:
-    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+  top: 5px;
+  right: -7px;
+  bottom: -7px;
+  width: 7px;
 }
 
 .future-card::after {
-  left: 6px;
-  right: -5px;
-  bottom: -5px;
-  height: 5px;
-  background:
-    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+  left: 5px;
+  right: -7px;
+  bottom: -7px;
+  height: 7px;
 }
 
 .future-card-head {
+  grid-area: head;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
   padding-bottom: 7px;
-  border-bottom: 2px dashed rgba(7, 16, 7, 0.72);
+  border-bottom: 2px dotted rgba(7, 16, 7, 0.7);
+}
+
+.future-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.12;
 }
 
 .future-monthly {
+  justify-self: end;
+  max-width: 142px;
   padding: 4px 6px;
-  color: #071007;
+  color: #c4d08b;
   background:
-    linear-gradient(180deg, rgba(196, 208, 139, 0.5), rgba(126, 148, 82, 0.36));
-  border: 2px solid #071007;
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 0;
   border-radius: 4px;
+  text-align: right;
+  text-transform: uppercase;
+  font-size: 0.66rem;
   font-weight: 900;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
 }
 
 .future-accumulated {
-  min-height: 48px;
+  grid-area: amount;
+  display: grid;
+  justify-items: stretch;
+  place-items: initial;
+  min-height: 52px;
+  padding: 7px 9px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
+  text-align: left;
 }
 
 .future-accumulated strong {
-  font-size: 1.24rem;
+  display: block;
+  font-size: 1.22rem;
+  line-height: 1;
+  overflow-wrap: anywhere;
   text-shadow:
     1px 0 0 #071007,
     0 1px 0 #071007;
 }
 
-@keyframes future-title-bird-fly {
-  0% {
-    left: 3px;
-    opacity: 0;
-    transform: translateY(var(--bird-start-y)) scale(var(--bird-scale));
-  }
-  10% {
-    opacity: 1;
-  }
-  54% {
-    opacity: 1;
-  }
-  100% {
-    left: calc(100% - 8px);
-    opacity: 0;
-    transform: translateY(var(--bird-end-y)) scale(var(--bird-scale));
-  }
+.future-accumulated span {
+  color: rgba(196, 208, 139, 0.78);
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 900;
 }
 
-@keyframes future-title-wing-left {
-  0%,
-  100% {
-    transform: rotate(-24deg);
-  }
-  50% {
-    transform: rotate(18deg);
-  }
+.future-card-actions {
+  grid-area: edit;
+  align-self: end;
+  display: flex;
+  justify-content: flex-end;
 }
 
-@keyframes future-title-wing-right {
-  0%,
-  100% {
-    transform: rotate(24deg);
-  }
-  50% {
-    transform: rotate(-18deg);
-  }
+.future-card-actions .tiny-key {
+  min-width: 58px;
+  min-height: 30px;
+  color: #c4d08b;
+  background:
+    linear-gradient(180deg, #263321, #0d140c);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 900;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .future-title-bird {
-    animation: none;
-    display: none;
-  }
+.future-card.is-accumulated-hidden {
+  grid-template-areas:
+    "head head"
+    "empty edit";
+  min-height: 94px;
 }

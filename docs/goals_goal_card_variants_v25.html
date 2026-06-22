@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variantes tarjetas Metas v25</title>
+  <style>
+    :root {
+      --ink: #071007;
+      --case-black: #050805;
+      --case-dark: #121a11;
+      --case-mid: #1d271b;
+      --case-hi: #354132;
+      --lcd-hi: #c4d08b;
+      --lcd: #97a260;
+      --lcd-mid: #7e9452;
+      --lcd-low: #5a7540;
+      --panel: #8fa05f;
+      --shadow: rgba(7, 16, 7, 0.72);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        repeating-radial-gradient(ellipse at 50% 38%, rgba(13, 21, 12, 0.07) 0 0.75px, transparent 0.75px 5px),
+        repeating-radial-gradient(ellipse at 52% 42%, rgba(195, 206, 133, 0.08) 0 0.75px, transparent 0.75px 7px),
+        radial-gradient(ellipse at 50% 24%, rgba(195, 206, 133, 0.11), transparent 58%),
+        #74884f;
+      font-family: "Courier New", Consolas, ui-monospace, monospace;
+      image-rendering: pixelated;
+    }
+
+    main {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      color: var(--lcd-hi);
+      font-size: 1rem;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 0 var(--case-black);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .option {
+      display: grid;
+      gap: 8px;
+    }
+
+    .name {
+      justify-self: start;
+      padding: 4px 7px;
+      color: var(--lcd-hi);
+      background: var(--ink);
+      border: 2px solid var(--case-hi);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .device {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 650px;
+      padding: 12px 10px 11px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.05), transparent 10%, transparent 90%, rgba(0,0,0,0.28)),
+        linear-gradient(180deg, var(--case-hi) 0, var(--case-mid) 26%, var(--case-dark) 68%, var(--case-black) 100%);
+      border: 3px solid #050805;
+      border-radius: 18px;
+      box-shadow:
+        inset 2px 2px 0 rgba(196, 208, 139, 0.08),
+        inset -5px -6px 0 rgba(0, 0, 0, 0.34),
+        0 14px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 34px;
+      padding: 4px 7px;
+      color: var(--lcd-hi);
+      background: linear-gradient(180deg, #263321, #11190f);
+      border: 2px solid #070b07;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .screen {
+      margin: 10px 4px;
+      padding: 10px;
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+        linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+        linear-gradient(180deg, rgba(126, 148, 82, 0.54), rgba(79, 104, 55, 0.28)),
+        rgba(126, 148, 82, 0.48);
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      box-shadow:
+        inset 5px 5px 0 rgba(7, 16, 7, 0.18),
+        inset -4px -4px 0 rgba(196, 208, 139, 0.12);
+    }
+
+    .window-title {
+      margin: 0 0 10px;
+      padding: 4px 6px;
+      color: var(--lcd-hi);
+      background:
+        linear-gradient(90deg, rgba(196, 208, 139, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+        #121a11;
+      border: 2px solid var(--ink);
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      padding: 0 2px;
+    }
+
+    .key {
+      min-height: 36px;
+      color: var(--lcd-hi);
+      background: linear-gradient(180deg, #2b3725, #11190f 54%, #080d07);
+      border: 2px solid #050805;
+      border-radius: 5px;
+      box-shadow:
+        inset 2px 2px 0 rgba(196, 208, 139, 0.08),
+        inset -3px -3px 0 rgba(0, 0, 0, 0.36),
+        2px 3px 0 rgba(0, 0, 0, 0.5);
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      font-weight: 900;
+      line-height: 34px;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .goal-card {
+      position: relative;
+      z-index: 0;
+      display: grid;
+      gap: 9px;
+      min-height: 232px;
+      padding: 10px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+        repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+        var(--panel);
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      box-shadow:
+        inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+        inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+    }
+
+    .goal-card::before,
+    .goal-card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle, var(--shadow) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+    }
+
+    .goal-card::before {
+      top: 5px;
+      right: -7px;
+      bottom: -7px;
+      width: 7px;
+    }
+
+    .goal-card::after {
+      left: 5px;
+      right: -7px;
+      bottom: -7px;
+      height: 7px;
+    }
+
+    .goal-title {
+      margin: 0;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      line-height: 1.12;
+      overflow-wrap: anywhere;
+    }
+
+    .goal-desc {
+      margin: 0;
+      color: rgba(7, 16, 7, 0.78);
+      font-size: 0.7rem;
+      font-weight: 900;
+      line-height: 1.16;
+    }
+
+    .monthly {
+      display: inline-block;
+      padding: 4px 6px;
+      color: var(--lcd-hi);
+      background:
+        repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+        var(--ink);
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-size: 0.66rem;
+      font-weight: 900;
+    }
+
+    .photo {
+      display: grid;
+      place-items: center;
+      min-height: 82px;
+      color: rgba(7, 16, 7, 0.7);
+      background:
+        linear-gradient(45deg, rgba(7, 16, 7, 0.14) 25%, transparent 25%, transparent 75%, rgba(7, 16, 7, 0.14) 75%) 0 0 / 8px 8px,
+        linear-gradient(180deg, rgba(196, 208, 139, 0.22), rgba(126, 148, 82, 0.2));
+      border: 2px solid var(--ink);
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      font-weight: 900;
+    }
+
+    .balance {
+      display: grid;
+      gap: 2px;
+      padding: 7px 9px;
+      color: var(--lcd-hi);
+      background:
+        repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+        var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 5px;
+      font-weight: 900;
+    }
+
+    .balance strong {
+      font-size: 1.1rem;
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .balance span {
+      color: rgba(196, 208, 139, 0.78);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+    }
+
+    .progress {
+      display: grid;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px;
+      border: 2px solid var(--ink);
+      border-radius: 4px;
+    }
+
+    .bar {
+      position: relative;
+      height: 14px;
+      background:
+        repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 5px),
+        rgba(196, 208, 139, 0.28);
+      border: 1px solid var(--ink);
+    }
+
+    .bar::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 56%;
+      background:
+        linear-gradient(90deg, rgba(7, 16, 7, 0.85) 1px, transparent 1px) 0 0 / 4px 4px,
+        var(--ink);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .btn {
+      min-height: 30px;
+      color: var(--lcd-hi);
+      background: linear-gradient(180deg, #263321, #0d140c);
+      border: 2px solid var(--ink);
+      border-radius: 4px;
+      box-shadow:
+        inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+        2px 2px 0 rgba(7, 16, 7, 0.55);
+      text-transform: uppercase;
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 900;
+    }
+
+    .mt1 .goal-card {
+      grid-template-columns: minmax(0, 1fr) 96px;
+      grid-template-areas:
+        "copy photo"
+        "money money"
+        "progress progress"
+        "actions actions";
+    }
+
+    .mt1 .copy { grid-area: copy; display: grid; gap: 6px; }
+    .mt1 .photo { grid-area: photo; min-height: 96px; }
+    .mt1 .balance { grid-area: money; }
+    .mt1 .progress { grid-area: progress; }
+    .mt1 .actions { grid-area: actions; }
+
+    .mt2 .goal-card {
+      grid-template-areas:
+        "photo"
+        "copy"
+        "money"
+        "progress"
+        "actions";
+    }
+
+    .mt2 .photo {
+      grid-area: photo;
+      min-height: 128px;
+    }
+
+    .mt2 .copy { grid-area: copy; display: grid; gap: 6px; }
+    .mt2 .balance { grid-area: money; }
+    .mt2 .progress { grid-area: progress; }
+    .mt2 .actions { grid-area: actions; }
+
+    .mt3 .goal-card {
+      grid-template-columns: 78px minmax(0, 1fr);
+      grid-template-areas:
+        "photo copy"
+        "photo monthly"
+        "money money"
+        "progress actions";
+      min-height: 196px;
+    }
+
+    .mt3 .photo { grid-area: photo; min-height: 126px; }
+    .mt3 .copy { grid-area: copy; display: grid; gap: 5px; }
+    .mt3 .monthly { grid-area: monthly; align-self: start; }
+    .mt3 .balance { grid-area: money; }
+    .mt3 .progress { grid-area: progress; }
+    .mt3 .actions { grid-area: actions; grid-template-columns: 1fr; }
+
+    .mt4 .goal-card {
+      grid-template-areas:
+        "copy"
+        "money"
+        "progress"
+        "photo"
+        "actions";
+    }
+
+    .mt4 .copy { grid-area: copy; display: grid; gap: 6px; }
+    .mt4 .balance { grid-area: money; text-align: center; }
+    .mt4 .balance strong { font-size: 1.25rem; }
+    .mt4 .progress { grid-area: progress; min-height: 42px; }
+    .mt4 .bar { height: 20px; }
+    .mt4 .photo { grid-area: photo; min-height: 72px; }
+    .mt4 .actions { grid-area: actions; }
+
+    .mt5 .goal-card {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "copy copy"
+        "photo money"
+        "photo progress"
+        "actions actions";
+    }
+
+    .mt5 .copy { grid-area: copy; display: grid; gap: 6px; }
+    .mt5 .photo { grid-area: photo; min-height: 150px; }
+    .mt5 .balance { grid-area: money; align-self: stretch; }
+    .mt5 .progress { grid-area: progress; align-self: end; }
+    .mt5 .actions { grid-area: actions; }
+
+    .mt6 .goal-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "copy actions"
+        "monthly monthly"
+        "photo photo"
+        "money money"
+        "progress progress";
+      min-height: 210px;
+    }
+
+    .mt6 .copy { grid-area: copy; display: grid; gap: 5px; }
+    .mt6 .monthly { grid-area: monthly; justify-self: start; }
+    .mt6 .photo { grid-area: photo; min-height: 86px; }
+    .mt6 .balance { grid-area: money; }
+    .mt6 .progress { grid-area: progress; }
+    .mt6 .actions { grid-area: actions; grid-template-columns: 52px; align-self: start; }
+    .mt6 .btn { min-height: 26px; font-size: 0.58rem; }
+
+    @media (max-width: 420px) {
+      main { padding: 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .mt1 .goal-card,
+      .mt3 .goal-card,
+      .mt5 .goal-card,
+      .mt6 .goal-card {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "copy"
+          "monthly"
+          "photo"
+          "money"
+          "progress"
+          "actions";
+      }
+      .mt1 .photo,
+      .mt3 .photo,
+      .mt5 .photo {
+        min-height: 100px;
+      }
+      .mt3 .actions,
+      .mt6 .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Propuestas tarjetas METAS</h1>
+    <section class="grid">
+      <div class="option mt1">
+        <span class="name">MT1 - FT2C con foto lateral</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p><span class="monthly">Por mes: Gs. 400.000</span></div>
+                <div class="photo">foto</div>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+
+      <div class="option mt2">
+        <span class="name">MT2 - Foto protagonista</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="photo">foto</div>
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p><span class="monthly">Por mes: Gs. 400.000</span></div>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+
+      <div class="option mt3">
+        <span class="name">MT3 - Compacta ledger</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="photo">foto</div>
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p></div>
+                <span class="monthly">Por mes: Gs. 400.000</span>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+
+      <div class="option mt4">
+        <span class="name">MT4 - Progreso protagonista</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p><span class="monthly">Por mes: Gs. 400.000</span></div>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+                <div class="photo">foto</div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+
+      <div class="option mt5">
+        <span class="name">MT5 - Foto y dinero en dos paneles</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p><span class="monthly">Por mes: Gs. 400.000</span></div>
+                <div class="photo">foto</div>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+
+      <div class="option mt6">
+        <span class="name">MT6 - Acciones arriba</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.70</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2 class="goal-title">Notebook nueva</h2><p class="goal-desc">Equipo para trabajo y estudios.</p></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+                <span class="monthly">Por mes: Gs. 400.000</span>
+                <div class="photo">foto</div>
+                <div class="balance"><strong>Gs. 2.400.000</strong><span>de Gs. 4.300.000</span></div>
+                <div class="progress"><div class="bar"></div></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

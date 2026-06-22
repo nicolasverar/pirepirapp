@@ -1376,3 +1376,27 @@ quiero la opcion FT2E y ademas en el rectangulo alargado oscuro donde dice "el f
 - `main.css` aplica el doble borde suave, fondo LCD punteado, sombra externa punteada y badge mensual de FT2E solo sobre `.future-card`.
 - Los pajaritos salen de la linea punteada, vuelan horizontalmente dentro del rectangulo oscuro y desaparecen al final.
 - Se subio el frontend a `v2.69` y el cache PWA a `finanzas-lcd-v77`.
+
+### Prompt 110 - Usuario
+
+```text
+espera creo que me gusta mas el FT2C cambia a ese y continuemos con las metas ahora
+```
+
+### Resumen operativo
+- Se reemplazo el skin productivo de `EL FUTURO` de FT2E a FT2C, manteniendo la linea punteada y los pajaritos del titulo.
+- FT2C aplica cuerpo claro tipo FT2 y panel oscuro para el monto acumulado.
+- Se subio el frontend a `v2.70` y el cache PWA a `finanzas-lcd-v78`.
+- Se creo la lamina local `docs/goals_goal_card_variants_v25.html` con variantes MT1-MT6 para continuar el rediseño de tarjetas `METAS`.
+
+### Prompt 111 - Usuario
+
+```text
+la tarjeta el futuro no se ve para nada como la preview que te pedi  arregla y ajusta lo que tengas que ajustar para que se vea exactamente igual y corregi los pajaritos elimiinandolosy abrime el html papi
+```
+
+### Resumen operativo
+- Se abrio la lamina local `docs/goals_future_card_ft2_variants_v24.html` para usar FT2C como referencia directa.
+- Se elimino por completo la estructura y CSS de pajaritos del titulo `EL FUTURO`.
+- El titulo `EL FUTURO` vuelve a renderizarse como `window-title` simple.
+- Se ajusto `.future-card` para copiar de forma mas literal FT2C: grilla, cuerpo claro, separador punteado, badge mensual oscuro, acumulado oscuro, sombra punteada externa y boton integrado.

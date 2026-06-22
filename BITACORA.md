@@ -1,5 +1,37 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - FT2C exacta en El Futuro y propuestas Metas
+
+### Objetivo
+- Cambiar la tarjeta productiva `EL FUTURO` desde FT2E a FT2C y ajustar el CSS para que coincida con la preview elegida.
+- Eliminar los pajaritos y la linea vertical punteada del titulo `EL FUTURO`.
+- Continuar el trabajo visual de la seccion `Metas` con propuestas para las tarjetas de metas especificas.
+
+### Cambios
+- `frontend/scripts/render.js`: el titulo `EL FUTURO` vuelve a ser un `window-title` simple, sin pista ni pajaritos.
+- `frontend/styles/main.css`: el skin de `.future-card` pasa a FT2C con grilla, cuerpo claro tipo FT2, sombra punteada externa y acumulado en panel oscuro.
+- `frontend/styles/main.css`: se eliminaron los selectores/keyframes de pajaritos y la linea vertical punteada.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.70` y cache PWA a `finanzas-lcd-v78`.
+- `docs/goals_goal_card_variants_v25.html`: nueva lamina con variantes MT1-MT6 para tarjetas `METAS`.
+- `docs/REGISTRO_ITERACIONES_PIREPIRAPP_2026-06-16.md`: se registro el prompt 110 y su resumen operativo.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend`: sin `v2.69`, `finanzas-lcd-v77`, `FT2E` ni `future-bird`.
+- Servidor local `http://127.0.0.1:4173`: sirve `v2.70`, `APP_VERSION: 'v2.70'`, `finanzas-lcd-v78`, titulo simple `EL FUTURO`, sin `future-bird`, CSS FT2C exacta y sin CSS de pajaritos.
+- Se verifico la existencia de `docs/goals_goal_card_variants_v25.html` y variantes MT1-MT6.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Elegir una variante MT para implementar el rediseño de tarjetas `METAS`.
+
 ## 2026-06-21 - FT2E en El Futuro y pajaritos de titulo
 
 ### Objetivo

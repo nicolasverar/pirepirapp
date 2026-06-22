@@ -1069,7 +1069,7 @@ sigue sin verse como te pedi esa seccion
 ### Prompt 84 - Usuario
 
 ```text
-file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/summary_available_partition_variants.html quiero que se vea exactamente como la opcion B
+file:///<ruta-local>/docs/summary_available_partition_variants.html quiero que se vea exactamente como la opcion B
 ```
 
 ### Resumen operativo
@@ -1304,7 +1304,7 @@ PERO QUIERO QUE EL MENU SE DESPLIEGUE ENCIMA DE LOS BOTONES no que los tape todo
 ### Prompt 104 - Usuario
 
 ```text
-del formulario file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/expense_form_variants_v22.html me gusta GF3 implementa ee pero elimina la palabra ticket de la esuina superior derecha ahora anadile el fondo de GF1
+del formulario file:///<ruta-local>/docs/expense_form_variants_v22.html me gusta GF3 implementa ee pero elimina la palabra ticket de la esuina superior derecha ahora anadile el fondo de GF1
 ```
 
 ### Resumen operativo
@@ -1404,7 +1404,7 @@ la tarjeta el futuro no se ve para nada como la preview que te pedi  arregla y a
 ### Prompt 112 - Usuario
 
 ```text
-la tarjeta de el futuro SE VE CON marco en el fondo y el modelo que me mostraste no tenia eso corregi para que se vea EXACTAMENTE IGUAL al FTC2 de file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/goals_future_card_ft2_variants_v24.html asegurate que lo sea  y   luego implementar en cuantoa la tarjeta de metas file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/goals_goal_card_variants_v25.html
+la tarjeta de el futuro SE VE CON marco en el fondo y el modelo que me mostraste no tenia eso corregi para que se vea EXACTAMENTE IGUAL al FTC2 de file:///<ruta-local>/docs/goals_future_card_ft2_variants_v24.html asegurate que lo sea  y   luego implementar en cuantoa la tarjeta de metas file:///<ruta-local>/docs/goals_goal_card_variants_v25.html
 prefiero el MT1 - FT2C con foto lateral pero genera variaciones luego incorpora el apartado de por mes en el espacio muerto a la derecha de acumulado asi las dos están posicionadas en una fila horizontal y también incorpora porcentaje
 ```
 
@@ -1414,3 +1414,27 @@ prefiero el MT1 - FT2C con foto lateral pero genera variaciones luego incorpora 
 - En `METAS`, `renderGoalCards` pasa a una estructura MT1 con foto lateral, fila horizontal `acumulado` / `por mes` y porcentaje visible en la barra de progreso.
 - Se creo `docs/goals_goal_card_mt1_variants_v26.html` con variaciones MT1A-MT1D.
 - Se subio el frontend a `v2.71` y el cache PWA a `finanzas-lcd-v79`.
+
+### Prompt 113 - Usuario
+
+```text
+en meta hay espacio muerto en la versoin 2.71 te parece si debajo del titulo en todo ese espacio muerto haces que el protagonista sea la foto luego todo igual
+```
+
+### Resumen operativo
+- Se cambio la distribucion productiva de `METAS` para que la tarjeta sea vertical: titulo/descripcion, foto protagonista full-width, fila `acumulado` / `por mes`, barra con porcentaje y acciones.
+- `.goal-photo` y sus canvas/placeholders pasan a ocupar el ancho completo de la tarjeta.
+- Se ajusto responsive para no forzar miniatura lateral en movil.
+- Se subio el frontend a `v2.72` y el cache PWA a `finanzas-lcd-v80`.
+
+### Prompt 114 - Usuario
+
+```text
+la tarjeta de metas tiene el mismo problm que el futuro, tiene ese bloque rectangular de fondo que no me gusta, sacalo, luego ahora pasemos a trabajar en la tarjeta cosas que quiero ya sabes que debes ahcer y el estilo que venimos manejando tambien implementa una opcion de pinear  cosas que quiero asi aparece arriba
+```
+
+### Resumen operativo
+- Se elimino el bloque rectangular heredado de `system-window` en `METAS` y `COSAS QUE QUIERO`.
+- `COSAS QUE QUIERO` adopta tarjetas FT2C con borde redondeado, sombra punteada externa, costo en panel oscuro y botones compactos.
+- Se agrego un boton `PIN` en cada item de wishlist; las cosas pineadas se guardan localmente por ID y se ordenan arriba antes del criterio menor/mayor.
+- Se subio el frontend a `v2.73` y el cache PWA a `finanzas-lcd-v81`.

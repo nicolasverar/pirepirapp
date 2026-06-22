@@ -3,6 +3,7 @@
 
   var utils = window.FinanzasUtils;
   var FUTURE_PREFS_KEY = 'finanzasFutureSavingsPrefs';
+  var WISHLIST_PINS_KEY = 'finanzasWishlistPins';
   var MOTIVE_SIMILARITY_THRESHOLD = 0.8;
 
   function render() {
@@ -569,7 +570,13 @@
       return '<p class="empty-state">La lista esta vacia.</p>';
     }
     var order = sortOrder === 'desc' ? 'desc' : 'asc';
+    var pins = readWishlistPins();
     var sorted = items.slice().sort(function (left, right) {
+      var leftPinned = isWishlistPinned(left, pins);
+      var rightPinned = isWishlistPinned(right, pins);
+      if (leftPinned !== rightPinned) {
+        return leftPinned ? -1 : 1;
+      }
       var leftAmount = Number(left.costoAproximado || 0);
       var rightAmount = Number(right.costoAproximado || 0);
       return order === 'desc' ? rightAmount - leftAmount : leftAmount - rightAmount;
@@ -581,11 +588,13 @@
       '</div>',
       '<div class="wish-grid">'
     ].join('') + sorted.map(function (item) {
-      var cardClass = 'wish-card' + (item.conversionFeedback ? ' is-converting' : '');
+      var pinned = isWishlistPinned(item, pins);
+      var cardClass = 'wish-card' + (item.conversionFeedback ? ' is-converting' : '') + (pinned ? ' is-pinned' : '');
       return [
         '<article class="' + cardClass + '">',
         renderSharpSparkles(),
         item.conversionFeedback ? '<span class="wish-convert-check" aria-hidden="true">OK</span>' : '',
+        '<button class="wish-pin js-pin-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button" aria-pressed="' + (pinned ? 'true' : 'false') + '">' + (pinned ? 'PIN*' : 'PIN') + '</button>',
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
@@ -598,6 +607,41 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
+  }
+
+  function readWishlistPins() {
+    try {
+      return JSON.parse(localStorage.getItem(WISHLIST_PINS_KEY) || '{}') || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeWishlistPins(pins) {
+    try {
+      localStorage.setItem(WISHLIST_PINS_KEY, JSON.stringify(pins || {}));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function isWishlistPinned(item, pins) {
+    return Boolean(item && item.id && pins && pins[String(item.id)]);
+  }
+
+  function toggleWishlistPin(id) {
+    if (!id) {
+      return;
+    }
+    var pins = readWishlistPins();
+    var key = String(id);
+    if (pins[key]) {
+      delete pins[key];
+    } else {
+      pins[key] = true;
+    }
+    writeWishlistPins(pins);
+    render();
   }
 
   function readFuturePrefs() {
@@ -1036,6 +1080,12 @@
     utils.qsa('.js-convert-wish', root).forEach(function (button) {
       button.addEventListener('click', function () {
         window.FinanzasApp.convertWishlistInstant(button.getAttribute('data-id'));
+      });
+    });
+
+    utils.qsa('.js-pin-wish', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        toggleWishlistPin(button.getAttribute('data-id'));
       });
     });
 

@@ -4506,14 +4506,15 @@ body::-webkit-scrollbar,
   position: relative;
   z-index: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "copy photo"
-    "money money"
-    "progress progress"
-    "actions actions";
+    "copy"
+    "photo"
+    "money"
+    "progress"
+    "actions";
   gap: 9px;
-  min-height: 232px;
+  min-height: 0;
   margin: 0 7px 7px 0;
   padding: 10px;
   overflow: visible;
@@ -4533,7 +4534,7 @@ body::-webkit-scrollbar,
   grid-area: copy;
   display: grid;
   align-content: start;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
   padding: 0;
 }
@@ -4555,7 +4556,7 @@ body::-webkit-scrollbar,
   margin: 0;
   overflow: visible;
   color: rgba(7, 16, 7, 0.78);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   font-weight: 900;
   line-height: 1.16;
   overflow-wrap: anywhere;
@@ -4563,19 +4564,19 @@ body::-webkit-scrollbar,
 
 .goals-window .goal-photo {
   grid-area: photo;
-  align-self: start;
-  justify-self: end;
+  align-self: stretch;
+  justify-self: stretch;
   display: grid;
   place-items: stretch;
-  width: 96px;
-  min-height: 96px;
+  width: 100%;
+  min-height: 150px;
 }
 
 .goals-window .goal-photo .lcd-photo,
 .goals-window .goal-photo .lcd-photo-placeholder {
-  width: 96px;
-  min-height: 96px;
-  aspect-ratio: 1;
+  width: 100%;
+  min-height: 150px;
+  aspect-ratio: 4 / 3;
   border: 2px solid #071007;
   border-radius: 4px;
 }
@@ -4690,4 +4691,219 @@ body::-webkit-scrollbar,
   text-transform: uppercase;
   font-size: 0.68rem;
   font-weight: 900;
+}
+
+/* Metas/Cosas: sin bloque rectangular contenedor, tarjetas FT2C flotantes. */
+.goals-window.system-window,
+.wishlist-window.system-window {
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.goals-window.system-window::after,
+.wishlist-window.system-window::after {
+  content: none;
+  display: none;
+}
+
+.goals-window .window-title,
+.wishlist-window .window-title {
+  min-height: 0;
+  margin: 0 0 10px;
+  padding: 4px 6px;
+  color: #c4d08b;
+  background:
+    linear-gradient(90deg, rgba(196, 208, 139, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+    #121a11;
+  border: 2px solid #071007;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.wishlist-window .wish-toolbar {
+  grid-template-columns: repeat(2, minmax(0, 74px));
+  margin: 0 0 10px;
+}
+
+.wishlist-window .wish-toolbar .tiny-key {
+  min-width: 0;
+  min-height: 30px;
+  color: #c4d08b;
+  background: linear-gradient(180deg, #263321, #0d140c);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.wishlist-window .wish-toolbar .tiny-key.is-active {
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.58), rgba(143, 160, 95, 0.82)),
+    #8fa05f;
+}
+
+.wishlist-window .wish-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.wishlist-window .wish-card {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  min-height: 206px;
+  height: 100%;
+  margin: 0 7px 7px 0;
+  padding: 10px;
+  overflow: visible;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+}
+
+.wishlist-window .wish-card::before,
+.wishlist-window .wish-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+}
+
+.wishlist-window .wish-card::before {
+  top: 5px;
+  right: -7px;
+  bottom: -7px;
+  width: 7px;
+}
+
+.wishlist-window .wish-card::after {
+  left: 5px;
+  right: -7px;
+  bottom: -7px;
+  height: 7px;
+}
+
+.wishlist-window .wish-card.is-pinned {
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.56), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 5px),
+    #9bab6b;
+}
+
+.wishlist-window .wish-pin {
+  position: absolute;
+  z-index: 5;
+  top: 8px;
+  right: 8px;
+  min-width: 42px;
+  min-height: 26px;
+  padding: 2px 5px;
+  color: #c4d08b;
+  background: #071007;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  text-transform: uppercase;
+  font-family: inherit;
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.wishlist-window .wish-card.is-pinned .wish-pin {
+  color: #071007;
+  background: #c4d08b;
+}
+
+.wishlist-window .wish-card .lcd-photo,
+.wishlist-window .wish-card .lcd-photo-placeholder {
+  width: 100%;
+  min-height: 96px;
+  aspect-ratio: 4 / 3;
+  border: 2px solid #071007;
+  border-radius: 4px;
+}
+
+.wishlist-window .wish-info {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+}
+
+.wishlist-window .wish-info > strong {
+  display: block;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.14;
+}
+
+.wishlist-window .wish-info b {
+  display: block;
+  padding: 5px 7px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+  text-align: left;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.wishlist-window .wish-info .mini-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.75fr);
+  gap: 5px;
+}
+
+.wishlist-window .wish-info .tiny-key {
+  min-width: 0;
+  min-height: 32px;
+  padding: 2px 4px;
+  color: #c4d08b;
+  background: linear-gradient(180deg, #263321, #0d140c);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1.05;
 }

@@ -1,5 +1,37 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - Foto protagonista, sin marcos y pins en Wishlist
+
+### Objetivo
+- Ajustar la tarjeta productiva `METAS` para aprovechar el espacio muerto bajo el titulo usando la foto como elemento protagonista.
+- Mantener la fila horizontal `acumulado` / `por mes`, la barra con porcentaje y las acciones.
+- Eliminar el bloque rectangular de fondo heredado en `METAS` y `COSAS QUE QUIERO`.
+- Rediseñar las tarjetas de `COSAS QUE QUIERO` con el estilo FT2C y agregar opcion de pinear items.
+
+### Cambios
+- `frontend/styles/main.css`: `.goals-window .goal-card` pasa de foto lateral a layout vertical: titulo/descripcion, foto full-width, fila de dinero, progreso y acciones.
+- `frontend/styles/main.css`: `.goal-photo` y sus canvas/placeholders ocupan el ancho completo con altura minima para que la imagen sea protagonista.
+- `frontend/styles/main.css`: `.goals-window.system-window` y `.wishlist-window.system-window` quedan sin fondo, borde, sombra ni pseudo-elemento lateral.
+- `frontend/styles/main.css`: `COSAS QUE QUIERO` recibe cards FT2C con sombra punteada externa, panel de costo oscuro, botones compactos y estado `is-pinned`.
+- `frontend/scripts/render.js`: se agrega pin local por ID en `localStorage` (`finanzasWishlistPins`), boton `PIN` por card y ordenamiento con pineadas arriba antes del criterio menor/mayor.
+- `frontend/styles/responsive.css`: se elimina el ancho fijo movil de 84px para la foto de metas y se fuerza ancho completo.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.73` y cache PWA a `finanzas-lcd-v81`.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `rg` sobre `frontend`: confirma `v2.73`, `finanzas-lcd-v81`, `WISHLIST_PINS_KEY`, `js-pin-wish`, ventanas sin marco y `wish-card.is-pinned`.
+- Servidor local `http://127.0.0.1:4173/?v=2.73`: sirve `v2.73`, `APP_VERSION: 'v2.73'`, `finanzas-lcd-v81`, `METAS` y `COSAS QUE QUIERO` sin marco heredado, wishlist FT2C, pin local y sin restos `v2.72`/`finanzas-lcd-v80`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en celular si la altura de foto protagonista y la densidad de las cards de wishlist quedan en el punto justo.
+
 ## 2026-06-22 - FT2C sin marco y MT1 para Metas
 
 ### Objetivo

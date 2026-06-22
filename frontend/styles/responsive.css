@@ -80,7 +80,12 @@
   }
 
   .goals-window .goal-card {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 84px;
+    grid-template-areas:
+      "copy photo"
+      "progress photo"
+      "money money"
+      "actions actions";
     gap: 8px;
     padding: 9px;
   }
@@ -94,8 +99,8 @@
   .goals-window .goal-photo,
   .goals-window .goal-photo .lcd-photo,
   .goals-window .goal-photo .lcd-photo-placeholder {
-    width: 100%;
-    min-height: 138px;
+    width: 84px;
+    min-height: 118px;
   }
 
   .goals-window .goal-money-row {

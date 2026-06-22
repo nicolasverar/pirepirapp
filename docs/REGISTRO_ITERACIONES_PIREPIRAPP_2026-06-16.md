@@ -1438,3 +1438,16 @@ la tarjeta de metas tiene el mismo problm que el futuro, tiene ese bloque rectan
 - `COSAS QUE QUIERO` adopta tarjetas FT2C con borde redondeado, sombra punteada externa, costo en panel oscuro y botones compactos.
 - Se agrego un boton `PIN` en cada item de wishlist; las cosas pineadas se guardan localmente por ID y se ordenan arriba antes del criterio menor/mayor.
 - Se subio el frontend a `v2.73` y el cache PWA a `finanzas-lcd-v81`.
+
+### Prompt 115 - Usuario
+
+```text
+file:///<ruta-local>/docs/goals_goal_card_mt1_variants_v26.html MT1C - Barra junto a foto este incorpota en metas mejor
+```
+
+### Resumen operativo
+- Se incorporo en `METAS` la variante `MT1C - Barra junto a foto` de la lamina local.
+- La barra de progreso queda en la columna izquierda debajo del texto, y la foto ocupa la columna derecha junto a texto/barra.
+- Se mantuvo la fila horizontal `acumulado` / `por mes` debajo.
+- El boton `PIN` de wishlist se simplifico a icono CSS compacto sin texto visible.
+- Se subio el frontend a `v2.74` y el cache PWA a `finanzas-lcd-v82`.

@@ -4506,15 +4506,14 @@ body::-webkit-scrollbar,
   position: relative;
   z-index: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 96px;
   grid-template-areas:
-    "copy"
-    "photo"
-    "money"
-    "progress"
-    "actions";
+    "copy photo"
+    "progress photo"
+    "money money"
+    "actions actions";
   gap: 9px;
-  min-height: 0;
+  min-height: 218px;
   margin: 0 7px 7px 0;
   padding: 10px;
   overflow: visible;
@@ -4534,7 +4533,7 @@ body::-webkit-scrollbar,
   grid-area: copy;
   display: grid;
   align-content: start;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
   padding: 0;
 }
@@ -4556,7 +4555,7 @@ body::-webkit-scrollbar,
   margin: 0;
   overflow: visible;
   color: rgba(7, 16, 7, 0.78);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 900;
   line-height: 1.16;
   overflow-wrap: anywhere;
@@ -4565,18 +4564,18 @@ body::-webkit-scrollbar,
 .goals-window .goal-photo {
   grid-area: photo;
   align-self: stretch;
-  justify-self: stretch;
+  justify-self: end;
   display: grid;
   place-items: stretch;
-  width: 100%;
-  min-height: 150px;
+  width: 96px;
+  min-height: 130px;
 }
 
 .goals-window .goal-photo .lcd-photo,
 .goals-window .goal-photo .lcd-photo-placeholder {
-  width: 100%;
-  min-height: 150px;
-  aspect-ratio: 4 / 3;
+  width: 96px;
+  min-height: 130px;
+  aspect-ratio: 1;
   border: 2px solid #071007;
   border-radius: 4px;
 }
@@ -4815,28 +4814,50 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin {
   position: absolute;
   z-index: 5;
-  top: 8px;
-  right: 8px;
-  min-width: 42px;
-  min-height: 26px;
-  padding: 2px 5px;
-  color: #c4d08b;
-  background: #071007;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.64), rgba(143, 160, 95, 0.9)),
+    #8fa05f;
   border: 2px solid #071007;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow:
-    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    inset 1px 1px 0 rgba(196, 208, 139, 0.38),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.22),
     2px 2px 0 rgba(7, 16, 7, 0.55);
-  text-transform: uppercase;
   font-family: inherit;
-  font-size: 0.58rem;
-  font-weight: 900;
-  line-height: 1;
+}
+
+.wishlist-window .wish-pin span {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 15px;
+  background: currentColor;
+  clip-path: polygon(20% 0, 80% 0, 80% 55%, 100% 55%, 50% 100%, 0 55%, 20% 55%);
+}
+
+.wishlist-window .wish-pin span::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  width: 2px;
+  height: 7px;
+  background: currentColor;
 }
 
 .wishlist-window .wish-card.is-pinned .wish-pin {
-  color: #071007;
-  background: #c4d08b;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
 }
 
 .wishlist-window .wish-card .lcd-photo,

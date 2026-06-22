@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - MT1C en Metas y pin compacto
+
+### Objetivo
+- Incorporar en `METAS` la variante `MT1C - Barra junto a foto` de `docs/goals_goal_card_mt1_variants_v26.html`.
+- Mejorar el boton `PIN` de `COSAS QUE QUIERO` para que no se vea como texto crudo.
+
+### Cambios
+- `frontend/styles/main.css`: la tarjeta de `METAS` usa grilla MT1C con areas `copy/photo`, `progress/photo`, `money/money` y `actions/actions`.
+- `frontend/styles/responsive.css`: la variante MT1C se mantiene tambien en viewport movil con foto lateral reducida.
+- `frontend/scripts/render.js`: el boton de pin pasa a renderizar un span visual sin texto.
+- `frontend/styles/main.css`: `.wish-pin` se redibuja como un boton fisico compacto con icono CSS.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.74` y cache PWA a `finanzas-lcd-v82`.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- Servidor local `http://127.0.0.1:4173/?v=2.74`: sirve `v2.74`, `APP_VERSION: 'v2.74'`, `finanzas-lcd-v82`, MT1C en metas, pin iconico y sin clases preparatorias `movements-window`/`settings-window`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Retomar luego, si se confirma, el rediseño de `Resumen`, `Gastos` y `Configuracion` con el lenguaje FT2C.
+
 ## 2026-06-22 - Foto protagonista, sin marcos y pins en Wishlist
 
 ### Objetivo

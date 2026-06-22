@@ -594,7 +594,7 @@
         '<article class="' + cardClass + '">',
         renderSharpSparkles(),
         item.conversionFeedback ? '<span class="wish-convert-check" aria-hidden="true">OK</span>' : '',
-        '<button class="wish-pin js-pin-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button" aria-pressed="' + (pinned ? 'true' : 'false') + '">' + (pinned ? 'PIN*' : 'PIN') + '</button>',
+        '<button class="wish-pin js-pin-wish" data-id="' + utils.escapeHtml(item.id) + '" type="button" aria-pressed="' + (pinned ? 'true' : 'false') + '"><span></span></button>',
         renderPhotoCanvas(item),
         '<div class="wish-info">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',

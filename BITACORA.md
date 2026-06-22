@@ -25,7 +25,8 @@
 - Se abrio la app local y la lamina `docs/goals_goal_card_mt1_variants_v26.html`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `bb46fa7` (`Ajustar FT2C y tarjeta MT1 de metas`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.71` sirve `v2.71`, `APP_VERSION: 'v2.71'`, `finanzas-lcd-v79`, `EL FUTURO` sin marco heredado, `goal-card-mt1`, `goal-money-row`, `goal-monthly-panel` y sin pajaritos.
 
 ### Pendientes
 - Revisar visualmente en celular si MT1A queda como base definitiva o si conviene una de las variantes MT1B-MT1D.

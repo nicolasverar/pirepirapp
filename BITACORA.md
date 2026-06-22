@@ -28,7 +28,8 @@
 - Servidor local `http://127.0.0.1:4173/?v=2.75`: sirve `v2.75`, `APP_VERSION: 'v2.75'`, `finanzas-lcd-v83`, `status-terminal`, `logo.png` y `pin-lcd.png`.
 
 ### Despliegue
-- Pendiente de commit, push y verificacion publica.
+- Commit principal: `d0179a8` (`Integrar terminal superior y pin LCD`) subido a `origin/main`.
+- GitHub Pages publico: `https://nicolasverar.github.io/pirepirapp/?v=2.75` sirve `v2.75`, `APP_VERSION: 'v2.75'`, `finanzas-lcd-v83`, terminal superior, `toast()` sin popup, `logo.png` y `pin-lcd.png`.
 
 ### Pendientes
 - Revisar visualmente en celular instalado que el terminal superior no corte mensajes demasiado largos.

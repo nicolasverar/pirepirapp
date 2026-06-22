@@ -544,16 +544,16 @@
     }
     return '<div class="goal-list">' + items.map(function (item) {
       return [
-        '<article class="goal-card">',
-        '<div class="goal-top-band">',
+        '<article class="goal-card goal-card-mt1">',
         '<div class="goal-copy">',
         '<strong>' + utils.escapeHtml(item.titulo) + '</strong>',
         '<p>' + utils.escapeHtml(item.descripcion || '') + '</p>',
-        '<span class="goal-monthly">Por mes: <b>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</b></span>',
         '</div>',
         '<div class="goal-photo">' + renderPhotoCanvas(item) + '</div>',
+        '<div class="goal-money-row">',
+        '<div class="goal-balance"><strong>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</strong><span>acumulado de ' + utils.escapeHtml(utils.formatMoney(item.montoObjetivo)) + '</span></div>',
+        '<div class="goal-monthly-panel"><span>Por mes</span><b>' + utils.escapeHtml(utils.formatMoney(item.montoMensual)) + '</b></div>',
         '</div>',
-        '<div class="goal-balance"><strong>' + utils.escapeHtml(utils.formatMoney(item.montoAcumulado)) + '</strong><span>de ' + utils.escapeHtml(utils.formatMoney(item.montoObjetivo)) + '</span></div>',
         renderProgressMeter(item.porcentaje || 0, 'goal-progress'),
         '<div class="mini-actions goal-actions">',
         '<button class="tiny-key js-edit-goal" data-id="' + utils.escapeHtml(item.id) + '" type="button">EDIT</button>',

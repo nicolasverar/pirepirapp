@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MT1 - Variantes tarjeta Metas</title>
+    <style>
+      :root {
+        --ink: #071007;
+        --panel: #8fa05f;
+        --lcd-hi: #c4d08b;
+        --case: #182117;
+        --case-deep: #090f08;
+        font-family: "Courier New", monospace;
+        color: var(--ink);
+        background: #10170f;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 18px;
+        background:
+          linear-gradient(90deg, rgba(196, 208, 139, 0.08) 1px, transparent 1px) 0 0 / 14px 14px,
+          linear-gradient(0deg, rgba(196, 208, 139, 0.06) 1px, transparent 1px) 0 0 / 14px 14px,
+          #10170f;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        color: var(--lcd-hi);
+        text-transform: uppercase;
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+      }
+
+      .option-name {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--lcd-hi);
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .device {
+        max-width: 330px;
+        padding: 10px;
+        background:
+          linear-gradient(145deg, #2d3528, var(--case) 50%, var(--case-deep));
+        border: 3px solid #050805;
+        border-radius: 18px;
+        box-shadow:
+          inset 2px 2px 0 rgba(196, 208, 139, 0.08),
+          inset -5px -6px 0 rgba(0, 0, 0, 0.34),
+          0 14px 30px rgba(0, 0, 0, 0.28);
+      }
+
+      .topbar,
+      .window-title,
+      .bottom .key {
+        color: var(--lcd-hi);
+        background:
+          linear-gradient(90deg, rgba(196, 208, 139, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+          #121a11;
+        border: 2px solid var(--ink);
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        min-height: 34px;
+        padding: 5px 7px;
+        font-size: 0.72rem;
+      }
+
+      .screen {
+        margin: 10px 4px;
+        padding: 10px;
+        background:
+          linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+          linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+          linear-gradient(180deg, rgba(126, 148, 82, 0.54), rgba(79, 104, 55, 0.28)),
+          rgba(126, 148, 82, 0.48);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        box-shadow:
+          inset 5px 5px 0 rgba(7, 16, 7, 0.18),
+          inset -4px -4px 0 rgba(196, 208, 139, 0.12);
+      }
+
+      .window-title {
+        margin: 0 0 10px;
+        padding: 4px 6px;
+        font-size: 0.78rem;
+      }
+
+      .goal-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .goal-card {
+        position: relative;
+        z-index: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 96px;
+        grid-template-areas:
+          "copy photo"
+          "money money"
+          "progress progress"
+          "actions actions";
+        gap: 9px;
+        min-height: 232px;
+        margin: 0 7px 7px 0;
+        padding: 10px;
+        color: var(--ink);
+        background:
+          linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+          repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+          var(--panel);
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        box-shadow:
+          inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+          inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+      }
+
+      .goal-card::before,
+      .goal-card::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background:
+          radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+      }
+
+      .goal-card::before {
+        top: 5px;
+        right: -7px;
+        bottom: -7px;
+        width: 7px;
+      }
+
+      .goal-card::after {
+        left: 5px;
+        right: -7px;
+        bottom: -7px;
+        height: 7px;
+      }
+
+      .copy {
+        grid-area: copy;
+        display: grid;
+        align-content: start;
+        gap: 6px;
+      }
+
+      .copy h2 {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        line-height: 1.12;
+      }
+
+      .copy p {
+        margin: 0;
+        color: rgba(7, 16, 7, 0.78);
+        font-size: 0.7rem;
+        font-weight: 900;
+        line-height: 1.16;
+      }
+
+      .photo {
+        grid-area: photo;
+        display: grid;
+        place-items: center;
+        width: 96px;
+        min-height: 96px;
+        color: rgba(7, 16, 7, 0.7);
+        background:
+          linear-gradient(45deg, rgba(7, 16, 7, 0.14) 25%, transparent 25%, transparent 75%, rgba(7, 16, 7, 0.14) 75%) 0 0 / 8px 8px,
+          linear-gradient(180deg, rgba(196, 208, 139, 0.22), rgba(126, 148, 82, 0.2));
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        font-weight: 900;
+      }
+
+      .money-row {
+        grid-area: money;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(104px, 0.72fr);
+        gap: 8px;
+      }
+
+      .balance,
+      .monthly {
+        display: grid;
+        align-content: center;
+        gap: 2px;
+        min-height: 58px;
+        padding: 7px 9px;
+        color: var(--lcd-hi);
+        background:
+          repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+          var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 5px;
+        font-weight: 900;
+      }
+
+      .balance strong,
+      .monthly strong {
+        overflow-wrap: anywhere;
+        font-size: 1.08rem;
+        line-height: 1;
+      }
+
+      .monthly strong { font-size: 0.96rem; }
+
+      .balance span,
+      .monthly span {
+        color: rgba(196, 208, 139, 0.78);
+        text-transform: uppercase;
+        font-size: 0.58rem;
+      }
+
+      .progress {
+        grid-area: progress;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 5px;
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+      }
+
+      .track {
+        height: 16px;
+        border: 1px solid var(--ink);
+        background:
+          repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 5px),
+          rgba(196, 208, 139, 0.28);
+      }
+
+      .track span {
+        display: block;
+        width: 56%;
+        height: 100%;
+        background:
+          linear-gradient(90deg, rgba(196, 208, 139, 0.12) 1px, transparent 1px) 0 0 / 4px 4px,
+          var(--ink);
+      }
+
+      .percent {
+        min-width: 48px;
+        padding: 3px 5px;
+        color: var(--lcd-hi);
+        background: var(--ink);
+        border-radius: 4px;
+        text-align: center;
+        font-size: 0.66rem;
+        font-weight: 900;
+      }
+
+      .actions {
+        grid-area: actions;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .btn {
+        min-height: 30px;
+        color: var(--lcd-hi);
+        background: linear-gradient(180deg, #263321, #0d140c);
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+        box-shadow:
+          inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+          2px 2px 0 rgba(7, 16, 7, 0.55);
+        text-transform: uppercase;
+        font: inherit;
+        font-size: 0.68rem;
+        font-weight: 900;
+      }
+
+      .mt1b .goal-card {
+        grid-template-columns: 86px minmax(0, 1fr);
+        grid-template-areas:
+          "photo copy"
+          "money money"
+          "progress progress"
+          "actions actions";
+      }
+
+      .mt1b .photo { width: 86px; min-height: 112px; }
+
+      .mt1c .goal-card {
+        grid-template-areas:
+          "copy photo"
+          "progress photo"
+          "money money"
+          "actions actions";
+        min-height: 218px;
+      }
+
+      .mt1d .money-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .bottom {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        padding: 0 2px;
+      }
+
+      .bottom .key {
+        min-height: 36px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 0.68rem;
+        line-height: 34px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Variantes MT1 con fila acumulado / por mes</h1>
+    <main class="grid">
+      <section class="option mt1a">
+        <span class="option-name">MT1A - Implementada</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.71</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2>Notebook nueva</h2><p>Equipo para trabajo y estudios.</p></div>
+                <div class="photo">foto</div>
+                <div class="money-row"><div class="balance"><strong>Gs. 2.400.000</strong><span>acumulado de Gs. 4.300.000</span></div><div class="monthly"><span>Por mes</span><strong>Gs. 400.000</strong></div></div>
+                <div class="progress"><div class="track"><span></span></div><div class="percent">56%</div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </section>
+
+      <section class="option mt1b">
+        <span class="option-name">MT1B - Foto izquierda alta</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.71</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2>Notebook nueva</h2><p>Equipo para trabajo y estudios.</p></div>
+                <div class="photo">foto</div>
+                <div class="money-row"><div class="balance"><strong>Gs. 2.400.000</strong><span>acumulado de Gs. 4.300.000</span></div><div class="monthly"><span>Por mes</span><strong>Gs. 400.000</strong></div></div>
+                <div class="progress"><div class="track"><span></span></div><div class="percent">56%</div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </section>
+
+      <section class="option mt1c">
+        <span class="option-name">MT1C - Barra junto a foto</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.71</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2>Notebook nueva</h2><p>Equipo para trabajo y estudios.</p></div>
+                <div class="photo">foto</div>
+                <div class="money-row"><div class="balance"><strong>Gs. 2.400.000</strong><span>acumulado de Gs. 4.300.000</span></div><div class="monthly"><span>Por mes</span><strong>Gs. 400.000</strong></div></div>
+                <div class="progress"><div class="track"><span></span></div><div class="percent">56%</div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </section>
+
+      <section class="option mt1d">
+        <span class="option-name">MT1D - Dinero mitad y mitad</span>
+        <div class="device">
+          <div class="topbar"><span>PIREPIRAPP v2.71</span><span>SYNC</span></div>
+          <div class="screen">
+            <div class="window-title">METAS</div>
+            <div class="goal-list">
+              <article class="goal-card">
+                <div class="copy"><h2>Notebook nueva</h2><p>Equipo para trabajo y estudios.</p></div>
+                <div class="photo">foto</div>
+                <div class="money-row"><div class="balance"><strong>Gs. 2.400.000</strong><span>acumulado de Gs. 4.300.000</span></div><div class="monthly"><span>Por mes</span><strong>Gs. 400.000</strong></div></div>
+                <div class="progress"><div class="track"><span></span></div><div class="percent">56%</div></div>
+                <div class="actions"><button class="btn">EDIT</button><button class="btn">DEL</button></div>
+              </article>
+            </div>
+          </div>
+          <div class="bottom"><div class="key">Resumen</div><div class="key">Gastos</div><div class="key">Metas</div><div class="key">Config</div></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

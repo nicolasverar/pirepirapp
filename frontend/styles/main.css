@@ -4408,3 +4408,286 @@ body::-webkit-scrollbar,
     "empty edit";
   min-height: 94px;
 }
+
+/* Metas v2.71: FT2C productiva sin marco de fondo y MT1 con foto lateral. */
+.future-window.system-window {
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.future-window.system-window::after {
+  content: none;
+  display: none;
+}
+
+.future-window .window-title {
+  min-height: 0;
+  margin: 0 0 10px;
+  padding: 4px 6px;
+  color: #c4d08b;
+  background:
+    linear-gradient(90deg, rgba(196, 208, 139, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+    #121a11;
+  border: 2px solid #071007;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.future-window .block-list {
+  display: grid;
+  gap: 12px;
+}
+
+.future-window .future-card {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "head head"
+    "amount amount"
+    "empty edit";
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  min-height: 128px;
+  margin: 0 7px 7px 0;
+  padding: 10px;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+}
+
+.future-window .future-card::before,
+.future-window .future-card::after,
+.goals-window .goal-card::before,
+.goals-window .goal-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+}
+
+.future-window .future-card::before,
+.goals-window .goal-card::before {
+  top: 5px;
+  right: -7px;
+  bottom: -7px;
+  width: 7px;
+}
+
+.future-window .future-card::after,
+.goals-window .goal-card::after {
+  left: 5px;
+  right: -7px;
+  bottom: -7px;
+  height: 7px;
+}
+
+.goals-window .goal-list {
+  display: grid;
+  gap: 12px;
+}
+
+.goals-window .goal-card {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  grid-template-areas:
+    "copy photo"
+    "money money"
+    "progress progress"
+    "actions actions";
+  gap: 9px;
+  min-height: 232px;
+  margin: 0 7px 7px 0;
+  padding: 10px;
+  overflow: visible;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+}
+
+.goals-window .goal-copy {
+  grid-area: copy;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+}
+
+.goals-window .goal-copy > strong {
+  display: block;
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.goals-window .goal-copy p {
+  display: block;
+  min-height: 0;
+  margin: 0;
+  overflow: visible;
+  color: rgba(7, 16, 7, 0.78);
+  font-size: 0.7rem;
+  font-weight: 900;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+.goals-window .goal-photo {
+  grid-area: photo;
+  align-self: start;
+  justify-self: end;
+  display: grid;
+  place-items: stretch;
+  width: 96px;
+  min-height: 96px;
+}
+
+.goals-window .goal-photo .lcd-photo,
+.goals-window .goal-photo .lcd-photo-placeholder {
+  width: 96px;
+  min-height: 96px;
+  aspect-ratio: 1;
+  border: 2px solid #071007;
+  border-radius: 4px;
+}
+
+.goals-window .goal-money-row {
+  grid-area: money;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(104px, 0.72fr);
+  gap: 8px;
+  min-width: 0;
+}
+
+.goals-window .goal-balance,
+.goals-window .goal-monthly-panel {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 7px 9px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
+  text-align: left;
+  font-weight: 900;
+}
+
+.goals-window .goal-balance strong,
+.goals-window .goal-monthly-panel b {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #c4d08b;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.goals-window .goal-balance strong {
+  font-size: 1.1rem;
+}
+
+.goals-window .goal-balance span,
+.goals-window .goal-monthly-panel span {
+  color: rgba(196, 208, 139, 0.78);
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.goals-window .goal-progress {
+  grid-area: progress;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  margin: 0;
+  padding: 5px;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.goals-window .goal-progress .progress-track {
+  height: 16px;
+  border: 1px solid #071007;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 5px),
+    rgba(196, 208, 139, 0.28);
+}
+
+.goals-window .goal-progress .progress-track span {
+  background:
+    linear-gradient(90deg, rgba(196, 208, 139, 0.12) 1px, transparent 1px) 0 0 / 4px 4px,
+    #071007;
+}
+
+.goals-window .goal-progress .progress-label {
+  position: static;
+  min-width: 48px;
+  padding: 3px 5px;
+  color: #c4d08b;
+  background: #071007;
+  border-radius: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+
+.goals-window .goal-actions {
+  grid-area: actions;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.goals-window .goal-actions .tiny-key {
+  min-width: 0;
+  min-height: 30px;
+  color: #c4d08b;
+  background: linear-gradient(180deg, #263321, #0d140c);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 900;
+}

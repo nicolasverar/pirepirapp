@@ -1400,3 +1400,17 @@ la tarjeta el futuro no se ve para nada como la preview que te pedi  arregla y a
 - Se elimino por completo la estructura y CSS de pajaritos del titulo `EL FUTURO`.
 - El titulo `EL FUTURO` vuelve a renderizarse como `window-title` simple.
 - Se ajusto `.future-card` para copiar de forma mas literal FT2C: grilla, cuerpo claro, separador punteado, badge mensual oscuro, acumulado oscuro, sombra punteada externa y boton integrado.
+
+### Prompt 112 - Usuario
+
+```text
+la tarjeta de el futuro SE VE CON marco en el fondo y el modelo que me mostraste no tenia eso corregi para que se vea EXACTAMENTE IGUAL al FTC2 de file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/goals_future_card_ft2_variants_v24.html asegurate que lo sea  y   luego implementar en cuantoa la tarjeta de metas file:///C:/Users/pc/Desktop/Coding/Finanzas/docs/goals_goal_card_variants_v25.html
+prefiero el MT1 - FT2C con foto lateral pero genera variaciones luego incorpora el apartado de por mes en el espacio muerto a la derecha de acumulado asi las dos están posicionadas en una fila horizontal y también incorpora porcentaje
+```
+
+### Resumen operativo
+- Se identifico que el marco visible no venia de `.future-card`, sino del contenedor `.future-window` al heredar `system-window`.
+- Se anulo solo para `EL FUTURO` el fondo, borde, sombra y pseudo-elemento lateral de `system-window`, manteniendo el titulo y las tarjetas FT2C.
+- En `METAS`, `renderGoalCards` pasa a una estructura MT1 con foto lateral, fila horizontal `acumulado` / `por mes` y porcentaje visible en la barra de progreso.
+- Se creo `docs/goals_goal_card_mt1_variants_v26.html` con variaciones MT1A-MT1D.
+- Se subio el frontend a `v2.71` y el cache PWA a `finanzas-lcd-v79`.

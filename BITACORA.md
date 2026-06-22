@@ -1,5 +1,35 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-22 - FT2C sin marco y MT1 para Metas
+
+### Objetivo
+- Corregir `EL FUTURO` para que coincida con la preview FT2C sin el marco/fondo heredado de `system-window`.
+- Implementar en `METAS` una tarjeta basada en MT1 con foto lateral, fila horizontal `acumulado` / `por mes` y porcentaje visible.
+- Generar una lamina nueva con variaciones MT1 derivadas.
+
+### Cambios
+- `frontend/styles/main.css`: `.future-window.system-window` queda sin fondo, borde, sombra ni pseudo-elemento lateral; el titulo `EL FUTURO` conserva el estilo de la preview y las tarjetas quedan FT2C.
+- `frontend/scripts/render.js`: las tarjetas `METAS` pasan a `goal-card-mt1`, con foto lateral y nueva fila `goal-money-row`.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css`: nuevo skin MT1 productivo con paneles `acumulado` y `por mes` en una misma fila, barra con porcentaje y ajustes moviles.
+- `docs/goals_goal_card_mt1_variants_v26.html`: nueva lamina MT1A-MT1D para comparar variaciones sobre la misma base visual.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`: version subida a `v2.71` y cache PWA a `finanzas-lcd-v79`.
+
+### Verificacion
+- `node --check` sobre `frontend/scripts/*.js`: sin errores.
+- `node --check frontend/service-worker.js`: sin errores.
+- `node -e` parseando `frontend/manifest.json`: `manifest OK`.
+- Conteo de llaves CSS en `main.css`, `responsive.css` y `lcd-theme.css`: llaves balanceadas.
+- Validacion de assets de `frontend/service-worker.js`: 24 assets, sin faltantes.
+- `git diff --check`: sin errores, solo avisos CRLF esperados en Windows.
+- Servidor local `http://127.0.0.1:4173/?v=2.71`: sirve `v2.71`, `APP_VERSION: 'v2.71'`, `finanzas-lcd-v79`, `future-window.system-window` sin marco, `goal-card-mt1`, `goal-money-row`, `goal-monthly-panel`, responsive de metas y sin pajaritos.
+- Se abrio la app local y la lamina `docs/goals_goal_card_mt1_variants_v26.html`.
+
+### Despliegue
+- Pendiente de commit, push y verificacion publica.
+
+### Pendientes
+- Revisar visualmente en celular si MT1A queda como base definitiva o si conviene una de las variantes MT1B-MT1D.
+
 ## 2026-06-22 - FT2C exacta en El Futuro y propuestas Metas
 
 ### Objetivo

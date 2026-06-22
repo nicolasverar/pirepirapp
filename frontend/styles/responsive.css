@@ -79,10 +79,42 @@
     min-height: 90px;
   }
 
+  .goals-window .goal-card {
+    grid-template-columns: minmax(0, 1fr) 84px;
+    gap: 8px;
+    padding: 9px;
+  }
+
   .goal-photo,
   .goal-photo .lcd-photo,
   .goal-photo .lcd-photo-placeholder {
     width: 86px;
+  }
+
+  .goals-window .goal-photo,
+  .goals-window .goal-photo .lcd-photo,
+  .goals-window .goal-photo .lcd-photo-placeholder {
+    width: 84px;
+    min-height: 84px;
+  }
+
+  .goals-window .goal-money-row {
+    grid-template-columns: minmax(0, 1fr) minmax(96px, 0.78fr);
+    gap: 7px;
+  }
+
+  .goals-window .goal-balance,
+  .goals-window .goal-monthly-panel {
+    min-height: 54px;
+    padding: 6px 7px;
+  }
+
+  .goals-window .goal-balance strong {
+    font-size: 0.95rem;
+  }
+
+  .goals-window .goal-monthly-panel b {
+    font-size: 0.86rem;
   }
 
   .goal-monthly,
@@ -101,6 +133,15 @@
 
   .goal-progress .progress-track {
     height: 16px;
+  }
+
+  .goals-window .goal-progress {
+    gap: 6px;
+  }
+
+  .goals-window .goal-progress .progress-label {
+    min-width: 43px;
+    font-size: 0.6rem;
   }
 
   .nav-key {

@@ -1,54 +1,32 @@
-# Instalacion
+# Instalacion Local y APK
 
-## Requisitos
+## PWA Local
 
-- Google Apps Script vinculado con `clasp`.
-- Acceso a Google Drive y Google Sheets con la misma cuenta.
-- Un navegador moderno en Android o escritorio.
-- Repositorio publico o un hosting HTTPS para servir la PWA.
+La app puede probarse como frontend estatico desde `frontend/`.
 
-## Backend
-
-1. Abri una terminal en `backend/`.
-2. Subi el codigo:
+En esta maquina el script historico con Python puede fallar si Python no esta instalado. Para servir con Node:
 
 ```powershell
-clasp push
+npx serve frontend
 ```
 
-3. En Apps Script, ejecuta manualmente `runSetup` una vez.
-4. Acepta los permisos de Google Sheets y Drive.
-5. Configura una Script Property:
+Si no queres instalar nada global, tambien se puede usar cualquier servidor estatico local.
 
-```text
-FINANZAS_API_TOKEN = una clave larga que solo vos conozcas
-```
+## APK
 
-6. Desplega como Web App con acceso `cualquier usuario con el enlace`.
-
-Ese acceso es necesario para que la PWA instalada pueda sincronizar. La proteccion real de datos es el token privado.
-
-`runSetup` crea:
-
-- La planilla principal.
-- Las hojas `Configuracion`, `Movimientos`, `AhorrosFuturo`, `Metas` y `Wishlist`.
-- La carpeta `FinanzasPersonales` en Drive.
-- Las subcarpetas `BaseDeDatos`, `ImagenesMetas`, `ImagenesWishlist` y `Respaldos`.
-
-## Frontend Instalado
-
-La carpeta `frontend/` es la app instalable.
-
-No pongas la URL ni la clave en `frontend/scripts/config.js`. La app las pide al abrir y las guarda localmente en el dispositivo.
-
-Para probar local:
+La ruta recomendada para Android es Capacitor:
 
 ```powershell
-.\scripts\servir-frontend.ps1
+npm init -y
+npm install @capacitor/core @capacitor/cli @capacitor/android
+npx cap init Pirepirapp com.pirepirapp.local --web-dir frontend
+npx cap add android
+npx cap sync android
+npx cap open android
 ```
 
-Luego abri:
+Desde Android Studio se prueba en emulador o telefono fisico. Para telefono fisico hay que activar Opciones de desarrollador y Depuracion USB.
 
-```text
-http://localhost:4173
-```
+## Limpieza De Una Instalacion Vieja
+
+Abrir `reset.html` desde el mismo origen donde se uso la app para borrar caches y datos locales del navegador. En Android instalado, tambien se puede borrar desde Ajustes > Apps > Pirepirapp > Almacenamiento.

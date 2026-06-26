@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1e2a1e">
-    <title>Actualizando Finanzas LCD</title>
+    <title>Limpiando Pirepirapp</title>
     <style>
       :root {
         color-scheme: dark;
@@ -42,12 +42,28 @@
   </head>
   <body>
     <main>
-      <h1>Actualizando app</h1>
-      <p>Limpiando cache local...</p>
+      <h1>Limpiando app</h1>
+      <p>Borrando datos locales...</p>
     </main>
     <script>
       (function () {
         'use strict';
+
+        function clearLocalStorage() {
+          try {
+            localStorage.clear();
+          } catch (error) {
+            return;
+          }
+        }
+
+        function clearSessionStorage() {
+          try {
+            sessionStorage.clear();
+          } catch (error) {
+            return;
+          }
+        }
 
         function clearCaches() {
           if (!window.caches) {
@@ -55,7 +71,8 @@
           }
           return caches.keys().then(function (keys) {
             return Promise.all(keys.filter(function (key) {
-              return key.indexOf('finanzas-lcd-') === 0;
+              return key.indexOf('finanzas-lcd-') === 0 ||
+                key.indexOf('finanzas-user-photos-') === 0;
             }).map(function (key) {
               return caches.delete(key);
             }));
@@ -72,6 +89,9 @@
             }));
           });
         }
+
+        clearLocalStorage();
+        clearSessionStorage();
 
         Promise.all([
           clearCaches(),

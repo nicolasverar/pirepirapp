@@ -1,48 +1,18 @@
-# Despliegue instalable
+# Distribucion
 
-## Apps Script API
+## Mientras Sea PWA
 
-1. En `backend/`, subi el codigo:
+GitHub Pages puede seguir sirviendo `frontend/` para pruebas visuales, pero no debe considerarse la fuente de datos. La etapa local/APK debe dejar de depender de Apps Script, Sheets y Drive.
 
-```powershell
-clasp push
-```
+## Para APK
 
-2. Crea una nueva version:
+El flujo esperado es:
 
-```powershell
-clasp version "PWA installable API"
-```
+1. Preparar frontend local-only.
+2. Empaquetar con Capacitor.
+3. Abrir `android/` en Android Studio.
+4. Probar en emulador o telefono fisico.
+5. Generar APK debug para pruebas internas.
+6. Generar release APK/AAB solo cuando la persistencia local y backups esten probados.
 
-3. Desplega o actualiza el Web App.
-4. Configura:
-
-- Ejecutar como: tu usuario.
-- Acceso: cualquier usuario con el enlace.
-
-5. Guarda la URL `/exec`.
-
-Las acciones de datos requieren `FINANZAS_API_TOKEN`. Sin esa clave, el endpoint no entrega ni modifica tus datos.
-
-## GitHub Pages
-
-El workflow `.github/workflows/pages.yml` publica la carpeta `frontend/`.
-
-1. En GitHub, entra a Settings > Pages.
-2. En Build and deployment, elegi GitHub Actions.
-3. Hace push a `main`.
-4. Espera que termine la action `Deploy Installable PWA`.
-5. Abri la URL de Pages.
-
-## Instalar En Android
-
-1. Abri la URL de GitHub Pages en Chrome.
-2. Toca el menu de Chrome.
-3. Elegi `Instalar app` o `Agregar a pantalla principal`.
-4. Abri la app instalada.
-5. Ingresa:
-
-- URL Apps Script: la URL `/exec`.
-- Clave: `FINANZAS_API_TOKEN`.
-
-Podes marcar `Recordar en este dispositivo` si es tu celular personal.
+No versionar APK, AAB, backups ni datos personales.

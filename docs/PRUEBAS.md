@@ -1,35 +1,37 @@
-# Pruebas manuales
+# Pruebas
 
-## Backend
+## Wipe
 
-- Ejecutar `runSetup` y confirmar que se crean las hojas.
-- Llamar `ping` desde Apps Script y verificar zona horaria `America/Asuncion`.
-- Confirmar que `bootstrap` sin token devuelve error de clave.
-- Confirmar que `bootstrap` con `FINANZAS_API_TOKEN` devuelve datos.
+- Abrir `frontend/reset.html`.
+- Confirmar que vuelve a `index.html`.
+- Confirmar que ya no quedan URL/token guardados en el formulario de conexion.
+- En Android, borrar almacenamiento de la app si se quiere limpieza total del WebView.
 
-## PWA
+## Frontend
 
-- Abrir la URL publica de GitHub Pages.
-- Confirmar que aparece el formulario de conexion.
-- Cargar URL `/exec` de Apps Script y clave privada.
-- Marcar `Recordar en este dispositivo` en un celular personal.
-- Instalar desde Chrome con `Instalar app` o `Agregar a pantalla principal`.
-- Abrir desde el icono instalado y verificar que mantiene la conexion.
-- Abrir Resumen y verificar estado de sincronizacion.
-- Registrar un gasto comun.
-- Registrar un ingreso adicional.
-- Registrar un aporte a ahorro.
-- Registrar un aporte a meta.
-- Comprar un elemento de wishlist.
-- Editar un movimiento y verificar que cambien metricas y acumulados.
-- Eliminar un movimiento y verificar que se reviertan metricas y acumulados.
-- Crear meta con fotografia y verificar efecto LCD pixelado.
-- Eliminar una meta y verificar que desaparece de la lista sin borrar movimientos historicos.
+- Validar sintaxis JS con `node --check`.
+- Validar `frontend/manifest.json`.
+- Validar que `frontend/service-worker.js` no tenga assets faltantes.
+- Probar navegacion en Resumen, Gastos, Metas y Configuracion.
+
+## Transicion Local
+
+Cuando exista el adaptador IndexedDB:
+
+- Crear movimiento.
+- Editar movimiento.
+- Eliminar movimiento.
+- Crear meta con foto local.
+- Crear wishlist.
 - Convertir wishlist en meta.
-- Cambiar sueldo mensual en Configuracion.
+- Exportar backup JSON.
+- Borrar datos locales.
+- Importar backup JSON y verificar que los saldos coincidan.
 
-## Seguridad
+## APK
 
-- Abrir la URL de Apps Script sin token y verificar que solo muestra la portada de API.
-- No guardar `FINANZAS_API_TOKEN` en archivos del repo.
-- Si se pierde el celular, cambiar `FINANZAS_API_TOKEN` en Apps Script.
+- Probar en Android Studio Emulator.
+- Probar en telefono fisico por USB.
+- Instalar APK manualmente.
+- Confirmar que persiste datos despues de cerrar y abrir.
+- Confirmar que funciona sin internet.

@@ -7,3 +7,14 @@ backend/.clasp.json
 frontend/scripts/config.local.js
 *.log
 frontend-server.*.log
+*.apk
+*.aab
+*.keystore
+*.jks
+*.json.backup
+backups/
+exports/
+dist/
+build/
+android/.gradle/
+android/app/build/

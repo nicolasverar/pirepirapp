@@ -1,46 +1,31 @@
 # Pirepirapp
 
-PWA instalable de finanzas personales con Google Apps Script como API, Google Sheets como base de datos y Google Drive para imagenes.
+App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para iniciar la transicion desde PWA sincronizada con Google Apps Script/Drive hacia una app local instalable como APK.
 
-La app instalable se publica como frontend estatico. No guarda URL ni claves en el repositorio: cada dispositivo se conecta ingresando la URL del Web App y la clave privada `FINANZAS_API_TOKEN`.
+## Estado Actual
 
-## Estructura
+- El frontend productivo vive en `frontend/`.
+- El backend de Apps Script queda solo como legado temporal en `backend/`.
+- No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
+- La siguiente etapa recomendada es reemplazar la capa `frontend/scripts/api.js` por almacenamiento local, idealmente IndexedDB primero y luego Capacitor/Android.
 
-- `backend/`: proyecto Apps Script para API, Sheets y Drive.
-- `frontend/`: PWA instalable con HTML, CSS, JS, manifest, iconos y service worker.
-- `docs/`: guias de instalacion, despliegue y pruebas.
-- `scripts/`: ayudas locales.
+## Datos
 
-## Seguridad
+El repo no debe guardar:
 
-El frontend puede estar en GitHub Pages porque no contiene datos ni claves.
+- Movimientos reales.
+- Montos personales.
+- Fotos cargadas por el usuario.
+- Links privados de Drive, Sheets o Apps Script.
+- Backups exportados.
+- APK/AAB generados.
 
-Los datos se protegen en Apps Script:
+Para limpiar una instalacion ya usada en navegador o PWA, abrir `frontend/reset.html` desde el mismo origen donde se instalo la app. Para limpiar Android por completo, tambien se puede borrar almacenamiento desde Ajustes > Apps > Pirepirapp > Almacenamiento.
 
-- `FINANZAS_API_TOKEN` vive en Script Properties.
-- Las acciones de datos requieren ese token.
-- La PWA guarda la URL y, si elegis recordarlo, el token solo en el dispositivo instalado.
+## Proximo Camino
 
-`FINANZAS_API_TOKEN` debe tener al menos 32 caracteres aleatorios. Nunca debe ser una palabra, frase, nombre, fecha ni ningun valor predecible.
-
-Usa una clave larga y no la subas a GitHub.
-
-## Instalacion En El Celular
-
-1. Publica `frontend/` en GitHub Pages.
-2. Abri la URL de Pages en Chrome.
-3. Usa `Instalar app` o `Agregar a pantalla principal`.
-4. Al abrir la app instalada, carga la URL `/exec` de Apps Script y tu clave privada.
-
-La URL de Apps Script es un endpoint de API. La pantalla real instalable vive en GitHub Pages.
-
-## Uso Actual
-
-- `Gastos` muestra todos los movimientos disponibles en Drive/Sheets; el mes se sincroniza automaticamente con el calendario, las altas/bajas se mantienen visibles aun durante refreshes silenciosos y la lista se puede filtrar por tipo.
-- Los gastos fijos se administran en `Configuracion`; la app los registra automaticamente como movimientos del mes en Sheets y ya no se cargan manualmente desde `Gastos`.
-- `Configuracion` permite cargar sueldo mensual, registrar `¡Cobré!` como ingreso de sueldo y administrar gastos fijos estructurados.
-- `Resumen` calcula `Disponible` desde el sueldo menos gastos fijos configurados, excluye esos fijos del ranking `Gastaste mas en` y muestra la particion del sueldo como torta LCD isometrica, monocroma y numerada segun la configuracion de sueldo/gastos fijos.
-- El porcentaje disponible se calcula sobre la plata que queda despues de las particiones fijas, no sobre el sueldo completo.
-- En movimientos de tipo `Compra cosa que quiero`, el motivo se toma de la cosa seleccionada para evitar cargar el mismo texto dos veces.
-- `Cosas que quiero` no usa descripcion. `Convertir en meta` crea la meta al instante con el titulo y costo aproximado del item.
-- La lista de `Cosas que quiero` se puede ordenar por costo de menor a mayor o de mayor a menor.
+1. Crear un adaptador local que replique las acciones actuales del API.
+2. Guardar configuracion, movimientos, metas y wishlist en IndexedDB.
+3. Guardar fotos como blobs/base64 locales o migrarlas a almacenamiento nativo al empaquetar.
+4. Agregar exportar/importar backup JSON.
+5. Empaquetar con Capacitor y probar APK en Android.

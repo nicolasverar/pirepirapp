@@ -1,0 +1,31 @@
+{
+  "name": "pirepirapp",
+  "version": "1.0.0",
+  "description": "App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para iniciar la transicion desde PWA sincronizada con Google Apps Script/Drive hacia una app local instalable como APK.",
+  "private": true,
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android",
+    "cap:build:debug": "cd android && gradlew.bat assembleDebug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolasverar/pirepirapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nicolasverar/pirepirapp/issues"
+  },
+  "homepage": "https://github.com/nicolasverar/pirepirapp#readme",
+  "devDependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1"
+  }
+}

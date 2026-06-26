@@ -12,6 +12,31 @@
 - Se reemplazo la documentacion base para reflejar el nuevo objetivo local/APK.
 - `frontend/reset.html` ahora limpia `localStorage`, `sessionStorage`, caches PWA, cache de fotos locales y service workers.
 
+## 2026-06-26 - Primer proyecto Android con Capacitor
+
+### Objetivo
+- Generar un primer contenedor Android para abrir Pirepirapp en Android Studio y producir un APK debug de prueba.
+
+### Cambios
+- Se agrego `package.json` y `package-lock.json`.
+- Se instalaron dependencias de Capacitor: `@capacitor/core`, `@capacitor/cli` y `@capacitor/android`.
+- Se agrego `capacitor.config.json` con `appId` `com.pirepirapp.local`, nombre `Pirepirapp` y `webDir` `frontend`.
+- Se genero el proyecto nativo `android/`.
+- Se ajustaron `namespace`, `applicationId`, nombre visible y `MainActivity` para `com.pirepirapp.local`.
+- Se copio el frontend a `android/app/src/main/assets/public`.
+- Se documento el flujo de prueba en `docs/APK_TRANSICION.md`.
+
+### Verificacion
+- `node --check frontend/scripts/app.js`: OK.
+- `android/app/src/main/assets/public/index.html`: existe.
+- En esta maquina no se ejecuto `assembleDebug` porque no hay `java`, Android Studio ni SDK Android en PATH.
+
+### Pendientes
+- Abrir `android/` en Android Studio en la maquina de pruebas.
+- Ejecutar Gradle sync desde Android Studio.
+- Generar APK debug.
+- Implementar almacenamiento local IndexedDB para que la APK deje de pedir URL/token.
+
 ### Pendientes
 - Implementar almacenamiento local real en IndexedDB.
 - Agregar exportacion/importacion de backup JSON.

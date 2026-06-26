@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pirepirapp</string>
+    <string name="title_activity_main">Pirepirapp</string>
+    <string name="package_name">com.pirepirapp.local</string>
+    <string name="custom_url_scheme">com.pirepirapp.local</string>
+</resources>

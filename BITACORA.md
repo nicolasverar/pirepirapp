@@ -16,6 +16,7 @@
 
 ### Objetivo
 - Generar un primer contenedor Android para abrir Pirepirapp en Android Studio y producir un APK debug de prueba.
+- Mantener los archivos y caches controlables del flujo dentro de la carpeta del repo.
 
 ### Cambios
 - Se agrego `package.json` y `package-lock.json`.
@@ -25,6 +26,8 @@
 - Se ajustaron `namespace`, `applicationId`, nombre visible y `MainActivity` para `com.pirepirapp.local`.
 - Se copio el frontend a `android/app/src/main/assets/public`.
 - Se documento el flujo de prueba en `docs/APK_TRANSICION.md`.
+- Se agrego `.npmrc` para cache npm local en `.tool-cache/npm`.
+- Se ajusto `npm run cap:build:debug` para usar `.gradle-user/` dentro del repo.
 
 ### Verificacion
 - `node --check frontend/scripts/app.js`: OK.
@@ -36,9 +39,4 @@
 - Ejecutar Gradle sync desde Android Studio.
 - Generar APK debug.
 - Implementar almacenamiento local IndexedDB para que la APK deje de pedir URL/token.
-
-### Pendientes
-- Implementar almacenamiento local real en IndexedDB.
-- Agregar exportacion/importacion de backup JSON.
-- Crear proyecto Android con Capacitor.
 - Definir si el backend legacy en `backend/` se elimina despues de completar la migracion.

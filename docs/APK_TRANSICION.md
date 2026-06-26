@@ -30,6 +30,16 @@ npm run cap:sync
 npm run cap:open
 ```
 
+## Modo Carpeta Estricta
+
+Los archivos del proyecto quedan dentro de esta carpeta del repo. Para reducir escrituras externas durante la prueba:
+
+- `.npmrc` fuerza la cache de npm a `.tool-cache/npm`.
+- `npm run cap:build:debug` usa `.gradle-user/` como Gradle user home.
+- `.tool-cache/` y `.gradle-user/` quedan ignoradas por git.
+
+Android Studio igualmente puede usar su SDK/JDK y caches propios del sistema. Si la maquina de prueba requiere aislamiento total, configurar el SDK de Android Studio dentro de una subcarpeta local del repo antes de sincronizar Gradle.
+
 Si `cap sync` falla dentro de OneDrive por permisos `EPERM`, abrir igualmente `android/` en Android Studio y dejar que Android Studio regenere/compile. En una carpeta local fuera de OneDrive suele ser mas estable.
 
 ## Fase 3 - Pruebas En Celular

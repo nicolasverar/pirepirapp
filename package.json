@@ -9,7 +9,7 @@
   "scripts": {
     "cap:sync": "cap sync android",
     "cap:open": "cap open android",
-    "cap:build:debug": "cd android && gradlew.bat assembleDebug"
+    "cap:build:debug": "cd android && gradlew.bat --gradle-user-home ../.gradle-user assembleDebug"
   },
   "repository": {
     "type": "git",

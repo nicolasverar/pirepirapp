@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
 node_modules/
+.tool-cache/
+.gradle-user/
 .env
 .env.*
 backend/.clasp.json

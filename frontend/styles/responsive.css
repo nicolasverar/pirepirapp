@@ -186,18 +186,26 @@
   }
 
   .movement-row {
-    grid-template-columns: minmax(0, 1fr) 34px;
-    gap: 4px;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    gap: 6px;
+    padding: 7px;
   }
 
-  .movement-main {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 5px;
-    min-height: 66px;
+  .movement-card-top {
+    grid-template-columns: minmax(0, 1fr) minmax(84px, auto);
+    gap: 6px;
   }
 
   .movement-value {
-    text-align: left;
+    max-width: 104px;
+    padding: 5px 5px;
+    font-size: 0.68rem;
+  }
+
+  .movement-actions .tiny-key {
+    min-height: 29px;
+    padding: 2px 3px;
+    font-size: 0.52rem;
   }
 
   .wish-toolbar {

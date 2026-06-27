@@ -1057,8 +1057,18 @@ code {
   overflow-wrap: anywhere;
 }
 
-.movement-list-panel {
-  padding: 8px;
+.movement-list-panel.system-window {
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+  background-image: none;
+  border: 0;
+  box-shadow: none;
+}
+
+.movement-list-panel.system-window::after {
+  content: none;
+  display: none;
 }
 
 .movement-filter-dock {
@@ -1136,10 +1146,54 @@ code {
 }
 
 .movement-row {
+  position: relative;
+  z-index: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) minmax(50px, auto);
+  gap: 8px;
   align-items: stretch;
+  min-width: 0;
+  min-height: 72px;
+}
+
+.movement-card {
+  margin: 0 7px 7px 0;
+  padding: 8px;
+  overflow: visible;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
+}
+
+.movement-card::before,
+.movement-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+}
+
+.movement-card::before {
+  top: 5px;
+  right: -7px;
+  bottom: -7px;
+  width: 7px;
+}
+
+.movement-card::after {
+  left: 5px;
+  right: -7px;
+  bottom: -7px;
+  height: 7px;
 }
 
 .movement-main {
@@ -1147,54 +1201,97 @@ code {
   grid-template-columns: minmax(0, 1fr);
   align-content: center;
   min-width: 0;
-  gap: 5px;
-  min-height: 66px;
-  padding: 7px;
+  gap: 7px;
+  min-height: 0;
+  padding: 0;
   text-align: left;
-  color: var(--lcd-ink);
-  background:
-    linear-gradient(180deg, var(--lcd-bg-2), var(--lcd-surface-lo));
-  border: 1px solid var(--lcd-line);
+  color: #071007;
+  background: transparent;
+  border: 0;
 }
 
-.movement-title,
-.movement-value {
+.movement-card-top,
+.movement-card-bottom {
+  display: grid;
   min-width: 0;
+}
+
+.movement-card-top {
+  grid-template-columns: minmax(0, 1fr) minmax(92px, auto);
+  align-items: start;
+  gap: 8px;
+}
+
+.movement-card-bottom {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  padding-top: 6px;
+  border-top: 2px solid rgba(7, 16, 7, 0.72);
 }
 
 .movement-title {
-  display: grid;
-  gap: 1px;
   min-width: 0;
-}
-
-.movement-title strong,
-.movement-title small {
   overflow: visible;
-  text-overflow: clip;
-  white-space: normal;
   overflow-wrap: anywhere;
-  line-height: 1.16;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.14;
 }
 
 .movement-value {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 8px;
-  text-align: left;
-}
-
-.movement-value b {
-  overflow-wrap: anywhere;
-  line-height: 1.05;
-}
-
-.movement-value small {
-  flex: 0 1 auto;
+  justify-self: end;
   min-width: 0;
-  text-align: right;
+  max-width: 132px;
+  padding: 5px 7px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
   overflow-wrap: anywhere;
+  text-align: right;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.movement-card-bottom small {
+  min-width: 0;
+  overflow: hidden;
+  color: #162014;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-size: 0.66rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.movement-actions {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.movement-actions .tiny-key {
+  min-width: 0;
+  min-height: 30px;
+  padding: 2px 4px;
+  color: #c4d08b;
+  background: linear-gradient(180deg, #263321, #0d140c);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.55);
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1.05;
 }
 
 .data-block,

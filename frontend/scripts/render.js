@@ -532,13 +532,22 @@
   function renderMovementTable(movements, showMonth) {
     return '<div class="movement-list">' + movements.map(function (item) {
       var meta = utils.formatMovementDateTime(item.fecha, item.hora);
+      var title = item.motivo || 'Movimiento';
       return [
-        '<article class="movement-row">',
-        '<button class="movement-main js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">',
-        '<span class="movement-title"><strong>' + utils.escapeHtml(item.motivo) + '</strong><small>' + utils.escapeHtml(meta) + '</small></span>',
-        '<span class="movement-value"><b>' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b><small>' + utils.escapeHtml(item.tipo) + '</small></span>',
-        '</button>',
+        '<article class="movement-row movement-card">',
+        '<div class="movement-main">',
+        '<div class="movement-card-top">',
+        '<strong class="movement-title">' + utils.escapeHtml(title) + '</strong>',
+        '<b class="movement-value">' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
+        '</div>',
+        '<div class="movement-card-bottom">',
+        '<small>' + utils.escapeHtml(meta) + '</small>',
+        '</div>',
+        '</div>',
+        '<div class="movement-actions">',
+        '<button class="tiny-key js-edit-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">EDIT</button>',
         '<button class="tiny-key js-delete-movement" type="button" data-id="' + utils.escapeHtml(item.id) + '">DEL</button>',
+        '</div>',
         '</article>'
       ].join('');
     }).join('') + '</div>';

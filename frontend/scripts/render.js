@@ -116,15 +116,15 @@
     if (!(summary || {}).sueldoRegistrado || !pending.length) {
       return '';
     }
-    var message = 'COBRO RECIENTE DETECTADO DISTRIBUIR INGRESO';
-    var beltText = renderPostSalaryBeltText(message);
+    var message = 'COBRO RECIENTE DETECTADO';
+    var alertText = [
+      '<span class="post-salary-alert-line">' + renderPostSalaryPixelText('COBRO RECIENTE') + '</span>',
+      '<span class="post-salary-alert-line">' + renderPostSalaryPixelText('DETECTADO') + '</span>'
+    ].join('');
     return [
       '<div class="post-salary-panel">',
-      '<div class="post-salary-belt" aria-label="' + utils.escapeHtml(message) + '">',
-      '<div class="post-salary-belt-track">',
-      '<div class="post-salary-belt-copy">' + beltText + '</div>',
-      '<div class="post-salary-belt-copy" aria-hidden="true">' + beltText + '</div>',
-      '</div>',
+      '<div class="post-salary-alert" aria-label="' + utils.escapeHtml(message) + '">',
+      '<div class="post-salary-alert-face">' + alertText + '</div>',
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
@@ -133,7 +133,7 @@
     ].join('');
   }
 
-  function renderPostSalaryBeltText(text) {
+  function renderPostSalaryPixelText(text) {
     var value = String(text || '').toUpperCase();
     var cell = 3;
     var gap = 1;

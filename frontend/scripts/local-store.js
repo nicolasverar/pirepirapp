@@ -7,6 +7,7 @@
   var STORE_NAME = 'records';
   var STATE_KEY = 'state';
   var FALLBACK_KEY = 'pirepirappLocalState';
+  var FALLBACK_PRIORITY_KEY = 'pirepirappLocalStatePreferFallback';
   var ACTIVE = 'Activo';
   var INACTIVE = 'Inactivo';
   var COMPLETED = 'Cumplido';
@@ -153,41 +154,58 @@
   }
 
   function loadState() {
+    if (shouldPreferFallbackState()) {
+      return Promise.resolve(loadFallbackState());
+    }
     return openDb().then(function (db) {
       if (!db) {
         return loadFallbackState();
       }
       return new Promise(function (resolve) {
-        var tx = db.transaction(STORE_NAME, 'readonly');
-        var store = tx.objectStore(STORE_NAME);
-        var req = store.get(STATE_KEY);
-        req.onsuccess = function () {
-          resolve(ensureState(req.result));
-        };
-        req.onerror = function () {
+        try {
+          var tx = db.transaction(STORE_NAME, 'readonly');
+          var store = tx.objectStore(STORE_NAME);
+          var req = store.get(STATE_KEY);
+          req.onsuccess = function () {
+            resolve(ensureState(req.result));
+          };
+          req.onerror = function () {
+            resolve(loadFallbackState());
+          };
+        } catch (error) {
           resolve(loadFallbackState());
-        };
+        }
       });
     });
   }
 
   function saveState(state) {
     var clean = ensureState(state);
+    saveFallbackState(clean);
     return openDb().then(function (db) {
       if (!db) {
-        saveFallbackState(clean);
         return null;
       }
       return new Promise(function (resolve) {
-        var tx = db.transaction(STORE_NAME, 'readwrite');
-        tx.objectStore(STORE_NAME).put(clean, STATE_KEY);
-        tx.oncomplete = function () {
+        try {
+          var tx = db.transaction(STORE_NAME, 'readwrite');
+          tx.objectStore(STORE_NAME).put(clean, STATE_KEY);
+          tx.oncomplete = function () {
+            clearFallbackPriority();
+            resolve(null);
+          };
+          tx.onerror = function () {
+            markFallbackPriority();
+            resolve(null);
+          };
+          tx.onabort = function () {
+            markFallbackPriority();
+            resolve(null);
+          };
+        } catch (error) {
+          markFallbackPriority();
           resolve(null);
-        };
-        tx.onerror = function () {
-          saveFallbackState(clean);
-          resolve(null);
-        };
+        }
       });
     });
   }
@@ -205,6 +223,30 @@
       localStorage.setItem(FALLBACK_KEY, JSON.stringify(state));
     } catch (error) {
       // Storage quota can be reached if many photos are saved in fallback mode.
+    }
+  }
+
+  function shouldPreferFallbackState() {
+    try {
+      return localStorage.getItem(FALLBACK_PRIORITY_KEY) === '1';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function markFallbackPriority() {
+    try {
+      localStorage.setItem(FALLBACK_PRIORITY_KEY, '1');
+    } catch (error) {
+      // If localStorage is blocked, the normal IndexedDB path remains available.
+    }
+  }
+
+  function clearFallbackPriority() {
+    try {
+      localStorage.removeItem(FALLBACK_PRIORITY_KEY);
+    } catch (error) {
+      // Nothing to clear if localStorage is blocked.
     }
   }
 

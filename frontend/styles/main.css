@@ -5449,77 +5449,86 @@ body::-webkit-scrollbar,
 
 .post-salary-panel {
   position: relative;
-  z-index: 1;
+  z-index: 4;
   display: grid;
-  gap: 8px;
-  overflow: hidden;
+  gap: 9px;
+  overflow: visible;
   min-width: 0;
-  padding: 2px 0 0;
+  padding: 4px 0 0;
 }
 
-.post-salary-belt {
+.post-salary-alert {
   position: relative;
+  z-index: 5;
+  display: block;
   min-width: 0;
-  min-height: 40px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 2px;
-  background:
-    linear-gradient(180deg, rgba(7, 16, 7, 0.032), rgba(7, 16, 7, 0.046)),
-    linear-gradient(90deg, rgba(5, 11, 5, var(--lcd-grid-alpha)) 1px, transparent 1px) 0 0 / var(--lcd-pixel-size) var(--lcd-pixel-size),
-    linear-gradient(0deg, rgba(5, 11, 5, var(--lcd-grid-alpha)) 1px, transparent 1px) 0 0 / var(--lcd-pixel-size) var(--lcd-pixel-size),
-    linear-gradient(145deg, rgba(172, 183, 117, 0.7), rgba(141, 153, 90, 0.96) 54%, rgba(111, 124, 73, 0.98)),
-    var(--lcd-bg);
-  box-shadow:
-    inset 0 1px 1px rgba(7, 16, 7, 0.12),
-    inset 0 -1px 0 rgba(203, 216, 145, 0.08);
+  overflow: visible;
+  isolation: isolate;
+  animation: post-salary-pop 1.46s steps(2, end) infinite;
+  filter: drop-shadow(3px 5px 0 rgba(7, 16, 7, 0.22));
   -webkit-tap-highlight-color: transparent;
 }
 
-.post-salary-belt::before,
-.post-salary-belt::after {
+.post-salary-alert::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 7px -5px -7px 5px;
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.45) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+    rgba(7, 16, 7, 0.12);
+  pointer-events: none;
+}
+
+.post-salary-alert-face {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  min-height: 63px;
+  padding: 10px 8px 9px;
+  overflow: hidden;
+  border: 2px solid #071007;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(7, 16, 7, 0.018), rgba(7, 16, 7, 0.045)),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.16) 0 1px, transparent 1px 5px),
+    linear-gradient(145deg, rgba(187, 199, 129, 0.94), rgba(151, 164, 98, 0.98) 54%, rgba(128, 140, 81, 0.98)),
+    var(--lcd-bg);
+  box-shadow:
+    inset 1px 1px 0 rgba(230, 241, 164, 0.32),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.17),
+    2px 2px 0 rgba(7, 16, 7, 0.7);
+  transform-origin: center;
+  animation: post-salary-face-pulse 1.46s steps(2, end) infinite;
+}
+
+.post-salary-alert-face::after {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  border: 0;
   background:
-    linear-gradient(180deg, rgba(7, 16, 7, 0.026), transparent 46%, rgba(7, 16, 7, 0.018));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 32%, rgba(7, 16, 7, 0.04));
+  opacity: 0.72;
+  pointer-events: none;
 }
 
-.post-salary-belt::before {
-  mix-blend-mode: normal;
-}
-
-.post-salary-belt::after {
-  display: none;
-}
-
-.post-salary-belt-track {
+.post-salary-alert-line {
   position: relative;
   z-index: 1;
   display: flex;
-  width: max-content;
-  min-height: 40px;
-  align-items: center;
-  animation: post-salary-belt-loop 15s linear infinite;
-  will-change: transform;
-}
-
-.post-salary-belt-copy {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 8px 40px 7px 14px;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
 }
 
 .post-salary-pixel-svg {
   display: block;
   flex: 0 0 auto;
   width: auto;
-  height: 23px;
+  max-width: 100%;
+  height: 22px;
   overflow: visible;
   image-rendering: pixelated;
 }
@@ -5529,21 +5538,47 @@ body::-webkit-scrollbar,
 }
 
 .post-salary-pixel-ghost {
-  fill: rgba(7, 16, 7, 0.13);
+  fill: rgba(7, 16, 7, 0.12);
 }
 
-@keyframes post-salary-belt-loop {
-  from {
-    transform: translateX(0);
+@keyframes post-salary-pop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(3px 5px 0 rgba(7, 16, 7, 0.2));
   }
 
-  to {
-    transform: translateX(-50%);
+  42% {
+    transform: translateY(-7px) scale(1.028);
+    filter: drop-shadow(7px 10px 0 rgba(7, 16, 7, 0.22));
+  }
+
+  65% {
+    transform: translateY(1px) scale(0.994);
+    filter: drop-shadow(2px 3px 0 rgba(7, 16, 7, 0.18));
+  }
+}
+
+@keyframes post-salary-face-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 1px 1px 0 rgba(230, 241, 164, 0.32),
+      inset -2px -2px 0 rgba(7, 16, 7, 0.17),
+      2px 2px 0 rgba(7, 16, 7, 0.7);
+  }
+
+  42% {
+    box-shadow:
+      inset 1px 1px 0 rgba(230, 241, 164, 0.38),
+      inset -2px -2px 0 rgba(7, 16, 7, 0.2),
+      5px 6px 0 rgba(7, 16, 7, 0.74);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .post-salary-belt-track {
+  .post-salary-alert,
+  .post-salary-alert-face {
     animation: none;
   }
 }

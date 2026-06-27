@@ -740,6 +740,7 @@
 
   function renderSettings(state) {
     var config = state.data.config || {};
+    var summary = state.data.resumen || {};
     var archive = state.data.archivo || [];
     return [
       '<section class="settings-stack">',
@@ -751,7 +752,7 @@
       '<label class="field"><span>Monto</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '</div>',
       '</section>',
-      renderFixedExpensesEditor(config),
+      renderFixedExpensesEditor(config, summary),
       '<div class="form-actions">',
       '<button class="lcd-button primary" type="submit">Guardar montos</button>',
       '</div>',
@@ -761,13 +762,14 @@
     ].join('');
   }
 
-  function renderFixedExpensesEditor(config) {
+  function renderFixedExpensesEditor(config, summary) {
     var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
+    var plannedSavings = utils.normalizeAmount((summary || {}).ahorrosPlanificados || plannedSavingsFromSummary(summary));
     var items = utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary);
     return [
       '<section class="system-window settings-card fixed-expense-editor">',
       '<div class="window-title"><span>GASTOS FIJOS</span><span>MONTO/%</span></div>',
-      '<div class="fixed-expense-list" data-fixed-list>',
+      '<div class="fixed-expense-list" data-fixed-list data-planned-savings="' + utils.escapeHtml(plannedSavings) + '">',
       (items.length ? items : [{ nombre: '', monto: 0, porcentajeSueldo: 0 }]).map(function (item, index) {
         return renderFixedExpenseRow(item, index, salary);
       }).join(''),
@@ -792,6 +794,7 @@
       '<input data-fixed-percent name="gastoFijoPorcentaje' + index + '" type="range" min="0" max="100" step="0.5" value="' + utils.escapeHtml(percentValue) + '">',
       '<b data-fixed-percent-display>' + utils.escapeHtml(percentValue) + '%</b>',
       '</span>',
+      '<small class="fixed-limit-message" data-fixed-limit-message hidden></small>',
       '</label>',
       '</div>',
       '<div class="fixed-expense-actions">',
@@ -1205,6 +1208,11 @@
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       errorBox.hidden = true;
+      if (updateFixedTotal(form) === false) {
+        errorBox.textContent = 'Los fijos y ahorros superan el 100% del sueldo.';
+        errorBox.hidden = false;
+        return;
+      }
       var payload = utils.formDataToObject(form);
       payload.sueldoMensual = utils.normalizeAmount(payload.sueldoMensual);
       payload.gastosFijos = collectFixedExpenses(form, payload.sueldoMensual);
@@ -1230,6 +1238,59 @@
       return utils.normalizeAmount(salaryInput.value);
     }
 
+    function plannedSavings() {
+      return utils.normalizeAmount(list.getAttribute('data-planned-savings') || 0);
+    }
+
+    function otherFixedTotal(row) {
+      return utils.qsa('[data-fixed-row]', list).reduce(function (sum, item) {
+        if (item === row) {
+          return sum;
+        }
+        return sum + utils.normalizeAmount((utils.qs('[data-fixed-amount]', item) || {}).value);
+      }, 0);
+    }
+
+    function maxAmountForRow(row) {
+      var sueldo = salary();
+      if (!sueldo) {
+        return 0;
+      }
+      return Math.max(0, sueldo - plannedSavings() - otherFixedTotal(row));
+    }
+
+    function updateRowLimit(row) {
+      var sueldo = salary();
+      var amountInput = utils.qs('[data-fixed-amount]', row);
+      var percentInput = utils.qs('[data-fixed-percent]', row);
+      var message = utils.qs('[data-fixed-limit-message]', row);
+      var maxAmount = maxAmountForRow(row);
+      var maxPercent = sueldo ? Math.round((maxAmount / sueldo) * 10000) / 100 : 0;
+      var amount = utils.normalizeAmount((amountInput || {}).value);
+      var clamped = sueldo && amount > maxAmount;
+      if (amountInput && clamped) {
+        amountInput.value = maxAmount ? String(maxAmount) : '';
+        amount = maxAmount;
+      }
+      if (percentInput) {
+        percentInput.max = formatPercentLabel(maxPercent);
+        percentInput.value = sueldo ? formatPercentLabel((amount / sueldo) * 100) : '0';
+      }
+      updatePercentSlider(row);
+      if (message) {
+        message.hidden = !clamped;
+        message.textContent = clamped
+          ? 'Limite disponible: ' + utils.formatMoney(maxAmount)
+          : '';
+      }
+      return !clamped;
+    }
+
+    function enforceBudgetLimits() {
+      utils.qsa('[data-fixed-row]', list).forEach(updateRowLimit);
+      return updateFixedTotal(form);
+    }
+
     function bindRow(row) {
       var nameInput = utils.qs('[data-fixed-name]', row);
       var amountInput = utils.qs('[data-fixed-amount]', row);
@@ -1239,7 +1300,7 @@
       amountInput.addEventListener('input', function () {
         var sueldo = salary();
         percentInput.value = sueldo ? formatPercentInput((utils.normalizeAmount(amountInput.value) / sueldo) * 100) : '';
-        updatePercentSlider(row);
+        updateRowLimit(row);
         updateFixedTotal(form);
       });
       percentInput.addEventListener('input', function () {
@@ -1247,7 +1308,7 @@
         if (sueldo) {
           amountInput.value = String(Math.round((Number(String(percentInput.value).replace(',', '.')) || 0) * sueldo / 100));
         }
-        updatePercentSlider(row);
+        updateRowLimit(row);
         updateFixedTotal(form);
       });
       nameInput.addEventListener('input', function () {
@@ -1259,7 +1320,7 @@
           list.insertAdjacentHTML('beforeend', renderFixedExpenseRow({}, 0, salary()));
           bindRow(utils.qs('[data-fixed-row]:last-child', list));
         }
-        updateFixedTotal(form);
+        enforceBudgetLimits();
       });
     }
 
@@ -1271,9 +1332,9 @@
         percentInput.value = salary() ? formatPercentInput((utils.normalizeAmount(amountInput.value) / salary()) * 100) : '';
         updatePercentSlider(row);
       });
-      updateFixedTotal(form);
+      enforceBudgetLimits();
     });
-    updateFixedTotal(form);
+    enforceBudgetLimits();
   }
 
   function updatePercentSlider(row) {
@@ -1347,22 +1408,26 @@
 
   function updateFixedTotal(root) {
     var salary = utils.normalizeAmount((utils.qs('[data-salary-input]', root) || {}).value);
+    var list = utils.qs('[data-fixed-list]', root);
+    var plannedSavings = utils.normalizeAmount((list || {}).getAttribute ? list.getAttribute('data-planned-savings') : 0);
     var items = collectFixedExpenses(root, salary);
     var total = items.reduce(function (sum, item) {
       return sum + utils.normalizeAmount(item.monto);
     }, 0);
     var percent = salary ? Math.round((total / salary) * 10000) / 100 : 0;
-    var availableAfterFixed = Math.max(0, salary - total);
+    var availableAfterFixed = Math.max(0, salary - total - plannedSavings);
+    var overBudget = Boolean(salary && total + plannedSavings > salary);
     var detail = salary
-      ? (total > salary
-        ? 'Excede el sueldo por ' + utils.formatMoney(total - salary)
-        : (formatPercentInput(percent) || '0') + '% del sueldo - Disponible tras fijos ' + utils.formatMoney(availableAfterFixed))
+      ? (overBudget
+        ? 'Excede por ' + utils.formatMoney(total + plannedSavings - salary) + ' contando ahorros'
+        : (formatPercentInput(percent) || '0') + '% del sueldo - Disponible tras fijos y ahorros ' + utils.formatMoney(availableAfterFixed))
       : 'Carga el sueldo para calcular disponible';
     var box = utils.qs('[data-fixed-total]', root);
     if (box) {
       box.innerHTML = '<span>Total fijo</span><strong>' + utils.escapeHtml(utils.formatMoney(total)) + '</strong><small>' + utils.escapeHtml(detail) + '</small>';
-      box.className = 'fixed-expense-total' + (salary && total > salary ? ' is-over-budget' : '');
+      box.className = 'fixed-expense-total' + (overBudget ? ' is-over-budget' : '');
     }
+    return !overBudget;
   }
 
   function topSpendingMotive(movements, config, summary) {

@@ -5315,21 +5315,8 @@ body::-webkit-scrollbar,
 
 .summary-stack > .availability-card.availability-card-b::after,
 .summary-stack > .salary-partition-card.salary-partition-aaa::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  left: 5px;
-  right: -8px;
-  bottom: -10px;
-  height: 10px;
-  border: 0;
-  border-radius: 0 0 8px 8px;
-  background:
-    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.96) 0 1.25px, transparent 1.45px) 0 0 / 4px 4px,
-    linear-gradient(180deg, rgba(7, 16, 7, 0.34), rgba(7, 16, 7, 0.2));
-  box-shadow: none;
-  opacity: 1;
-  pointer-events: none;
+  content: none;
+  display: none;
 }
 
 .summary-stack > .availability-card.availability-card-b::before,
@@ -5339,13 +5326,13 @@ body::-webkit-scrollbar,
   z-index: 2;
   top: 5px;
   right: -8px;
-  bottom: -10px;
+  bottom: -8px;
   width: 8px;
   border: 0;
   border-radius: 0 8px 8px 0;
   background:
-    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.88) 0 1.15px, transparent 1.4px) 0 0 / 4px 4px,
-    linear-gradient(90deg, rgba(7, 16, 7, 0.24), rgba(7, 16, 7, 0.16));
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.74) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+    rgba(7, 16, 7, 0.12);
   box-shadow: none;
   opacity: 1;
   pointer-events: none;
@@ -5356,15 +5343,15 @@ body::-webkit-scrollbar,
   position: absolute;
   z-index: 5;
   left: 5px;
-  right: -9px;
-  bottom: -11px;
+  right: -8px;
+  bottom: -8px;
   display: block;
-  height: 14px;
+  height: 8px;
   border-radius: 0 0 8px 8px;
   background:
-    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 1) 0 1.3px, transparent 1.55px) 0 0 / 4px 4px,
-    linear-gradient(180deg, rgba(7, 16, 7, 0.38), rgba(7, 16, 7, 0.2));
-  box-shadow: inset 0 4px 0 rgba(7, 16, 7, 0.08);
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.74) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+    rgba(7, 16, 7, 0.12);
+  box-shadow: none;
   pointer-events: none;
 }
 

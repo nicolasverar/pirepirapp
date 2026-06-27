@@ -312,3 +312,5 @@
 - `node --check`: OK para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda activa en `frontend` de `v2.89`, `2.89`, `finanzas-lcd-v97`, `claimSalary`, `js-claim-salary`, `salary-paid-button`, `Eliminar cobro`, `eliminar cobro`, `Sueldo cargado` y `Agregar gasto fijo`: sin controles de cobro/config obsoletos activos.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.90`: OK, responde HTML con `v2.90`.
+- `git push origin main`: OK.

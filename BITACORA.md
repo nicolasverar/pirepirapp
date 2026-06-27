@@ -447,3 +447,29 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.96`: OK, responde HTML con `v2.96`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.96`: OK, responde `finanzas-lcd-v104`.
 - Commit funcional `56e959f` pusheado a `origin/main`.
+
+## 2026-06-27 - Fijos simplificados y sombra reforzada v2.97
+
+### Objetivo
+- Evitar la etiqueta duplicada `Sueldo mensual` en Config.
+- Simplificar gastos fijos eliminando la rueda y dejando solo el deslizador.
+- Asegurar que la sombra inferior punteada salga en `Plata disponible` y `Particion sueldo`.
+
+### Cambios
+- En la tarjeta `Sueldo mensual`, el campo ahora se etiqueta solo como `Monto`.
+- En `Gastos fijos`, se elimino la rueda/dial; queda un slider horizontal con lectura porcentual.
+- El total de fijos muestra el porcentaje del sueldo y el disponible estimado despues de fijos.
+- Se neutralizo el estilo rojo de sobrepresupuesto para que Config no se vea como alerta completa.
+- `Plata disponible` y `Particion sueldo` ahora tienen un elemento real `.summary-bottom-dot-shadow` dentro de la tarjeta, ademas del pseudo-elemento, para que el puntillado inferior se vea aunque el navegador tape la sombra externa.
+- Se subio version visible a `v2.97` y service worker a `finanzas-lcd-v105`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `fixed-dial`, `fixed-dial-face`, `data-fixed-dial`, `fixedDialAngle`, `Sueldo mensual</span>`, `v=2.96`, `v2.96` y `finanzas-lcd-v104`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.97`: OK, responde HTML con `v2.97`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.97`: OK, responde `finanzas-lcd-v105`.
+- Commit funcional `d8d6825` pusheado a `origin/main`.

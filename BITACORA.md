@@ -577,3 +577,27 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.01`: OK, responde HTML con `v3.01`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.01`: OK, responde `finanzas-lcd-v109`.
 - Commit funcional `80e932e` pusheado a `origin/main`.
+
+## 2026-06-27 - Actualizar app desde Config v3.02
+
+### Objetivo
+- Agregar en `Config` el boton inferior `ACTUALIZAR` para refrescar la app y limpiar cache.
+
+### Cambios
+- El boton inferior queda con tres modos: `AGREGAR` en Resumen/Metas, `FILTRAR` en Gastos y `ACTUALIZAR` en Config.
+- Al tocar `ACTUALIZAR`, la app muestra aviso en terminal, borra cache PWA `finanzas-lcd-*`, cache de fotos `finanzas-user-photos-*`, limpia el bootstrap cacheado y desregistra service workers.
+- Despues de limpiar cache, recarga `index.html` con `appUpdate=<timestamp>` conservando el hash de la vista.
+- No se usa `reset.html` y no se borra el almacenamiento principal de datos financieros.
+- Se subio version visible a `v3.02` y service worker a `finanzas-lcd-v110`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\router.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.01`, `v3.01` y `finanzas-lcd-v109`: sin resultados; se confirmaron `ACTUALIZAR`, `updateApplicationCache`, `clearRuntimeCaches` y `unregisterServiceWorkers`.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.02`: OK, responde HTML con `v3.02`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.02`: OK, responde `finanzas-lcd-v110`.
+- Commit funcional `8b26778` pusheado a `origin/main`.

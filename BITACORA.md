@@ -902,3 +902,21 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.14`, `v3.14` y `finanzas-lcd-v122`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Previsualizaciones particion sueldo
+
+### Objetivo
+- Explorar reemplazos visuales para el grafico de torta de `Particion sueldo` antes de implementarlo en la app principal.
+
+### Cambios
+- Se creo `frontend/previews/particion.html` como laboratorio independiente.
+- Se agregaron tres alternativas: barra LCD segmentada, gauge de distribucion y ledger proporcional.
+- Cada alternativa permite ver desglose granular de gastos fijos y ahorros/metas.
+- Se agregaron escenarios de prueba: base, fijos altos y exceso.
+- No se reemplazo todavia la torta actual en `Resumen`; queda pendiente elegir una direccion visual.
+
+### Verificacion
+- `node --check frontend\previews\particion.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

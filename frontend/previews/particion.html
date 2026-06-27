@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#070808">
+    <title>Pirepirapp - previews particion</title>
+    <link rel="stylesheet" href="./particion.css">
+  </head>
+  <body>
+    <main class="preview-shell">
+      <header class="preview-top">
+        <div class="preview-brand">
+          <strong>PIREPIRAPP</strong>
+          <span>PARTICION LAB</span>
+        </div>
+        <div class="preview-terminal" aria-live="polite">
+          <span>comparador de pantallas</span>
+        </div>
+      </header>
+
+      <section class="preview-controls" aria-label="Escenarios de prueba">
+        <button class="preview-chip is-active" type="button" data-scenario="normal">BASE</button>
+        <button class="preview-chip" type="button" data-scenario="fixed">FIJOS ALTOS</button>
+        <button class="preview-chip" type="button" data-scenario="over">EXCESO</button>
+      </section>
+
+      <section class="preview-grid" id="preview-grid" aria-label="Previsualizaciones de particion de sueldo"></section>
+    </main>
+
+    <script src="./particion.js"></script>
+  </body>
+</html>

@@ -196,3 +196,22 @@
 - `git diff --check`: OK.
 - Busqueda de `Superfluos`, `SUPERF`, `v2.83` y `finanzas-lcd-v91` en frontend/scripts/docs activos: sin resultados.
 - `npm run cap:sync`: copio assets web a `android/app/src/main/assets/public`, pero la fase final quedo bloqueada en esta maquina por placeholders/reparse points de OneDrive en archivos generados e ignorados por git. En la PC de Android, ejecutar `npm run cap:sync` despues del pull.
+
+## 2026-06-27 - Cinta pixelada hundida v2.85
+
+### Objetivo
+- Hacer que la cinta post-cobro recorra el mensaje con la misma fuente pixelada de 35 segmentos usada en la fecha.
+- Quitar el enmarcado adicional de la cinta y dejar solo un fondo rectangular hundido por sombra.
+
+### Cambios
+- El texto de la cinta ahora se renderiza como SVG 5x7 con segmentos activos y fantasma.
+- Se duplico el SVG dentro del track para mantener el loop continuo.
+- Se eliminaron los bordes superior/inferior y las piezas laterales; el rectangulo usa fondo LCD con sombras internas para dar profundidad.
+- Se subio version visible a `v2.85` y service worker a `finanzas-lcd-v93`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda de cache anterior activa: sin resultados; solo queda `2.84rem` como tamano CSS no relacionado.
+- No se pudo hacer screenshot headless porque Edge/Chrome no estan en PATH en esta maquina.

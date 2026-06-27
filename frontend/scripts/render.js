@@ -147,18 +147,51 @@
       return '';
     }
     var message = 'COBRO RECIENTE DETECTADO DISTRIBUIR INGRESO';
+    var beltText = renderPostSalaryBeltText(message);
     return [
       '<div class="post-salary-panel">',
       '<div class="post-salary-belt" aria-label="' + utils.escapeHtml(message) + '">',
       '<div class="post-salary-belt-track">',
-      '<span>' + utils.escapeHtml(message) + '</span>',
-      '<span aria-hidden="true">' + utils.escapeHtml(message) + '</span>',
+      '<div class="post-salary-belt-copy">' + beltText + '</div>',
+      '<div class="post-salary-belt-copy" aria-hidden="true">' + beltText + '</div>',
       '</div>',
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
       '</div>',
       '</div>'
+    ].join('');
+  }
+
+  function renderPostSalaryBeltText(text) {
+    var value = String(text || '').toUpperCase();
+    var cell = 3;
+    var gap = 1;
+    var charGap = 4;
+    var width = summaryPixelSvgWidth(value, cell, gap, charGap);
+    var height = 7 * (cell + gap) - gap;
+    var active = [];
+    var ghost = [];
+    var x = 0;
+    for (var c = 0; c < value.length; c += 1) {
+      var glyph = summaryPixelGlyph(value.charAt(c));
+      for (var row = 0; row < glyph.length; row += 1) {
+        for (var col = 0; col < glyph[row].length; col += 1) {
+          var rect = '<rect x="' + (x + col * (cell + gap)) + '" y="' + (row * (cell + gap)) + '" width="' + cell + '" height="' + cell + '"></rect>';
+          if (glyph[row].charAt(col) === '1') {
+            active.push(rect);
+          } else {
+            ghost.push(rect);
+          }
+        }
+      }
+      x += glyph[0].length * (cell + gap) + charGap;
+    }
+    return [
+      '<svg class="post-salary-pixel-svg" width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false">',
+      '<g class="post-salary-pixel-ghost">' + ghost.join('') + '</g>',
+      '<g class="post-salary-pixel-active">' + active.join('') + '</g>',
+      '</svg>'
     ].join('');
   }
 

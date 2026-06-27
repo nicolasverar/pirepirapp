@@ -52,8 +52,8 @@
     var actionKey = window.FinanzasUtils.qs('#action-key');
     var actionKeyLabel = window.FinanzasUtils.qs('#action-key .action-key-label');
     var keyZone = window.FinanzasUtils.qs('.key-zone');
-    var enabled = current === 'resumen' || current === 'metas' || current === 'gastos';
-    var label = current === 'gastos' ? 'FILTRAR' : 'AGREGAR';
+    var enabled = current === 'resumen' || current === 'metas' || current === 'gastos' || current === 'configuracion';
+    var label = current === 'gastos' ? 'FILTRAR' : (current === 'configuracion' ? 'ACTUALIZAR' : 'AGREGAR');
     if (actionKey) {
       actionKey.hidden = !enabled;
       actionKey.disabled = !enabled;

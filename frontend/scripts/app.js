@@ -29,6 +29,10 @@
     var actionKey = utils.qs('#action-key');
     actionKey.addEventListener('click', function () {
       var view = window.FinanzasState.getState().currentView;
+      if (view === 'configuracion') {
+        updateApplicationCache();
+        return;
+      }
       if (view !== 'resumen' && view !== 'metas' && view !== 'gastos') {
         return;
       }
@@ -1313,6 +1317,49 @@
     });
   }
 
+  function updateApplicationCache() {
+    toast('Actualizando app');
+    if (window.FinanzasLocalCache && window.FinanzasLocalCache.clearBootstrap) {
+      window.FinanzasLocalCache.clearBootstrap();
+    }
+    Promise.all([
+      clearRuntimeCaches(),
+      unregisterServiceWorkers()
+    ]).then(reloadForFreshApp).catch(reloadForFreshApp);
+  }
+
+  function clearRuntimeCaches() {
+    if (!window.caches || !caches.keys) {
+      return Promise.resolve();
+    }
+    return caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (key) {
+        return key.indexOf('finanzas-lcd-') === 0 ||
+          key.indexOf('finanzas-user-photos-') === 0;
+      }).map(function (key) {
+        return caches.delete(key);
+      }));
+    });
+  }
+
+  function unregisterServiceWorkers() {
+    if (!navigator.serviceWorker || !navigator.serviceWorker.getRegistrations) {
+      return Promise.resolve();
+    }
+    return navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      return Promise.all(registrations.map(function (registration) {
+        return registration.unregister();
+      }));
+    });
+  }
+
+  function reloadForFreshApp() {
+    var url = new URL('./index.html', window.location.href);
+    url.searchParams.set('appUpdate', String(Date.now()));
+    url.hash = window.location.hash || '#configuracion';
+    window.location.replace(url.toString());
+  }
+
   function registerServiceWorker() {
     if (!('serviceWorker' in navigator)) {
       return;
@@ -1330,6 +1377,7 @@
     mutate: mutate,
     convertWishlistInstant: convertWishlistInstant,
     toast: toast,
+    updateApplicationCache: updateApplicationCache,
     version: version,
     syncVersionLabels: syncVersionLabels
   };

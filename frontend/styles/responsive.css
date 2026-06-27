@@ -85,14 +85,19 @@
   }
 
   .goals-window .goal-card {
-    grid-template-columns: minmax(0, 1fr) 84px;
-    grid-template-areas:
-      "copy photo"
-      "progress photo"
-      "money money"
-      "actions actions";
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
     padding: 9px;
+  }
+
+  .goals-window .goal-main-row {
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 8px;
+  }
+
+  .goals-window .goal-left-stack {
+    min-height: 92px;
+    gap: 6px;
   }
 
   .goal-photo,
@@ -104,27 +109,27 @@
   .goals-window .goal-photo,
   .goals-window .goal-photo .lcd-photo,
   .goals-window .goal-photo .lcd-photo-placeholder {
-    width: 84px;
-    min-height: 118px;
+    width: 92px;
+    min-height: 0;
   }
 
   .goals-window .goal-money-row {
-    grid-template-columns: minmax(0, 1fr) minmax(96px, 0.78fr);
-    gap: 7px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
   }
 
   .goals-window .goal-balance,
   .goals-window .goal-monthly-panel {
-    min-height: 54px;
-    padding: 6px 7px;
+    min-height: 43px;
+    padding: 5px 6px;
   }
 
   .goals-window .goal-balance strong {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
   }
 
   .goals-window .goal-monthly-panel b {
-    font-size: 0.86rem;
+    font-size: 0.78rem;
   }
 
   .goal-monthly,
@@ -132,8 +137,8 @@
     font-size: 0.64rem;
   }
 
-  .goal-copy p {
-    min-height: 2.85em;
+  .goals-window .goal-copy p {
+    min-height: 0;
     -webkit-line-clamp: 2;
   }
 
@@ -142,7 +147,7 @@
   }
 
   .goal-progress .progress-track {
-    height: 16px;
+    height: 18px;
   }
 
   .goals-window .goal-progress {
@@ -202,7 +207,7 @@
     grid-template-columns: none;
     grid-template-rows: auto auto;
     gap: 6px;
-    min-height: 166px;
+    min-height: 148px;
     padding: 6px;
   }
 

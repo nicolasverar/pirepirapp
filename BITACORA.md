@@ -354,3 +354,24 @@
 - Busqueda activa en `frontend` de `v2.91`, `2.91` y `finanzas-lcd-v99`: sin resultados.
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.92`: OK, responde HTML con `v2.92`.
 - `git push origin main`: OK.
+
+## 2026-06-27 - Metas y cosas que quiero v2.93
+
+### Objetivo
+- Redisenar las tarjetas de `Metas` segun referencia visual local `asi quiero.jpeg`.
+- Rebalancear `Cosas que quiero` y reemplazar el pin disonante por una perforacion circular integrada.
+- Aclarar el control `Mostrar acumulado` del formulario de ahorro futuro.
+
+### Cambios
+- La tarjeta de meta ahora usa fila principal con titulo/modulos de dinero a la izquierda e imagen cuadrada alineada a la derecha.
+- `Acumulado` y `Por mes` quedan apilados junto a la imagen; la barra de progreso pasa al espacio inferior.
+- La wishlist reduce espacio muerto superior, compacta foto/contenido y reemplaza el icono de pin por una circunferencia negra texturada en la esquina.
+- Se quito `pin-lcd.png` del precache del service worker porque ya no participa del pin visual.
+- `Mostrar acumulado` en ahorro futuro se ve como toggle LCD, no como checkbox/selector plano.
+- Se subio version visible a `v2.93` y service worker a `finanzas-lcd-v101`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `v2.92`, `2.92`, `finanzas-lcd-v100`, `pin-lcd.png` y `grid-area: actions`: sin resultados.

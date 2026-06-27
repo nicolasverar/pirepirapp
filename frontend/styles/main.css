@@ -1766,6 +1766,51 @@ dd {
   accent-color: var(--lcd-ink);
 }
 
+.future-saving-modal .check-field {
+  grid-template-columns: minmax(0, 1fr) 58px;
+  padding: 7px 8px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.14);
+}
+
+.future-saving-modal .check-field span {
+  color: #c4d08b;
+}
+
+.future-saving-modal .check-field input {
+  appearance: none;
+  position: relative;
+  width: 54px;
+  height: 26px;
+  min-height: 26px;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.22) 0 2px, transparent 2px 5px),
+    #8fa05f;
+  border: 2px solid #c4d08b;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.future-saving-modal .check-field input::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: #071007;
+  box-shadow: 1px 1px 0 rgba(196, 208, 139, 0.18);
+}
+
+.future-saving-modal .check-field input:checked::before {
+  left: 31px;
+}
+
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4057,7 +4102,7 @@ body::-webkit-scrollbar,
   height: 4px;
 }
 
-/* Resumen v2.92: textura rayada de Metas, sin enmarcar la tarjeta de fecha. */
+/* Resumen: textura rayada de Metas, sin enmarcar la tarjeta de fecha. */
 .summary-stack > .summary-combined-card,
 .summary-stack > .availability-card,
 .summary-stack > .availability-card.availability-card-b,
@@ -4577,14 +4622,9 @@ body::-webkit-scrollbar,
   position: relative;
   z-index: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px;
-  grid-template-areas:
-    "copy photo"
-    "progress photo"
-    "money money"
-    "actions actions";
-  gap: 9px;
-  min-height: 218px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-height: 232px;
   margin: 0 7px 7px 0;
   padding: 10px;
   overflow: visible;
@@ -4600,11 +4640,26 @@ body::-webkit-scrollbar,
     inset -2px -2px 0 rgba(7, 16, 7, 0.18);
 }
 
+.goals-window .goal-main-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(118px, 34vw, 156px);
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+}
+
+.goals-window .goal-left-stack {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  min-width: 0;
+  min-height: clamp(118px, 34vw, 156px);
+}
+
 .goals-window .goal-copy {
-  grid-area: copy;
   display: grid;
   align-content: start;
-  gap: 6px;
+  gap: 3px;
   min-width: 0;
   padding: 0;
 }
@@ -4615,9 +4670,9 @@ body::-webkit-scrollbar,
   white-space: normal;
   overflow-wrap: anywhere;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: clamp(1rem, 4.4vw, 1.34rem);
   font-weight: 900;
-  line-height: 1.12;
+  line-height: 1.02;
 }
 
 .goals-window .goal-copy p {
@@ -4633,29 +4688,29 @@ body::-webkit-scrollbar,
 }
 
 .goals-window .goal-photo {
-  grid-area: photo;
-  align-self: stretch;
+  align-self: start;
   justify-self: end;
   display: grid;
   place-items: stretch;
-  width: 96px;
-  min-height: 130px;
+  width: clamp(118px, 34vw, 156px);
+  aspect-ratio: 1;
+  min-height: 0;
 }
 
 .goals-window .goal-photo .lcd-photo,
 .goals-window .goal-photo .lcd-photo-placeholder {
-  width: 96px;
-  min-height: 130px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   aspect-ratio: 1;
   border: 2px solid #071007;
   border-radius: 4px;
 }
 
 .goals-window .goal-money-row {
-  grid-area: money;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(104px, 0.72fr);
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
   min-width: 0;
 }
 
@@ -4665,7 +4720,7 @@ body::-webkit-scrollbar,
   align-content: center;
   gap: 2px;
   min-width: 0;
-  min-height: 58px;
+  min-height: 50px;
   padding: 7px 9px;
   color: #c4d08b;
   background:
@@ -4683,12 +4738,12 @@ body::-webkit-scrollbar,
   min-width: 0;
   overflow-wrap: anywhere;
   color: #c4d08b;
-  font-size: 1rem;
+  font-size: clamp(0.92rem, 4.1vw, 1.22rem);
   line-height: 1;
 }
 
 .goals-window .goal-balance strong {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 4.8vw, 1.36rem);
 }
 
 .goals-window .goal-balance span,
@@ -4701,21 +4756,22 @@ body::-webkit-scrollbar,
 }
 
 .goals-window .goal-progress {
-  grid-area: progress;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
-  min-height: 34px;
+  min-height: 50px;
   margin: 0;
-  padding: 5px;
+  padding: 9px 8px;
   border: 2px solid #071007;
   border-radius: 4px;
-  background: transparent;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.18), transparent 42%),
+    rgba(196, 208, 139, 0.24);
 }
 
 .goals-window .goal-progress .progress-track {
-  height: 16px;
+  height: 22px;
   border: 1px solid #071007;
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 5px),
@@ -4742,7 +4798,7 @@ body::-webkit-scrollbar,
 }
 
 .goals-window .goal-actions {
-  grid-area: actions;
+  grid-area: auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px;
@@ -4833,11 +4889,11 @@ body::-webkit-scrollbar,
   z-index: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 8px;
-  min-height: 206px;
+  gap: 6px;
+  min-height: 176px;
   height: 100%;
   margin: 0 7px 7px 0;
-  padding: 10px;
+  padding: 8px;
   overflow: visible;
   color: #071007;
   background:
@@ -4885,38 +4941,39 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin {
   position: absolute;
   z-index: 5;
-  top: 4px;
-  right: 4px;
+  top: -10px;
+  right: -10px;
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
   padding: 0;
-  color: #071007;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 50%;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.16),
+    2px 2px 0 rgba(7, 16, 7, 0.48);
   font-family: inherit;
-  opacity: 0.82;
+  opacity: 1;
 }
 
 .wishlist-window .wish-pin span {
   position: relative;
   display: block;
-  width: 25px;
-  height: 25px;
-  background: url("../icons/pin-lcd.png") center / contain no-repeat;
-  image-rendering: pixelated;
-  filter:
-    drop-shadow(1px 1px 0 rgba(7, 16, 7, 0.64))
-    drop-shadow(-1px 0 0 rgba(196, 208, 139, 0.2));
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(196, 208, 139, 0.86);
+  border-radius: 50%;
+  background: #071007;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.16);
 }
 
 .wishlist-window .wish-card.is-pinned .wish-pin {
-  color: #c4d08b;
-  opacity: 1;
-  transform: translate(-1px, 1px) rotate(-8deg);
+  transform: translate(-1px, 1px);
 }
 
 .wishlist-window .wish-pin:focus-visible {
@@ -4927,7 +4984,7 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-card .lcd-photo,
 .wishlist-window .wish-card .lcd-photo-placeholder {
   width: 100%;
-  min-height: 96px;
+  min-height: 82px;
   aspect-ratio: 4 / 3;
   border: 2px solid #071007;
   border-radius: 4px;
@@ -4937,7 +4994,7 @@ body::-webkit-scrollbar,
   display: grid;
   grid-template-rows: auto auto auto;
   align-content: start;
-  gap: 7px;
+  gap: 5px;
   min-width: 0;
 }
 

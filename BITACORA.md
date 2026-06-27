@@ -549,3 +549,31 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.00`: OK, responde HTML con `v3.00`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.00`: OK, responde `finanzas-lcd-v108`.
 - Commit funcional `e7993ed` pusheado a `origin/main`.
+
+## 2026-06-27 - Filtros de gastos en boton inferior v3.01
+
+### Objetivo
+- Mover los filtros de `Gastos` al lugar del boton inferior de accion.
+- El boton debe llamarse `FILTRAR` y abrir un menu similar al de `AGREGAR`.
+
+### Cambios
+- En la vista `Gastos`, el boton inferior vuelve a mostrarse y cambia su etiqueta a `FILTRAR`.
+- El menu `FILTRAR` se despliega desde la barra inferior con el mismo posicionamiento del menu `AGREGAR`.
+- Dentro del menu se reutilizan los mismos filtros aprobados: `Todo`, `Gastos`, `Ingresos`, `Cosas`, `Ahorro/meta` y `Fijos`.
+- Los chips de filtro ya no se renderizan sueltos dentro de la pantalla de gastos.
+- Al elegir un filtro, se actualiza `movementFilter`, se cierra el menu y la vista conserva el encabezado `MOVIMIENTOS`.
+- Se subio version visible a `v3.01` y service worker a `finanzas-lcd-v109`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\router.js`: OK.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.00`, `v3.00`, `finanzas-lcd-v108`, `renderMovementFilters`, `js-movement-filter`, `Mostrando todos los movimientos` y `GASTOS TOTALES`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.01`: OK, responde HTML con `v3.01`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.01`: OK, responde `finanzas-lcd-v109`.
+- Commit funcional `80e932e` pusheado a `origin/main`.

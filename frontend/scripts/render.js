@@ -109,8 +109,8 @@
       renderSummaryPixelSvg(summaryDayLabel() + ' ' + summaryDateLabel(), 'date'),
       '</div>',
       '</div>',
-      '</article>',
       renderPostSalaryPanel(summary),
+      '</article>',
       '<article class="summary-combined-card">',
       '<div class="summary-combined-spent">',
       '<span class="summary-combined-title">EN LO QUE VA DE ' + utils.escapeHtml(String(currentMonthName || '').toUpperCase()) + ' GASTASTE</span>',
@@ -147,7 +147,7 @@
       return '';
     }
     return [
-      '<article class="system-window post-salary-panel">',
+      '<div class="post-salary-panel">',
       '<div class="post-salary-pixel-line">',
       renderSummaryPixelSvg('HOY ES ' + String(utils.friendlyFullDate ? utils.friendlyFullDate() : utils.friendlyDate()).toUpperCase(), 'label'),
       '</div>',
@@ -157,7 +157,7 @@
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
       '</div>',
-      '</article>'
+      '</div>'
     ].join('');
   }
 

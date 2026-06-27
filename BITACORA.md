@@ -109,3 +109,18 @@
 
 ### Pendiente operativo
 - Probar visualmente `v2.79` en Android Studio Emulator despues de `git pull` y `npm run cap:sync` en la PC Android.
+
+## 2026-06-27 - Ajuste visual panel post-cobro v2.80
+
+### Objetivo
+- Corregir el panel post-cobro para que no aparezca como una tarjeta separada debajo de la fecha.
+
+### Cambios
+- El panel post-cobro ahora queda dentro del mismo bloque visual de fecha/resumen.
+- Se elimino el `system-window` propio del panel y los pendientes se muestran como filas sobre el fondo LCD.
+- Se subio version visible a `v2.80` y service worker a `finanzas-lcd-v88`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.

@@ -5190,7 +5190,9 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 13px 11px;
+  align-items: stretch;
+  padding: 0 7px 7px 0;
 }
 
 .wishlist-window .wish-card {
@@ -5198,11 +5200,13 @@ body::-webkit-scrollbar,
   z-index: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 5px;
-  min-height: 156px;
+  justify-items: stretch;
+  gap: 7px;
+  min-width: 0;
+  min-height: 150px;
   height: 100%;
-  margin: 0 7px 7px 0;
-  padding: 7px;
+  margin: 0;
+  padding: 8px;
   overflow: visible;
   color: #071007;
   background:
@@ -5240,60 +5244,11 @@ body::-webkit-scrollbar,
   height: 7px;
 }
 
-.wishlist-window .wish-card.is-pinned {
-  background:
-    linear-gradient(180deg, rgba(196, 208, 139, 0.56), transparent 30%),
-    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 5px),
-    #9bab6b;
-}
-
-.wishlist-window .wish-pin {
-  position: absolute;
-  z-index: 5;
-  top: -4px;
-  right: -4px;
-  display: grid;
-  place-items: center;
-  width: 27px;
-  height: 27px;
-  padding: 0;
-  color: #c4d08b;
-  background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
-    #071007;
-  border: 2px solid #071007;
-  border-radius: 50%;
-  box-shadow:
-    inset 1px 1px 0 rgba(196, 208, 139, 0.16),
-    2px 2px 0 rgba(7, 16, 7, 0.48);
-  font-family: inherit;
-  opacity: 1;
-}
-
-.wishlist-window .wish-pin span {
-  position: relative;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border: 2px solid rgba(196, 208, 139, 0.86);
-  border-radius: 50%;
-  background: #071007;
-  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.16);
-}
-
-.wishlist-window .wish-card.is-pinned .wish-pin {
-  transform: translate(0, 0);
-}
-
-.wishlist-window .wish-pin:focus-visible {
-  outline: 2px solid #071007;
-  outline-offset: 1px;
-}
-
 .wishlist-window .wish-card .lcd-photo,
 .wishlist-window .wish-card .lcd-photo-placeholder {
   width: 100%;
-  min-height: 68px;
+  min-width: 0;
+  min-height: 66px;
   aspect-ratio: 4 / 3;
   border: 2px solid #071007;
   border-radius: 4px;
@@ -5304,7 +5259,8 @@ body::-webkit-scrollbar,
   grid-template-rows: auto auto auto;
   align-content: start;
   justify-items: stretch;
-  gap: 5px;
+  gap: 6px;
+  width: 100%;
   min-width: 0;
   text-align: center;
 }
@@ -5323,6 +5279,8 @@ body::-webkit-scrollbar,
 
 .wishlist-window .wish-info b {
   display: block;
+  width: 100%;
+  box-sizing: border-box;
   padding: 5px 7px;
   color: #c4d08b;
   background:
@@ -5341,6 +5299,7 @@ body::-webkit-scrollbar,
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 5px;
+  width: 100%;
 }
 
 .wishlist-window .wish-info .tiny-key {
@@ -5361,6 +5320,44 @@ body::-webkit-scrollbar,
   font-size: 0.56rem;
   font-weight: 900;
   line-height: 1.05;
+}
+
+.summary-stack > .availability-card.availability-card-b::after,
+.summary-stack > .salary-partition-card.salary-partition-aaa::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 5px;
+  right: -8px;
+  bottom: -10px;
+  height: 10px;
+  border: 0;
+  border-radius: 0 0 8px 8px;
+  background:
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.96) 0 1.25px, transparent 1.45px) 0 0 / 4px 4px,
+    linear-gradient(180deg, rgba(7, 16, 7, 0.34), rgba(7, 16, 7, 0.2));
+  box-shadow: none;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.summary-stack > .availability-card.availability-card-b::before,
+.summary-stack > .salary-partition-card.salary-partition-aaa::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  right: -8px;
+  bottom: -10px;
+  width: 8px;
+  border: 0;
+  border-radius: 0 8px 8px 0;
+  background:
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 0.88) 0 1.15px, transparent 1.4px) 0 0 / 4px 4px,
+    linear-gradient(90deg, rgba(7, 16, 7, 0.24), rgba(7, 16, 7, 0.16));
+  box-shadow: none;
+  opacity: 1;
+  pointer-events: none;
 }
 
 .post-salary-panel {

@@ -179,9 +179,10 @@
     grid-template-rows: 26px auto;
   }
 
-  .wish-grid {
+  .wishlist-window .wish-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
+    gap: 10px 8px;
+    padding: 0 7px 7px 0;
   }
 
   .movement-row {
@@ -203,24 +204,17 @@
     grid-template-columns: repeat(2, minmax(0, 66px));
   }
 
-  .wish-card {
+  .wishlist-window .wish-card {
     grid-template-columns: none;
     grid-template-rows: auto auto;
     gap: 6px;
-    min-height: 136px;
-    padding: 6px;
-  }
-
-  .wishlist-window .wish-pin {
-    top: -3px;
-    right: -3px;
-    width: 24px;
-    height: 24px;
+    min-height: 132px;
+    padding: 7px;
   }
 
   .wishlist-window .wish-card .lcd-photo,
   .wishlist-window .wish-card .lcd-photo-placeholder {
-    min-height: 58px;
+    min-height: 56px;
   }
 
   .wish-info > strong {

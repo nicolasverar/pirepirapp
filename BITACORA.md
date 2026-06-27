@@ -524,3 +524,28 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.99`: OK, responde HTML con `v2.99`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.99`: OK, responde `finanzas-lcd-v107`.
 - Commit funcional `335f056` pusheado a `origin/main`.
+
+## 2026-06-27 - Primer rediseño vista gastos v3.00
+
+### Objetivo
+- Eliminar la presentacion anterior de filtros en `Gastos`.
+- Reemplazar el encabezado por `MOVIMIENTOS` grande con la misma logica pixelada 5x7/35 segmentos usada en la tarjeta de fecha del resumen.
+
+### Cambios
+- La vista `Gastos` ya no muestra el titulo `GASTOS TOTALES`, el mensaje `Mostrando todos los movimientos...` ni el boton visible `Actualizar`.
+- Se agrego un encabezado `MOVIMIENTOS` renderizado con `renderSummaryPixelSvg`.
+- Se agrego una linea compacta que cambia segun el filtro activo, con conteo y alcance mensual.
+- Los filtros pasaron al pie de la vista como dock de seleccion, sin tarjeta envolvente.
+- La lista de movimientos queda en su panel propio debajo del encabezado.
+- Se subio version visible a `v3.00` y service worker a `finanzas-lcd-v108`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `Mostrando todos los movimientos`, `GASTOS TOTALES`, `v=2.99`, `v2.99` y `finanzas-lcd-v107`: sin resultados visibles; queda solo el listener generico `.js-refresh` sin boton renderizado en la vista.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.00`: OK, responde HTML con `v3.00`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.00`: OK, responde `finanzas-lcd-v108`.
+- Commit funcional `e7993ed` pusheado a `origin/main`.

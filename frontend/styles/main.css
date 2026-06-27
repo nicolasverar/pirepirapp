@@ -5031,18 +5031,15 @@ body::-webkit-scrollbar,
   overflow: hidden;
   border: 0;
   border-radius: 2px;
-  background:
-    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(180deg, rgba(74, 92, 47, 0.38) 0, rgba(151, 166, 96, 0.52) 42%, rgba(112, 134, 72, 0.46) 100%),
-    rgba(126, 148, 82, 0.45);
+  background-image:
+    linear-gradient(90deg, rgba(13, 21, 12, 0.13) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(13, 21, 12, 0.1) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(188, 198, 125, 0.24), rgba(141, 153, 90, 0.18));
+  background-size: 12px 12px, 12px 12px, auto;
+  background-color: rgba(151, 162, 96, 0.76);
   box-shadow:
-    inset 0 5px 7px rgba(7, 16, 7, 0.4),
-    inset 0 -2px 3px rgba(203, 216, 145, 0.22),
-    inset 5px 0 6px rgba(7, 16, 7, 0.24),
-    inset -5px 0 6px rgba(7, 16, 7, 0.2),
-    0 2px 0 rgba(202, 213, 143, 0.28),
-    0 -2px 0 rgba(7, 16, 7, 0.28);
+    inset 0 2px 2px rgba(7, 16, 7, 0.16),
+    inset 0 -1px 0 rgba(203, 216, 145, 0.14);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -5055,8 +5052,7 @@ body::-webkit-scrollbar,
   pointer-events: none;
   border: 0;
   background:
-    linear-gradient(180deg, rgba(7, 16, 7, 0.14), transparent 30%, transparent 72%, rgba(203, 216, 145, 0.1)),
-    linear-gradient(90deg, rgba(7, 16, 7, 0.24), transparent 9%, transparent 91%, rgba(7, 16, 7, 0.2));
+    linear-gradient(180deg, rgba(7, 16, 7, 0.05), transparent 38%, transparent 78%, rgba(203, 216, 145, 0.04));
 }
 
 .post-salary-belt::before {

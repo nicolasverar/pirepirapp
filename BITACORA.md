@@ -215,3 +215,20 @@
 - `git diff --check`: OK.
 - Busqueda de cache anterior activa: sin resultados; solo queda `2.84rem` como tamano CSS no relacionado.
 - No se pudo hacer screenshot headless porque Edge/Chrome no estan en PATH en esta maquina.
+
+## 2026-06-27 - Fondo integrado para cinta v2.86
+
+### Objetivo
+- Hacer que el fondo hundido de la cinta use el mismo tratamiento visual que la parte superior.
+- Reducir drasticamente la sombra para que el hundimiento sea sutil.
+
+### Cambios
+- La cinta adopta la grilla y color base LCD de los modulos superiores.
+- Se reemplazo la sombra marcada por dos sombras internas leves.
+- Se elimino el oscurecimiento lateral del overlay.
+- Se subio version visible a `v2.86` y service worker a `finanzas-lcd-v94`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.

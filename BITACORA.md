@@ -473,3 +473,30 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.97`: OK, responde HTML con `v2.97`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.97`: OK, responde `finanzas-lcd-v105`.
 - Commit funcional `d8d6825` pusheado a `origin/main`.
+
+## 2026-06-27 - Limite de presupuesto en fijos v2.98
+
+### Objetivo
+- Hacer que el porcentaje del gasto fijo complete automaticamente el monto que representa.
+- Evitar asignaciones que hagan que fijos + ahorros superen el 100% del sueldo.
+- Reducir el refuerzo de sombra inferior para que sea igual al lateral.
+
+### Cambios
+- El editor de gastos fijos calcula el maximo asignable por fila como `sueldo - ahorros planificados - otros fijos`.
+- Al mover el slider de porcentaje, el monto mensual se autocompleta con el valor de ese porcentaje del sueldo.
+- Si el monto o porcentaje supera lo disponible, se recorta al maximo permitido y se muestra el limite asignable.
+- Al guardar, se bloquea la configuracion si fijos + ahorros exceden el sueldo.
+- El total de fijos muestra `Disponible tras fijos y ahorros`.
+- La sombra inferior de `Plata disponible` y `Particion sueldo` ahora es una sola franja punteada de 8px, igual al lateral, sin doble capa excesiva.
+- Se subio version visible a `v2.98` y service worker a `finanzas-lcd-v106`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `fixed-dial`, `fixedDialAngle`, `data-fixed-dial`, `v=2.97`, `v2.97` y `finanzas-lcd-v105`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.98`: OK, responde HTML con `v2.98`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.98`: OK, responde `finanzas-lcd-v106`.
+- Commit funcional `4c53882` pusheado a `origin/main`.

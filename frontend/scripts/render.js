@@ -117,14 +117,11 @@
       return '';
     }
     var message = 'COBRO RECIENTE DETECTADO';
-    var alertText = [
-      '<span class="post-salary-alert-line">' + renderPostSalaryPixelText('COBRO RECIENTE') + '</span>',
-      '<span class="post-salary-alert-line">' + renderPostSalaryPixelText('DETECTADO') + '</span>'
-    ].join('');
+    var alertText = renderPostSalaryPixelText(message);
     return [
       '<div class="post-salary-panel">',
       '<div class="post-salary-alert" aria-label="' + utils.escapeHtml(message) + '">',
-      '<div class="post-salary-alert-face">' + alertText + '</div>',
+      alertText,
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
@@ -135,9 +132,9 @@
 
   function renderPostSalaryPixelText(text) {
     var value = String(text || '').toUpperCase();
-    var cell = 3;
-    var gap = 1;
-    var charGap = 4;
+    var cell = 2.1;
+    var gap = 0.75;
+    var charGap = 2;
     var width = summaryPixelSvgWidth(value, cell, gap, charGap);
     var height = 7 * (cell + gap) - gap;
     var active = [];

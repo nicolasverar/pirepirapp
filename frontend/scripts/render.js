@@ -99,6 +99,7 @@
       renderMoneyLineDetails(summary),
       '<div class="availability-b-divider"></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
+      '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
       '</article>',
       renderSalaryPartition(config, summary),
       '</section>'
@@ -747,7 +748,7 @@
       '<section class="system-window settings-card salary-settings-card">',
       '<div class="window-title"><span>SUELDO MENSUAL</span><span>MONTO</span></div>',
       '<div class="salary-config-panel">',
-      '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
+      '<label class="field"><span>Monto</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '</div>',
       '</section>',
       renderFixedExpensesEditor(config),
@@ -787,9 +788,9 @@
       '<label class="field fixed-expense-name"><span>Nombre del gasto</span><input data-fixed-name name="gastoFijoNombre' + index + '" type="text" maxlength="80" value="' + utils.escapeHtml(name) + '" autocomplete="off"></label>',
       '<label class="field"><span>Monto mensual</span><input data-fixed-amount name="gastoFijoMonto' + index + '" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(amount || '') + '"></label>',
       '<label class="field fixed-percent-control"><span>Porcentaje del sueldo</span>',
-      '<span class="fixed-dial-shell" data-fixed-dial-shell style="--fixed-dial-angle:' + utils.escapeHtml(String(fixedDialAngle(percent))) + 'deg">',
-      '<span class="fixed-dial-face" aria-hidden="true"><i></i><b data-fixed-percent-display>' + utils.escapeHtml(percentValue) + '%</b></span>',
+      '<span class="fixed-slider-shell">',
       '<input data-fixed-percent name="gastoFijoPorcentaje' + index + '" type="range" min="0" max="100" step="0.5" value="' + utils.escapeHtml(percentValue) + '">',
+      '<b data-fixed-percent-display>' + utils.escapeHtml(percentValue) + '%</b>',
       '</span>',
       '</label>',
       '</div>',
@@ -803,11 +804,6 @@
   function formatPercentInput(value) {
     var number = Number(value || 0);
     return number ? String(Math.round(number * 100) / 100) : '';
-  }
-
-  function fixedDialAngle(value) {
-    var percent = Math.max(0, Math.min(100, Number(value || 0)));
-    return Math.round((-135 + (percent * 2.7)) * 10) / 10;
   }
 
   function formatPercentLabel(value) {
@@ -881,6 +877,7 @@
       excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(excess)) + '</p>' : '',
       salary ? renderSalaryPartitionPie(partition, salary, total, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       salary ? renderSalaryPartitionLegend(partition, salary, excess) : '',
+      '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
       '</article>'
     ].join('');
   }
@@ -1242,7 +1239,7 @@
       amountInput.addEventListener('input', function () {
         var sueldo = salary();
         percentInput.value = sueldo ? formatPercentInput((utils.normalizeAmount(amountInput.value) / sueldo) * 100) : '';
-        updatePercentDial(row);
+        updatePercentSlider(row);
         updateFixedTotal(form);
       });
       percentInput.addEventListener('input', function () {
@@ -1250,7 +1247,7 @@
         if (sueldo) {
           amountInput.value = String(Math.round((Number(String(percentInput.value).replace(',', '.')) || 0) * sueldo / 100));
         }
-        updatePercentDial(row);
+        updatePercentSlider(row);
         updateFixedTotal(form);
       });
       nameInput.addEventListener('input', function () {
@@ -1272,23 +1269,19 @@
         var amountInput = utils.qs('[data-fixed-amount]', row);
         var percentInput = utils.qs('[data-fixed-percent]', row);
         percentInput.value = salary() ? formatPercentInput((utils.normalizeAmount(amountInput.value) / salary()) * 100) : '';
-        updatePercentDial(row);
+        updatePercentSlider(row);
       });
       updateFixedTotal(form);
     });
     updateFixedTotal(form);
   }
 
-  function updatePercentDial(row) {
+  function updatePercentSlider(row) {
     var percentInput = utils.qs('[data-fixed-percent]', row);
-    var shell = utils.qs('[data-fixed-dial-shell]', row);
     var display = utils.qs('[data-fixed-percent-display]', row);
     var percent = Math.max(0, Math.min(100, Number(String((percentInput || {}).value || '').replace(',', '.')) || 0));
     if (percentInput) {
       percentInput.value = formatPercentLabel(percent);
-    }
-    if (shell) {
-      shell.style.setProperty('--fixed-dial-angle', fixedDialAngle(percent) + 'deg');
     }
     if (display) {
       display.textContent = formatPercentLabel(percent) + '%';
@@ -1359,9 +1352,15 @@
       return sum + utils.normalizeAmount(item.monto);
     }, 0);
     var percent = salary ? Math.round((total / salary) * 10000) / 100 : 0;
+    var availableAfterFixed = Math.max(0, salary - total);
+    var detail = salary
+      ? (total > salary
+        ? 'Excede el sueldo por ' + utils.formatMoney(total - salary)
+        : (formatPercentInput(percent) || '0') + '% del sueldo - Disponible tras fijos ' + utils.formatMoney(availableAfterFixed))
+      : 'Carga el sueldo para calcular disponible';
     var box = utils.qs('[data-fixed-total]', root);
     if (box) {
-      box.innerHTML = '<span>Total fijo</span><strong>' + utils.escapeHtml(utils.formatMoney(total)) + '</strong><small>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '% del sueldo</small>';
+      box.innerHTML = '<span>Total fijo</span><strong>' + utils.escapeHtml(utils.formatMoney(total)) + '</strong><small>' + utils.escapeHtml(detail) + '</small>';
       box.className = 'fixed-expense-total' + (salary && total > salary ? ' is-over-budget' : '');
     }
   }

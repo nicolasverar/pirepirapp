@@ -1818,7 +1818,7 @@ dd {
 
 .fixed-expense-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(92px, 0.78fr) minmax(132px, 1.14fr);
+  grid-template-columns: minmax(0, 1fr) minmax(112px, 0.62fr);
   gap: 8px;
   align-items: end;
 }
@@ -1866,59 +1866,37 @@ dd {
 }
 
 .fixed-percent-control {
+  grid-column: 1 / -1;
   min-width: 0;
 }
 
-.fixed-dial-shell {
-  --fixed-dial-angle: -135deg;
+.fixed-slider-shell {
   display: grid;
-  grid-template-columns: 72px minmax(56px, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(52px, auto);
   align-items: center;
   gap: 8px;
   min-width: 0;
+  width: 100%;
 }
 
-.fixed-dial-face {
-  position: relative;
+.fixed-slider-shell b {
   display: grid;
   place-items: center;
-  width: 70px;
-  height: 70px;
+  min-height: 30px;
+  min-width: 52px;
+  padding: 3px 5px;
   color: #c4d08b;
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
-    radial-gradient(circle at 35% 26%, rgba(196, 208, 139, 0.18), transparent 29%),
     #071007;
   border: 2px solid #071007;
-  border-radius: 50%;
-  box-shadow:
-    inset 2px 2px 0 rgba(196, 208, 139, 0.11),
-    inset -3px -3px 0 rgba(0, 0, 0, 0.38),
-    2px 2px 0 rgba(7, 16, 7, 0.42);
-  font-size: 0.7rem;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.12);
+  font-size: 0.72rem;
   font-weight: 900;
 }
 
-.fixed-dial-face i {
-  position: absolute;
-  top: 9px;
-  left: calc(50% - 1px);
-  width: 2px;
-  height: 25px;
-  background: #c4d08b;
-  border-radius: 2px;
-  transform: rotate(var(--fixed-dial-angle));
-  transform-origin: 50% 26px;
-  box-shadow: 0 0 0 1px rgba(196, 208, 139, 0.12);
-}
-
-.fixed-dial-face b {
-  position: relative;
-  z-index: 1;
-  padding-top: 12px;
-}
-
-.fixed-dial-shell input[type="range"] {
+.fixed-slider-shell input[type="range"] {
   appearance: none;
   width: 100%;
   min-height: 34px;
@@ -1926,7 +1904,7 @@ dd {
   background: transparent;
 }
 
-.fixed-dial-shell input[type="range"]::-webkit-slider-runnable-track {
+.fixed-slider-shell input[type="range"]::-webkit-slider-runnable-track {
   height: 12px;
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.18) 0 1px, transparent 1px 6px),
@@ -1936,7 +1914,7 @@ dd {
   box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.12);
 }
 
-.fixed-dial-shell input[type="range"]::-webkit-slider-thumb {
+.fixed-slider-shell input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 22px;
   height: 22px;
@@ -1949,14 +1927,14 @@ dd {
   box-shadow: 2px 2px 0 rgba(7, 16, 7, 0.42);
 }
 
-.fixed-dial-shell input[type="range"]::-moz-range-track {
+.fixed-slider-shell input[type="range"]::-moz-range-track {
   height: 12px;
   background: #071007;
   border: 2px solid #071007;
   border-radius: 999px;
 }
 
-.fixed-dial-shell input[type="range"]::-moz-range-thumb {
+.fixed-slider-shell input[type="range"]::-moz-range-thumb {
   width: 22px;
   height: 22px;
   background: #c4d08b;
@@ -1977,6 +1955,19 @@ dd {
 .fixed-expense-total small {
   color: #c4d08b;
   opacity: 0.82;
+}
+
+.settings-card .fixed-expense-total.is-over-budget {
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border-color: #071007;
+}
+
+.settings-card .fixed-expense-total.is-over-budget small {
+  color: #c4d08b;
+  opacity: 1;
 }
 
 .archive-list {
@@ -5357,6 +5348,23 @@ body::-webkit-scrollbar,
     linear-gradient(90deg, rgba(7, 16, 7, 0.24), rgba(7, 16, 7, 0.16));
   box-shadow: none;
   opacity: 1;
+  pointer-events: none;
+}
+
+.summary-stack > .availability-card.availability-card-b .summary-bottom-dot-shadow,
+.summary-stack > .salary-partition-card.salary-partition-aaa .summary-bottom-dot-shadow {
+  position: absolute;
+  z-index: 5;
+  left: 5px;
+  right: -9px;
+  bottom: -11px;
+  display: block;
+  height: 14px;
+  border-radius: 0 0 8px 8px;
+  background:
+    radial-gradient(circle at 2px 2px, rgba(7, 16, 7, 1) 0 1.3px, transparent 1.55px) 0 0 / 4px 4px,
+    linear-gradient(180deg, rgba(7, 16, 7, 0.38), rgba(7, 16, 7, 0.2));
+  box-shadow: inset 0 4px 0 rgba(7, 16, 7, 0.08);
   pointer-events: none;
 }
 

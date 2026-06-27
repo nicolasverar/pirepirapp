@@ -352,3 +352,5 @@
 - `node --check`: OK para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda activa en `frontend` de `v2.91`, `2.91` y `finanzas-lcd-v99`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.92`: OK, responde HTML con `v2.92`.
+- `git push origin main`: OK.

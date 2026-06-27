@@ -880,3 +880,25 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.13`, `v3.13` y `finanzas-lcd-v121`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Sincronizar menu inferior con pestanas v3.15
+
+### Objetivo
+- Hacer que la ventanita abierta desde el boton inferior sea consistente al cambiar de pestana.
+
+### Cambios
+- Si el menu de accion esta abierto y se cambia a `Gastos`, se reemplaza por el menu `FILTRAR`.
+- Si el menu de accion esta abierto y se cambia a `Metas`, se reemplaza por el menu de agregar metas/wishlist/ahorro.
+- Si el menu de accion esta abierto y se cambia a `Resumen`, se reemplaza por el menu de ingreso/gasto.
+- Si el menu de accion esta abierto y se cambia a `Config`, se cierra.
+- Se subio version visible a `v3.15` y service worker a `finanzas-lcd-v123`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\router.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.14`, `v3.14` y `finanzas-lcd-v122`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

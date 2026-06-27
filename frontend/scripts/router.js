@@ -12,7 +12,11 @@
     if (!labels[view]) {
       view = 'resumen';
     }
+    var previous = window.FinanzasState.getState().currentView;
     window.FinanzasState.setView(view);
+    if (previous !== view && window.FinanzasForms && window.FinanzasForms.syncActionMenuForView) {
+      window.FinanzasForms.syncActionMenuForView(view);
+    }
     window.location.hash = view;
   }
 

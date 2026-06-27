@@ -235,13 +235,29 @@
   }
 
   function actionMenu() {
-    var root = utils.qs('#modal-root');
-    if (root && !root.hidden && root.className.indexOf('is-action-menu') !== -1) {
+    var view = window.FinanzasState.getState().currentView;
+    if (isActionMenuOpen()) {
       closeModal();
       return;
     }
-    var view = window.FinanzasState.getState().currentView;
+    openActionMenuForView(view);
+  }
+
+  function syncActionMenuForView(view) {
+    if (!isActionMenuOpen()) {
+      return;
+    }
+    openActionMenuForView(view);
+  }
+
+  function isActionMenuOpen() {
+    var root = utils.qs('#modal-root');
+    return Boolean(root && !root.hidden && root.className.indexOf('is-action-menu') !== -1);
+  }
+
+  function openActionMenuForView(view) {
     if (view !== 'resumen' && view !== 'metas' && view !== 'gastos') {
+      closeModal();
       return;
     }
     if (view === 'gastos') {
@@ -1391,6 +1407,7 @@
 
   window.FinanzasForms = {
     actionMenu: actionMenu,
+    syncActionMenuForView: syncActionMenuForView,
     openMovementForm: openMovementForm,
     openFixedExpensePicker: openFixedExpensePicker,
     openFutureSavingForm: openFutureSavingForm,

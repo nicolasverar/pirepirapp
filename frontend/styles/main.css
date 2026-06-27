@@ -5018,10 +5018,10 @@ body::-webkit-scrollbar,
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   overflow: hidden;
   min-width: 0;
-  padding: 4px 0 0;
+  padding: 2px 0 0;
 }
 
 .post-salary-pixel-line {
@@ -5040,41 +5040,64 @@ body::-webkit-scrollbar,
 }
 
 .post-salary-pixel-command .summary-pixel-svg {
-  height: clamp(16px, 4.3vw, 28px);
+  height: clamp(20px, 5vw, 34px);
 }
 
 .post-salary-list {
   display: grid;
-  gap: 2px;
+  gap: 0;
   min-width: 0;
+  padding-top: 3px;
 }
 
 .post-salary-item {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(54px, 0.24fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(54px, 0.24fr) minmax(0, 1fr) minmax(82px, auto);
   align-items: center;
   gap: 8px;
   width: 100%;
-  min-height: 34px;
-  padding: 6px 2px;
+  min-height: 36px;
+  padding: 7px 2px;
   border: 0;
-  border-top: 1px solid rgba(7, 16, 7, 0.32);
   border-radius: 0;
-  background: transparent;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.44) 0 1px, transparent 1.4px) 0 0 / 8px 8px,
+    transparent;
   box-shadow: none;
   color: var(--lcd-ink);
   text-align: left;
   cursor: pointer;
 }
 
-.post-salary-item:last-child {
-  border-bottom: 1px solid rgba(7, 16, 7, 0.32);
+.post-salary-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.58) 0 1.2px, transparent 1.4px) 0 0 / 7px 2px;
+  opacity: 0.85;
+}
+
+.post-salary-item:last-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background:
+    radial-gradient(circle, rgba(7, 16, 7, 0.58) 0 1.2px, transparent 1.4px) 0 0 / 7px 2px;
+  opacity: 0.85;
 }
 
 .post-salary-item:hover,
 .post-salary-item:focus-visible {
   background:
-    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),
+    radial-gradient(circle, rgba(7, 16, 7, 0.52) 0 1px, transparent 1.4px) 0 0 / 8px 8px,
     rgba(7, 16, 7, 0.05);
   outline: 0;
 }
@@ -5096,7 +5119,7 @@ body::-webkit-scrollbar,
   padding: 0;
   border: 0;
   background: transparent;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 900;
   text-align: left;
   text-transform: uppercase;

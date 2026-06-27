@@ -148,11 +148,8 @@
     }
     return [
       '<div class="post-salary-panel">',
-      '<div class="post-salary-pixel-line">',
-      renderSummaryPixelSvg('HOY ES ' + String(utils.friendlyFullDate ? utils.friendlyFullDate() : utils.friendlyDate()).toUpperCase(), 'label'),
-      '</div>',
       '<div class="post-salary-pixel-line post-salary-pixel-command">',
-      renderSummaryPixelSvg('YA COBRASTE REPARTI EL PAN COMO DIJISTE', 'label'),
+      renderSummaryPixelSvg('DISTRIBUIR INGRESO RECIENTE', 'label'),
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),

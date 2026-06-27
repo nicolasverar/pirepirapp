@@ -124,3 +124,20 @@
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
+
+## 2026-06-27 - Panel post-cobro sin mensaje duplicado v2.81
+
+### Objetivo
+- Quitar el mensaje duplicado de fecha dentro del panel post-cobro y mejorar la separacion visual de pendientes.
+
+### Cambios
+- Se reemplazo el texto post-cobro por `DISTRIBUIR INGRESO RECIENTE`.
+- Se eliminaron las lineas de fecha y "ya cobraste" dentro del panel.
+- Los pendientes de fijos, ahorros y metas ahora se separan con puntillismo LCD.
+- Se subio version visible a `v2.81` y service worker a `finanzas-lcd-v89`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda de texto post-cobro anterior en frontend: sin resultados activos.

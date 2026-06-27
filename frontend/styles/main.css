@@ -1898,10 +1898,14 @@ dd {
 
 .fixed-slider-shell input[type="range"] {
   appearance: none;
+  position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 34px;
   padding: 0;
   background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
 }
 
 .fixed-slider-shell input[type="range"]::-webkit-slider-runnable-track {

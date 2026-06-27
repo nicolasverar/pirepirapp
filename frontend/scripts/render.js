@@ -783,7 +783,7 @@
     var name = utils.fixedExpenseName(item);
     var amount = utils.fixedExpenseAmount(item);
     var percent = utils.fixedExpensePercent(item, salary);
-    var percentValue = formatPercentInput(percent) || '0';
+    var percentValue = formatPercentRange(percent);
     return [
       '<article class="fixed-expense-row" data-fixed-row>',
       '<div class="fixed-expense-fields">',
@@ -811,6 +811,18 @@
 
   function formatPercentLabel(value) {
     return formatPercentInput(value) || '0';
+  }
+
+  function parsePercentRange(value) {
+    var number = Number(String(value === undefined || value === null || value === '' ? 0 : value).replace(',', '.'));
+    if (!isFinite(number)) {
+      return 0;
+    }
+    return Math.max(0, Math.min(100, Math.round(number * 100) / 100));
+  }
+
+  function formatPercentRange(value) {
+    return String(parsePercentRange(value));
   }
 
   function renderArchiveSection(items) {
@@ -1273,8 +1285,9 @@
         amount = maxAmount;
       }
       if (percentInput) {
-        percentInput.max = formatPercentLabel(maxPercent);
-        percentInput.value = sueldo ? formatPercentLabel((amount / sueldo) * 100) : '0';
+        percentInput.max = '100';
+        percentInput.setAttribute('data-fixed-max-percent', formatPercentLabel(maxPercent));
+        percentInput.value = formatPercentRange(sueldo ? (amount / sueldo) * 100 : 0);
       }
       updatePercentSlider(row);
       if (message) {
@@ -1299,14 +1312,18 @@
 
       amountInput.addEventListener('input', function () {
         var sueldo = salary();
-        percentInput.value = sueldo ? formatPercentInput((utils.normalizeAmount(amountInput.value) / sueldo) * 100) : '';
+        percentInput.value = formatPercentRange(sueldo ? (utils.normalizeAmount(amountInput.value) / sueldo) * 100 : 0);
         updateRowLimit(row);
         updateFixedTotal(form);
       });
       percentInput.addEventListener('input', function () {
         var sueldo = salary();
+        var percent = parsePercentRange(percentInput.value);
+        percentInput.value = formatPercentRange(percent);
         if (sueldo) {
-          amountInput.value = String(Math.round((Number(String(percentInput.value).replace(',', '.')) || 0) * sueldo / 100));
+          amountInput.value = String(Math.round(percent * sueldo / 100));
+        } else {
+          amountInput.value = '';
         }
         updateRowLimit(row);
         updateFixedTotal(form);
@@ -1329,7 +1346,7 @@
       utils.qsa('[data-fixed-row]', list).forEach(function (row) {
         var amountInput = utils.qs('[data-fixed-amount]', row);
         var percentInput = utils.qs('[data-fixed-percent]', row);
-        percentInput.value = salary() ? formatPercentInput((utils.normalizeAmount(amountInput.value) / salary()) * 100) : '';
+        percentInput.value = formatPercentRange(salary() ? (utils.normalizeAmount(amountInput.value) / salary()) * 100 : 0);
         updatePercentSlider(row);
       });
       enforceBudgetLimits();
@@ -1340,9 +1357,9 @@
   function updatePercentSlider(row) {
     var percentInput = utils.qs('[data-fixed-percent]', row);
     var display = utils.qs('[data-fixed-percent-display]', row);
-    var percent = Math.max(0, Math.min(100, Number(String((percentInput || {}).value || '').replace(',', '.')) || 0));
+    var percent = parsePercentRange((percentInput || {}).value);
     if (percentInput) {
-      percentInput.value = formatPercentLabel(percent);
+      percentInput.value = formatPercentRange(percent);
     }
     if (display) {
       display.textContent = formatPercentLabel(percent) + '%';
@@ -1393,7 +1410,7 @@
     return utils.qsa('[data-fixed-row]', root).map(function (row) {
       var name = String((utils.qs('[data-fixed-name]', row) || {}).value || '').trim();
       var amount = utils.normalizeAmount((utils.qs('[data-fixed-amount]', row) || {}).value);
-      var percent = Number(String((utils.qs('[data-fixed-percent]', row) || {}).value || '').replace(',', '.')) || 0;
+      var percent = parsePercentRange((utils.qs('[data-fixed-percent]', row) || {}).value);
       if (!name && !amount) {
         return null;
       }

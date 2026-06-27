@@ -279,15 +279,19 @@
 
   function filterMenuContent() {
     var options = movementFilterMenuOptions();
+    var activeCount = options.filter(function (option) {
+      return option.value !== 'all' && option.active;
+    }).length;
+    var status = activeCount ? activeCount + ' ON' : options.length + ' OPC.';
     return [
       '<div class="add-action-menu filter-action-menu">',
       '<div class="add-action-context">',
-      '<div class="add-action-context-label"><span>MOVIMIENTOS</span><span>' + utils.escapeHtml(options.length + ' OPC.') + '</span></div>',
+      '<div class="add-action-context-label"><span>MOVIMIENTOS</span><span>' + utils.escapeHtml(status) + '</span></div>',
       '<nav class="movement-filters movement-filter-dock" aria-label="Filtrar movimientos">',
       options.map(function (option) {
         var activeClass = option.active ? ' is-active' : '';
         return [
-          '<button class="filter-chip js-filter-menu-option' + activeClass + '" type="button" data-filter="' + utils.escapeHtml(option.value) + '">',
+          '<button class="filter-chip js-filter-menu-option' + activeClass + '" type="button" data-filter="' + utils.escapeHtml(option.value) + '" aria-pressed="' + (option.active ? 'true' : 'false') + '">',
           '<span>' + utils.escapeHtml(option.label) + '</span>',
           '<small>' + utils.escapeHtml(option.count) + '</small>',
           '</button>'
@@ -302,10 +306,22 @@
   function bindMovementFilterMenu(root) {
     utils.qsa('.js-filter-menu-option', root).forEach(function (button) {
       button.addEventListener('click', function () {
-        window.FinanzasState.setState({ movementFilter: button.getAttribute('data-filter') || 'all' });
-        closeModal();
+        var current = window.FinanzasState.getState().movementFilter || 'all';
+        var next = toggleMovementFilter(current, button.getAttribute('data-filter') || 'all');
+        window.FinanzasState.setState({ movementFilter: next });
+        refreshMovementFilterMenu(root);
       });
     });
+  }
+
+  function refreshMovementFilterMenu(root) {
+    var body = utils.qs('.modal-body', root);
+    if (!body) {
+      return;
+    }
+    body.innerHTML = filterMenuContent();
+    bindMovementFilterMenu(root);
+    positionActionMenu(root);
   }
 
   function movementFilterMenuOptions() {
@@ -318,7 +334,7 @@
         value: option.value,
         label: option.label,
         count: count,
-        active: option.value === active
+        active: movementFiltersInclude(active, option.value)
       };
     });
   }
@@ -338,6 +354,45 @@
     return (movements || []).filter(function (item) {
       return matchesMovementFilter(item, filter);
     }).length;
+  }
+
+  function normalizeMovementFilters(filter) {
+    var values = Array.isArray(filter) ? filter : [filter || 'all'];
+    var allowed = movementFilterOptions().map(function (option) {
+      return option.value;
+    });
+    var seen = {};
+    var result = [];
+    values.forEach(function (value) {
+      var clean = String(value || '').trim();
+      if (!clean || clean === 'all' || seen[clean] || allowed.indexOf(clean) === -1) {
+        return;
+      }
+      seen[clean] = true;
+      result.push(clean);
+    });
+    return result;
+  }
+
+  function movementFiltersInclude(active, value) {
+    var filters = normalizeMovementFilters(active);
+    return value === 'all' ? !filters.length : filters.indexOf(value) !== -1;
+  }
+
+  function toggleMovementFilter(active, value) {
+    var clean = String(value || 'all').trim();
+    var filters = normalizeMovementFilters(active);
+    var index;
+    if (!clean || clean === 'all') {
+      return 'all';
+    }
+    index = filters.indexOf(clean);
+    if (index === -1) {
+      filters.push(clean);
+    } else {
+      filters.splice(index, 1);
+    }
+    return filters.length ? filters : 'all';
   }
 
   function matchesMovementFilter(item, filter) {

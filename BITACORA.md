@@ -721,3 +721,30 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.07`: OK, responde HTML con `v3.07`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.07`: OK, responde `finanzas-lcd-v115`.
 - Commit funcional `e57e146` pusheado a `origin/main`.
+
+## 2026-06-27 - Filtros acumulables y tacto app v3.08
+
+### Objetivo
+- Permitir que los filtros de `Gastos` se acumulen marcando y desmarcando opciones sin cerrar el menu.
+- Diferenciar sutilmente las tarjetas de movimientos por tipo sin salir de la estetica LCD.
+- Evitar la seleccion accidental de texto en la app, manteniendo inputs y formularios editables.
+
+### Cambios
+- `movementFilter` ahora acepta multiples filtros activos y conserva compatibilidad con el valor unico anterior.
+- El menu inferior `FILTRAR` permanece abierto al tocar chips y actualiza el estado visual/cantidad de filtros activos.
+- La linea de estado de `MOVIMIENTOS` muestra combinaciones como `Gastos + Fijos`.
+- Cada tarjeta de movimiento recibe una marca lateral pixelada distinta para ingresos, gastos, fijos, ahorro/metas y wishlist.
+- Se agrego `user-select: none` a la interfaz general y se re-habilito `user-select: text` en campos de formulario.
+- Se subio version visible a `v3.08` y service worker a `finanzas-lcd-v116`.
+- Se ejecuto `npm.cmd run cap:copy` para copiar los assets web al proyecto Android local; la carpeta generada `android/app/src/main/assets/public` sigue ignorada por git.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.07`, `v3.07` y `finanzas-lcd-v115`: sin resultados.
+- `npm.cmd run build`: no aplica; el proyecto no tiene script `build`.
+- `npm.cmd run cap:build:debug`: bloqueado en esta maquina porque no hay `java` en `PATH` ni `JAVA_HOME` configurado.

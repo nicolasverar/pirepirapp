@@ -90,6 +90,31 @@
   box-shadow: 2px 2px 0 var(--lcd-dark);
 }
 
+body,
+button,
+.device-shell,
+.lcd-screen,
+.status-bar,
+.key-zone,
+.system-window,
+.filter-chip,
+.movement-card,
+.modal-root {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+select,
+option,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
 .window-title {
   display: flex;
   align-items: center;
@@ -1158,7 +1183,7 @@ code {
 
 .movement-card {
   margin: 0 7px 7px 0;
-  padding: 8px;
+  padding: 8px 8px 8px 15px;
   overflow: visible;
   color: #071007;
   background:
@@ -1194,6 +1219,51 @@ code {
   right: -7px;
   bottom: -7px;
   height: 7px;
+}
+
+.movement-kind-mark {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 5px;
+  z-index: 1;
+  width: 5px;
+  border: 1px solid #071007;
+  border-radius: 2px;
+  background: #8fa05f;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.24);
+  pointer-events: none;
+}
+
+.movement-kind-expense .movement-kind-mark {
+  background:
+    repeating-linear-gradient(0deg, #071007 0 2px, transparent 2px 5px),
+    #8fa05f;
+}
+
+.movement-kind-income .movement-kind-mark {
+  background:
+    repeating-linear-gradient(135deg, #071007 0 1px, transparent 1px 4px),
+    #c4d08b;
+}
+
+.movement-kind-fixed .movement-kind-mark {
+  background:
+    repeating-linear-gradient(90deg, #071007 0 2px, transparent 2px 4px),
+    #8fa05f;
+}
+
+.movement-kind-saving .movement-kind-mark {
+  background:
+    radial-gradient(circle, #071007 0 1px, transparent 1.2px) 0 0 / 4px 4px,
+    #c4d08b;
+}
+
+.movement-kind-wishlist .movement-kind-mark {
+  background:
+    repeating-linear-gradient(45deg, #071007 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(135deg, rgba(7, 16, 7, 0.38) 0 1px, transparent 1px 4px),
+    #8fa05f;
 }
 
 .movement-main {

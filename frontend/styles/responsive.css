@@ -191,6 +191,10 @@
     padding: 7px;
   }
 
+  .movement-card {
+    padding-left: 14px;
+  }
+
   .movement-card-top {
     grid-template-columns: minmax(0, 1fr) minmax(84px, auto);
     gap: 6px;

@@ -467,12 +467,14 @@
   }
 
   function movementFilterStatus(activeFilter, count, config, allMonths) {
-    var options = movementFilterOptions();
-    var selected = options.filter(function (option) {
-      return option.value === activeFilter;
-    })[0] || options[0];
+    var filters = normalizeMovementFilters(activeFilter);
+    var selected = filters.length
+      ? filters.map(function (value) {
+        return movementFilterLabel(value);
+      }).join(' + ')
+      : 'Todo';
     var scope = allMonths ? 'todos los meses' : 'mes ' + ((config || {}).mesActual || utils.currentMonth());
-    return selected.label + ' / ' + count + ' movimientos / ' + scope;
+    return selected + ' / ' + count + ' movimientos / ' + scope;
   }
 
   function movementFilterOptions() {
@@ -487,9 +489,40 @@
   }
 
   function filterMovementsByType(movements, filter) {
+    var filters = normalizeMovementFilters(filter);
+    if (!filters.length) {
+      return (movements || []).slice();
+    }
     return (movements || []).filter(function (item) {
-      return matchesMovementFilter(item, filter);
+      return filters.some(function (activeFilter) {
+        return matchesMovementFilter(item, activeFilter);
+      });
     });
+  }
+
+  function normalizeMovementFilters(filter) {
+    var values = Array.isArray(filter) ? filter : [filter || 'all'];
+    var allowed = movementFilterOptions().map(function (option) {
+      return option.value;
+    });
+    var seen = {};
+    var result = [];
+    values.forEach(function (value) {
+      var clean = String(value || '').trim();
+      if (!clean || clean === 'all' || seen[clean] || allowed.indexOf(clean) === -1) {
+        return;
+      }
+      seen[clean] = true;
+      result.push(clean);
+    });
+    return result;
+  }
+
+  function movementFilterLabel(value) {
+    var option = movementFilterOptions().filter(function (candidate) {
+      return candidate.value === value;
+    })[0];
+    return option ? option.label : 'Todo';
   }
 
   function matchesMovementFilter(item, filter) {
@@ -534,7 +567,8 @@
       var meta = utils.formatMovementDateTime(item.fecha, item.hora);
       var title = item.motivo || 'Movimiento';
       return [
-        '<article class="movement-row movement-card">',
+        '<article class="movement-row movement-card' + movementKindClass(item) + '">',
+        '<span class="movement-kind-mark" aria-hidden="true"></span>',
         '<div class="movement-main">',
         '<div class="movement-card-top">',
         '<strong class="movement-title">' + utils.escapeHtml(title) + '</strong>',
@@ -551,6 +585,23 @@
         '</article>'
       ].join('');
     }).join('') + '</div>';
+  }
+
+  function movementKindClass(item) {
+    var type = String((item || {}).tipo || '');
+    if (type === 'Ingreso') {
+      return ' movement-kind-income';
+    }
+    if (utils.isFixedExpenseMovement(item)) {
+      return ' movement-kind-fixed';
+    }
+    if (type === 'Aporte a ahorro' || type === 'Aporte a meta') {
+      return ' movement-kind-saving';
+    }
+    if (type === 'Compra de wishlist') {
+      return ' movement-kind-wishlist';
+    }
+    return ' movement-kind-expense';
   }
 
   function renderGoals(state) {

@@ -696,3 +696,28 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.06`: OK, responde HTML con `v3.06`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.06`: OK, responde `finanzas-lcd-v114`.
 - Commit funcional `b0781f1` pusheado a `origin/main`.
+
+## 2026-06-27 - Movimientos en tarjetas horizontales v3.07
+
+### Objetivo
+- Redisenar cada registro de `Gastos` como tarjeta horizontal con motivo, monto, fecha/hora y acciones.
+
+### Cambios
+- La lista de movimientos ahora renderiza cada registro como tarjeta individual con textura LCD rayada, borde negro y sombra punteada lateral/inferior.
+- La primera fila muestra motivo a la izquierda y monto a la derecha.
+- La segunda fila muestra fecha y hora del registro.
+- Las acciones quedan en una columna compacta con botones `EDIT` y `DEL`; `EDIT` abre el formulario existente y `DEL` mantiene la confirmacion de borrado.
+- El contenedor de la lista queda transparente/sin marco para no anidar tarjetas visuales.
+- Se agregaron ajustes responsive para conservar lectura horizontal en pantallas chicas.
+- Se subio version visible a `v3.07` y service worker a `finanzas-lcd-v115`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.06`, `v3.06` y `finanzas-lcd-v114`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.07`: OK, responde HTML con `v3.07`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.07`: OK, responde `finanzas-lcd-v115`.
+- Commit funcional `e57e146` pusheado a `origin/main`.

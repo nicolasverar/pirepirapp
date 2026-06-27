@@ -50,12 +50,18 @@
 
   function syncActionKey(current) {
     var actionKey = window.FinanzasUtils.qs('#action-key');
+    var actionKeyLabel = window.FinanzasUtils.qs('#action-key .action-key-label');
     var keyZone = window.FinanzasUtils.qs('.key-zone');
-    var enabled = current === 'resumen' || current === 'metas';
+    var enabled = current === 'resumen' || current === 'metas' || current === 'gastos';
+    var label = current === 'gastos' ? 'FILTRAR' : 'AGREGAR';
     if (actionKey) {
       actionKey.hidden = !enabled;
       actionKey.disabled = !enabled;
       actionKey.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+      actionKey.setAttribute('aria-label', label);
+    }
+    if (actionKeyLabel) {
+      actionKeyLabel.textContent = label;
     }
     if (keyZone) {
       keyZone.classList.toggle('is-action-hidden', !enabled);

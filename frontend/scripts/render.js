@@ -462,7 +462,6 @@
       '<section class="system-window movement-list-panel">',
       filteredMovements.length ? renderMovementTable(filteredMovements, allMonths) : '<p class="empty-state">No hay movimientos para este filtro.</p>',
       '</section>',
-      renderMovementFilters(movements, activeFilter),
       '</section>'
     ].join('');
   }
@@ -476,24 +475,6 @@
     return selected.label + ' / ' + count + ' movimientos / ' + scope;
   }
 
-  function renderMovementFilters(movements, activeFilter) {
-    var options = movementFilterOptions();
-    return [
-      '<nav class="movement-filters movement-filter-dock" aria-label="Filtrar movimientos">',
-      options.map(function (option) {
-        var count = movementFilterCount(movements, option.value);
-        var activeClass = option.value === activeFilter ? ' is-active' : '';
-        return [
-          '<button class="filter-chip js-movement-filter' + activeClass + '" type="button" data-filter="' + utils.escapeHtml(option.value) + '">',
-          '<span>' + utils.escapeHtml(option.label) + '</span>',
-          '<small>' + utils.escapeHtml(count) + '</small>',
-          '</button>'
-        ].join('');
-      }).join(''),
-      '</nav>'
-    ].join('');
-  }
-
   function movementFilterOptions() {
     return [
       { value: 'all', label: 'Todo' },
@@ -503,10 +484,6 @@
       { value: 'saving', label: 'Ahorro/meta' },
       { value: 'fixed', label: 'Fijos' }
     ];
-  }
-
-  function movementFilterCount(movements, filter) {
-    return filterMovementsByType(movements || [], filter).length;
   }
 
   function filterMovementsByType(movements, filter) {
@@ -1142,12 +1119,6 @@
     if (refresh) {
       refresh.addEventListener('click', window.FinanzasApp.refresh);
     }
-
-    utils.qsa('.js-movement-filter', root).forEach(function (button) {
-      button.addEventListener('click', function () {
-        window.FinanzasState.setState({ movementFilter: button.getAttribute('data-filter') || 'all' });
-      });
-    });
 
     utils.qsa('.js-edit-movement', root).forEach(function (button) {
       button.addEventListener('click', function () {

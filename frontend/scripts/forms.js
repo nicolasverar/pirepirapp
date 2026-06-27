@@ -211,7 +211,11 @@
       return;
     }
     var view = window.FinanzasState.getState().currentView;
-    if (view !== 'resumen' && view !== 'metas') {
+    if (view !== 'resumen' && view !== 'metas' && view !== 'gastos') {
+      return;
+    }
+    if (view === 'gastos') {
+      openModal('FILTRAR', filterMenuContent(), bindMovementFilterMenu, 'action-menu-modal filter-action-modal');
       return;
     }
     if (view === 'metas') {
@@ -236,8 +240,9 @@
       '<div class="add-action-context-label"><span>' + utils.escapeHtml(label) + '</span><span>' + utils.escapeHtml(count) + '</span></div>',
       '<div class="add-action-list">',
       options.map(function (option, index) {
+        var activeClass = option.active ? ' is-active' : '';
         return [
-          '<button class="add-action-item" type="button" data-form-action="' + utils.escapeHtml(option.action) + '">',
+          '<button class="add-action-item' + activeClass + '" type="button" data-form-action="' + utils.escapeHtml(option.action) + '">',
           '<i class="add-action-num">' + utils.escapeHtml(String(index + 1).length === 1 ? '0' + (index + 1) : String(index + 1)) + '</i>',
           '<span><strong>' + utils.escapeHtml(option.title) + '</strong><span>' + utils.escapeHtml(option.detail) + '</span></span>',
           '</button>'
@@ -270,6 +275,92 @@
         }
       });
     });
+  }
+
+  function filterMenuContent() {
+    var options = movementFilterMenuOptions();
+    return [
+      '<div class="add-action-menu filter-action-menu">',
+      '<div class="add-action-context">',
+      '<div class="add-action-context-label"><span>MOVIMIENTOS</span><span>' + utils.escapeHtml(options.length + ' OPC.') + '</span></div>',
+      '<nav class="movement-filters movement-filter-dock" aria-label="Filtrar movimientos">',
+      options.map(function (option) {
+        var activeClass = option.active ? ' is-active' : '';
+        return [
+          '<button class="filter-chip js-filter-menu-option' + activeClass + '" type="button" data-filter="' + utils.escapeHtml(option.value) + '">',
+          '<span>' + utils.escapeHtml(option.label) + '</span>',
+          '<small>' + utils.escapeHtml(option.count) + '</small>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</nav>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function bindMovementFilterMenu(root) {
+    utils.qsa('.js-filter-menu-option', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.FinanzasState.setState({ movementFilter: button.getAttribute('data-filter') || 'all' });
+        closeModal();
+      });
+    });
+  }
+
+  function movementFilterMenuOptions() {
+    var state = window.FinanzasState.getState();
+    var movements = movementItemsFromData((state.data || {}).movimientos);
+    var active = state.movementFilter || 'all';
+    return movementFilterOptions().map(function (option) {
+      var count = movementFilterCount(movements, option.value);
+      return {
+        value: option.value,
+        label: option.label,
+        count: count,
+        active: option.value === active
+      };
+    });
+  }
+
+  function movementFilterOptions() {
+    return [
+      { value: 'all', label: 'Todo' },
+      { value: 'expense', label: 'Gastos' },
+      { value: 'income', label: 'Ingresos' },
+      { value: 'wishlist', label: 'Cosas' },
+      { value: 'saving', label: 'Ahorro/meta' },
+      { value: 'fixed', label: 'Fijos' }
+    ];
+  }
+
+  function movementFilterCount(movements, filter) {
+    return (movements || []).filter(function (item) {
+      return matchesMovementFilter(item, filter);
+    }).length;
+  }
+
+  function matchesMovementFilter(item, filter) {
+    var type = String((item || {}).tipo || '');
+    if (!filter || filter === 'all') {
+      return true;
+    }
+    if (filter === 'expense') {
+      return type === 'Gasto' && !utils.isFixedExpenseMovement(item);
+    }
+    if (filter === 'income') {
+      return type === 'Ingreso';
+    }
+    if (filter === 'wishlist') {
+      return type === 'Compra de wishlist';
+    }
+    if (filter === 'saving') {
+      return type === 'Aporte a ahorro' || type === 'Aporte a meta';
+    }
+    if (filter === 'fixed') {
+      return utils.isFixedExpenseMovement(item);
+    }
+    return true;
   }
 
   function openMovementForm(defaultType, existing, defaults) {
@@ -413,6 +504,9 @@
     }
     if (source && Array.isArray(source.movimientos)) {
       return source.movimientos;
+    }
+    if (source && Array.isArray(source.data)) {
+      return source.data;
     }
     return [];
   }

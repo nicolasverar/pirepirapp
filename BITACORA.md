@@ -841,3 +841,22 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.11`, `v3.11` y `finanzas-lcd-v119`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Legibilidad etiquetas de gastos v3.13
+
+### Objetivo
+- Corregir la etiqueta compacta bajo el motivo de cada gasto, que quedaba ilegible por bajo contraste.
+
+### Cambios
+- La etiqueta de tipo de movimiento pasa a fondo LCD claro con texto negro.
+- Se aumento levemente el tamano y padding de la etiqueta.
+- Se reforzo borde/sombra para mantener estetica pixelada sin oscurecer el texto.
+- Se subio version visible a `v3.13` y service worker a `finanzas-lcd-v121`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.12`, `v3.12` y `finanzas-lcd-v120`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

@@ -1416,18 +1416,21 @@ code {
 .movement-kind-label {
   width: max-content;
   max-width: 100%;
-  padding: 2px 4px;
-  color: #c4d08b;
+  padding: 3px 5px;
+  color: #071007;
   background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
-    #071007;
-  border: 1px solid #071007;
+    linear-gradient(180deg, rgba(196, 208, 139, 0.96), rgba(143, 160, 95, 0.92)),
+    #c4d08b;
+  border: 2px solid #071007;
   border-radius: 3px;
+  box-shadow:
+    inset 1px 1px 0 rgba(230, 238, 166, 0.3),
+    1px 1px 0 rgba(7, 16, 7, 0.38);
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
-  font-size: 0.54rem;
+  font-size: 0.6rem;
   font-weight: 900;
   line-height: 1;
 }

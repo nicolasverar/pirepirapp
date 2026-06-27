@@ -5466,8 +5466,22 @@ body::-webkit-scrollbar,
   width: 100%;
   min-height: 18px;
   overflow: hidden;
-  padding: 1px 0 0;
+  padding: 7px 0 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+.post-salary-alert::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.62) 0 4px, transparent 4px 8px);
+  opacity: 0.72;
+  pointer-events: none;
+  animation: post-salary-letter-blink 0.64s steps(2, end) infinite;
 }
 
 .post-salary-pixel-svg {
@@ -5483,7 +5497,7 @@ body::-webkit-scrollbar,
 
 .post-salary-pixel-active {
   fill: #071007;
-  animation: post-salary-letter-blink 1.08s steps(2, end) infinite;
+  animation: post-salary-letter-blink 0.64s steps(2, end) infinite;
 }
 
 .post-salary-pixel-ghost {
@@ -5502,6 +5516,7 @@ body::-webkit-scrollbar,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .post-salary-alert::before,
   .post-salary-pixel-active {
     animation: none;
   }

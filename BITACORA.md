@@ -748,3 +748,29 @@
 - Busqueda activa en `frontend` de `v=3.07`, `v3.07` y `finanzas-lcd-v115`: sin resultados.
 - `npm.cmd run build`: no aplica; el proyecto no tiene script `build`.
 - `npm.cmd run cap:build:debug`: bloqueado en esta maquina porque no hay `java` en `PATH` ni `JAVA_HOME` configurado.
+
+## 2026-06-27 - Filtros por mes y wishlist desde gasto v3.09
+
+### Objetivo
+- Agregar filtro por meses en la seccion `Gastos`, acumulable junto con los filtros de tipo.
+- Quitar de la linea de estado el conteo textual de movimientos.
+- Permitir registrar una compra de `Cosas que quiero` desde el campo `Motivo` del formulario de gasto.
+
+### Cambios
+- El menu `FILTRAR` ahora separa filtros por `Tipo` y por `Mes`.
+- Los filtros de tipo se acumulan como union y los filtros de mes cruzan el resultado, por ejemplo `Gastos + Junio 2026`.
+- La linea bajo `MOVIMIENTOS` ya no muestra `X movimientos`; solo muestra filtros activos unidos por `+`.
+- El campo `Motivo` del formulario de gasto mantiene escritura libre por defecto y agrega un boton `COSAS` cuando hay wishlist activa.
+- Al elegir una cosa de wishlist, el movimiento pasa a `Compra de wishlist`, se guarda `idRelacionado`, se autocompleta motivo y monto aproximado, dejando el monto editable.
+- Se agrego opcion `LIBRE` para volver al modo de motivo manual.
+- Se subio version visible a `v3.09` y service worker a `finanzas-lcd-v117`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.08`, `v3.08` y `finanzas-lcd-v116`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

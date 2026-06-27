@@ -246,6 +246,14 @@
     grid-template-columns: 1fr;
   }
 
+  .ticket-form-modal .movement-motive-field {
+    grid-template-columns: 1fr;
+  }
+
+  .motive-wishlist-panel {
+    grid-column: 1;
+  }
+
   .add-action-list {
     grid-template-columns: 1fr;
   }

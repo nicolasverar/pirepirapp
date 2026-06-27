@@ -117,6 +117,36 @@
     ].join('');
   }
 
+  function movementMotiveField(value, wishlistItems) {
+    var items = Array.isArray(wishlistItems) ? wishlistItems : [];
+    if (!items.length) {
+      return field('Motivo', 'motivo', 'text', value || '', 'required maxlength="120" autocomplete="off" data-movement-motive');
+    }
+    return [
+      '<div class="field movement-motive-field">',
+      '<span>Motivo</span>',
+      '<div class="movement-motive-control">',
+      '<input name="motivo" type="text" value="' + utils.escapeHtml(value || '') + '" required maxlength="120" autocomplete="off" data-movement-motive>',
+      '<button class="motive-wishlist-toggle" type="button" data-wishlist-picker-toggle>COSAS</button>',
+      '</div>',
+      '<div class="motive-wishlist-panel" hidden data-wishlist-picker-list>',
+      '<button class="motive-wishlist-item motive-wishlist-free" type="button" data-wishlist-free>',
+      '<strong>LIBRE</strong>',
+      '<small>Escribir motivo</small>',
+      '</button>',
+      items.map(function (item) {
+        return [
+          '<button class="motive-wishlist-item" type="button" data-wishlist-picker-id="' + utils.escapeHtml(item.id || '') + '">',
+          '<strong>' + utils.escapeHtml(item.titulo || 'Cosa que quiero') + '</strong>',
+          '<small>' + utils.escapeHtml(utils.formatMoney(item.costoAproximado || 0)) + '</small>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
   function bindSalaryShortcut(root, config, motiveInput, amountInput) {
     var button = utils.qs('[data-fill-salary]', root);
     if (!button) {
@@ -278,7 +308,8 @@
   }
 
   function filterMenuContent() {
-    var options = movementFilterMenuOptions();
+    var groups = movementFilterMenuOptions();
+    var options = groups.typeOptions.concat(groups.monthOptions);
     var activeCount = options.filter(function (option) {
       return option.value !== 'all' && option.active;
     }).length;
@@ -287,7 +318,18 @@
       '<div class="add-action-menu filter-action-menu">',
       '<div class="add-action-context">',
       '<div class="add-action-context-label"><span>MOVIMIENTOS</span><span>' + utils.escapeHtml(status) + '</span></div>',
-      '<nav class="movement-filters movement-filter-dock" aria-label="Filtrar movimientos">',
+      renderMovementFilterGroup('Tipo', groups.typeOptions, 'movement-filter-types'),
+      groups.monthOptions.length ? renderMovementFilterGroup('Mes', groups.monthOptions, 'movement-filter-months') : '',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderMovementFilterGroup(label, options, extraClass) {
+    return [
+      '<div class="movement-filter-group">',
+      '<div class="movement-filter-group-label">' + utils.escapeHtml(label) + '</div>',
+      '<nav class="movement-filters movement-filter-dock ' + utils.escapeHtml(extraClass || '') + '" aria-label="Filtrar movimientos por ' + utils.escapeHtml(label.toLowerCase()) + '">',
       options.map(function (option) {
         var activeClass = option.active ? ' is-active' : '';
         return [
@@ -298,7 +340,6 @@
         ].join('');
       }).join(''),
       '</nav>',
-      '</div>',
       '</div>'
     ].join('');
   }
@@ -327,19 +368,65 @@
   function movementFilterMenuOptions() {
     var state = window.FinanzasState.getState();
     var movements = movementItemsFromData((state.data || {}).movimientos);
+    var config = (state.data || {}).config || {};
     var active = state.movementFilter || 'all';
-    return movementFilterOptions().map(function (option) {
-      var count = movementFilterCount(movements, option.value);
+    return {
+      typeOptions: movementFilterOptions().map(function (option) {
+        var count = movementFilterCount(movements, option.value);
+        return {
+          value: option.value,
+          label: option.label,
+          count: count,
+          active: movementFiltersInclude(active, option.value)
+        };
+      }),
+      monthOptions: movementMonthFilterOptions(movements, config).map(function (option) {
+        var count = movementFilterCount(movements, option.value);
+        return {
+          value: option.value,
+          label: option.label,
+          count: count,
+          active: movementFiltersInclude(active, option.value)
+        };
+      })
+    };
+  }
+
+  function movementMonthFilterOptions(movements, config) {
+    var seen = {};
+    var months = [];
+    function addMonth(value) {
+      var month = String(value || '').slice(0, 7);
+      if (!/^\d{4}-\d{2}$/.test(month) || seen[month]) {
+        return;
+      }
+      seen[month] = true;
+      months.push(month);
+    }
+
+    addMonth((config || {}).mesActual || utils.currentMonth());
+    (movements || []).forEach(function (item) {
+      addMonth(movementMonth(item));
+    });
+
+    months.sort().reverse();
+    return months.map(function (month) {
       return {
-        value: option.value,
-        label: option.label,
-        count: count,
-        active: movementFiltersInclude(active, option.value)
+        value: 'month:' + month,
+        label: movementMonthLabel(month)
       };
     });
   }
 
-  function movementFilterOptions() {
+  function movementMonthLabel(value) {
+    var monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    var text = String(value || '');
+    var index = Number(text.slice(5, 7)) - 1;
+    var label = monthNames[index] || text.slice(5, 7);
+    return label + ' ' + text.slice(2, 4);
+  }
+
+  function movementTypeFilterOptions() {
     return [
       { value: 'all', label: 'Todo' },
       { value: 'expense', label: 'Gastos' },
@@ -350,6 +437,10 @@
     ];
   }
 
+  function movementFilterOptions() {
+    return movementTypeFilterOptions();
+  }
+
   function movementFilterCount(movements, filter) {
     return (movements || []).filter(function (item) {
       return matchesMovementFilter(item, filter);
@@ -358,20 +449,26 @@
 
   function normalizeMovementFilters(filter) {
     var values = Array.isArray(filter) ? filter : [filter || 'all'];
-    var allowed = movementFilterOptions().map(function (option) {
+    var allowed = movementTypeFilterOptions().map(function (option) {
       return option.value;
     });
     var seen = {};
     var result = [];
     values.forEach(function (value) {
       var clean = String(value || '').trim();
-      if (!clean || clean === 'all' || seen[clean] || allowed.indexOf(clean) === -1) {
+      if (!clean || clean === 'all' || seen[clean]) {
         return;
       }
-      seen[clean] = true;
-      result.push(clean);
+      if (isMonthFilter(clean) || allowed.indexOf(clean) !== -1) {
+        seen[clean] = true;
+        result.push(clean);
+      }
     });
     return result;
+  }
+
+  function isMonthFilter(value) {
+    return /^month:\d{4}-\d{2}$/.test(String(value || ''));
   }
 
   function movementFiltersInclude(active, value) {
@@ -399,6 +496,9 @@
     var type = String((item || {}).tipo || '');
     if (!filter || filter === 'all') {
       return true;
+    }
+    if (isMonthFilter(filter)) {
+      return movementMonth(item) === String(filter).slice(6, 13);
     }
     if (filter === 'expense') {
       return type === 'Gasto' && !utils.isFixedExpenseMovement(item);
@@ -451,12 +551,13 @@
     var relatedControl = useRelatedSelect
       ? select('Seleccionar', 'idRelacionado', relatedOptions, initialRelatedId, 'data-related-select')
       : '<input name="idRelacionado" type="hidden" value="' + utils.escapeHtml(initialRelatedId || '') + '">';
+    var showWishlistPicker = !isIncome && !useTypeSelect && Array.isArray(data.wishlist) && data.wishlist.length;
     var html = [
       '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       typeControl,
       isIncome ? incomeSalaryShortcut() : '',
-      field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off" data-movement-motive'),
+      movementMotiveField(movement.motivo || '', showWishlistPicker ? data.wishlist : []),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric" data-movement-amount'),
       relatedControl,
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
@@ -471,6 +572,7 @@
     openModal(isIncome ? 'INGRESO' : 'GASTO', html, function (root) {
       var typeSelect = utils.qs('[data-movement-type]', root);
       var relatedSelect = utils.qs('[data-related-select]', root);
+      var relatedField = utils.qs('[name="idRelacionado"]', root);
       var motiveInput = utils.qs('[data-movement-motive]', root);
       var amountInput = utils.qs('[data-movement-amount]', root);
       if (relatedSelect) {
@@ -495,6 +597,7 @@
           autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
         });
       }
+      bindWishlistMotivePicker(root, data, typeSelect, motiveInput, amountInput, relatedField);
 
       bindForm(root, '#movement-form', function (form) {
         var payload = utils.formDataToObject(form);
@@ -536,6 +639,55 @@
       return 'Ingreso';
     }
     return fallbackCategory || 'Otros';
+  }
+
+  function bindWishlistMotivePicker(root, data, typeControl, motiveInput, amountInput, relatedField) {
+    var toggle = utils.qs('[data-wishlist-picker-toggle]', root);
+    var panel = utils.qs('[data-wishlist-picker-list]', root);
+    if (!toggle || !panel || !typeControl || !motiveInput) {
+      return;
+    }
+
+    toggle.addEventListener('click', function () {
+      panel.hidden = !panel.hidden;
+    });
+
+    var freeButton = utils.qs('[data-wishlist-free]', panel);
+    if (freeButton) {
+      freeButton.addEventListener('click', function () {
+        typeControl.value = 'Gasto';
+        if (relatedField) {
+          relatedField.value = '';
+        }
+        toggle.classList.remove('is-active');
+        panel.hidden = true;
+        motiveInput.focus();
+      });
+    }
+
+    utils.qsa('[data-wishlist-picker-id]', panel).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var item = findById((data || {}).wishlist || [], button.getAttribute('data-wishlist-picker-id'));
+        var amount = utils.normalizeAmount(item && item.costoAproximado);
+        if (!item) {
+          return;
+        }
+        typeControl.value = 'Compra de wishlist';
+        if (relatedField) {
+          relatedField.value = item.id || '';
+        }
+        motiveInput.value = item.titulo || motiveInput.value || 'Cosa que quiero';
+        if (amount > 0 && amountInput) {
+          amountInput.value = amount;
+        }
+        toggle.classList.add('is-active');
+        panel.hidden = true;
+        if (amountInput) {
+          amountInput.focus();
+          amountInput.select();
+        }
+      });
+    });
   }
 
   function isDuplicateSalaryPayload(data, payload) {

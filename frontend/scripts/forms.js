@@ -210,6 +210,9 @@
       return;
     }
     var view = window.FinanzasState.getState().currentView;
+    if (view !== 'resumen' && view !== 'metas') {
+      return;
+    }
     if (view === 'metas') {
       openModal('AGREGAR', actionMenuContent('METAS', '3 OPC.', [
         { action: 'future', title: 'Ahorro futuro', detail: 'Mensual' },

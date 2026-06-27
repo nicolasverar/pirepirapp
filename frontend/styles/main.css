@@ -4005,6 +4005,11 @@ body::-webkit-scrollbar,
   font-weight: 900;
 }
 
+.key-zone.is-action-hidden {
+  gap: 8px;
+  padding-top: 9px;
+}
+
 .key-zone .action-key-label {
   color: inherit;
   background: transparent;

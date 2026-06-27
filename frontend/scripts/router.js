@@ -45,6 +45,21 @@
     window.FinanzasUtils.qsa('[data-view]').forEach(function (button) {
       button.classList.toggle('is-active', button.getAttribute('data-view') === current);
     });
+    syncActionKey(current);
+  }
+
+  function syncActionKey(current) {
+    var actionKey = window.FinanzasUtils.qs('#action-key');
+    var keyZone = window.FinanzasUtils.qs('.key-zone');
+    var enabled = current === 'resumen' || current === 'metas';
+    if (actionKey) {
+      actionKey.hidden = !enabled;
+      actionKey.disabled = !enabled;
+      actionKey.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+    }
+    if (keyZone) {
+      keyZone.classList.toggle('is-action-hidden', !enabled);
+    }
   }
 
   window.FinanzasRouter = {

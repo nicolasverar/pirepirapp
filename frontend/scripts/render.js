@@ -808,7 +808,6 @@
       }).join(''),
       '</div>',
       '<div class="fixed-expense-total" data-fixed-total></div>',
-      '<button class="lcd-button js-add-fixed-expense" type="button">Agregar gasto fijo</button>',
       '</section>'
     ].join('');
   }
@@ -1204,7 +1203,6 @@
   function bindFixedExpenseEditor(form) {
     var list = utils.qs('[data-fixed-list]', form);
     var salaryInput = utils.qs('[data-salary-input]', form);
-    var addButton = utils.qs('.js-add-fixed-expense', form);
     if (!list || !salaryInput) {
       return;
     }
@@ -1258,13 +1256,6 @@
       });
       updateFixedTotal(form);
     });
-    if (addButton) {
-      addButton.addEventListener('click', function () {
-        list.insertAdjacentHTML('beforeend', renderFixedExpenseRow({}, utils.qsa('[data-fixed-row]', list).length, salary()));
-        bindRow(utils.qs('[data-fixed-row]:last-child', list));
-        updateFixedTotal(form);
-      });
-    }
     updateFixedTotal(form);
   }
 

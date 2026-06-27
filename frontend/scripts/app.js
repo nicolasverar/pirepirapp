@@ -28,6 +28,10 @@
   function bindGlobalActions() {
     var actionKey = utils.qs('#action-key');
     actionKey.addEventListener('click', function () {
+      var view = window.FinanzasState.getState().currentView;
+      if (view !== 'resumen' && view !== 'metas') {
+        return;
+      }
       window.FinanzasForms.actionMenu();
     });
 

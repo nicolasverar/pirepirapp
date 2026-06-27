@@ -275,3 +275,20 @@
 - Iconos PNG verificados: `cornerA=0` y `centerA=255` en `logo-circle.png`, `icon-192.png`, `icon-512.png` y launcher Android principal.
 - `npm run cap:copy` quedo bloqueado en esta maquina por `EPERM` al reemplazar `android/app/src/main/assets/public/cordova_plugins.js`, carpeta ignorada por git y marcada como `ReparsePoint` de OneDrive. En la PC de Android, correr `npm run cap:copy` despues del pull antes de ejecutar desde Android Studio.
 - `npm run cap:build:debug` quedo bloqueado en esta maquina porque no hay `java` en `PATH` ni `JAVA_HOME` configurado.
+
+## 2026-06-27 - Agregar solo en resumen y metas v2.89
+
+### Objetivo
+- Quitar cualquier boton de agregar en las secciones `Gastos` y `Configuracion`.
+
+### Cambios
+- El boton fisico `AGREGAR` ahora se muestra y funciona solo en `Resumen` y `Metas`.
+- El menu `AGREGAR` ignora clicks fuera de esas dos secciones.
+- Se retiro el boton interno `Agregar gasto fijo` de `Configuracion`.
+- Se subio version visible a `v2.89` y service worker a `finanzas-lcd-v97`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, router, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `Agregar gasto fijo`, `js-add-fixed-expense`, `v2.88`, `2.88` y `finanzas-lcd-v96`: sin resultados.

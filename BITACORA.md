@@ -178,3 +178,21 @@
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda de encabezado/cache anterior en frontend: sin resultados activos.
+
+## 2026-06-27 - Volver particion disponible v2.84
+
+### Objetivo
+- Reemplazar la categoria visual `Superfluos` por `Disponible` en la particion del sueldo.
+
+### Cambios
+- Las categorias base vuelven a incluir `Disponible`.
+- La torta y leyenda muestran `Disponible` y el badge abreviado `DISP.`.
+- El resumen local conserva el calculo del tramo libre del sueldo y expone la clave de particion como `disponible`.
+- Se subio version visible a `v2.84` y service worker a `finanzas-lcd-v92`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda de `Superfluos`, `SUPERF`, `v2.83` y `finanzas-lcd-v91` en frontend/scripts/docs activos: sin resultados.
+- `npm run cap:sync`: copio assets web a `android/app/src/main/assets/public`, pero la fase final quedo bloqueada en esta maquina por placeholders/reparse points de OneDrive en archivos generados e ignorados por git. En la PC de Android, ejecutar `npm run cap:sync` despues del pull.

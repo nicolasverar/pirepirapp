@@ -52,7 +52,7 @@ async function run() {
   await window.FinanzasApi.request('updateConfig', {
     sueldoMensual: 5000000,
     mesActual: '2026-05',
-    categorias: ['Alimentacion', 'Transporte', 'Superfluos', 'Wishlist', 'Otros'],
+    categorias: ['Alimentacion', 'Transporte', 'Disponible', 'Wishlist', 'Otros'],
     gastosFijos: [
       { nombre: 'Alquiler', monto: 1000000 },
       { categoria: 'Internet', monto: 150000 }
@@ -71,7 +71,7 @@ async function run() {
   await window.FinanzasApi.request('createMovement', {
     tipo: 'Gasto',
     motivo: 'Cierre abril',
-    categoria: 'Superfluos',
+    categoria: 'Disponible',
     monto: 4000000,
     fecha: '2026-04-30',
     hora: '20:00:00'
@@ -112,7 +112,7 @@ async function run() {
   assert.strictEqual(claim.resumen.sueldoCobrado, 5000000, 'Debe registrar sueldo cobrado');
   assert.strictEqual(claim.resumen.disponible, 6000000, 'Al cobrar debe sumar sueldo nuevo y remanente');
   assert.strictEqual(claim.resumen.ahorrosPlanificados, 650000, 'Ahorros planificados vienen de futuro + metas');
-  assert.strictEqual(claim.resumen.superfluosPlanificados, 3200000, 'Superfluos completan la particion del sueldo');
+  assert.strictEqual(claim.resumen.superfluosPlanificados, 3200000, 'Disponible completa la particion del sueldo');
   assert.strictEqual(claim.resumen.recordatoriosPendientes.length, 4, 'Post-cobro debe recordar fijos, futuro y metas');
 
   const secondClaim = await window.FinanzasApi.request('claimSalary', {
@@ -225,7 +225,7 @@ async function run() {
   assert.strictEqual(summary.cantidadMovimientos, 8);
   assert.strictEqual(summary.recordatoriosPendientes.length, 0, 'Panel post-cobro debe vaciarse al cumplir compromisos');
   assert.strictEqual(summary.recordatoriosCompletos, true, 'Recordatorios deben quedar completos');
-  assert.deepStrictEqual(summary.particionSueldo.map((item) => item.clave), ['fijos', 'ahorros', 'superfluos']);
+  assert.deepStrictEqual(summary.particionSueldo.map((item) => item.clave), ['fijos', 'ahorros', 'disponible']);
 
   const refreshedSaving = bootstrap.ahorrosFuturo.find((item) => item.id === saving.id);
   assert.strictEqual(refreshedSaving.montoAcumulado, 350000, 'Aporte debe acumular ahorro');

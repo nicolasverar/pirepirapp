@@ -231,7 +231,7 @@
   }
 
   function normalizeCategories(items) {
-    var fallback = ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Superfluos', 'Ahorros', 'Metas', 'Wishlist', 'Otros'];
+    var fallback = ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Disponible', 'Ahorros', 'Metas', 'Wishlist', 'Otros'];
     var seen = {};
     return (Array.isArray(items) && items.length ? items : fallback)
       .map(function (item) { return String(item || '').trim(); })
@@ -769,8 +769,8 @@
         porcentaje: Math.round((savings / total) * 10000) / 100
       },
       {
-        clave: 'superfluos',
-        nombre: 'Superfluos',
+        clave: 'disponible',
+        nombre: 'Disponible',
         monto: superfluous,
         porcentaje: Math.round((superfluous / total) * 10000) / 100
       }

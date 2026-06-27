@@ -761,7 +761,7 @@
     return [
       { clave: 'fijos', nombre: 'Gastos fijos', monto: fixed, porcentaje: Math.round((fixed / total) * 10000) / 100 },
       { clave: 'ahorros', nombre: 'Ahorros', monto: savings, porcentaje: Math.round((savings / total) * 10000) / 100 },
-      { clave: 'superfluos', nombre: 'Superfluos', monto: superfluous, porcentaje: Math.round((superfluous / total) * 10000) / 100 }
+      { clave: 'disponible', nombre: 'Disponible', monto: superfluous, porcentaje: Math.round((superfluous / total) * 10000) / 100 }
     ].filter(function (item) {
       return item.monto > 0;
     });

@@ -14,7 +14,7 @@
         sueldoMensual: 0,
         moneda: 'PYG',
         mesActual: window.FinanzasUtils.currentMonth(),
-        categorias: ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Superfluos', 'Ahorros', 'Metas', 'Wishlist', 'Otros'],
+        categorias: ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Disponible', 'Ahorros', 'Metas', 'Wishlist', 'Otros'],
         gastosFijos: [
           { categoria: 'Alimentacion', monto: 0 },
           { categoria: 'Transporte', monto: 0 }

@@ -847,7 +847,7 @@
     var excess = Math.max(0, utils.normalizeAmount((summary || {}).excesoParticion || 0));
     var superfluous = utils.normalizeAmount((summary || {}).superfluosPlanificados || 0);
     var superfluousPercent = salary ? Math.round((superfluous / salary) * 10000) / 100 : 0;
-    var titleBadge = excess > 0 ? 'EXCESO' : 'SUPERF. ' + (formatPercentInput(superfluousPercent) || '0') + '%';
+    var titleBadge = excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(superfluousPercent) || '0') + '%';
 
     return [
       '<article class="system-window salary-partition-card salary-partition-aaa' + (excess > 0 ? ' is-over-budget' : '') + '">',
@@ -879,7 +879,7 @@
     return [
       { label: 'Gastos fijos', amount: fixed, className: 'segment-0' },
       { label: 'Ahorros', amount: savings, className: 'segment-1' },
-      { label: 'Superfluos', amount: superfluous, className: 'segment-available' }
+      { label: 'Disponible', amount: superfluous, className: 'segment-available' }
     ].filter(function (item) {
       return item.amount > 0;
     });

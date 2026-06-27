@@ -146,11 +146,14 @@
     if (!(summary || {}).sueldoRegistrado || !pending.length) {
       return '';
     }
+    var message = 'COBRO RECIENTE DETECTADO DISTRIBUIR INGRESO';
     return [
       '<div class="post-salary-panel">',
-      '<div class="post-salary-pixel-line post-salary-pixel-command">',
-      renderSummaryPixelSvg('DISTRIBUIR', 'label'),
-      renderSummaryPixelSvg('INGRESO RECIENTE', 'label'),
+      '<div class="post-salary-belt" aria-label="' + utils.escapeHtml(message) + '">',
+      '<div class="post-salary-belt-track">',
+      '<span>' + utils.escapeHtml(message) + '</span>',
+      '<span aria-hidden="true">' + utils.escapeHtml(message) + '</span>',
+      '</div>',
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
@@ -248,6 +251,7 @@
     '.': ['00000', '00000', '00000', '00000', '00000', '01100', '01100'],
     'A': ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
     'B': ['11110', '10001', '10001', '11110', '10001', '10001', '11110'],
+    'C': ['01111', '10000', '10000', '10000', '10000', '10000', '01111'],
     'D': ['11110', '10001', '10001', '10001', '10001', '10001', '11110'],
     'E': ['11111', '10000', '10000', '11110', '10000', '10000', '11111'],
     'G': ['01111', '10000', '10000', '10011', '10001', '10001', '01111'],
@@ -260,6 +264,7 @@
     'O': ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
     'R': ['11110', '10001', '10001', '11110', '10100', '10010', '10001'],
     'S': ['01111', '10000', '10000', '01110', '00001', '00001', '11110'],
+    'T': ['11111', '00100', '00100', '00100', '00100', '00100', '00100'],
     'U': ['10001', '10001', '10001', '10001', '10001', '10001', '01110'],
     'V': ['10001', '10001', '10001', '10001', '10001', '01010', '00100'],
     'Y': ['10001', '10001', '01010', '00100', '00100', '00100', '00100']

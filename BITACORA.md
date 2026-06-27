@@ -160,3 +160,21 @@
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda de encabezado/cache anterior en frontend: sin resultados activos.
+
+## 2026-06-27 - Cinta transportadora post-cobro v2.83
+
+### Objetivo
+- Reforzar visualmente el estado de cobro reciente con una cinta transportadora en loop.
+- Corregir letras faltantes del alfabeto pixelado.
+
+### Cambios
+- El panel post-cobro ahora muestra una cinta animada con `COBRO RECIENTE DETECTADO DISTRIBUIR INGRESO`.
+- Se agregaron glyphs pixelados para `C` y `T`.
+- Se mantuvo el listado de pendientes debajo de la cinta.
+- Se subio version visible a `v2.83` y service worker a `finanzas-lcd-v91`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda de encabezado/cache anterior en frontend: sin resultados activos.

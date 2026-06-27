@@ -121,7 +121,10 @@
     return [
       '<div class="post-salary-panel">',
       '<div class="post-salary-alert" aria-label="' + utils.escapeHtml(message) + '">',
-      alertText,
+      '<div class="post-salary-marquee-track">',
+      '<span class="post-salary-marquee-copy">' + alertText + '</span>',
+      '<span class="post-salary-marquee-copy" aria-hidden="true">' + alertText + '</span>',
+      '</div>',
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),

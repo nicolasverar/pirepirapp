@@ -5461,64 +5461,87 @@ body::-webkit-scrollbar,
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-width: 0;
   width: 100%;
-  min-height: 18px;
+  min-height: 24px;
   overflow: hidden;
-  padding: 7px 0 0;
+  padding: 6px 0;
   -webkit-tap-highlight-color: transparent;
 }
 
-.post-salary-alert::before {
+.post-salary-alert::before,
+.post-salary-alert::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
   height: 2px;
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.62) 0 4px, transparent 4px 8px);
   opacity: 0.72;
   pointer-events: none;
-  animation: post-salary-letter-blink 0.64s steps(2, end) infinite;
+}
+
+.post-salary-alert::before {
+  top: 0;
+}
+
+.post-salary-alert::after {
+  bottom: 0;
+}
+
+.post-salary-marquee-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-width: 200%;
+  animation: post-salary-marquee-right 8.5s linear infinite;
+  will-change: transform;
+}
+
+.post-salary-marquee-copy {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50%;
+  padding: 0 28px;
 }
 
 .post-salary-pixel-svg {
   display: block;
-  flex: 0 1 auto;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  max-height: 20px;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  height: 17px;
   overflow: visible;
   image-rendering: pixelated;
 }
 
 .post-salary-pixel-active {
   fill: #071007;
-  animation: post-salary-letter-blink 0.64s steps(2, end) infinite;
 }
 
 .post-salary-pixel-ghost {
   fill: rgba(7, 16, 7, 0.12);
 }
 
-@keyframes post-salary-letter-blink {
-  0%,
-  100% {
-    opacity: 1;
+@keyframes post-salary-marquee-right {
+  from {
+    transform: translateX(-50%);
   }
 
-  46% {
-    opacity: 0.28;
+  to {
+    transform: translateX(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .post-salary-alert::before,
-  .post-salary-pixel-active {
+  .post-salary-marquee-track {
     animation: none;
+    transform: translateX(0);
   }
 }
 

@@ -249,17 +249,33 @@
     openModal('CONEXION', [
       '<form class="lcd-form" id="access-form">',
       '<p class="form-error" hidden></p>',
-      '<p>Conecta esta instalacion con tu Apps Script.</p>',
-      field('URL Apps Script', 'apiUrl', 'url', window.FinanzasApi.getApiUrl(), 'required inputmode="url" autocomplete="url" placeholder="https://script.google.com/macros/s/.../exec"'),
-      field('Clave', 'authToken', 'password', '', 'required autocomplete="current-password"'),
+      '<p>La APK guarda localmente en este dispositivo. Apps Script queda como modo legado opcional.</p>',
+      '<div class="form-actions">',
+      '<button class="lcd-button primary" type="button" data-use-local>Usar local</button>',
+      '</div>',
+      field('URL Apps Script', 'apiUrl', 'url', window.FinanzasApi.getApiUrl(), 'inputmode="url" autocomplete="url" placeholder="https://script.google.com/macros/s/.../exec"'),
+      field('Clave', 'authToken', 'password', '', 'autocomplete="current-password"'),
       '<label class="check-field"><input name="remember" type="checkbox" value="1"><span>Recordar en este dispositivo</span></label>',
       '<div class="form-actions">',
       '<button class="lcd-button primary" type="submit">Conectar</button>',
       '</div>',
       '</form>'
     ].join(''), function (root) {
+      var localButton = utils.qs('[data-use-local]', root);
+      if (localButton) {
+        localButton.addEventListener('click', function () {
+          window.FinanzasApi.useLocalMode();
+          closeModal();
+          window.FinanzasApp.refresh();
+        });
+      }
       bindForm(root, '#access-form', function (form) {
         var payload = utils.formDataToObject(form);
+        if (!payload.apiUrl) {
+          window.FinanzasApi.useLocalMode();
+          closeModal();
+          return window.FinanzasApp.refresh();
+        }
         window.FinanzasApi.configureConnection(payload.apiUrl, payload.authToken, payload.remember === '1');
         closeModal();
         return window.FinanzasApp.refresh();

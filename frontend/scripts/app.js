@@ -18,12 +18,6 @@
     bindGlobalActions();
     registerServiceWorker();
     loadMovementGuards();
-    if (!window.FinanzasApi.hasBackend() || !window.FinanzasApi.getAuthToken()) {
-      window.FinanzasRender.render();
-      setStatus('Conectar');
-      window.FinanzasForms.openAccessForm();
-      return;
-    }
     var hadCache = loadCachedBootstrap();
     if (!hadCache) {
       window.FinanzasRender.render();
@@ -133,7 +127,7 @@
         applyMutationResult(action, data);
         window.FinanzasState.setState({ syncStatus: 'Sincronizado', error: '' });
         toast('Guardado');
-        if (isMovementRoute(action)) {
+        if (isMovementRoute(action) && !(window.FinanzasApi.isLocalMode && window.FinanzasApi.isLocalMode())) {
           scheduleMovementRefresh();
         } else {
           refresh({ background: true, silent: true });

@@ -38,5 +38,28 @@
 - Abrir `android/` en Android Studio en la maquina de pruebas.
 - Ejecutar Gradle sync desde Android Studio.
 - Generar APK debug.
-- Implementar almacenamiento local IndexedDB para que la APK deje de pedir URL/token.
 - Definir si el backend legacy en `backend/` se elimina despues de completar la migracion.
+
+## 2026-06-26 - Modo local IndexedDB v2.77
+
+### Objetivo
+- Hacer que la APK arranque y guarde datos sin depender de Apps Script, URL, token, Sheets ni Drive.
+
+### Cambios
+- Se agrego `frontend/scripts/local-store.js` con almacenamiento local IndexedDB y fallback a `localStorage`.
+- `frontend/scripts/api.js` ahora usa modo local por defecto y conserva Apps Script solo como legado opcional.
+- La app ya no abre el modal de conexion al iniciar.
+- Se cubren configuracion, movimientos, gastos fijos, ahorros, metas, wishlist, conversion a meta y fotos locales.
+- Se subio la version visible a `v2.77` y se actualizo el service worker a `finanzas-lcd-v85`.
+- Android Gradle ejecuta `npm run cap:copy` antes de compilar para copiar cambios web al APK.
+
+### Verificacion
+- `node --check` paso para `utils.js`, `state.js`, `local-store.js`, `api.js`, `local-cache.js`, `router.js`, `lcd-image.js`, `forms.js`, `render.js`, `app.js` y `service-worker.js`.
+- Prueba logica Node: `LOCAL_STORE_OK` para bootstrap, config, movimiento, wishlist con foto y conversion a meta.
+- Prueba logica Node: `API_MODE_OK` para modo local por defecto y vuelta desde remoto a local.
+- En esta PC `npm run cap:copy` volvio a fallar por `EPERM` de OneDrive sobre `android/app/src/main/assets/public/.nojekyll`.
+
+### Pendientes
+- Ejecutar `npm run cap:sync` o directamente `Run` en Android Studio en la PC Android, donde el proyecto no esta bajo este OneDrive.
+- Probar `Run` desde Android Studio en el emulador.
+- Crear un gasto, una meta con foto y una wishlist para confirmar persistencia local.

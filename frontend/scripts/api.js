@@ -4,6 +4,7 @@
   var API_URL_KEY = 'finanzasApiUrl';
   var TOKEN_SESSION_KEY = 'finanzasApiToken';
   var TOKEN_LOCAL_KEY = 'finanzasApiTokenRemembered';
+  var MODE_KEY = 'finanzasDataMode';
 
   function getStoredValue(storage, key) {
     try {
@@ -38,11 +39,17 @@
   }
 
   function hasBackend() {
+    if (isLocalMode()) {
+      return Boolean(window.FinanzasLocalStore);
+    }
     var url = getApiUrl();
     return Boolean(url && url.indexOf('PEGAR_URL') === -1);
   }
 
   function getAuthToken() {
+    if (isLocalMode()) {
+      return 'local-device';
+    }
     return getStoredValue(localStorage, TOKEN_LOCAL_KEY) || getStoredValue(sessionStorage, TOKEN_SESSION_KEY);
   }
 
@@ -65,14 +72,34 @@
   function configureConnection(apiUrl, token, remember) {
     setApiUrl(apiUrl);
     setAuthToken(token, remember);
+    setStoredValue(localStorage, MODE_KEY, String(apiUrl || '').trim() ? 'remote' : 'local');
   }
 
   function clearConnection() {
     clearAuthToken();
     setApiUrl('');
+    setStoredValue(localStorage, MODE_KEY, 'local');
+  }
+
+  function isLocalMode() {
+    var mode = getStoredValue(localStorage, MODE_KEY);
+    return mode !== 'remote';
+  }
+
+  function useLocalMode() {
+    clearAuthToken();
+    setApiUrl('');
+    setStoredValue(localStorage, MODE_KEY, 'local');
   }
 
   function request(action, payload) {
+    if (isLocalMode()) {
+      if (!window.FinanzasLocalStore) {
+        return Promise.reject(new Error('El almacenamiento local no esta disponible.'));
+      }
+      return window.FinanzasLocalStore.request(action, payload || {});
+    }
+
     if (!hasBackend()) {
       return Promise.reject(new Error('Conecta la URL de Apps Script para sincronizar.'));
     }
@@ -144,6 +171,8 @@
     setAuthToken: setAuthToken,
     clearAuthToken: clearAuthToken,
     configureConnection: configureConnection,
+    isLocalMode: isLocalMode,
+    useLocalMode: useLocalMode,
     clearConnection: clearConnection
   };
 }());

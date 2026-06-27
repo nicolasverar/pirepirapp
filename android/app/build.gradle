@@ -48,6 +48,18 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
+tasks.register('copyCapacitorWeb', Exec) {
+    workingDir rootProject.projectDir.parentFile
+    def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+    if (isWindows) {
+        commandLine 'cmd', '/c', 'npm', 'run', 'cap:copy'
+    } else {
+        commandLine 'npm', 'run', 'cap:copy'
+    }
+}
+
+preBuild.dependsOn(copyCapacitorWeb)
+
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {

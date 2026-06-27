@@ -6,7 +6,7 @@
 - El proyecto Android queda en `android/`.
 - El paquete Android es `com.pirepirapp.local`.
 - El nombre visible de la app es `Pirepirapp`.
-- Esta primera etapa es un contenedor Android para probar instalacion y WebView. Todavia no reemplaza la capa legacy de Apps Script por almacenamiento local.
+- Esta etapa ya incluye un primer modo local con IndexedDB para configuracion, movimientos, metas, wishlist y fotos locales.
 
 ## Fase 1 - Local Primero
 
@@ -15,12 +15,15 @@
 - Cambiar el arranque para que no pida URL ni token.
 - Agregar exportacion e importacion JSON.
 
+Estado: los tres primeros puntos ya estan implementados en `frontend/scripts/local-store.js`. Queda agregar exportacion/importacion JSON como backup manual.
+
 ## Fase 2 - Empaque Android
 
 - Inicializar Capacitor.
 - Usar `frontend/` como `webDir`.
 - Probar con Android Studio.
 - Sincronizar cambios con `npx cap sync android`.
+- Android Gradle ejecuta `npm run cap:copy` antes de compilar para copiar cambios web al APK.
 
 Comandos desde la raiz del repo:
 

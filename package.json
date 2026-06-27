@@ -8,6 +8,7 @@
   },
   "scripts": {
     "cap:sync": "cap sync android",
+    "cap:copy": "cap copy android",
     "cap:open": "cap open android",
     "cap:build:debug": "cd android && gradlew.bat --gradle-user-home ../.gradle-user assembleDebug"
   },

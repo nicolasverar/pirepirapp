@@ -7,7 +7,7 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 - El frontend productivo vive en `frontend/`.
 - El backend de Apps Script queda solo como legado temporal en `backend/`.
 - No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
-- La siguiente etapa recomendada es reemplazar la capa `frontend/scripts/api.js` por almacenamiento local, idealmente IndexedDB primero y luego Capacitor/Android.
+- La app arranca por defecto en modo local con IndexedDB mediante `frontend/scripts/local-store.js`; Apps Script queda solo como legado opcional.
 
 ## Datos
 
@@ -24,8 +24,7 @@ Para limpiar una instalacion ya usada en navegador o PWA, abrir `frontend/reset.
 
 ## Proximo Camino
 
-1. Crear un adaptador local que replique las acciones actuales del API.
-2. Guardar configuracion, movimientos, metas y wishlist en IndexedDB.
-3. Guardar fotos como blobs/base64 locales o migrarlas a almacenamiento nativo al empaquetar.
-4. Agregar exportar/importar backup JSON.
-5. Empaquetar con Capacitor y probar APK en Android.
+1. Agregar exportar/importar backup JSON.
+2. Probar persistencia local en APK: config, gastos, metas, wishlist y fotos.
+3. Pulir releases Android firmadas.
+4. Definir si el backend legacy en `backend/` se elimina.

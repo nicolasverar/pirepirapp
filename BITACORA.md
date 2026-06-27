@@ -601,3 +601,28 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.02`: OK, responde HTML con `v3.02`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.02`: OK, responde `finanzas-lcd-v110`.
 - Commit funcional `8b26778` pusheado a `origin/main`.
+
+## 2026-06-27 - Aviso post-cobro y guardado local v3.03
+
+### Objetivo
+- Reemplazar la cinta post-cobro por un cuadro LCD intermitente que sobresalga de la pantalla.
+- Reforzar el guardado local ante fallos de IndexedDB/localStorage.
+
+### Cambios
+- El aviso post-cobro ya no usa cinta transportadora; ahora muestra un cuadro saltante con `COBRO RECIENTE` y `DETECTADO` en display pixelado 5x7/35 segmentos.
+- La lista de gastos, ahorros y metas pendientes queda debajo del cuadro y mantiene sus acciones de carga.
+- El panel permite overflow visible para que el cuadro parezca salir y volver a la pantalla, con sombra punteada y animacion intermitente.
+- `local-store.js` ahora mantiene un espejo actualizado en `localStorage` y usa una marca de prioridad para leer el fallback si una escritura de IndexedDB falla o se aborta.
+- Se subio version visible a `v3.03` y service worker a `finanzas-lcd-v111`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\local-store.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `post-salary-belt`, `post-salary-belt-loop`, `post-salary-belt-track`, `post-salary-belt-copy`, `renderPostSalaryBeltText`, `v=3.02`, `v3.02` y `finanzas-lcd-v110`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.03`: OK, responde HTML con `v3.03`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.03`: OK, responde `finanzas-lcd-v111`.
+- Commit funcional `d80b77b` pusheado a `origin/main`.

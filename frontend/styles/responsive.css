@@ -15,30 +15,31 @@
 
 @media (max-width: 360px) {
   .status-bar {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-    font-size: 0.72rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 5px;
+    padding-inline: 6px;
+    font-size: 0.68rem;
   }
 
   .brand-mark {
     grid-template-columns: auto auto;
-    justify-content: center;
-    gap: 5px;
+    justify-content: start;
+    gap: 4px;
   }
 
   .brand-mark strong {
-    max-width: 126px;
-    font-size: 0.68rem;
+    max-width: 92px;
+    font-size: 0.62rem;
   }
 
   .brand-version {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .status-terminal {
-    min-height: 23px;
-    padding: 4px 6px;
-    font-size: 0.54rem;
+    min-height: 20px;
+    padding: 4px 5px 4px 15px;
+    font-size: 0.5rem;
   }
 
   .big-money {

@@ -4632,13 +4632,13 @@ body::-webkit-scrollbar,
 
 .status-bar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto;
   align-items: center;
-  justify-items: center;
-  gap: 6px;
-  min-height: 66px;
-  padding: 7px 10px 8px;
+  justify-items: stretch;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 7px;
   color: rgba(218, 220, 207, 0.92);
   background:
     radial-gradient(circle at 25% 0, rgba(255, 255, 255, 0.055), transparent 34%),
@@ -4655,9 +4655,9 @@ body::-webkit-scrollbar,
   display: inline-grid;
   grid-template-columns: auto auto;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   max-width: 100%;
-  gap: 8px;
+  gap: 5px;
   white-space: nowrap;
   color: rgba(218, 220, 207, 0.94);
   text-shadow: 1px 1px 0 #000;
@@ -4666,7 +4666,7 @@ body::-webkit-scrollbar,
 .brand-mark strong {
   flex: 0 1 auto;
   min-width: 0;
-  font-size: 0.84rem;
+  font-size: 0.76rem;
 }
 
 .brand-version {
@@ -4677,7 +4677,7 @@ body::-webkit-scrollbar,
   background: transparent;
   border: 0;
   box-shadow: none;
-  font-size: 0.64rem;
+  font-size: 0.56rem;
   line-height: 1;
   text-shadow: 1px 1px 0 #000;
 }
@@ -4687,11 +4687,12 @@ body::-webkit-scrollbar,
 }
 
 .status-terminal {
+  position: relative;
   display: block;
   width: 100%;
   min-width: 0;
-  min-height: 24px;
-  padding: 5px 8px;
+  min-height: 21px;
+  padding: 4px 6px 4px 17px;
   color: rgba(196, 208, 139, 0.9);
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
@@ -4710,6 +4711,15 @@ body::-webkit-scrollbar,
   text-shadow: 1px 1px 0 #050805;
 }
 
+.status-terminal::before {
+  content: ">";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  color: rgba(196, 208, 139, 0.72);
+  transform: translateY(-50%);
+}
+
 .status-terminal span {
   display: block;
   overflow: hidden;
@@ -4718,11 +4728,31 @@ body::-webkit-scrollbar,
 }
 
 .status-terminal.is-notice {
-  color: #071007;
+  color: #c4d08b;
   background:
-    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.13) 0 1px, transparent 1px 4px),
-    #c4d08b;
-  text-shadow: none;
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
+    #071007;
+}
+
+.status-terminal.is-notice span {
+  display: inline-block;
+  width: max-content;
+  min-width: max-content;
+  padding-left: 100%;
+  overflow: visible;
+  text-overflow: clip;
+  animation: terminalNoticeSlide 1.45s linear 3;
+  will-change: transform;
+}
+
+@keyframes terminalNoticeSlide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .toast-root {

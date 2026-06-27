@@ -1295,16 +1295,26 @@
   function toast(message) {
     var terminal = utils.qs('#status-terminal');
     var line = utils.qs('#status-terminal span');
+    var done;
     if (!terminal || !line) {
       return;
     }
     window.clearTimeout(toastTimer);
+    terminal.classList.remove('is-notice');
+    line.removeAttribute('style');
     line.textContent = String(message || '');
+    if (!line.textContent) {
+      return;
+    }
+    void line.offsetWidth;
     terminal.classList.add('is-notice');
-    toastTimer = window.setTimeout(function () {
-      line.textContent = 'Listo';
+
+    done = function () {
+      line.textContent = '';
       terminal.classList.remove('is-notice');
-    }, 2600);
+    };
+    line.addEventListener('animationend', done, { once: true });
+    toastTimer = window.setTimeout(done, 4700);
   }
 
   function version() {

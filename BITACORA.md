@@ -817,3 +817,27 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `monthOptions`, `movement-filter-months`, `movementMonthFilterOptions`, `v=3.10`, `v3.10` y `finanzas-lcd-v118`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Header compacto y terminal deslizante v3.12
+
+### Objetivo
+- Reducir el alto del marco superior para ganar espacio de pantalla.
+- Mantener nombre de app, version y terminal de comandos en una sola fila.
+- Hacer que las notificaciones del terminal se deslicen de derecha a izquierda tres veces y desaparezcan.
+
+### Cambios
+- El header superior paso de dos filas a una sola fila compacta.
+- `PIREPIRAPP`, version visible y terminal quedan alineados horizontalmente.
+- El terminal queda como ranura de comando con prompt `>`.
+- Los avisos usan animacion `terminalNoticeSlide` con tres repeticiones.
+- Al terminar la animacion, el texto del aviso se limpia y queda solo el terminal vacio.
+- Se subio version visible a `v3.12` y service worker a `finanzas-lcd-v120`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.11`, `v3.11` y `finanzas-lcd-v119`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

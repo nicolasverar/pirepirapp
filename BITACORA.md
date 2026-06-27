@@ -397,3 +397,29 @@
 - Busqueda activa en `frontend` de `v2.93`, `2.93` y `finanzas-lcd-v101`: sin resultados.
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.94`: OK, responde HTML con `v2.94`.
 - `git push origin main`: OK.
+
+## 2026-06-27 - Configuracion y archivo v2.95
+
+### Objetivo
+- Reestructurar `Config` para que solo gestione sueldo mensual y gastos fijos.
+- Reemplazar el porcentaje numerico de gastos fijos por un control tactil tipo dial/slider.
+- Implementar `Papelera/Archivo` para metas y cosas que quiero borradas, cumplidas o convertidas.
+
+### Cambios
+- `Config` ahora muestra tarjetas separadas para `Sueldo mensual`, `Gastos fijos` y `Papelera/Archivo`.
+- Se eliminaron funciones extra dentro de Config: no hay cobro, eliminacion de cobro, actualizar app ni mes automatico.
+- Cada gasto fijo conserva tres campos: nombre, monto mensual y porcentaje del sueldo.
+- Monto y porcentaje se recalculan en ambas direcciones; el porcentaje se controla con dial circular y slider de 0% a 100%.
+- El archivo local lista metas borradas, metas cumplidas, cosas compradas, cosas convertidas y cosas borradas.
+- Cada item de archivo se puede recuperar y vuelve a su coleccion activa sin perder fotos, montos ni progreso.
+- Las metas que llegan a 100% pasan a estado `Cumplido` y entran al archivo.
+- Se subio version visible a `v2.95` y service worker a `finanzas-lcd-v103`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para `render.js`, `local-store.js`, `app.js`, `state.js`, `config.js` y `service-worker.js`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=2.94`, `v2.94`, `APP_VERSION: 'v2.94'` y `finanzas-lcd-v102`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.95`: OK, responde HTML con `v2.95`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.95`: OK, responde `finanzas-lcd-v103`.
+- Commit funcional `554e555` pusheado a `origin/main`.

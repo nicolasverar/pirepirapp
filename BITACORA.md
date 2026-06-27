@@ -423,3 +423,27 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.95`: OK, responde HTML con `v2.95`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.95`: OK, responde `finanzas-lcd-v103`.
 - Commit funcional `554e555` pusheado a `origin/main`.
+
+## 2026-06-27 - Sombras punteadas y wishlist v2.96
+
+### Objetivo
+- Hacer visible el puntillado de la sombra inferior en `Plata disponible` y `Particion sueldo`.
+- Recentrar las tarjetas de `Cosas que quiero` y eliminar el control de fijar.
+
+### Cambios
+- Se agrego una regla final mas especifica para la sombra inferior/lateral de `Plata disponible` y `Particion sueldo`, con puntillado oscuro explicito.
+- `Cosas que quiero` ya no renderiza boton de fijar ni conserva orden por pin.
+- Se elimino la logica y CSS de `wish-pin`/`is-pinned`.
+- La grilla de wishlist queda en dos columnas estables, sin margen externo por tarjeta, con padding interno parejo para foto, monto y acciones.
+- Se subio version visible a `v2.96` y service worker a `finanzas-lcd-v104`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=2.95`, `v2.95`, `finanzas-lcd-v103` y `WISHLIST_PINS_KEY`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.96`: OK, responde HTML con `v2.96`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.96`: OK, responde `finanzas-lcd-v104`.
+- Commit funcional `56e959f` pusheado a `origin/main`.

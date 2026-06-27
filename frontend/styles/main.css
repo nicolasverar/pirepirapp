@@ -4057,6 +4057,122 @@ body::-webkit-scrollbar,
   height: 4px;
 }
 
+/* Resumen v2.90: todas las tarjetas usan la textura fisica de Metas. */
+.summary-stack > .summary-embedded.total-window,
+.summary-stack > .summary-combined-card,
+.summary-stack > .availability-card,
+.summary-stack > .salary-partition-card {
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  margin: 0 8px 12px 0;
+  color: #071007;
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(180deg, rgba(139, 160, 88, 0.54), rgba(92, 122, 62, 0.5)),
+    rgba(126, 148, 82, 0.5);
+  border: 2px solid #0b1209;
+  border-radius: 7px;
+  box-shadow:
+    inset 1px 1px 0 rgba(195, 206, 133, 0.38),
+    inset -2px -2px 0 rgba(13, 21, 12, 0.22);
+  image-rendering: pixelated;
+}
+
+.summary-stack > .summary-embedded.total-window::before,
+.summary-stack > .summary-combined-card::before,
+.summary-stack > .availability-card::before,
+.summary-stack > .salary-partition-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 7px;
+  right: -8px;
+  bottom: -8px;
+  width: 8px;
+  border: 0;
+  border-radius: 0 7px 7px 0;
+  background:
+    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
+    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
+    rgba(101, 115, 66, 0.9);
+  pointer-events: none;
+}
+
+.summary-stack > .summary-embedded.total-window::after,
+.summary-stack > .summary-combined-card::after,
+.summary-stack > .availability-card::after,
+.summary-stack > .salary-partition-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 7px;
+  right: -8px;
+  bottom: -8px;
+  height: 8px;
+  border: 0;
+  border-radius: 0 0 7px 7px;
+  background:
+    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
+    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
+    rgba(101, 115, 66, 0.9);
+  pointer-events: none;
+}
+
+.summary-stack > .summary-embedded.total-window > *,
+.summary-stack > .summary-combined-card > *,
+.summary-stack > .availability-card > *,
+.summary-stack > .salary-partition-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.summary-stack > .summary-embedded.total-window {
+  padding: 12px;
+}
+
+.summary-stack > .availability-card.availability-card-b .available-line {
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.12) 1px, transparent 1px) 0 0 / 4px 4px,
+    linear-gradient(0deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
+    #bccb84;
+  box-shadow:
+    inset 2px 2px 0 rgba(7, 16, 7, 0.2),
+    inset -2px -2px 0 rgba(222, 232, 159, 0.32);
+}
+
+.summary-stack > .availability-card.availability-card-b .available-line strong.available-money-pixel {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 8px;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.summary-stack > .availability-card.availability-card-b .available-line strong.available-money-pixel .summary-pixel-amount {
+  width: 100%;
+  height: 42px;
+}
+
+.ticket-form-modal .form-error:not([hidden]) {
+  display: block;
+  padding: 8px 9px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.18),
+    2px 2px 0 rgba(7, 16, 7, 0.36);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
 /* Selector AGREGAR: AF3B con fondo AF3A. */
 .modal-root.is-action-menu .modal-backdrop {
   pointer-events: none;

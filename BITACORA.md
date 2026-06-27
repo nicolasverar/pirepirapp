@@ -292,3 +292,23 @@
 - `node --check` paso para scripts frontend activos, router, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda activa en `frontend` de `Agregar gasto fijo`, `js-add-fixed-expense`, `v2.88`, `2.88` y `finanzas-lcd-v96`: sin resultados.
+
+## 2026-06-27 - Resumen y cobro sueldo v2.90
+
+### Objetivo
+- Consolidar el flujo de cobro como ingreso de sueldo y dejar la distribucion para el panel post-cobro.
+- Unificar la textura de tarjetas de Resumen con la estetica de tarjetas de Metas.
+
+### Cambios
+- Todas las tarjetas principales de `Resumen` usan marco negro, textura LCD y sombra lateral/inferior tipo Metas.
+- `Plata disponible` muestra el monto con render pixelado/segmentado igual al monto gastado del mes.
+- El formulario nuevo de ingreso/gasto ya no muestra selector manual de meta, ahorro, gasto fijo o wishlist; esos destinos se cargan desde el emergente post-cobro.
+- El segundo intento de registrar sueldo en el mismo mes muestra la alerta: `Cobraste otra vez gua'u? que bola que sos en serio`.
+- Se agrego defensa para respuestas `yaRegistrado` del storage/backend, evitando que se trate como `Guardado`.
+- Se subio version visible a `v2.90` y service worker a `finanzas-lcd-v98`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `v2.89`, `2.89`, `finanzas-lcd-v97`, `claimSalary`, `js-claim-salary`, `salary-paid-button`, `Eliminar cobro`, `eliminar cobro`, `Sueldo cargado` y `Agregar gasto fijo`: sin controles de cobro/config obsoletos activos.

@@ -96,7 +96,7 @@
       '</article>',
       '<article class="system-window availability-card availability-card-b">',
       '<div class="availability-b-title"><span>PLATA DISPONIBLE</span></div>',
-      '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
+      '<div class="available-line"><span>Te queda</span><strong class="available-money-pixel">' + renderSummaryPixelSvg(utils.formatMoney(summary.disponible || 0), 'amount') + '</strong></div>',
       renderMoneyLineDetails(summary),
       '<div class="availability-b-divider"></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),

@@ -121,9 +121,13 @@
     var rollback = applyOptimisticMutation(action, payload || {});
     return window.FinanzasApi.request(action, payload || {})
       .then(function (data) {
+        if (data && data.yaRegistrado && rollback) {
+          rollback();
+          rollback = null;
+        }
         applyMutationResult(action, data);
         window.FinanzasState.setState({ syncStatus: 'Local', error: '' });
-        toast('Guardado');
+        toast(data && data.yaRegistrado ? "Cobraste otra vez gua'u? que bola que sos en serio" : 'Guardado');
         if (isMovementRoute(action) && !(window.FinanzasApi.isLocalMode && window.FinanzasApi.isLocalMode())) {
           scheduleMovementRefresh();
         } else {

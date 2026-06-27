@@ -2,6 +2,7 @@
   'use strict';
 
   var utils = window.FinanzasUtils;
+  var DUPLICATE_SALARY_MESSAGE = "Cobraste otra vez gua'u? que bola que sos en serio";
 
   function openModal(title, content, afterOpen, className) {
     var root = utils.qs('#modal-root');
@@ -144,7 +145,7 @@
         timeInput.value = utils.toInputTime();
       }
       if (window.FinanzasApp && window.FinanzasApp.toast) {
-        window.FinanzasApp.toast('Sueldo cargado en el formulario.');
+        window.FinanzasApp.toast('Ingreso listo para guardar.');
       }
     });
   }
@@ -288,17 +289,22 @@
     if (initialType === 'Gasto fijo' && !initialRelatedId) {
       initialRelatedId = fixedExpenseValueForMovement(data, movement);
     }
+    var useTypeSelect = Boolean(existing && !isIncome);
     var typeControl = isIncome
       ? '<input name="tipo" type="hidden" value="Ingreso" data-movement-type>'
-      : select('Tipo', 'tipo', [
+      : (useTypeSelect ? select('Tipo', 'tipo', [
         { value: 'Gasto', label: 'Gasto' },
         { value: 'Gasto fijo', label: 'Gasto fijo' },
         { value: 'Aporte a ahorro', label: 'Aporte a ahorro' },
         { value: 'Aporte a meta', label: 'Aporte a meta' },
         { value: 'Compra de wishlist', label: 'Compra cosa que quiero' }
-      ], initialType, 'data-movement-type');
+      ], initialType, 'data-movement-type') : '<input name="tipo" type="hidden" value="' + utils.escapeHtml(initialType || 'Gasto') + '" data-movement-type>');
 
     var relatedOptions = relatedSelectOptions(data, relatedMode(initialType, defaultCategory));
+    var useRelatedSelect = Boolean(existing && !isIncome);
+    var relatedControl = useRelatedSelect
+      ? select('Seleccionar', 'idRelacionado', relatedOptions, initialRelatedId, 'data-related-select')
+      : '<input name="idRelacionado" type="hidden" value="' + utils.escapeHtml(initialRelatedId || '') + '">';
     var html = [
       '<form class="lcd-form" id="movement-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
@@ -306,7 +312,7 @@
       isIncome ? incomeSalaryShortcut() : '',
       field('Motivo', 'motivo', 'text', movement.motivo || '', 'required maxlength="120" autocomplete="off" data-movement-motive'),
       field('Monto', 'monto', 'number', movement.monto || '', 'required min="1" step="1" inputmode="numeric" data-movement-amount'),
-      select('Seleccionar', 'idRelacionado', relatedOptions, initialRelatedId, 'data-related-select'),
+      relatedControl,
       textarea('Descripcion', 'descripcion', movement.descripcion || '', 'maxlength="500" rows="3"'),
       '<div class="field-row">',
       field('Fecha', 'fecha', 'date', defaultDate, 'required'),
@@ -321,12 +327,14 @@
       var relatedSelect = utils.qs('[data-related-select]', root);
       var motiveInput = utils.qs('[data-movement-motive]', root);
       var amountInput = utils.qs('[data-movement-amount]', root);
-      updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, initialRelatedId, movement.motivo || '');
-      updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
-      updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
-      autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
+      if (relatedSelect) {
+        updateRelatedOptions(data, typeSelect, { value: defaultCategory }, relatedSelect, initialRelatedId, movement.motivo || '');
+        updateRelatedVisibility(typeSelect, { value: defaultCategory }, relatedSelect);
+        updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+        autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
+      }
       bindSalaryShortcut(root, config, motiveInput, amountInput);
-      if (typeSelect.tagName === 'SELECT') {
+      if (typeSelect.tagName === 'SELECT' && relatedSelect) {
         typeSelect.addEventListener('change', function () {
           var currentCategory = typeSelect.value === 'Compra de wishlist' ? 'Wishlist' : defaultCategory;
           updateRelatedOptions(data, typeSelect, { value: currentCategory }, relatedSelect, '', movement.motivo || '');
@@ -335,10 +343,12 @@
           autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
         });
       }
-      relatedSelect.addEventListener('change', function () {
-        updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
-        autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
-      });
+      if (relatedSelect) {
+        relatedSelect.addEventListener('change', function () {
+          updateMotiveVisibility(typeSelect, relatedSelect, motiveInput);
+          autocompleteRelatedAmount(data, typeSelect, relatedSelect, amountInput, motiveInput);
+        });
+      }
 
       bindForm(root, '#movement-form', function (form) {
         var payload = utils.formDataToObject(form);
@@ -346,6 +356,9 @@
         payload.hora = payload.hora.length === 5 ? payload.hora + ':00' : payload.hora;
         payload.categoria = categoryForMovementPayload(payload.tipo, defaultCategory, isIncome);
         normalizeRelatedMovementPayload(payload, relatedSelect, movement);
+        if (!existing && isDuplicateSalaryPayload(data, payload)) {
+          throw new Error(DUPLICATE_SALARY_MESSAGE);
+        }
         if (payload.categoria === 'Gasto fijo') {
           delete payload.idRelacionado;
         } else if (!payload.idRelacionado) {
@@ -377,6 +390,39 @@
       return 'Ingreso';
     }
     return fallbackCategory || 'Otros';
+  }
+
+  function isDuplicateSalaryPayload(data, payload) {
+    if (!isSalaryPayload(payload)) {
+      return false;
+    }
+    var month = String((payload.fecha || utils.toInputDate())).slice(0, 7);
+    return movementItemsFromData(data.movimientos).some(function (item) {
+      return movementMonth(item) === month && isSalaryPayload(item);
+    });
+  }
+
+  function isSalaryPayload(item) {
+    return String((item || {}).tipo || '') === 'Ingreso'
+      && String((item || {}).motivo || '').trim().toLowerCase() === 'sueldo';
+  }
+
+  function movementItemsFromData(source) {
+    if (Array.isArray(source)) {
+      return source;
+    }
+    if (source && Array.isArray(source.movimientos)) {
+      return source.movimientos;
+    }
+    return [];
+  }
+
+  function movementMonth(item) {
+    var date = String((item || {}).fecha || '');
+    if (/^\d{4}-\d{2}/.test(date)) {
+      return date.slice(0, 7);
+    }
+    return String((item || {}).mes || '').slice(0, 7);
   }
 
   function openFixedExpensePicker() {

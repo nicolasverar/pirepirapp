@@ -860,3 +860,23 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.12`, `v3.12` y `finanzas-lcd-v120`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Redisenar filtro de meses v3.14
+
+### Objetivo
+- Corregir el filtro de meses por intervalo `Desde / Hasta`, que se veia feo e incomodo de usar.
+
+### Cambios
+- Se reemplazaron los campos nativos `type="month"` por selectores LCD con los meses disponibles.
+- El intervalo ahora se muestra en filas completas `Desde` y `Hasta`, sin quedar comprimido.
+- Se ajustaron estilos responsive para que el control sea usable en pantallas chicas.
+- Se subio version visible a `v3.14` y service worker a `finanzas-lcd-v122`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.13`, `v3.13` y `finanzas-lcd-v121`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

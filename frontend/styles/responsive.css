@@ -223,8 +223,16 @@
     gap: 5px;
   }
 
-  .movement-range-field input {
-    font-size: 0.6rem;
+  .movement-range-field {
+    grid-template-columns: 44px minmax(0, 1fr);
+    min-height: 41px;
+    padding: 4px;
+    font-size: 0.54rem;
+  }
+
+  .movement-range-field select {
+    min-height: 31px;
+    font-size: 0.64rem;
   }
 
   .wish-toolbar {

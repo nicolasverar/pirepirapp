@@ -346,15 +346,14 @@
   function renderMovementMonthRange(range, bounds) {
     var current = range || {};
     var limits = bounds || {};
-    var minAttr = limits.min ? ' min="' + utils.escapeHtml(limits.min) + '"' : '';
-    var maxAttr = limits.max ? ' max="' + utils.escapeHtml(limits.max) + '"' : '';
+    var options = movementRangeMonthOptions(current, limits);
     return [
       '<div class="movement-filter-group movement-range-filter">',
       '<div class="movement-filter-group-label">Meses</div>',
       '<div class="movement-range-panel' + (current.active ? ' is-active' : '') + '">',
       '<div class="movement-range-grid">',
-      '<label class="movement-range-field"><span>Desde</span><input type="month" value="' + utils.escapeHtml(current.from || '') + '"' + minAttr + maxAttr + ' data-filter-month-from></label>',
-      '<label class="movement-range-field"><span>Hasta</span><input type="month" value="' + utils.escapeHtml(current.to || '') + '"' + minAttr + maxAttr + ' data-filter-month-to></label>',
+      renderMovementMonthSelect('Desde', 'data-filter-month-from', current.from || '', options),
+      renderMovementMonthSelect('Hasta', 'data-filter-month-to', current.to || '', options),
       '</div>',
       '<div class="movement-range-actions">',
       '<button class="range-key primary" type="button" data-filter-range-apply>APLICAR</button>',
@@ -363,6 +362,44 @@
       '</div>',
       '</div>'
     ].join('');
+  }
+
+  function renderMovementMonthSelect(label, attribute, value, options) {
+    var currentValue = String(value || '').slice(0, 7);
+    var optionHtml = ['<option value="">MES</option>'].concat((options || []).map(function (option) {
+      var optionValue = String(option.value || '').slice(0, 7);
+      return '<option value="' + utils.escapeHtml(optionValue) + '"' + (optionValue === currentValue ? ' selected' : '') + '>' + utils.escapeHtml(option.label || optionValue) + '</option>';
+    })).join('');
+    return [
+      '<label class="movement-range-field">',
+      '<span>' + utils.escapeHtml(label) + '</span>',
+      '<span class="movement-range-select"><select ' + attribute + '>' + optionHtml + '</select></span>',
+      '</label>'
+    ].join('');
+  }
+
+  function movementRangeMonthOptions(current, bounds) {
+    var source = ((bounds || {}).options || []).slice();
+    var seen = {};
+    function addOption(value) {
+      var month = normalizeMonthInput(value);
+      if (!month || seen[month]) {
+        return;
+      }
+      seen[month] = true;
+      source.push({ value: month, label: movementMonthLabel(month) });
+    }
+    source.forEach(function (option) {
+      seen[String(option.value || '').slice(0, 7)] = true;
+    });
+    addOption((current || {}).from);
+    addOption((current || {}).to);
+    if (!source.length) {
+      addOption(utils.currentMonth());
+    }
+    return source.sort(function (left, right) {
+      return String(right.value || '').localeCompare(String(left.value || ''));
+    });
   }
 
   function bindMovementFilterMenu(root) {
@@ -458,7 +495,13 @@
     months.sort().reverse();
     return {
       min: months.length ? months[months.length - 1] : '',
-      max: months.length ? months[0] : ''
+      max: months.length ? months[0] : '',
+      options: months.map(function (month) {
+        return {
+          value: month,
+          label: movementMonthLabel(month)
+        };
+      })
     };
   }
 

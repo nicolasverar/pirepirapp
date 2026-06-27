@@ -93,6 +93,11 @@
     return parts.day + ' de ' + parts.month;
   }
 
+  function friendlyFullDate() {
+    var parts = todayParts();
+    return parts.day + ' de ' + parts.month + ' de ' + parts.year;
+  }
+
   function compactDate() {
     var parts = todayParts();
     return String(parts.day).padStart(2, '0') + ' ' + parts.monthShort;
@@ -224,6 +229,7 @@
     formatPercent: formatPercent,
     formatMovementDateTime: formatMovementDateTime,
     friendlyDate: friendlyDate,
+    friendlyFullDate: friendlyFullDate,
     compactDate: compactDate,
     currentMonth: currentMonth,
     toInputDate: toInputDate,

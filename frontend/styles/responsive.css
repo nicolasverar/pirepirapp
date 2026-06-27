@@ -245,6 +245,15 @@
   .salary-paid-button {
     min-height: 48px;
   }
+
+  .post-salary-item {
+    grid-template-columns: minmax(48px, 0.28fr) minmax(0, 1fr);
+  }
+
+  .post-salary-item b {
+    grid-column: 2;
+    text-align: left;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

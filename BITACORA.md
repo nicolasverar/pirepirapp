@@ -85,3 +85,27 @@
 ### Limitacion local
 - En esta PC dentro de OneDrive, `npm run cap:copy` sigue fallando por `EPERM`; esta vez sobre `android/app/src/main/assets/public/index.html`.
 - La prueba Android debe hacerse en la PC del emulador con `git pull` y `Run`, donde el build anterior ya funciono.
+
+## 2026-06-27 - Modelo sueldo continuo y panel post-cobro v2.79
+
+### Objetivo
+- Implementar el concepto financiero de sueldo como particion disjunta y linea continua de dinero.
+- Hacer que el cobro mensual active recordatorios hasta registrar fijos, futuro y metas.
+
+### Cambios
+- Se agrego accion local `claimSalary` para registrar el cobro del mes sin duplicarlo.
+- El resumen local ahora calcula remanente anterior, sueldo cobrado, ingresos extra, salidas totales y disponible continuo.
+- La torta de particion ahora usa fijos, ahorros y superfluos; ahorros se deriva de futuro + metas activas.
+- Se agrego panel post-cobro bajo la fecha con frase pixelada y pendientes accionables.
+- Se dejo de marcar gastos fijos como pagados automaticamente al refrescar.
+- Se agregaron detalles de linea de dinero en la tarjeta de disponible.
+- Se subio version visible a `v2.79` y service worker a `finanzas-lcd-v87`.
+- Se actualizo `scripts/smoke-local-store.js`, `README.md` y `docs/PRUEBAS.md`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- El smoke test cubre remanente anterior, cobro mensual, no duplicacion de sueldo, panel post-cobro, pagos fijos, aportes a futuro/metas, wishlist, fotos y persistencia.
+
+### Pendiente operativo
+- Probar visualmente `v2.79` en Android Studio Emulator despues de `git pull` y `npm run cap:sync` en la PC Android.

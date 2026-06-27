@@ -52,28 +52,42 @@ async function run() {
   await window.FinanzasApi.request('updateConfig', {
     sueldoMensual: 5000000,
     mesActual: '2026-05',
-    categorias: ['Alimentacion', 'Transporte', 'Wishlist', 'Otros'],
+    categorias: ['Alimentacion', 'Transporte', 'Superfluos', 'Wishlist', 'Otros'],
     gastosFijos: [
       { nombre: 'Alquiler', monto: 1000000 },
       { categoria: 'Internet', monto: 150000 }
     ]
   });
 
-  const fixed = await window.FinanzasApi.request('syncFixedExpenses', {});
-  assert.strictEqual(fixed.mes, '2026-05', 'Gastos fijos deben usar mesActual configurado');
-  assert.strictEqual(fixed.movimientosCreados.length, 2, 'Debe crear dos gastos fijos');
+  await window.FinanzasApi.request('createMovement', {
+    tipo: 'Ingreso',
+    motivo: 'Sueldo',
+    categoria: 'Ingreso',
+    monto: 5000000,
+    fecha: '2026-04-30',
+    hora: '08:00:00'
+  });
+
+  await window.FinanzasApi.request('createMovement', {
+    tipo: 'Gasto',
+    motivo: 'Cierre abril',
+    categoria: 'Superfluos',
+    monto: 4000000,
+    fecha: '2026-04-30',
+    hora: '20:00:00'
+  });
 
   const saving = await window.FinanzasApi.request('createFutureSaving', {
     titulo: 'Fondo emergencia',
     descripcion: 'Reserva',
-    montoMensual: 200000,
+    montoMensual: 250000,
     montoAcumulado: 100000
   });
 
   const goal = await window.FinanzasApi.request('createGoal', {
     titulo: 'Notebook',
     descripcion: 'Trabajo',
-    montoMensual: 300000,
+    montoMensual: 400000,
     montoObjetivo: 3000000,
     imageBase64: 'data:image/png;base64,goal'
   });
@@ -86,6 +100,51 @@ async function run() {
 
   const photo = await window.FinanzasApi.request('getPhoto', { fileId: wish.imageDriveId });
   assert.strictEqual(photo.dataUrl, 'data:image/png;base64,wish', 'La foto local debe recuperarse por ID');
+
+  const claim = await window.FinanzasApi.request('claimSalary', {
+    mes: '2026-05',
+    monto: 5000000,
+    fecha: '2026-05-01',
+    hora: '08:00:00'
+  });
+  assert.strictEqual(claim.yaRegistrado, false, 'El primer cobro del mes debe crear movimiento');
+  assert.strictEqual(claim.resumen.remanenteAnterior, 1000000, 'Debe arrastrar remanente anterior');
+  assert.strictEqual(claim.resumen.sueldoCobrado, 5000000, 'Debe registrar sueldo cobrado');
+  assert.strictEqual(claim.resumen.disponible, 6000000, 'Al cobrar debe sumar sueldo nuevo y remanente');
+  assert.strictEqual(claim.resumen.ahorrosPlanificados, 650000, 'Ahorros planificados vienen de futuro + metas');
+  assert.strictEqual(claim.resumen.superfluosPlanificados, 3200000, 'Superfluos completan la particion del sueldo');
+  assert.strictEqual(claim.resumen.recordatoriosPendientes.length, 4, 'Post-cobro debe recordar fijos, futuro y metas');
+
+  const secondClaim = await window.FinanzasApi.request('claimSalary', {
+    mes: '2026-05',
+    monto: 5000000,
+    fecha: '2026-05-01',
+    hora: '09:00:00'
+  });
+  assert.strictEqual(secondClaim.yaRegistrado, true, 'Cobrar dos veces el mismo mes no debe duplicar sueldo');
+
+  await window.FinanzasApi.request('createMovement', {
+    tipo: 'Gasto',
+    motivo: 'Alquiler',
+    categoria: 'Gasto fijo',
+    monto: 1000000,
+    fecha: '2026-05-02',
+    hora: '09:00:00',
+    descripcion: 'Gasto fijo'
+  });
+
+  await window.FinanzasApi.request('createMovement', {
+    tipo: 'Gasto',
+    motivo: 'Internet',
+    categoria: 'Gasto fijo',
+    monto: 150000,
+    fecha: '2026-05-03',
+    hora: '09:00:00',
+    descripcion: 'Gasto fijo'
+  });
+
+  bootstrap = await window.FinanzasApi.request('bootstrap', {});
+  assert.strictEqual(bootstrap.resumen.recordatoriosPendientes.length, 2, 'Pagar fijos debe quitarlos del panel');
 
   await window.FinanzasApi.request('createMovement', {
     tipo: 'Gasto',
@@ -147,17 +206,26 @@ async function run() {
   const summary = bootstrap.resumen;
 
   assert.strictEqual(summary.mes, '2026-05');
-  assert.strictEqual(summary.totalIngresos, 5200000);
+  assert.strictEqual(summary.remanenteAnterior, 1000000);
+  assert.strictEqual(summary.sueldoCobrado, 5000000);
+  assert.strictEqual(summary.ingresosExtra, 200000);
+  assert.strictEqual(summary.totalIngresos, 6200000);
   assert.strictEqual(summary.gastosFijosConfigurados, 1150000);
   assert.strictEqual(summary.gastosFijos, 1150000);
   assert.strictEqual(summary.gastosVariables, 50000);
   assert.strictEqual(summary.comprasWishlist, 350000);
   assert.strictEqual(summary.totalGastado, 400000);
+  assert.strictEqual(summary.salidasTotales, 2200000);
   assert.strictEqual(summary.aportesAhorro, 250000);
   assert.strictEqual(summary.aportesMeta, 400000);
   assert.strictEqual(summary.totalApartado, 650000);
-  assert.strictEqual(summary.disponible, 3000000);
-  assert.strictEqual(summary.cantidadMovimientos, 7);
+  assert.strictEqual(summary.ahorrosPlanificados, 650000);
+  assert.strictEqual(summary.superfluosPlanificados, 3200000);
+  assert.strictEqual(summary.disponible, 4000000);
+  assert.strictEqual(summary.cantidadMovimientos, 8);
+  assert.strictEqual(summary.recordatoriosPendientes.length, 0, 'Panel post-cobro debe vaciarse al cumplir compromisos');
+  assert.strictEqual(summary.recordatoriosCompletos, true, 'Recordatorios deben quedar completos');
+  assert.deepStrictEqual(summary.particionSueldo.map((item) => item.clave), ['fijos', 'ahorros', 'superfluos']);
 
   const refreshedSaving = bootstrap.ahorrosFuturo.find((item) => item.id === saving.id);
   assert.strictEqual(refreshedSaving.montoAcumulado, 350000, 'Aporte debe acumular ahorro');
@@ -170,7 +238,7 @@ async function run() {
   assert.ok(!bootstrap.wishlist.some((item) => item.id === secondWish.id), 'Wishlist convertida no debe quedar activa');
 
   const state = await window.FinanzasLocalStore.loadState();
-  assert.strictEqual(state.movimientos.length, 7, 'Persistencia local debe conservar movimientos');
+  assert.strictEqual(state.movimientos.length, 10, 'Persistencia local debe conservar movimientos');
   assert.ok(Object.keys(state.photos).length >= 2, 'Persistencia local debe conservar fotos');
 
   console.log('SMOKE_LOCAL_STORE_OK');

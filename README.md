@@ -8,6 +8,16 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 - El backend de Apps Script queda solo como legado temporal en `backend/`.
 - No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
 - La app arranca por defecto en modo local con IndexedDB mediante `frontend/scripts/local-store.js`; Apps Script queda solo como legado opcional.
+- El modelo financiero local trata el sueldo como una particion disjunta: gastos fijos, ahorros y superfluos.
+- El boton `Cobre` registra el sueldo del mes, suma el remanente anterior y activa recordatorios post-cobro hasta cargar fijos, futuro y metas.
+
+## Modelo Financiero
+
+- El saldo es continuo: no se resetea por mes; el remanente anterior entra al ciclo siguiente.
+- El sueldo configurado define la particion esperada, pero el dinero disponible se calcula con movimientos reales.
+- Los ahorros planificados se derivan automaticamente de futuro y metas activas.
+- Wishlist queda como lista de deseos sin compromiso mensual; sus compras impactan como movimiento real.
+- El panel post-cobro desaparece cuando todos los compromisos del mes fueron registrados.
 
 ## Datos
 
@@ -35,4 +45,4 @@ Para limpiar una instalacion ya usada en navegador o PWA, abrir `frontend/reset.
 npm run test:smoke
 ```
 
-El smoke test simula modo local, configuracion, gastos fijos, movimientos, ahorros, metas, wishlist, fotos y persistencia.
+El smoke test simula modo local, cobro mensual, remanente continuo, panel post-cobro, gastos fijos, movimientos, ahorros, metas, wishlist, fotos y persistencia.

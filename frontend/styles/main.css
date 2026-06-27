@@ -5013,3 +5013,102 @@ body::-webkit-scrollbar,
   font-weight: 900;
   line-height: 1.05;
 }
+
+.post-salary-panel {
+  display: grid;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.post-salary-pixel-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.post-salary-pixel-line .summary-pixel-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(18px, 5vw, 34px);
+}
+
+.post-salary-pixel-command .summary-pixel-svg {
+  height: clamp(16px, 4.3vw, 28px);
+}
+
+.post-salary-list {
+  display: grid;
+  gap: 8px;
+}
+
+.post-salary-item {
+  display: grid;
+  grid-template-columns: minmax(54px, 0.24fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 2px solid var(--lcd-line);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(172, 183, 117, 0.45), rgba(111, 124, 73, 0.25));
+  box-shadow: 2px 2px 0 rgba(13, 21, 12, 0.55);
+  color: var(--lcd-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.post-salary-item:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(13, 21, 12, 0.55);
+}
+
+.post-salary-kind,
+.post-salary-item strong,
+.post-salary-item b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.post-salary-kind {
+  padding: 3px 5px;
+  border: 1px solid var(--lcd-line);
+  background: rgba(13, 21, 12, 0.12);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.post-salary-item strong {
+  font-size: 0.86rem;
+  text-transform: uppercase;
+}
+
+.post-salary-item b {
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.money-line-details {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.money-line-details span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.money-line-details b {
+  white-space: nowrap;
+}

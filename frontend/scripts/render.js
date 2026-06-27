@@ -110,6 +110,7 @@
       '</div>',
       '</div>',
       '</article>',
+      renderPostSalaryPanel(summary),
       '<article class="summary-combined-card">',
       '<div class="summary-combined-spent">',
       '<span class="summary-combined-title">EN LO QUE VA DE ' + utils.escapeHtml(String(currentMonthName || '').toUpperCase()) + ' GASTASTE</span>',
@@ -125,10 +126,12 @@
       '<article class="system-window availability-card availability-card-b">',
       '<div class="availability-b-title"><span>PLATA DISPONIBLE</span></div>',
       '<div class="available-line"><span>Te queda</span><strong>' + utils.escapeHtml(utils.formatMoney(summary.disponible || 0)) + '</strong></div>',
+      renderMoneyLineDetails(summary),
       '<div class="availability-b-divider"></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
+      '<button class="lcd-button primary salary-paid-button js-claim-salary" type="button">' + (summary.sueldoRegistrado ? 'Sueldo cargado' : 'Cobre') + '</button>',
       '</article>',
-      renderSalaryPartition(config),
+      renderSalaryPartition(config, summary),
       '</section>'
     ].join('');
   }
@@ -136,6 +139,54 @@
   function summaryDayLabel() {
     var days = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
     return days[new Date().getDay()] || '';
+  }
+
+  function renderPostSalaryPanel(summary) {
+    var pending = (summary || {}).recordatoriosPendientes || [];
+    if (!(summary || {}).sueldoRegistrado || !pending.length) {
+      return '';
+    }
+    return [
+      '<article class="system-window post-salary-panel">',
+      '<div class="post-salary-pixel-line">',
+      renderSummaryPixelSvg('HOY ES ' + String(utils.friendlyFullDate ? utils.friendlyFullDate() : utils.friendlyDate()).toUpperCase(), 'label'),
+      '</div>',
+      '<div class="post-salary-pixel-line post-salary-pixel-command">',
+      renderSummaryPixelSvg('YA COBRASTE REPARTI EL PAN COMO DIJISTE', 'label'),
+      '</div>',
+      '<div class="post-salary-list">',
+      pending.map(renderPostSalaryItem).join(''),
+      '</div>',
+      '</article>'
+    ].join('');
+  }
+
+  function renderPostSalaryItem(item) {
+    var kind = String(item.tipo || '').toUpperCase();
+    if (kind === 'AHORRO') {
+      kind = 'FUTURO';
+    }
+    return [
+      '<button class="post-salary-item js-pay-reminder" type="button"',
+      ' data-reminder-type="' + utils.escapeHtml(item.tipoMovimiento || '') + '"',
+      ' data-reminder-name="' + utils.escapeHtml(item.nombre || '') + '"',
+      ' data-reminder-amount="' + utils.escapeHtml(item.monto || 0) + '"',
+      ' data-reminder-related="' + utils.escapeHtml(item.idRelacionado || '') + '">',
+      '<span class="post-salary-kind">' + utils.escapeHtml(kind || 'ITEM') + '</span>',
+      '<strong>' + utils.escapeHtml(item.nombre || 'Pendiente') + '</strong>',
+      '<b>' + utils.escapeHtml(utils.formatMoney(item.monto || 0)) + '</b>',
+      '</button>'
+    ].join('');
+  }
+
+  function renderMoneyLineDetails(summary) {
+    var source = summary || {};
+    return [
+      '<div class="money-line-details">',
+      '<span>Remanente anterior <b>' + utils.escapeHtml(utils.formatMoney(source.remanenteAnterior || 0)) + '</b></span>',
+      '<span>Cobro del mes <b>' + utils.escapeHtml(utils.formatMoney(source.sueldoCobrado || 0)) + '</b></span>',
+      '</div>'
+    ].join('');
   }
 
   function summaryDateLabel() {
@@ -729,7 +780,7 @@
       '<p class="form-error" hidden></p>',
       '<div class="salary-config-panel">',
       '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
-      '<button class="lcd-button primary salary-paid-button js-claim-salary" type="button">¡Cobré!</button>',
+      '<button class="lcd-button primary salary-paid-button js-claim-salary" type="button">Cobre</button>',
       '</div>',
       renderFixedExpensesEditor(config),
       '<div class="form-actions">',
@@ -784,30 +835,52 @@
     return number ? String(Math.round(number * 100) / 100) : '';
   }
 
-  function renderSalaryPartition(config) {
+  function renderSalaryPartition(config, summary) {
     var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
-    var fixed = utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary);
-    var total = fixed.reduce(function (sum, item) {
-      return sum + utils.fixedExpenseAmount(item);
+    var partition = salaryPartitionFromSummary(summary, config);
+    var total = partition.reduce(function (sum, item) {
+      return sum + item.amount;
     }, 0);
-    var available = Math.max(0, salary - total);
-    var excess = Math.max(0, total - salary);
-    var availablePercent = salary ? Math.round((available / salary) * 10000) / 100 : 0;
-    var titleBadge = excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(availablePercent) || '0') + '%';
+    var excess = Math.max(0, utils.normalizeAmount((summary || {}).excesoParticion || 0));
+    var superfluous = utils.normalizeAmount((summary || {}).superfluosPlanificados || 0);
+    var superfluousPercent = salary ? Math.round((superfluous / salary) * 10000) / 100 : 0;
+    var titleBadge = excess > 0 ? 'EXCESO' : 'SUPERF. ' + (formatPercentInput(superfluousPercent) || '0') + '%';
 
     return [
       '<article class="system-window salary-partition-card salary-partition-aaa' + (excess > 0 ? ' is-over-budget' : '') + '">',
       '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span><span>' + utils.escapeHtml(titleBadge) + '</span></div>',
       salary ? '<div class="partition-summary partition-summary-top"><span>Sueldo distribuido</span><b>' + utils.escapeHtml(utils.formatMoney(salary)) + '</b></div>' : '',
       excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(excess)) + '</p>' : '',
-      salary ? renderSalaryPartitionPie(fixed, salary, total, available, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
-      salary ? renderSalaryPartitionLegend(fixed, salary, available, excess) : '',
+      salary ? renderSalaryPartitionPie(partition, salary, total, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
+      salary ? renderSalaryPartitionLegend(partition, salary, excess) : '',
       '</article>'
     ].join('');
   }
 
-  function renderSalaryPartitionPie(fixed, salary, total, available, excess) {
-    var segments = salaryPartitionSegments(fixed, salary, available);
+  function salaryPartitionFromSummary(summary, config) {
+    var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
+    var source = Array.isArray((summary || {}).particionSueldo) ? (summary || {}).particionSueldo : [];
+    var classes = {
+      fijos: 'segment-0',
+      ahorros: 'segment-1',
+      superfluos: 'segment-available'
+    };
+    if (source.length) {
+      return source.map(function (item) {
+        return {
+          label: item.nombre || item.clave || 'Particion',
+          amount: utils.normalizeAmount(item.monto),
+          percent: Number(item.porcentaje || 0),
+          className: classes[item.clave] || 'segment-2'
+        };
+      }).filter(function (item) {
+        return item.amount > 0;
+      });
+    }
+    return salaryPartitionSegments(utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary), salary, Math.max(0, salary));
+  }
+
+  function renderSalaryPartitionPie(segments, salary, total, excess) {
     var chartTotal = Math.max(segments.reduce(function (sum, item) {
       return sum + item.amount;
     }, 0), 1);
@@ -955,13 +1028,12 @@
     return String(Math.round(Number(value || 0) * 100) / 100);
   }
 
-  function renderSalaryPartitionLegend(fixed, salary, available, excess) {
-    var items = fixed.map(function (item, index) {
-      var amount = utils.fixedExpenseAmount(item);
-      var percent = salary ? Math.round((utils.fixedExpenseAmount(item) / salary) * 10000) / 100 : 0;
-      return '<li><i class="segment-' + (index % 6) + '"></i><span><strong>' + utils.escapeHtml(utils.fixedExpenseName(item) || 'Gasto fijo') + '</strong><small>' + utils.escapeHtml(utils.formatMoney(amount)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
+  function renderSalaryPartitionLegend(segments, salary, excess) {
+    var items = (segments || []).map(function (item) {
+      var amount = utils.normalizeAmount(item.amount);
+      var percent = salary ? Math.round((amount / salary) * 10000) / 100 : 0;
+      return '<li><i class="' + utils.escapeHtml(item.className || 'segment-0') + '"></i><span><strong>' + utils.escapeHtml(item.label || 'Particion') + '</strong><small>' + utils.escapeHtml(utils.formatMoney(amount)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b></li>';
     });
-    items.push('<li><i class="segment-available"></i><span><strong>Disponible</strong><small>' + utils.escapeHtml(utils.formatMoney(available)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput(salary ? (available / salary) * 100 : 0) || '0') + '%</b></li>');
     if (excess > 0) {
       items.push('<li><i class="segment-excess"></i><span><strong>Exceso</strong><small>' + utils.escapeHtml(utils.formatMoney(excess)) + '</small></span><b>' + utils.escapeHtml(formatPercentInput((excess / salary) * 100) || '0') + '%</b></li>');
     }
@@ -1014,6 +1086,23 @@
       button.addEventListener('click', function () {
         var salaryInput = utils.qs('[data-salary-input]', root);
         window.FinanzasApp.claimSalary(salaryInput ? salaryInput.value : undefined);
+      });
+    });
+
+    utils.qsa('.js-pay-reminder', root).forEach(function (button) {
+      button.addEventListener('click', function () {
+        var type = button.getAttribute('data-reminder-type') || 'Gasto';
+        var name = button.getAttribute('data-reminder-name') || '';
+        var amount = button.getAttribute('data-reminder-amount') || '';
+        var related = button.getAttribute('data-reminder-related') || '';
+        window.FinanzasForms.openMovementForm('Gasto', null, {
+          tipo: type,
+          motivo: name,
+          monto: amount,
+          idRelacionado: related,
+          categoria: type === 'Gasto fijo' ? 'Gasto fijo' : (type === 'Aporte a meta' ? 'Metas' : 'Ahorros'),
+          descripcion: type === 'Gasto fijo' ? 'Gasto fijo' : 'Reparto post-cobro'
+        });
       });
     });
 

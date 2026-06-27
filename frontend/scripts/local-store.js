@@ -50,6 +50,9 @@
         resumen: buildSummary(state)
       });
     }
+    if (route === 'claimsalary') {
+      return changed(claimSalary(state, payload || {}));
+    }
     if (route === 'getsummary') {
       return unchanged(buildSummary(state, monthFromPayload(payload) || state.config.mesActual));
     }
@@ -219,6 +222,8 @@
       estadoMesActual: String(config.estadoMesActual || config.monthStatus || 'abierto').trim() || 'abierto',
       mesActual: normalizeMonth(config.mesActual || config.currentMonth || currentMonth()),
       fechaUltimoInicioMes: String(config.fechaUltimoInicioMes || '').slice(0, 7),
+      fechaUltimoCobro: String(config.fechaUltimoCobro || '').slice(0, 10),
+      ultimoMesCobrado: String(config.ultimoMesCobrado || '').slice(0, 7),
       categorias: normalizeCategories(config.categorias || config.categories),
       gastosFijos: normalizeFixedExpenses(config.gastosFijos || config.fixedExpenses, salary),
       zonaHoraria: String(config.zonaHoraria || 'America/Asuncion')
@@ -226,7 +231,7 @@
   }
 
   function normalizeCategories(items) {
-    var fallback = ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Ahorros', 'Metas', 'Wishlist', 'Otros'];
+    var fallback = ['Alimentacion', 'Transporte', 'Servicios', 'Salud', 'Educacion', 'Hogar', 'Ocio', 'Superfluos', 'Ahorros', 'Metas', 'Wishlist', 'Otros'];
     var seen = {};
     return (Array.isArray(items) && items.length ? items : fallback)
       .map(function (item) { return String(item || '').trim(); })
@@ -272,6 +277,46 @@
       mes: month || null,
       allMonths: allMonths,
       movimientos: clone(items)
+    };
+  }
+
+  function claimSalary(state, payload) {
+    var month = monthFromPayload(payload) || state.config.mesActual || currentMonth();
+    var salary = utils.normalizeAmount(payload.monto !== undefined ? payload.monto : state.config.sueldoMensual);
+    if (!salary) {
+      throw new Error('Carga tu sueldo mensual primero.');
+    }
+    var existing = findSalaryMovement(state.movimientos, month);
+    state.config.mesActual = month;
+    state.config.estadoMesActual = 'cobrado';
+    state.config.ultimoMesCobrado = month;
+    if (existing) {
+      state.config.fechaUltimoCobro = existing.fecha;
+      return {
+        movimiento: clone(existing),
+        yaRegistrado: true,
+        mes: month,
+        resumen: buildSummary(state, month)
+      };
+    }
+
+    var date = payload.fecha || defaultDateForMonth(month);
+    var movement = movementFromPayload({
+      fecha: date,
+      hora: payload.hora || utils.toInputTime() + ':00',
+      tipo: 'Ingreso',
+      motivo: 'Sueldo',
+      categoria: 'Ingreso',
+      monto: salary,
+      descripcion: 'Cobro de sueldo ' + month
+    }, null, nextId('mov'));
+    state.movimientos.push(movement);
+    state.config.fechaUltimoCobro = movement.fecha;
+    return {
+      movimiento: clone(movement),
+      yaRegistrado: false,
+      mes: month,
+      resumen: buildSummary(state, month)
     };
   }
 
@@ -560,12 +605,28 @@
       gastosFijos: 0,
       gastosVariables: 0,
       comprasWishlist: 0,
+      ingresosSueldo: 0,
       ingresosExtra: 0,
       aportesAhorro: 0,
       aportesMeta: 0
     };
     var categoryTotals = {};
     var count = 0;
+    var remanenteAnterior = 0;
+    var salaryMovement = null;
+
+    state.movimientos.forEach(function (movement) {
+      var itemMonth = movementMonth(movement);
+      var amount = utils.normalizeAmount(movement.monto);
+      if (itemMonth < month) {
+        if (isIncomeMovement(movement)) {
+          remanenteAnterior += amount;
+        } else if (isOutflowMovement(movement)) {
+          remanenteAnterior -= amount;
+        }
+      }
+    });
+
     state.movimientos.filter(function (movement) {
       return movementMonth(movement) === month;
     }).forEach(function (movement) {
@@ -586,8 +647,13 @@
         totals.comprasWishlist += amount;
         categoryTotals[category] = Number(categoryTotals[category] || 0) + amount;
       }
-      if (type === 'Ingreso' && String(movement.motivo || '').toLowerCase() !== 'sueldo') {
-        totals.ingresosExtra += amount;
+      if (type === 'Ingreso') {
+        if (isSalaryMovement(movement)) {
+          totals.ingresosSueldo += amount;
+          salaryMovement = salaryMovement || movement;
+        } else {
+          totals.ingresosExtra += amount;
+        }
       }
       if (type === 'Aporte a ahorro') {
         totals.aportesAhorro += amount;
@@ -600,20 +666,36 @@
     var fixedConfigured = normalizeFixedExpenses(config.gastosFijos, salary).reduce(function (sum, item) {
       return sum + utils.fixedExpenseAmount(item);
     }, 0);
+    var savingsPlan = plannedSavings(state);
+    var savingsConfigured = savingsPlan.reduce(function (sum, item) {
+      return sum + item.monto;
+    }, 0);
+    var plannedPartition = fixedConfigured + savingsConfigured;
+    var superfluosPlanificados = Math.max(0, salary - plannedPartition);
+    var excesoParticion = Math.max(0, plannedPartition - salary);
     var totalGastado = totals.gastosVariables + totals.comprasWishlist;
-    var totalIngresos = salary + totals.ingresosExtra;
+    var salidasTotales = totals.gastos + totals.comprasWishlist + totals.aportesAhorro + totals.aportesMeta;
+    var ingresosDelMes = totals.ingresosSueldo + totals.ingresosExtra;
+    var totalIngresos = remanenteAnterior + ingresosDelMes;
     var totalApartado = totals.aportesAhorro + totals.aportesMeta;
-    var baseDisponible = salary - fixedConfigured;
-    var disponible = baseDisponible + totals.ingresosExtra - totals.gastosVariables - totals.comprasWishlist - totalApartado;
-    var baseCalculoDisponible = Math.max(0, baseDisponible + totals.ingresosExtra);
+    var baseDisponible = totalIngresos - fixedConfigured - savingsConfigured;
+    var disponible = totalIngresos - salidasTotales;
+    var baseCalculoDisponible = Math.max(0, totalIngresos);
+    var reminders = postSalaryReminders(state, month, salaryMovement);
 
     return {
       mes: month,
       moneda: config.moneda || 'PYG',
       sueldoMensual: salary,
+      sueldoCobrado: totals.ingresosSueldo,
+      sueldoRegistrado: totals.ingresosSueldo > 0,
+      fechaCobro: salaryMovement ? salaryMovement.fecha : '',
+      remanenteAnterior: remanenteAnterior,
       ingresosExtra: totals.ingresosExtra,
+      ingresosDelMes: ingresosDelMes,
       totalIngresos: totalIngresos,
       totalGastado: totalGastado,
+      salidasTotales: salidasTotales,
       gastosNormales: totals.gastos,
       gastosFijos: totals.gastosFijos,
       gastosVariables: totals.gastosVariables,
@@ -622,6 +704,10 @@
       aportesAhorro: totals.aportesAhorro,
       aportesMeta: totals.aportesMeta,
       totalApartado: totalApartado,
+      ahorrosPlanificados: savingsConfigured,
+      superfluosPlanificados: superfluosPlanificados,
+      excesoParticion: excesoParticion,
+      particionSueldo: salaryPartitionSummary(fixedConfigured, savingsConfigured, superfluosPlanificados, salary),
       baseDisponible: baseDisponible,
       baseCalculoDisponible: baseCalculoDisponible,
       disponible: disponible,
@@ -631,10 +717,124 @@
       categoriaMayorGasto: topCategory(categoryTotals),
       actividadReciente: sortMovements(state.movimientos.slice()).slice(0, 5),
       cantidadMovimientos: count,
+      recordatoriosPostCobro: reminders.todos,
+      recordatoriosPendientes: reminders.pendientes,
+      recordatoriosCompletos: reminders.completos,
       ahorrosFuturo: activeItems(state.ahorrosFuturo),
       metas: activeItems(state.metas),
       wishlist: sortWishlist(activeItems(state.wishlist))
     };
+  }
+
+  function plannedSavings(state) {
+    var items = [];
+    activeItems(state.ahorrosFuturo).forEach(function (item) {
+      var amount = utils.normalizeAmount(item.montoMensual);
+      if (amount > 0) {
+        items.push({
+          tipo: 'ahorro',
+          idRelacionado: item.id,
+          nombre: item.titulo || 'Futuro',
+          monto: amount
+        });
+      }
+    });
+    activeItems(state.metas).forEach(function (item) {
+      var amount = utils.normalizeAmount(item.montoMensual);
+      if (amount > 0) {
+        items.push({
+          tipo: 'meta',
+          idRelacionado: item.id,
+          nombre: item.titulo || 'Meta',
+          monto: amount
+        });
+      }
+    });
+    return items;
+  }
+
+  function salaryPartitionSummary(fixed, savings, superfluous, salary) {
+    var total = Math.max(1, utils.normalizeAmount(salary));
+    return [
+      {
+        clave: 'fijos',
+        nombre: 'Gastos fijos',
+        monto: fixed,
+        porcentaje: Math.round((fixed / total) * 10000) / 100
+      },
+      {
+        clave: 'ahorros',
+        nombre: 'Ahorros',
+        monto: savings,
+        porcentaje: Math.round((savings / total) * 10000) / 100
+      },
+      {
+        clave: 'superfluos',
+        nombre: 'Superfluos',
+        monto: superfluous,
+        porcentaje: Math.round((superfluous / total) * 10000) / 100
+      }
+    ].filter(function (item) {
+      return item.monto > 0;
+    });
+  }
+
+  function postSalaryReminders(state, month, salaryMovement) {
+    if (!salaryMovement) {
+      return { todos: [], pendientes: [], completos: true };
+    }
+    var fixedItems = normalizeFixedExpenses(state.config.gastosFijos, state.config.sueldoMensual).map(function (item, index) {
+      return {
+        id: 'fixed-' + index,
+        tipo: 'fijo',
+        tipoMovimiento: 'Gasto fijo',
+        nombre: utils.fixedExpenseName(item) || 'Gasto fijo',
+        monto: utils.fixedExpenseAmount(item),
+        idRelacionado: 'fixed-' + index,
+        pagado: hasFixedPayment(state.movimientos, month, item)
+      };
+    }).filter(function (item) {
+      return item.nombre && item.monto > 0;
+    });
+    var savingItems = plannedSavings(state).map(function (item) {
+      return {
+        id: item.tipo + '-' + item.idRelacionado,
+        tipo: item.tipo,
+        tipoMovimiento: item.tipo === 'meta' ? 'Aporte a meta' : 'Aporte a ahorro',
+        nombre: item.nombre,
+        monto: item.monto,
+        idRelacionado: item.idRelacionado,
+        pagado: hasRelatedPayment(state.movimientos, month, item)
+      };
+    });
+    var all = fixedItems.concat(savingItems);
+    return {
+      todos: all,
+      pendientes: all.filter(function (item) { return !item.pagado; }),
+      completos: all.length > 0 && all.every(function (item) { return item.pagado; })
+    };
+  }
+
+  function hasFixedPayment(movements, month, fixedExpense) {
+    var name = normalizeCompareText(utils.fixedExpenseName(fixedExpense));
+    return (movements || []).some(function (movement) {
+      return movementMonth(movement) === month
+        && utils.isFixedExpenseMovement(movement)
+        && normalizeCompareText(movement.motivo) === name;
+    });
+  }
+
+  function hasRelatedPayment(movements, month, item) {
+    var expectedType = item.tipo === 'meta' ? 'Aporte a meta' : 'Aporte a ahorro';
+    return (movements || []).some(function (movement) {
+      return movementMonth(movement) === month
+        && movement.tipo === expectedType
+        && String(movement.idRelacionado || '') === String(item.idRelacionado || '');
+    });
+  }
+
+  function normalizeCompareText(value) {
+    return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
   }
 
   function topCategory(totals) {
@@ -694,6 +894,35 @@
       return date.slice(0, 7);
     }
     return String((item || {}).mes || currentMonth()).slice(0, 7);
+  }
+
+  function defaultDateForMonth(month) {
+    var value = normalizeMonth(month);
+    var today = utils.toInputDate();
+    return today.slice(0, 7) === value ? today : value + '-01';
+  }
+
+  function findSalaryMovement(items, month) {
+    return (items || []).filter(function (item) {
+      return movementMonth(item) === month && isSalaryMovement(item);
+    })[0] || null;
+  }
+
+  function isSalaryMovement(item) {
+    return String((item || {}).tipo || '') === 'Ingreso'
+      && String((item || {}).motivo || '').trim().toLowerCase() === 'sueldo';
+  }
+
+  function isIncomeMovement(item) {
+    return String((item || {}).tipo || '') === 'Ingreso';
+  }
+
+  function isOutflowMovement(item) {
+    var type = String((item || {}).tipo || '');
+    return type === 'Gasto'
+      || type === 'Compra de wishlist'
+      || type === 'Aporte a ahorro'
+      || type === 'Aporte a meta';
   }
 
   function monthFromPayload(payload) {

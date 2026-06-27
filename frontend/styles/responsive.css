@@ -207,8 +207,20 @@
     grid-template-columns: none;
     grid-template-rows: auto auto;
     gap: 6px;
-    min-height: 148px;
+    min-height: 136px;
     padding: 6px;
+  }
+
+  .wishlist-window .wish-pin {
+    top: -3px;
+    right: -3px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .wishlist-window .wish-card .lcd-photo,
+  .wishlist-window .wish-card .lcd-photo-placeholder {
+    min-height: 58px;
   }
 
   .wish-info > strong {

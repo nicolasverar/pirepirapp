@@ -4204,6 +4204,24 @@ body::-webkit-scrollbar,
   height: 42px;
 }
 
+.summary-stack > .availability-card.availability-card-b::after,
+.summary-stack > .salary-partition-card.salary-partition-aaa::after {
+  z-index: 2;
+  height: 9px;
+  bottom: -9px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.78) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+    rgba(101, 115, 66, 0.88);
+}
+
+.summary-stack > .availability-card.availability-card-b::before,
+.summary-stack > .salary-partition-card.salary-partition-aaa::before {
+  z-index: 2;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(7, 16, 7, 0.78) 0 1px, transparent 1.25px) 0 0 / 4px 4px,
+    rgba(101, 115, 66, 0.88);
+}
+
 .ticket-form-modal .form-error:not([hidden]) {
   display: block;
   padding: 8px 9px;
@@ -4889,11 +4907,11 @@ body::-webkit-scrollbar,
   z-index: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 6px;
-  min-height: 176px;
+  gap: 5px;
+  min-height: 156px;
   height: 100%;
   margin: 0 7px 7px 0;
-  padding: 8px;
+  padding: 7px;
   overflow: visible;
   color: #071007;
   background:
@@ -4941,12 +4959,12 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin {
   position: absolute;
   z-index: 5;
-  top: -10px;
-  right: -10px;
+  top: -4px;
+  right: -4px;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 27px;
+  height: 27px;
   padding: 0;
   color: #c4d08b;
   background:
@@ -4964,8 +4982,8 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-pin span {
   position: relative;
   display: block;
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   border: 2px solid rgba(196, 208, 139, 0.86);
   border-radius: 50%;
   background: #071007;
@@ -4973,7 +4991,7 @@ body::-webkit-scrollbar,
 }
 
 .wishlist-window .wish-card.is-pinned .wish-pin {
-  transform: translate(-1px, 1px);
+  transform: translate(0, 0);
 }
 
 .wishlist-window .wish-pin:focus-visible {
@@ -4984,7 +5002,7 @@ body::-webkit-scrollbar,
 .wishlist-window .wish-card .lcd-photo,
 .wishlist-window .wish-card .lcd-photo-placeholder {
   width: 100%;
-  min-height: 82px;
+  min-height: 68px;
   aspect-ratio: 4 / 3;
   border: 2px solid #071007;
   border-radius: 4px;
@@ -4994,8 +5012,10 @@ body::-webkit-scrollbar,
   display: grid;
   grid-template-rows: auto auto auto;
   align-content: start;
+  justify-items: stretch;
   gap: 5px;
   min-width: 0;
+  text-align: center;
 }
 
 .wishlist-window .wish-info > strong {
@@ -5003,6 +5023,7 @@ body::-webkit-scrollbar,
   overflow: visible;
   overflow-wrap: anywhere;
   white-space: normal;
+  text-align: center;
   text-transform: uppercase;
   font-size: 0.76rem;
   font-weight: 900;
@@ -5019,7 +5040,7 @@ body::-webkit-scrollbar,
   border: 2px solid #071007;
   border-radius: 5px;
   overflow-wrap: anywhere;
-  text-align: left;
+  text-align: center;
   font-size: 0.76rem;
   font-weight: 900;
   line-height: 1;
@@ -5027,7 +5048,7 @@ body::-webkit-scrollbar,
 
 .wishlist-window .wish-info .mini-actions {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.75fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 5px;
 }
 
@@ -5044,6 +5065,7 @@ body::-webkit-scrollbar,
     2px 2px 0 rgba(7, 16, 7, 0.55);
   white-space: normal;
   overflow-wrap: anywhere;
+  text-align: center;
   text-transform: uppercase;
   font-size: 0.56rem;
   font-weight: 900;

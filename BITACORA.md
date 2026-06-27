@@ -377,3 +377,21 @@
 - Busqueda activa en `frontend` de `v2.92`, `2.92`, `finanzas-lcd-v100`, `pin-lcd.png` y `grid-area: actions`: sin resultados.
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.93`: OK, responde HTML con `v2.93`.
 - `git push origin main`: OK.
+
+## 2026-06-27 - Ajuste sombra y wishlist v2.94
+
+### Objetivo
+- Agregar puntillado visible en la sombra inferior de `Plata disponible` y `Particion de sueldo`.
+- Recentrar y compactar las tarjetas de `Cosas que quiero`.
+
+### Cambios
+- `Plata disponible` y `Particion de sueldo` tienen sombra inferior con fondo punteado explicito, igual que el lateral.
+- La tarjeta `Cosas que quiero` reduce espacio superior, centra titulo/monto/botones y compacta la foto.
+- El boton de fijar/punch queda integrado a la esquina superior derecha y mas cerca del campo visual.
+- Se subio version visible a `v2.94` y service worker a `finanzas-lcd-v102`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `v2.93`, `2.93` y `finanzas-lcd-v101`: sin resultados.

@@ -783,19 +783,23 @@
 
   function renderSettings(state) {
     var config = state.data.config || {};
+    var archive = state.data.archivo || [];
     return [
-      '<section class="system-window">',
-      '<div class="window-title">CONFIGURACION</div>',
+      '<section class="settings-stack">',
       '<form class="lcd-form settings-form" id="settings-form">',
       '<p class="form-error" hidden></p>',
+      '<section class="system-window settings-card salary-settings-card">',
+      '<div class="window-title"><span>SUELDO MENSUAL</span><span>MONTO</span></div>',
       '<div class="salary-config-panel">',
       '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '</div>',
+      '</section>',
       renderFixedExpensesEditor(config),
       '<div class="form-actions">',
-      '<button class="lcd-button primary" type="submit">Guardar</button>',
+      '<button class="lcd-button primary" type="submit">Guardar montos</button>',
       '</div>',
       '</form>',
+      renderArchiveSection(archive),
       '</section>'
     ].join('');
   }
@@ -804,8 +808,8 @@
     var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
     var items = utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary);
     return [
-      '<section class="fixed-expense-editor">',
-      '<div class="section-subtitle">Gastos fijos</div>',
+      '<section class="system-window settings-card fixed-expense-editor">',
+      '<div class="window-title"><span>GASTOS FIJOS</span><span>MONTO/%</span></div>',
       '<div class="fixed-expense-list" data-fixed-list>',
       (items.length ? items : [{ nombre: '', monto: 0, porcentajeSueldo: 0 }]).map(function (item, index) {
         return renderFixedExpenseRow(item, index, salary);
@@ -820,15 +824,20 @@
     var name = utils.fixedExpenseName(item);
     var amount = utils.fixedExpenseAmount(item);
     var percent = utils.fixedExpensePercent(item, salary);
+    var percentValue = formatPercentInput(percent) || '0';
     return [
       '<article class="fixed-expense-row" data-fixed-row>',
-      '<label class="field"><span>Nombre</span><input data-fixed-name name="gastoFijoNombre' + index + '" type="text" maxlength="80" value="' + utils.escapeHtml(name) + '" autocomplete="off"></label>',
-      '<div class="field-row">',
+      '<div class="fixed-expense-fields">',
+      '<label class="field fixed-expense-name"><span>Nombre del gasto</span><input data-fixed-name name="gastoFijoNombre' + index + '" type="text" maxlength="80" value="' + utils.escapeHtml(name) + '" autocomplete="off"></label>',
       '<label class="field"><span>Monto mensual</span><input data-fixed-amount name="gastoFijoMonto' + index + '" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(amount || '') + '"></label>',
-      '<label class="field"><span>% sueldo</span><input data-fixed-percent name="gastoFijoPorcentaje' + index + '" type="number" min="0" step="0.01" inputmode="decimal" value="' + utils.escapeHtml(formatPercentInput(percent)) + '"></label>',
+      '<label class="field fixed-percent-control"><span>Porcentaje del sueldo</span>',
+      '<span class="fixed-dial-shell" data-fixed-dial-shell style="--fixed-dial-angle:' + utils.escapeHtml(String(fixedDialAngle(percent))) + 'deg">',
+      '<span class="fixed-dial-face" aria-hidden="true"><i></i><b data-fixed-percent-display>' + utils.escapeHtml(percentValue) + '%</b></span>',
+      '<input data-fixed-percent name="gastoFijoPorcentaje' + index + '" type="range" min="0" max="100" step="0.5" value="' + utils.escapeHtml(percentValue) + '">',
+      '</span>',
+      '</label>',
       '</div>',
       '<div class="fixed-expense-actions">',
-      '<button class="tiny-key js-edit-fixed-expense" type="button">Editar</button>',
       '<button class="tiny-key js-remove-fixed-expense" type="button">Eliminar</button>',
       '</div>',
       '</article>'
@@ -838,6 +847,64 @@
   function formatPercentInput(value) {
     var number = Number(value || 0);
     return number ? String(Math.round(number * 100) / 100) : '';
+  }
+
+  function fixedDialAngle(value) {
+    var percent = Math.max(0, Math.min(100, Number(value || 0)));
+    return Math.round((-135 + (percent * 2.7)) * 10) / 10;
+  }
+
+  function formatPercentLabel(value) {
+    return formatPercentInput(value) || '0';
+  }
+
+  function renderArchiveSection(items) {
+    return [
+      '<section class="system-window settings-card archive-settings-card">',
+      '<div class="window-title"><span>PAPELERA</span><span>ARCHIVO</span></div>',
+      '<div class="archive-list" data-archive-list>',
+      renderArchiveItems(items || []),
+      '</div>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderArchiveItems(items) {
+    if (!items || !items.length) {
+      return '<p class="empty-state archive-empty">No hay metas ni cosas archivadas.</p>';
+    }
+    return items.map(function (item) {
+      var type = item.tipo === 'wishlist' ? 'wishlist' : 'meta';
+      var title = item.titulo || (type === 'wishlist' ? 'Cosa que quiero' : 'Meta');
+      var amount = item.montoObjetivo || item.costoAproximado || item.montoAcumulado || 0;
+      return [
+        '<article class="archive-item">',
+        '<div class="archive-copy">',
+        '<span class="archive-badge">' + utils.escapeHtml(item.motivoArchivo || archiveReason(item)) + '</span>',
+        '<strong>' + utils.escapeHtml(title) + '</strong>',
+        amount ? '<small>' + utils.escapeHtml(utils.formatMoney(amount)) + '</small>' : '',
+        '</div>',
+        '<button class="tiny-key js-restore-archive" type="button" data-archive-type="' + utils.escapeHtml(type) + '" data-id="' + utils.escapeHtml(item.id || '') + '">Recuperar</button>',
+        '</article>'
+      ].join('');
+    }).join('');
+  }
+
+  function archiveReason(item) {
+    var status = String((item || {}).estado || '').toLowerCase();
+    if ((item || {}).tipo === 'wishlist') {
+      if (status === 'comprado') {
+        return 'Cumplida';
+      }
+      if (status === 'convertido') {
+        return 'Convertida';
+      }
+      return 'Borrada';
+    }
+    if ((item || {}).cumplida) {
+      return 'Cumplida';
+    }
+    return 'Borrada';
   }
 
   function renderSalaryPartition(config, summary) {
@@ -1202,6 +1269,7 @@
     });
 
     bindFixedExpenseEditor(form);
+    bindArchive(root);
   }
 
   function bindFixedExpenseEditor(form) {
@@ -1219,12 +1287,12 @@
       var nameInput = utils.qs('[data-fixed-name]', row);
       var amountInput = utils.qs('[data-fixed-amount]', row);
       var percentInput = utils.qs('[data-fixed-percent]', row);
-      var editButton = utils.qs('.js-edit-fixed-expense', row);
       var removeButton = utils.qs('.js-remove-fixed-expense', row);
 
       amountInput.addEventListener('input', function () {
         var sueldo = salary();
         percentInput.value = sueldo ? formatPercentInput((utils.normalizeAmount(amountInput.value) / sueldo) * 100) : '';
+        updatePercentDial(row);
         updateFixedTotal(form);
       });
       percentInput.addEventListener('input', function () {
@@ -1232,14 +1300,11 @@
         if (sueldo) {
           amountInput.value = String(Math.round((Number(String(percentInput.value).replace(',', '.')) || 0) * sueldo / 100));
         }
+        updatePercentDial(row);
         updateFixedTotal(form);
       });
       nameInput.addEventListener('input', function () {
         updateFixedTotal(form);
-      });
-      editButton.addEventListener('click', function () {
-        nameInput.focus();
-        nameInput.select();
       });
       removeButton.addEventListener('click', function () {
         row.parentNode.removeChild(row);
@@ -1257,10 +1322,67 @@
         var amountInput = utils.qs('[data-fixed-amount]', row);
         var percentInput = utils.qs('[data-fixed-percent]', row);
         percentInput.value = salary() ? formatPercentInput((utils.normalizeAmount(amountInput.value) / salary()) * 100) : '';
+        updatePercentDial(row);
       });
       updateFixedTotal(form);
     });
     updateFixedTotal(form);
+  }
+
+  function updatePercentDial(row) {
+    var percentInput = utils.qs('[data-fixed-percent]', row);
+    var shell = utils.qs('[data-fixed-dial-shell]', row);
+    var display = utils.qs('[data-fixed-percent-display]', row);
+    var percent = Math.max(0, Math.min(100, Number(String((percentInput || {}).value || '').replace(',', '.')) || 0));
+    if (percentInput) {
+      percentInput.value = formatPercentLabel(percent);
+    }
+    if (shell) {
+      shell.style.setProperty('--fixed-dial-angle', fixedDialAngle(percent) + 'deg');
+    }
+    if (display) {
+      display.textContent = formatPercentLabel(percent) + '%';
+    }
+  }
+
+  function bindArchive(root) {
+    var list = utils.qs('[data-archive-list]', root);
+    if (!list) {
+      return;
+    }
+
+    function render(items) {
+      list.innerHTML = renderArchiveItems(items || []);
+    }
+
+    function loadArchive() {
+      if (!window.FinanzasApi || !window.FinanzasApi.request) {
+        return Promise.resolve();
+      }
+      return window.FinanzasApi.request('getArchive', {})
+        .then(render)
+        .catch(function () {
+          return null;
+        });
+    }
+
+    list.addEventListener('click', function (event) {
+      var button = event.target.closest ? event.target.closest('.js-restore-archive') : null;
+      if (!button || !list.contains(button)) {
+        return;
+      }
+      button.disabled = true;
+      window.FinanzasApp.mutate('restoreArchiveItem', {
+        tipo: button.getAttribute('data-archive-type') || '',
+        id: button.getAttribute('data-id') || ''
+      })
+        .then(loadArchive)
+        .catch(function () {
+          button.disabled = false;
+        });
+    });
+
+    loadArchive();
   }
 
   function collectFixedExpenses(root, salary) {

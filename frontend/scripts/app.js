@@ -307,7 +307,8 @@
       movimientos: current.movimientos,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: nextGoals,
-      wishlist: nextWishlist
+      wishlist: nextWishlist,
+      archivo: current.archivo
     });
     saveCurrentBootstrap();
 
@@ -417,7 +418,8 @@
       movimientos: nextMovements,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: current.metas,
-      wishlist: current.wishlist
+      wishlist: current.wishlist,
+      archivo: current.archivo
     });
     rememberMovementDelete(id);
     saveCurrentBootstrap();
@@ -537,7 +539,8 @@
       movimientos: movementDataWithItems(source, items),
       ahorrosFuturo: current.ahorrosFuturo,
       metas: current.metas,
-      wishlist: current.wishlist
+      wishlist: current.wishlist,
+      archivo: current.archivo
     });
   }
 
@@ -1007,7 +1010,8 @@
       movimientos: movementDataWithItems(source, items),
       ahorrosFuturo: next.ahorrosFuturo || current.ahorrosFuturo,
       metas: next.metas || current.metas,
-      wishlist: next.wishlist || current.wishlist
+      wishlist: next.wishlist || current.wishlist,
+      archivo: next.archivo || current.archivo
     };
   }
 
@@ -1040,6 +1044,16 @@
     }
 
     if ((route === 'createwishlistitem' || route === 'updatewishlistitem') && result.id) {
+      applyListItemResult('wishlist', result, isActiveItem(result));
+      return;
+    }
+
+    if (route === 'restorearchiveitem') {
+      applyArchiveRestoreResult(result);
+      return;
+    }
+
+    if (route === 'deletewishlistitem' && result.id) {
       applyListItemResult('wishlist', result, isActiveItem(result));
       return;
     }
@@ -1095,7 +1109,8 @@
       movimientos: nextMovements,
       ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
       metas: (result.resumen && result.resumen.metas) || current.metas,
-      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
+      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist,
+      archivo: (result.resumen && result.resumen.archivo) || current.archivo
     };
     nextData.resumen = recalculateSummary(nextData.resumen, nextData.config, items, nextData);
 
@@ -1119,7 +1134,8 @@
       movimientos: current.movimientos,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: current.metas,
-      wishlist: current.wishlist
+      wishlist: current.wishlist,
+      archivo: current.archivo
     });
     saveCurrentBootstrap();
   }
@@ -1138,7 +1154,8 @@
       },
       ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
       metas: (result.resumen && result.resumen.metas) || current.metas,
-      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
+      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist,
+      archivo: (result.resumen && result.resumen.archivo) || current.archivo
     });
     saveCurrentBootstrap();
   }
@@ -1154,6 +1171,38 @@
     }
     var nextData = Object.assign({}, current, objectWithKey(listName, items));
     nextData.resumen = recalculateSummary(
+      current.resumen,
+      nextData.config,
+      movementItemsFromData(nextData.movimientos || {}),
+      nextData
+    );
+    window.FinanzasState.setData(nextData);
+    saveCurrentBootstrap();
+  }
+
+  function applyArchiveRestoreResult(result) {
+    var current = window.FinanzasState.getState().data;
+    var item = (result || {}).item || {};
+    var listName = (result || {}).coleccion === 'wishlist' || (result || {}).tipo === 'wishlist'
+      ? 'wishlist'
+      : 'metas';
+    if (!item.id) {
+      if (result && result.archivo) {
+        window.FinanzasState.setData(Object.assign({}, current, { archivo: result.archivo }));
+        saveCurrentBootstrap();
+      }
+      return;
+    }
+    var source = Array.isArray(current[listName]) ? current[listName] : [];
+    var items = source.filter(function (existing) {
+      return String(existing.id) !== String(item.id);
+    });
+    if (isActiveItem(item)) {
+      items.push(item);
+    }
+    var nextData = Object.assign({}, current, objectWithKey(listName, items));
+    nextData.archivo = result.archivo || current.archivo;
+    nextData.resumen = result.resumen || recalculateSummary(
       current.resumen,
       nextData.config,
       movementItemsFromData(nextData.movimientos || {}),
@@ -1189,7 +1238,8 @@
       movimientos: current.movimientos,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: metas,
-      wishlist: wishlist
+      wishlist: wishlist,
+      archivo: result.archivo || current.archivo
     };
     nextData.resumen = recalculateSummary(
       current.resumen,

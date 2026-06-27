@@ -252,6 +252,15 @@
     grid-template-columns: 1fr;
   }
 
+  .fixed-expense-fields,
+  .archive-item {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-item .tiny-key {
+    justify-self: stretch;
+  }
+
   .post-salary-item {
     grid-template-columns: minmax(48px, 0.28fr) minmax(0, 1fr);
   }

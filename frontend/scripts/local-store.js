@@ -9,6 +9,7 @@
   var FALLBACK_KEY = 'pirepirappLocalState';
   var ACTIVE = 'Activo';
   var INACTIVE = 'Inactivo';
+  var COMPLETED = 'Cumplido';
   var CONVERTED = 'Convertido';
   var PURCHASED = 'Comprado';
 
@@ -100,6 +101,15 @@
     }
     if (route === 'updatewishlistitem') {
       return changed(upsertWishlistItem(state, payload || {}, requireItem(state.wishlist, payload.id, 'wishlist')));
+    }
+    if (route === 'deletewishlistitem') {
+      return changed(deleteWishlistItem(state, payload || {}));
+    }
+    if (route === 'getarchive') {
+      return unchanged(archiveItems(state));
+    }
+    if (route === 'restorearchiveitem') {
+      return changed(restoreArchiveItem(state, payload || {}));
     }
     if (route === 'uploadphoto') {
       return changed(uploadPhoto(state, payload || {}));
@@ -253,7 +263,8 @@
       movimientos: listMovements(state, { allMonths: true, order: 'desc' }),
       ahorrosFuturo: activeItems(state.ahorrosFuturo),
       metas: activeItems(state.metas),
-      wishlist: sortWishlist(activeItems(state.wishlist))
+      wishlist: sortWishlist(activeItems(state.wishlist)),
+      archivo: archiveItems(state)
     };
   }
 
@@ -471,6 +482,12 @@
     return clone(item);
   }
 
+  function deleteWishlistItem(state, payload) {
+    var existing = requireItem(state.wishlist, payload.id, 'wishlist');
+    existing.estado = INACTIVE;
+    return clone(existing);
+  }
+
   function convertWishlistToGoal(state, payload) {
     var id = payload.wishlistId || payload.id;
     var item = requireItem(state.wishlist, id, 'wishlist');
@@ -563,6 +580,11 @@
     item.montoAcumulado = Math.max(0, utils.normalizeAmount(item.montoAcumulado) + Number(delta || 0));
     if (isGoal) {
       item.porcentaje = goalPercent(item.montoAcumulado, item.montoObjetivo);
+      if (goalCompleted(item)) {
+        item.estado = COMPLETED;
+      } else if (String(item.estado || '').toLowerCase() === COMPLETED.toLowerCase()) {
+        item.estado = ACTIVE;
+      }
     }
   }
 
@@ -692,7 +714,8 @@
       recordatoriosCompletos: reminders.completos,
       ahorrosFuturo: activeItems(state.ahorrosFuturo),
       metas: activeItems(state.metas),
-      wishlist: sortWishlist(activeItems(state.wishlist))
+      wishlist: sortWishlist(activeItems(state.wishlist)),
+      archivo: archiveItems(state)
     };
   }
 
@@ -830,6 +853,67 @@
     return clone((items || []).filter(function (item) {
       return !item.estado || String(item.estado).toLowerCase() === ACTIVE.toLowerCase();
     }));
+  }
+
+  function archiveItems(state) {
+    var archived = [];
+    (state.metas || []).forEach(function (item) {
+      var status = String(item.estado || ACTIVE).toLowerCase();
+      if (status === INACTIVE.toLowerCase() || status === COMPLETED.toLowerCase()) {
+        archived.push(Object.assign({}, item, {
+          tipo: 'meta',
+          cumplida: status === COMPLETED.toLowerCase(),
+          motivoArchivo: status === COMPLETED.toLowerCase() ? 'Meta cumplida' : 'Meta borrada'
+        }));
+      }
+    });
+    (state.wishlist || []).forEach(function (item) {
+      var status = String(item.estado || ACTIVE).toLowerCase();
+      if (status !== ACTIVE.toLowerCase()) {
+        archived.push(Object.assign({}, item, {
+          tipo: 'wishlist',
+          motivoArchivo: wishlistArchiveReason(status)
+        }));
+      }
+    });
+    archived.sort(function (left, right) {
+      return String(left.titulo || '').localeCompare(String(right.titulo || ''), 'es');
+    });
+    return clone(archived);
+  }
+
+  function wishlistArchiveReason(status) {
+    if (status === PURCHASED.toLowerCase()) {
+      return 'Cosa cumplida';
+    }
+    if (status === CONVERTED.toLowerCase()) {
+      return 'Cosa convertida';
+    }
+    return 'Cosa borrada';
+  }
+
+  function restoreArchiveItem(state, payload) {
+    var type = String(payload.tipo || payload.type || payload.coleccion || '').toLowerCase();
+    var isWishlist = type === 'wishlist' || type === 'wish' || type === 'cosas';
+    var collection = isWishlist ? state.wishlist : state.metas;
+    var label = isWishlist ? 'wishlist' : 'meta';
+    var item = requireItem(collection, payload.id, label);
+    item.estado = ACTIVE;
+    if (isWishlist) {
+      item.fechaConversionMeta = '';
+    }
+    return {
+      tipo: isWishlist ? 'wishlist' : 'meta',
+      coleccion: isWishlist ? 'wishlist' : 'metas',
+      item: clone(item),
+      archivo: archiveItems(state),
+      resumen: buildSummary(state)
+    };
+  }
+
+  function goalCompleted(item) {
+    var target = utils.normalizeAmount((item || {}).montoObjetivo);
+    return target > 0 && utils.normalizeAmount((item || {}).montoAcumulado) >= target;
   }
 
   function sortWishlist(items) {

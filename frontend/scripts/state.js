@@ -24,7 +24,8 @@
       movimientos: { movimientos: [] },
       ahorrosFuturo: [],
       metas: [],
-      wishlist: []
+      wishlist: [],
+      archivo: []
     }
   };
 
@@ -47,7 +48,8 @@
       movimientos: next.movimientos || state.data.movimientos,
       ahorrosFuturo: next.ahorrosFuturo || state.data.ahorrosFuturo,
       metas: next.metas || state.data.metas,
-      wishlist: next.wishlist || state.data.wishlist
+      wishlist: next.wishlist || state.data.wishlist,
+      archivo: next.archivo || state.data.archivo
     };
     notify();
   }

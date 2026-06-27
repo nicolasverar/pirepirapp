@@ -246,6 +246,44 @@ async function run() {
   assert.strictEqual(state.movimientos.length, 10, 'Persistencia local debe conservar movimientos');
   assert.ok(Object.keys(state.photos).length >= 2, 'Persistencia local debe conservar fotos');
 
+  let archive = await window.FinanzasApi.request('getArchive', {});
+  assert.ok(archive.some((item) => item.id === wish.id && item.motivoArchivo === 'Cosa cumplida'), 'Wishlist comprada debe ir al archivo');
+  assert.ok(archive.some((item) => item.id === secondWish.id && item.motivoArchivo === 'Cosa convertida'), 'Wishlist convertida debe ir al archivo');
+
+  const deletedGoal = await window.FinanzasApi.request('createGoal', {
+    titulo: 'Meta borrable',
+    montoMensual: 10000,
+    montoObjetivo: 100000
+  });
+  await window.FinanzasApi.request('deleteGoal', { id: deletedGoal.id });
+  archive = await window.FinanzasApi.request('getArchive', {});
+  assert.ok(archive.some((item) => item.id === deletedGoal.id && item.motivoArchivo === 'Meta borrada'), 'Meta borrada debe ir al archivo');
+
+  await window.FinanzasApi.request('restoreArchiveItem', { tipo: 'meta', id: deletedGoal.id });
+  const restoredGoals = await window.FinanzasApi.request('getGoals', {});
+  assert.ok(restoredGoals.some((item) => item.id === deletedGoal.id), 'Meta restaurada debe volver a metas activas');
+
+  await window.FinanzasApi.request('restoreArchiveItem', { tipo: 'wishlist', id: wish.id });
+  const restoredWishlist = await window.FinanzasApi.request('getWishlist', {});
+  assert.ok(restoredWishlist.some((item) => item.id === wish.id), 'Wishlist restaurada debe volver activa');
+
+  const completedGoal = await window.FinanzasApi.request('createGoal', {
+    titulo: 'Meta cumplible',
+    montoMensual: 10000,
+    montoObjetivo: 100000
+  });
+  await window.FinanzasApi.request('createMovement', {
+    tipo: 'Aporte a meta',
+    motivo: completedGoal.titulo,
+    categoria: 'Metas',
+    monto: 100000,
+    idRelacionado: completedGoal.id,
+    fecha: '2026-05-20',
+    hora: '12:00:00'
+  });
+  archive = await window.FinanzasApi.request('getArchive', {});
+  assert.ok(archive.some((item) => item.id === completedGoal.id && item.motivoArchivo === 'Meta cumplida'), 'Meta cumplida debe ir al archivo');
+
   console.log('SMOKE_LOCAL_STORE_OK');
 }
 

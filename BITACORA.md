@@ -252,3 +252,26 @@
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda activa de `claimSalary`, `claimsalary`, `js-claim-salary` y `salary-paid-button`: sin resultados en frontend/scripts/docs activos.
+
+## 2026-06-27 - Marco PDA negro e icono circular v2.88
+
+### Objetivo
+- Reemplazar el tono verdoso del marco fisico y botonera por una textura negra tipo PDA.
+- Limpiar el header superior para quitar referencias visibles a sincronizacion, conexion y actualizacion.
+- Usar `logo.jpeg` solo como icono de app/launcher, sin insertarlo en la interfaz.
+
+### Cambios
+- El header muestra `PIREPIRAPP`, version visible y un terminal compacto solo para avisos rapidos como `Guardado`.
+- Se eliminaron los controles visibles de conexion, actualizacion de app, estado de sync y texto de mes automatico.
+- La carcasa y botones inferiores adoptan grafito/negro con textura sutil de material.
+- Se genero `logo-circle.png` desde `..\logo.jpeg` con fondo transparente y se actualizaron `frontend/icons/icon-192.png`, `frontend/icons/icon-512.png` y todos los recursos launcher de Android.
+- El fondo adaptive launcher pasa a transparente y se subio version visible a `v2.88` con service worker `finanzas-lcd-v96`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `Conexion`, `Actualizar app`, `Mes automatico`, `Sincronizado`, `Sin conexion`, `update-app`, `sync-status` y handlers obsoletos: sin resultados.
+- Iconos PNG verificados: `cornerA=0` y `centerA=255` en `logo-circle.png`, `icon-192.png`, `icon-512.png` y launcher Android principal.
+- `npm run cap:copy` quedo bloqueado en esta maquina por `EPERM` al reemplazar `android/app/src/main/assets/public/cordova_plugins.js`, carpeta ignorada por git y marcada como `ReparsePoint` de OneDrive. En la PC de Android, correr `npm run cap:copy` despues del pull antes de ejecutar desde Android Studio.
+- `npm run cap:build:debug` quedo bloqueado en esta maquina porque no hay `java` en `PATH` ni `JAVA_HOME` configurado.

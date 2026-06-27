@@ -6,25 +6,28 @@
   .device-shell {
     height: calc(100vh - 36px);
     height: calc(100svh - 36px);
-    border: 3px solid #070a07;
-    box-shadow: 8px 8px 0 #060806;
+    border: 3px solid #030404;
+    box-shadow:
+      inset 0 0 0 2px rgba(255, 255, 255, 0.035),
+      8px 8px 0 #020303;
   }
 }
 
 @media (max-width: 360px) {
   .status-bar {
-    grid-template-columns: auto minmax(0, 1fr) 22px;
-    gap: 5px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
     font-size: 0.72rem;
   }
 
   .brand-mark {
     grid-template-columns: auto auto;
-    gap: 4px;
+    justify-content: center;
+    gap: 5px;
   }
 
   .brand-mark strong {
-    max-width: 94px;
+    max-width: 126px;
     font-size: 0.68rem;
   }
 
@@ -33,19 +36,9 @@
   }
 
   .status-terminal {
-    min-height: 24px;
-    padding: 4px 5px;
+    min-height: 23px;
+    padding: 4px 6px;
     font-size: 0.54rem;
-  }
-
-  .sync-indicator {
-    width: 22px;
-    height: 24px;
-  }
-
-  .sync-dot {
-    width: 10px;
-    height: 10px;
   }
 
   .big-money {

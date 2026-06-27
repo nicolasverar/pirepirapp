@@ -1,8 +1,8 @@
 :root {
-  --case-black: #090c08;
-  --case-dark: #171b14;
-  --case-mid: #2a2f24;
-  --case-hi: #444b38;
+  --case-black: #060707;
+  --case-dark: #101112;
+  --case-mid: #242628;
+  --case-hi: #4a4d4f;
   --lcd-bg: #97a260;
   --lcd-bg-2: #8d995a;
   --lcd-surface-hi: #acb775;
@@ -12,8 +12,8 @@
   --lcd-ink: #0d150c;
   --lcd-line: #121c10;
   --lcd-alert: #5d2d22;
-  --key-face: #1a2418;
-  --key-press: #7b8a50;
+  --key-face: #1a1c1e;
+  --key-press: #3b3f42;
   --focus: #aebb76;
   --shadow-hard: 3px 3px 0 #0b100b;
   --font-lcd: "Courier New", Consolas, monospace;
@@ -37,8 +37,8 @@ body {
   margin: 0;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 0, rgba(174, 203, 124, 0.09), transparent 36%),
-    repeating-linear-gradient(0deg, #111711 0, #111711 6px, #141c14 6px, #141c14 12px);
+    radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0.045), transparent 36%),
+    repeating-linear-gradient(0deg, #090a0a 0, #090a0a 6px, #0d0e0f 6px, #0d0e0f 12px);
   color: var(--lcd-ink);
   font-family: var(--font-lcd);
   letter-spacing: 0;

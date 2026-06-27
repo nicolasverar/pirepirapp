@@ -44,40 +44,13 @@
   function updateChrome(state) {
     var sectionTitle = utils.qs('#section-title');
     var statusDate = utils.qs('#status-date');
-    var statusTerminalBox = utils.qs('#status-terminal');
-    var statusTerminal = utils.qs('#status-terminal span');
-    var syncLabel = utils.qs('#sync-status .sync-label');
-    var syncBox = utils.qs('#sync-status');
     if (sectionTitle) {
       sectionTitle.textContent = window.FinanzasRouter.currentLabel();
     }
     if (statusDate) {
       statusDate.textContent = utils.compactDate();
     }
-    if (statusTerminal && (!statusTerminalBox || !statusTerminalBox.classList.contains('is-notice'))) {
-      statusTerminal.textContent = state.syncStatus;
-    }
-    if (syncLabel) {
-      syncLabel.textContent = state.syncStatus;
-    }
-    if (syncBox) {
-      syncBox.className = 'sync-indicator sync-' + syncClass(state.syncStatus);
-    }
     window.FinanzasRouter.syncNav();
-  }
-
-  function syncClass(status) {
-    var text = String(status || '').toLowerCase();
-    if (text.indexOf('error') !== -1) {
-      return 'error';
-    }
-    if (text.indexOf('guard') !== -1 || text.indexOf('carg') !== -1) {
-      return 'saving';
-    }
-    if (text.indexOf('sin conexion') !== -1 || text.indexOf('falta') !== -1) {
-      return 'offline';
-    }
-    return 'ok';
   }
 
   function renderMissingConfig() {
@@ -85,9 +58,7 @@
       '<section class="system-window">',
       '<div class="window-title">CONFIGURACION</div>',
       '<p class="lcd-strong">Almacenamiento local no disponible.</p>',
-      '<p>Usa el modo local o configura el modo legado de Apps Script desde conexion.</p>',
-      '<button class="lcd-button primary js-connect-backend" type="button">Conexion</button>',
-      renderAppVersionPanel(),
+      '<p>Reinicia la app o limpia almacenamiento local si el problema persiste.</p>',
       '</section>'
     ].join('');
   }
@@ -819,11 +790,8 @@
       renderFixedExpensesEditor(config),
       '<div class="form-actions">',
       '<button class="lcd-button primary" type="submit">Guardar</button>',
-      '<button class="lcd-button js-connect-backend" type="button">Conexion</button>',
       '</div>',
       '</form>',
-      '<p class="lcd-muted">Mes automatico: ' + utils.escapeHtml(config.mesActual || utils.currentMonth()) + '</p>',
-      renderAppVersionPanel(),
       '</section>'
     ].join('');
   }
@@ -1088,16 +1056,6 @@
     return '<ul class="partition-legend">' + items.join('') + '</ul>';
   }
 
-  function renderAppVersionPanel() {
-    var version = (window.FinanzasApp && window.FinanzasApp.version && window.FinanzasApp.version()) || ((window.FINANZAS_CONFIG || {}).APP_VERSION || 'dev');
-    return [
-      '<div class="app-version-panel">',
-      '<div class="version-line"><strong data-app-version>' + utils.escapeHtml(version) + '</strong></div>',
-      '<button class="lcd-button js-update-app" type="button">Actualizar app</button>',
-      '</div>'
-    ].join('');
-  }
-
   function renderProgressMeter(percent, extraClass) {
     var value = Math.max(0, Math.min(100, Number(percent || 0)));
     var moodClass = value > 66 ? ' progress-high' : value > 33 ? ' progress-mid' : ' progress-low';
@@ -1117,18 +1075,6 @@
         window.FinanzasRouter.go('gastos');
       });
     }
-
-    utils.qsa('.js-connect-backend', root).forEach(function (button) {
-      button.addEventListener('click', function () {
-        window.FinanzasForms.openAccessForm();
-      });
-    });
-
-    utils.qsa('.js-update-app', root).forEach(function (button) {
-      button.addEventListener('click', function () {
-        window.FinanzasApp.updateApp();
-      });
-    });
 
     utils.qsa('.js-pay-reminder', root).forEach(function (button) {
       button.addEventListener('click', function () {

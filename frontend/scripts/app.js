@@ -31,18 +31,13 @@
       window.FinanzasForms.actionMenu();
     });
 
-    var updateButton = utils.qs('#update-app-button');
-    if (updateButton) {
-      updateButton.addEventListener('click', updateApp);
-    }
-
     window.addEventListener('online', function () {
-      setStatus('Sincronizado');
+      setStatus('Local');
       refresh();
     });
 
     window.addEventListener('offline', function () {
-      setStatus('Sin conexion');
+      setStatus('Local');
     });
   }
 
@@ -67,7 +62,7 @@
   function refresh(options) {
     var settings = options || {};
     if (!window.FinanzasApi.hasBackend()) {
-      setStatus('Falta URL');
+      setStatus('Local');
       window.FinanzasRender.render();
       return Promise.resolve();
     }
@@ -76,7 +71,7 @@
     var currentStatus = window.FinanzasState.getState().syncStatus;
     window.FinanzasState.setState({
       loading: !hasData,
-      syncStatus: settings.silent ? currentStatus : (hasData || settings.background ? 'Actualizando' : 'Cargando'),
+      syncStatus: settings.silent ? currentStatus : (hasData || settings.background ? 'Local' : 'Cargando'),
       error: ''
     });
     return window.FinanzasApi.request('bootstrap', {})
@@ -86,7 +81,7 @@
         if (window.FinanzasLocalCache) {
           window.FinanzasLocalCache.saveBootstrap(reconciled);
         }
-        window.FinanzasState.setState({ loading: false, syncStatus: 'Sincronizado', error: '' });
+        window.FinanzasState.setState({ loading: false, syncStatus: 'Local', error: '' });
       })
       .catch(function (error) {
         var hasLocalData = Boolean(window.FinanzasState.getState().data.resumen);
@@ -97,15 +92,14 @@
         });
         if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
-          window.FinanzasForms.openAccessForm();
-          toast(error.message);
+          toast('Usando almacenamiento local.');
           return;
         }
         if (settings.silent && hasLocalData) {
           return;
         }
         if (hasLocalData) {
-          toast(navigator.onLine === false ? 'Sin conexion. Usando datos guardados.' : 'Usando datos guardados.');
+          toast('Usando datos locales.');
           return;
         }
         toast(error.message);
@@ -124,7 +118,7 @@
     return window.FinanzasApi.request(action, payload || {})
       .then(function (data) {
         applyMutationResult(action, data);
-        window.FinanzasState.setState({ syncStatus: 'Sincronizado', error: '' });
+        window.FinanzasState.setState({ syncStatus: 'Local', error: '' });
         toast('Guardado');
         if (isMovementRoute(action) && !(window.FinanzasApi.isLocalMode && window.FinanzasApi.isLocalMode())) {
           scheduleMovementRefresh();
@@ -140,7 +134,6 @@
         window.FinanzasState.setState({ syncStatus: 'Error', error: error.message });
         if (/clave|token|conecta|url|FINANZAS_API_TOKEN/i.test(error.message)) {
           window.FinanzasApi.clearAuthToken();
-          window.FinanzasForms.openAccessForm();
         }
         toast(error.message);
         throw error;
@@ -206,7 +199,7 @@
     applyMovementItemsToState(current, source, items, result.resumen || current.resumen, current.config);
     saveCurrentBootstrap();
     if (created.length) {
-      toast('Gastos fijos sincronizados');
+      toast('Gastos fijos cargados');
     }
   }
 
@@ -1247,8 +1240,7 @@
     line.textContent = String(message || '');
     terminal.classList.add('is-notice');
     toastTimer = window.setTimeout(function () {
-      var state = window.FinanzasState.getState();
-      line.textContent = state.syncStatus || 'Sin iniciar';
+      line.textContent = 'Listo';
       terminal.classList.remove('is-notice');
     }, 2600);
   }
@@ -1258,78 +1250,9 @@
   }
 
   function syncVersionLabels() {
-    utils.qsa('[data-app-version], #update-app-button').forEach(function (item) {
+    utils.qsa('[data-app-version]').forEach(function (item) {
       item.textContent = version();
     });
-  }
-
-  function updateApp() {
-    if (navigator.onLine === false) {
-      toast('Necesitas conexion para actualizar.');
-      return Promise.resolve();
-    }
-
-    setStatus('Actualizando');
-    toast('Actualizando app...');
-
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      window.location.assign('./reset.html?from=app&appUpdate=' + Date.now());
-      return Promise.resolve();
-    }
-
-    return Promise.all([
-      clearAppCaches(),
-      unregisterServiceWorker()
-    ]).then(function () {
-      rememberUpdateMoment();
-      reloadWithoutCache();
-    }).catch(function (error) {
-      setStatus('Error');
-      toast(error && error.message ? error.message : 'No se pudo actualizar la app.');
-    });
-  }
-
-  function clearAppCaches() {
-    if (!window.caches) {
-      return Promise.resolve();
-    }
-    return caches.keys().then(function (keys) {
-      return Promise.all(keys.filter(function (key) {
-        return key.indexOf('finanzas-lcd-') === 0;
-      }).map(function (key) {
-        return caches.delete(key);
-      }));
-    });
-  }
-
-  function unregisterServiceWorker() {
-    if (!('serviceWorker' in navigator)) {
-      return Promise.resolve();
-    }
-    if (navigator.serviceWorker.getRegistrations) {
-      return navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        return Promise.all(registrations.map(function (registration) {
-          return registration.unregister();
-        }));
-      });
-    }
-    return navigator.serviceWorker.getRegistration().then(function (registration) {
-      return registration ? registration.unregister() : null;
-    });
-  }
-
-  function rememberUpdateMoment() {
-    try {
-      localStorage.setItem('finanzasLastAppUpdate', new Date().toISOString());
-    } catch (error) {
-      // Local storage can be unavailable in private browsing.
-    }
-  }
-
-  function reloadWithoutCache() {
-    var url = new URL(window.location.href);
-    url.searchParams.set('appUpdate', String(Date.now()));
-    window.location.replace(url.toString());
   }
 
   function registerServiceWorker() {
@@ -1349,7 +1272,6 @@
     mutate: mutate,
     convertWishlistInstant: convertWishlistInstant,
     toast: toast,
-    updateApp: updateApp,
     version: version,
     syncVersionLabels: syncVersionLabels
   };

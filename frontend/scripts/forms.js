@@ -309,17 +309,16 @@
 
   function filterMenuContent() {
     var groups = movementFilterMenuOptions();
-    var options = groups.typeOptions.concat(groups.monthOptions);
-    var activeCount = options.filter(function (option) {
+    var activeCount = groups.typeOptions.filter(function (option) {
       return option.value !== 'all' && option.active;
-    }).length;
-    var status = activeCount ? activeCount + ' ON' : options.length + ' OPC.';
+    }).length + (groups.monthRange.active ? 1 : 0);
+    var status = activeCount ? activeCount + ' ON' : (groups.typeOptions.length + 1) + ' OPC.';
     return [
       '<div class="add-action-menu filter-action-menu">',
       '<div class="add-action-context">',
       '<div class="add-action-context-label"><span>MOVIMIENTOS</span><span>' + utils.escapeHtml(status) + '</span></div>',
       renderMovementFilterGroup('Tipo', groups.typeOptions, 'movement-filter-types'),
-      groups.monthOptions.length ? renderMovementFilterGroup('Mes', groups.monthOptions, 'movement-filter-months') : '',
+      renderMovementMonthRange(groups.monthRange, groups.monthBounds),
       '</div>',
       '</div>'
     ].join('');
@@ -344,6 +343,28 @@
     ].join('');
   }
 
+  function renderMovementMonthRange(range, bounds) {
+    var current = range || {};
+    var limits = bounds || {};
+    var minAttr = limits.min ? ' min="' + utils.escapeHtml(limits.min) + '"' : '';
+    var maxAttr = limits.max ? ' max="' + utils.escapeHtml(limits.max) + '"' : '';
+    return [
+      '<div class="movement-filter-group movement-range-filter">',
+      '<div class="movement-filter-group-label">Meses</div>',
+      '<div class="movement-range-panel' + (current.active ? ' is-active' : '') + '">',
+      '<div class="movement-range-grid">',
+      '<label class="movement-range-field"><span>Desde</span><input type="month" value="' + utils.escapeHtml(current.from || '') + '"' + minAttr + maxAttr + ' data-filter-month-from></label>',
+      '<label class="movement-range-field"><span>Hasta</span><input type="month" value="' + utils.escapeHtml(current.to || '') + '"' + minAttr + maxAttr + ' data-filter-month-to></label>',
+      '</div>',
+      '<div class="movement-range-actions">',
+      '<button class="range-key primary" type="button" data-filter-range-apply>APLICAR</button>',
+      '<button class="range-key" type="button" data-filter-range-clear>TODO</button>',
+      '</div>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
   function bindMovementFilterMenu(root) {
     utils.qsa('.js-filter-menu-option', root).forEach(function (button) {
       button.addEventListener('click', function () {
@@ -353,6 +374,38 @@
         refreshMovementFilterMenu(root);
       });
     });
+    bindMovementRangeMenu(root);
+  }
+
+  function bindMovementRangeMenu(root) {
+    var fromInput = utils.qs('[data-filter-month-from]', root);
+    var toInput = utils.qs('[data-filter-month-to]', root);
+    var applyButton = utils.qs('[data-filter-range-apply]', root);
+    var clearButton = utils.qs('[data-filter-range-clear]', root);
+
+    function applyRange() {
+      var current = window.FinanzasState.getState().movementFilter || 'all';
+      var next = setMovementMonthRange(current, fromInput && fromInput.value, toInput && toInput.value);
+      window.FinanzasState.setState({ movementFilter: next });
+      refreshMovementFilterMenu(root);
+    }
+
+    if (applyButton) {
+      applyButton.addEventListener('click', applyRange);
+    }
+    if (fromInput) {
+      fromInput.addEventListener('change', applyRange);
+    }
+    if (toInput) {
+      toInput.addEventListener('change', applyRange);
+    }
+    if (clearButton) {
+      clearButton.addEventListener('click', function () {
+        var current = window.FinanzasState.getState().movementFilter || 'all';
+        window.FinanzasState.setState({ movementFilter: setMovementMonthRange(current, '', '') });
+        refreshMovementFilterMenu(root);
+      });
+    }
   }
 
   function refreshMovementFilterMenu(root) {
@@ -380,19 +433,12 @@
           active: movementFiltersInclude(active, option.value)
         };
       }),
-      monthOptions: movementMonthFilterOptions(movements, config).map(function (option) {
-        var count = movementFilterCount(movements, option.value);
-        return {
-          value: option.value,
-          label: option.label,
-          count: count,
-          active: movementFiltersInclude(active, option.value)
-        };
-      })
+      monthRange: movementRangeFromFilters(active),
+      monthBounds: movementRangeBounds(movements, config)
     };
   }
 
-  function movementMonthFilterOptions(movements, config) {
+  function movementRangeBounds(movements, config) {
     var seen = {};
     var months = [];
     function addMonth(value) {
@@ -410,12 +456,30 @@
     });
 
     months.sort().reverse();
-    return months.map(function (month) {
-      return {
-        value: 'month:' + month,
-        label: movementMonthLabel(month)
-      };
+    return {
+      min: months.length ? months[months.length - 1] : '',
+      max: months.length ? months[0] : ''
+    };
+  }
+
+  function movementRangeFromFilters(active) {
+    var months = [];
+    var range = null;
+    normalizeMovementFilters(active).forEach(function (value) {
+      if (isRangeFilter(value)) {
+        range = parseRangeFilter(value);
+      } else if (isMonthFilter(value)) {
+        months.push(value.slice(6, 13));
+      }
     });
+    if (!range && months.length) {
+      months.sort();
+      range = {
+        from: months[0],
+        to: months[months.length - 1]
+      };
+    }
+    return Object.assign({ from: '', to: '', active: false }, range || {}, { active: Boolean(range) });
   }
 
   function movementMonthLabel(value) {
@@ -459,7 +523,7 @@
       if (!clean || clean === 'all' || seen[clean]) {
         return;
       }
-      if (isMonthFilter(clean) || allowed.indexOf(clean) !== -1) {
+      if (isMonthFilter(clean) || isRangeFilter(clean) || allowed.indexOf(clean) !== -1) {
         seen[clean] = true;
         result.push(clean);
       }
@@ -469,6 +533,18 @@
 
   function isMonthFilter(value) {
     return /^month:\d{4}-\d{2}$/.test(String(value || ''));
+  }
+
+  function isRangeFilter(value) {
+    return /^range:\d{4}-\d{2}\.\.\d{4}-\d{2}$/.test(String(value || ''));
+  }
+
+  function parseRangeFilter(value) {
+    var match = /^range:(\d{4}-\d{2})\.\.(\d{4}-\d{2})$/.exec(String(value || ''));
+    if (!match) {
+      return null;
+    }
+    return normalizeMonthRange(match[1], match[2]);
   }
 
   function movementFiltersInclude(active, value) {
@@ -492,6 +568,43 @@
     return filters.length ? filters : 'all';
   }
 
+  function setMovementMonthRange(active, fromValue, toValue) {
+    var range = normalizeMonthRange(fromValue, toValue);
+    var filters = normalizeMovementFilters(active).filter(function (value) {
+      return !isMonthFilter(value) && !isRangeFilter(value);
+    });
+    if (range) {
+      filters.push('range:' + range.from + '..' + range.to);
+    }
+    return filters.length ? filters : 'all';
+  }
+
+  function normalizeMonthRange(fromValue, toValue) {
+    var from = normalizeMonthInput(fromValue);
+    var to = normalizeMonthInput(toValue);
+    var swap;
+    if (!from && !to) {
+      return null;
+    }
+    if (!from) {
+      from = to;
+    }
+    if (!to) {
+      to = from;
+    }
+    if (from > to) {
+      swap = from;
+      from = to;
+      to = swap;
+    }
+    return { from: from, to: to };
+  }
+
+  function normalizeMonthInput(value) {
+    var text = String(value || '').slice(0, 7);
+    return /^\d{4}-\d{2}$/.test(text) ? text : '';
+  }
+
   function matchesMovementFilter(item, filter) {
     var type = String((item || {}).tipo || '');
     if (!filter || filter === 'all') {
@@ -499,6 +612,11 @@
     }
     if (isMonthFilter(filter)) {
       return movementMonth(item) === String(filter).slice(6, 13);
+    }
+    if (isRangeFilter(filter)) {
+      var range = parseRangeFilter(filter);
+      var month = movementMonth(item);
+      return Boolean(range && month >= range.from && month <= range.to);
     }
     if (filter === 'expense') {
       return type === 'Gasto' && !utils.isFixedExpenseMovement(item);

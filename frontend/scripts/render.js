@@ -489,14 +489,15 @@
 
   function filterMovementsByType(movements, filter) {
     var groups = splitMovementFilters(filter);
-    if (!groups.types.length && !groups.months.length) {
+    if (!groups.types.length && !groups.range) {
       return (movements || []).slice();
     }
     return (movements || []).filter(function (item) {
       var typeMatches = !groups.types.length || groups.types.some(function (activeFilter) {
         return matchesMovementFilter(item, activeFilter);
       });
-      var monthMatches = !groups.months.length || groups.months.indexOf(movementMonth(item)) !== -1;
+      var month = movementMonth(item);
+      var monthMatches = !groups.range || (month >= groups.range.from && month <= groups.range.to);
       return typeMatches && monthMatches;
     });
   }
@@ -513,7 +514,7 @@
       if (!clean || clean === 'all' || seen[clean]) {
         return;
       }
-      if (isMonthFilter(clean) || allowed.indexOf(clean) !== -1) {
+      if (isMonthFilter(clean) || isRangeFilter(clean) || allowed.indexOf(clean) !== -1) {
         seen[clean] = true;
         result.push(clean);
       }
@@ -524,19 +525,40 @@
   function splitMovementFilters(filter) {
     var groups = {
       types: [],
-      months: []
+      range: null
     };
+    var months = [];
     normalizeMovementFilters(filter).forEach(function (value) {
       if (isMonthFilter(value)) {
-        groups.months.push(value.slice(6, 13));
+        months.push(value.slice(6, 13));
+      } else if (isRangeFilter(value)) {
+        groups.range = parseRangeFilter(value);
       } else {
         groups.types.push(value);
       }
     });
+    if (!groups.range && months.length) {
+      months.sort();
+      groups.range = {
+        from: months[0],
+        to: months[months.length - 1]
+      };
+    }
     return groups;
   }
 
   function movementFilterLabel(value) {
+    var range;
+    if (isRangeFilter(value)) {
+      range = parseRangeFilter(value);
+      if (!range) {
+        return 'Meses';
+      }
+      if (range.from === range.to) {
+        return movementMonthLabel(range.from);
+      }
+      return movementMonthLabel(range.from) + ' - ' + movementMonthLabel(range.to);
+    }
     if (isMonthFilter(value)) {
       return movementMonthLabel(value.slice(6, 13));
     }
@@ -548,6 +570,25 @@
 
   function isMonthFilter(value) {
     return /^month:\d{4}-\d{2}$/.test(String(value || ''));
+  }
+
+  function isRangeFilter(value) {
+    return /^range:\d{4}-\d{2}\.\.\d{4}-\d{2}$/.test(String(value || ''));
+  }
+
+  function parseRangeFilter(value) {
+    var match = /^range:(\d{4}-\d{2})\.\.(\d{4}-\d{2})$/.exec(String(value || ''));
+    var from;
+    var to;
+    if (!match) {
+      return null;
+    }
+    from = match[1];
+    to = match[2];
+    if (from > to) {
+      return { from: to, to: from };
+    }
+    return { from: from, to: to };
   }
 
   function movementMonthLabel(value) {
@@ -565,6 +606,11 @@
     }
     if (isMonthFilter(filter)) {
       return movementMonth(item) === String(filter).slice(6, 13);
+    }
+    if (isRangeFilter(filter)) {
+      var range = parseRangeFilter(filter);
+      var month = movementMonth(item);
+      return Boolean(range && month >= range.from && month <= range.to);
     }
     if (filter === 'expense') {
       return type === 'Gasto' && !utils.isFixedExpenseMovement(item);

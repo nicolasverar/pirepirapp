@@ -1122,8 +1122,83 @@ code {
   padding-top: 0;
 }
 
-.movement-filter-months {
+.movement-range-panel {
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.07) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.28);
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.18);
+}
+
+.movement-range-panel.is-active {
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.38), rgba(143, 160, 95, 0.3)),
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 4px);
+}
+
+.movement-range-grid {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.movement-range-field {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  color: #071007;
+  text-transform: uppercase;
+  font-size: 0.54rem;
+  font-weight: 900;
+}
+
+.movement-range-field input {
+  min-width: 0;
+  min-height: 31px;
+  padding: 4px 5px;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.62), rgba(143, 160, 95, 0.36));
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px 0 rgba(230, 238, 166, 0.22);
+  font: inherit;
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+
+.movement-range-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.range-key {
+  min-height: 30px;
+  padding: 4px 6px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.34);
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.range-key.primary {
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.48), transparent 42%),
+    #c4d08b;
 }
 
 .movement-filter-dock .filter-chip {

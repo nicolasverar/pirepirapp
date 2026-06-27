@@ -793,3 +793,27 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.09`, `v3.09` y `finanzas-lcd-v117`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Intervalo de meses en filtros v3.11
+
+### Objetivo
+- Reemplazar la seleccion de meses por chips individuales por un filtro compacto de intervalo.
+
+### Cambios
+- El menu `FILTRAR` mantiene los chips acumulables de `Tipo`.
+- La seccion `Meses` ahora muestra controles `Desde` y `Hasta` con selector mensual.
+- El intervalo se guarda como un unico filtro `range:AAAA-MM..AAAA-MM`, para evitar una vista pesada cuando haya muchos meses.
+- El boton `TODO` limpia solo el intervalo de meses y conserva los filtros de tipo activos.
+- La linea bajo `MOVIMIENTOS` muestra el intervalo como texto compacto, por ejemplo `Gastos + Junio 2026 - Agosto 2026`.
+- Se conserva compatibilidad con filtros viejos `month:AAAA-MM` si quedaron en estado local.
+- Se subio version visible a `v3.11` y service worker a `finanzas-lcd-v119`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `monthOptions`, `movement-filter-months`, `movementMonthFilterOptions`, `v=3.10`, `v3.10` y `finanzas-lcd-v118`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

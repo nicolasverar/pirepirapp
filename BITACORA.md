@@ -650,3 +650,25 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.04`: OK, responde HTML con `v3.04`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.04`: OK, responde `finanzas-lcd-v112`.
 - Commit funcional `826de5a` pusheado a `origin/main`.
+
+## 2026-06-27 - Linea superior intermitente post-cobro v3.05
+
+### Objetivo
+- Agregar un marco superior de lineas intermitentes al aviso post-cobro.
+- Acelerar el parpadeo del aviso.
+
+### Cambios
+- El aviso `COBRO RECIENTE DETECTADO` conserva una sola linea y sin marco completo.
+- Se agrego una linea superior segmentada/pixelada con el mismo lenguaje visual de los separadores inferiores.
+- El parpadeo de las letras y de la linea superior pasa de `1.08s` a `0.64s`.
+- Se subio version visible a `v3.05` y service worker a `finanzas-lcd-v113`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.04`, `v3.04` y `finanzas-lcd-v112`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.05`: OK, responde HTML con `v3.05`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.05`: OK, responde `finanzas-lcd-v113`.
+- Commit funcional `d9d9d81` pusheado a `origin/main`.

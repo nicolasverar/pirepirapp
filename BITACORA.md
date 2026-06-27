@@ -626,3 +626,27 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.03`: OK, responde HTML con `v3.03`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.03`: OK, responde `finanzas-lcd-v111`.
 - Commit funcional `d80b77b` pusheado a `origin/main`.
+
+## 2026-06-27 - Aviso post-cobro sin marco v3.04
+
+### Objetivo
+- Hacer que el aviso post-cobro muestre toda la frase en una sola fila.
+- Quitar el marco/cuadro y dejar la intermitencia solo en las letras.
+
+### Cambios
+- `COBRO RECIENTE DETECTADO` se renderiza en una sola linea con la matriz pixelada 5x7/35 segmentos.
+- Se eliminaron el contenedor con borde, la sombra, el fondo, el salto del bloque y la animacion del marco.
+- La intermitencia ahora aplica solamente a los segmentos activos de las letras.
+- Se compacto el SVG del aviso para que entre mejor en pantallas chicas sin partirse en dos lineas.
+- Se subio version visible a `v3.04` y service worker a `finanzas-lcd-v112`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `post-salary-alert-face`, `post-salary-alert-line`, `post-salary-pop`, `post-salary-face-pulse`, `v=3.03`, `v3.03` y `finanzas-lcd-v111`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=3.04`: OK, responde HTML con `v3.04`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=3.04`: OK, responde `finanzas-lcd-v112`.
+- Commit funcional `826de5a` pusheado a `origin/main`.

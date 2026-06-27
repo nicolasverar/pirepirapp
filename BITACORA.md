@@ -500,3 +500,27 @@
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.98`: OK, responde HTML con `v2.98`.
 - Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.98`: OK, responde `finanzas-lcd-v106`.
 - Commit funcional `4c53882` pusheado a `origin/main`.
+
+## 2026-06-27 - Reparacion slider fijos v2.99
+
+### Objetivo
+- Corregir el deslizador de porcentaje de sueldo en `Gastos fijos`.
+
+### Cambios
+- El slider mantiene su rango nativo `0-100` para que siempre pueda moverse.
+- El limite de presupuesto se calcula por JS sin pisar dinamicamente el `max` del control.
+- Se separo el valor tecnico del range del texto visual mostrado, evitando formatos no aptos para `input type="range"`.
+- Al mover el porcentaje, se autocompleta el monto mensual y si supera `sueldo - ahorros - otros fijos`, se recorta al maximo permitido.
+- Se reforzo la interaccion del range con `cursor: pointer`, `z-index` y `touch-action`.
+- Se subio version visible a `v2.99` y service worker a `finanzas-lcd-v107`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=2.98`, `v2.98`, `finanzas-lcd-v106`, `fixed-dial`, `fixedDialAngle` y `data-fixed-dial`: sin resultados.
+- URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.99`: OK, responde HTML con `v2.99`.
+- Service worker publico verificado con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/service-worker.js?v=2.99`: OK, responde `finanzas-lcd-v107`.
+- Commit funcional `335f056` pusheado a `origin/main`.

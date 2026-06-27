@@ -602,12 +602,16 @@
     return '<div class="movement-list">' + movements.map(function (item) {
       var meta = utils.formatMovementDateTime(item.fecha, item.hora);
       var title = item.motivo || 'Movimiento';
+      var kindLabel = movementKindLabel(item);
       return [
         '<article class="movement-row movement-card' + movementKindClass(item) + '">',
         '<span class="movement-kind-mark" aria-hidden="true"></span>',
         '<div class="movement-main">',
         '<div class="movement-card-top">',
+        '<span class="movement-title-stack">',
         '<strong class="movement-title">' + utils.escapeHtml(title) + '</strong>',
+        '<small class="movement-kind-label">' + utils.escapeHtml(kindLabel) + '</small>',
+        '</span>',
         '<b class="movement-value">' + utils.escapeHtml(utils.formatMoney(item.monto)) + '</b>',
         '</div>',
         '<div class="movement-card-bottom">',
@@ -638,6 +642,27 @@
       return ' movement-kind-wishlist';
     }
     return ' movement-kind-expense';
+  }
+
+  function movementKindLabel(item) {
+    var type = String((item || {}).tipo || '');
+    var motive = String((item || {}).motivo || '').trim().toLowerCase();
+    if (type === 'Ingreso') {
+      return motive === 'sueldo' ? 'Cobro de sueldo' : 'Ingreso';
+    }
+    if (utils.isFixedExpenseMovement(item)) {
+      return 'Gasto fijo';
+    }
+    if (type === 'Aporte a ahorro') {
+      return 'Ahorro futuro';
+    }
+    if (type === 'Aporte a meta') {
+      return 'Ahorro meta';
+    }
+    if (type === 'Compra de wishlist') {
+      return 'Cosa que quiero';
+    }
+    return 'Gasto corriente';
   }
 
   function renderGoals(state) {

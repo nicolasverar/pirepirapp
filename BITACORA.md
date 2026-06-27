@@ -774,3 +774,22 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda activa en `frontend` de `v=3.08`, `v3.08` y `finanzas-lcd-v116`: sin resultados.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Etiqueta de tipo en movimientos v3.10
+
+### Objetivo
+- Mostrar debajo del nombre de cada movimiento una etiqueta legible de categoria/tipo.
+
+### Cambios
+- Cada tarjeta de `Gastos` muestra ahora una linea bajo el motivo con etiquetas como `Gasto corriente`, `Gasto fijo`, `Ahorro futuro`, `Ahorro meta`, `Cosa que quiero`, `Ingreso` o `Cobro de sueldo`.
+- La etiqueta usa estilo pixelado compacto negro/verde para no competir con el monto ni la fecha.
+- Se subio version visible a `v3.10` y service worker a `finanzas-lcd-v118`.
+
+### Verificacion
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda activa en `frontend` de `v=3.09`, `v3.09` y `finanzas-lcd-v117`: sin resultados.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

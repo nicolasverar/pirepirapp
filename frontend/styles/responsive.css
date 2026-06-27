@@ -206,6 +206,10 @@
     font-size: 0.68rem;
   }
 
+  .movement-kind-label {
+    font-size: 0.5rem;
+  }
+
   .movement-actions .tiny-key {
     min-height: 29px;
     padding: 2px 3px;

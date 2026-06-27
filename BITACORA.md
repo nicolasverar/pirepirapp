@@ -334,3 +334,21 @@
 - Busqueda activa en `frontend` de `v2.90`, `2.90`, `finanzas-lcd-v98` y `summary-embedded.total-window`: sin resultados.
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.91`: OK, responde HTML con `v2.91`.
 - `git push origin main`: OK.
+
+## 2026-06-27 - Fondo y sombra Resumen v2.92
+
+### Objetivo
+- Hacer visible el fondo rayado en `Plata disponible`.
+- Hacer visible la sombra inferior de las tarjetas de `Resumen`, no solo la lateral derecha.
+
+### Cambios
+- Se agrego el selector especifico `availability-card-b` al override final para que no gane el fondo liso previo.
+- El area de monto de `Plata disponible` tambien recibe la textura rayada.
+- La sombra inferior paso a `z-index` visible y se agrego margen inferior/box-shadow para que no quede tapada por la siguiente tarjeta.
+- Se subio version visible a `v2.92` y service worker a `finanzas-lcd-v100`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `v2.91`, `2.91` y `finanzas-lcd-v99`: sin resultados.

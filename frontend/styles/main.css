@@ -4057,14 +4057,15 @@ body::-webkit-scrollbar,
   height: 4px;
 }
 
-/* Resumen v2.91: textura rayada de Metas, sin enmarcar la tarjeta de fecha. */
+/* Resumen v2.92: textura rayada de Metas, sin enmarcar la tarjeta de fecha. */
 .summary-stack > .summary-combined-card,
 .summary-stack > .availability-card,
+.summary-stack > .availability-card.availability-card-b,
 .summary-stack > .salary-partition-card {
   position: relative;
   z-index: 0;
   overflow: visible;
-  margin: 0 7px 7px 0;
+  margin: 0 8px 15px 0;
   color: #071007;
   background:
     linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
@@ -4073,6 +4074,7 @@ body::-webkit-scrollbar,
   border: 2px solid #071007;
   border-radius: 8px;
   box-shadow:
+    7px 7px 0 rgba(7, 16, 7, 0.22),
     inset 1px 1px 0 rgba(196, 208, 139, 0.24),
     inset -2px -2px 0 rgba(7, 16, 7, 0.18);
   image-rendering: pixelated;
@@ -4080,14 +4082,15 @@ body::-webkit-scrollbar,
 
 .summary-stack > .summary-combined-card::before,
 .summary-stack > .availability-card::before,
+.summary-stack > .availability-card.availability-card-b::before,
 .summary-stack > .salary-partition-card::before {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   top: 5px;
-  right: -7px;
-  bottom: -7px;
-  width: 7px;
+  right: -8px;
+  bottom: -8px;
+  width: 8px;
   border: 0;
   border-radius: 0 8px 8px 0;
   background:
@@ -4097,14 +4100,15 @@ body::-webkit-scrollbar,
 
 .summary-stack > .summary-combined-card::after,
 .summary-stack > .availability-card::after,
+.summary-stack > .availability-card.availability-card-b::after,
 .summary-stack > .salary-partition-card::after {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   left: 5px;
-  right: -7px;
-  bottom: -7px;
-  height: 7px;
+  right: -8px;
+  bottom: -8px;
+  height: 8px;
   border: 0;
   border-radius: 0 0 8px 8px;
   background:
@@ -4114,9 +4118,10 @@ body::-webkit-scrollbar,
 
 .summary-stack > .summary-combined-card > *,
 .summary-stack > .availability-card > *,
+.summary-stack > .availability-card.availability-card-b > *,
 .summary-stack > .salary-partition-card > * {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .summary-embedded .summary-spent-line {
@@ -4124,7 +4129,8 @@ body::-webkit-scrollbar,
 }
 
 .summary-embedded .summary-spent-line strong,
-.summary-stack > .availability-card.availability-card-b .available-line {
+.summary-stack > .availability-card.availability-card-b .available-line,
+.summary-stack > .availability-card.availability-card-b .available-money-pixel {
   background:
     linear-gradient(180deg, rgba(196, 208, 139, 0.36), transparent 36%),
     repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
@@ -4132,6 +4138,7 @@ body::-webkit-scrollbar,
 }
 
 .summary-stack > .availability-card.availability-card-b .available-line {
+  background-color: #bccb84;
   box-shadow:
     inset 2px 2px 0 rgba(7, 16, 7, 0.2),
     inset -2px -2px 0 rgba(222, 232, 159, 0.32);

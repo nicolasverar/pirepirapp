@@ -595,7 +595,7 @@
     ].join(' ');
   }
 
-  function recalculateSummary(summary, config, movements) {
+  function recalculateSummary(summary, config, movements, dataOverride) {
     var base = copyObject(summary || {});
     var appConfig = config || {};
     var month = String(base.mes || appConfig.mesActual || utils.currentMonth()).slice(0, 7);
@@ -663,7 +663,7 @@
     var totalGastado = totals.gastosVariables + totals.comprasWishlist;
     var totalApartado = totals.aportesAhorro + totals.aportesMeta;
     var fixedConfigured = fixedExpenseTotal(appConfig.gastosFijos, monthlySalary);
-    var savingsPlan = plannedSavingsFromCurrentState();
+    var savingsPlan = plannedSavingsFromCurrentState(dataOverride);
     var savingsConfigured = savingsPlan.reduce(function (sum, item) {
       return sum + utils.normalizeAmount(item.monto);
     }, 0);
@@ -676,7 +676,7 @@
     var baseDisponible = totalIngresos - fixedConfigured - savingsConfigured;
     var disponible = totalIngresos - salidasTotales;
     var baseCalculoDisponible = Math.max(0, totalIngresos);
-    var reminders = postSalaryRemindersFromCurrentState(month, salaryMovement, movements);
+    var reminders = postSalaryRemindersFromCurrentState(month, salaryMovement, movements, dataOverride);
     base.mes = month;
     base.moneda = appConfig.moneda || base.moneda || 'PYG';
     base.sueldoMensual = monthlySalary;
@@ -728,8 +728,8 @@
       || type === 'Aporte a meta';
   }
 
-  function plannedSavingsFromCurrentState() {
-    var data = window.FinanzasState.getState().data || {};
+  function plannedSavingsFromCurrentState(dataOverride) {
+    var data = dataOverride || window.FinanzasState.getState().data || {};
     var items = [];
     activeStateItems(data.ahorrosFuturo).forEach(function (item) {
       var amount = utils.normalizeAmount(item.montoMensual);
@@ -767,11 +767,11 @@
     });
   }
 
-  function postSalaryRemindersFromCurrentState(month, salaryMovement, movements) {
+  function postSalaryRemindersFromCurrentState(month, salaryMovement, movements, dataOverride) {
     if (!salaryMovement) {
       return { todos: [], pendientes: [], completos: true };
     }
-    var data = window.FinanzasState.getState().data || {};
+    var data = dataOverride || window.FinanzasState.getState().data || {};
     var config = data.config || {};
     var fixed = utils.normalizeFixedExpenses(config.gastosFijos || [], config.sueldoMensual || 0).map(function (item, index) {
       return {
@@ -786,7 +786,7 @@
     }).filter(function (item) {
       return item.nombre && item.monto > 0;
     });
-    var savings = plannedSavingsFromCurrentState().map(function (item) {
+    var savings = plannedSavingsFromCurrentState(data).map(function (item) {
       return {
         id: item.tipo + '-' + item.idRelacionado,
         tipo: item.tipo,
@@ -1126,7 +1126,7 @@
       metas: (result.resumen && result.resumen.metas) || current.metas,
       wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
     };
-    nextData.resumen = recalculateSummary(nextData.resumen, nextData.config, items);
+    nextData.resumen = recalculateSummary(nextData.resumen, nextData.config, items, nextData);
 
     if (route === 'deletemovement') {
       rememberMovementDelete(result.movimiento.id);
@@ -1167,14 +1167,16 @@
       ultimoMesCobrado: result.mes || (result.resumen || {}).mes || '',
       fechaUltimoCobro: result.movimiento.fecha || ''
     });
-    window.FinanzasState.setData({
+    var nextData = {
       config: nextConfig,
-      resumen: result.resumen || recalculateSummary(current.resumen, nextConfig, items),
+      resumen: result.resumen,
       movimientos: movementDataWithItems(source, items),
       ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
       metas: (result.resumen && result.resumen.metas) || current.metas,
       wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
-    });
+    };
+    nextData.resumen = nextData.resumen || recalculateSummary(current.resumen, nextConfig, items, nextData);
+    window.FinanzasState.setData(nextData);
     saveCurrentBootstrap();
   }
 
@@ -1206,7 +1208,14 @@
     if (keepVisible) {
       items.push(item);
     }
-    window.FinanzasState.setData(Object.assign({}, current, objectWithKey(listName, items)));
+    var nextData = Object.assign({}, current, objectWithKey(listName, items));
+    nextData.resumen = recalculateSummary(
+      current.resumen,
+      nextData.config,
+      movementItemsFromData(nextData.movimientos || {}),
+      nextData
+    );
+    window.FinanzasState.setData(nextData);
     saveCurrentBootstrap();
   }
 
@@ -1230,14 +1239,21 @@
       wishlist.push(result.wishlistItem);
     }
 
-    window.FinanzasState.setData({
+    var nextData = {
       config: current.config,
       resumen: current.resumen,
       movimientos: current.movimientos,
       ahorrosFuturo: current.ahorrosFuturo,
       metas: metas,
       wishlist: wishlist
-    });
+    };
+    nextData.resumen = recalculateSummary(
+      current.resumen,
+      nextData.config,
+      movementItemsFromData(nextData.movimientos || {}),
+      nextData
+    );
+    window.FinanzasState.setData(nextData);
     saveCurrentBootstrap();
   }
 

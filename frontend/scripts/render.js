@@ -149,7 +149,8 @@
     return [
       '<div class="post-salary-panel">',
       '<div class="post-salary-pixel-line post-salary-pixel-command">',
-      renderSummaryPixelSvg('DISTRIBUIR INGRESO RECIENTE', 'label'),
+      renderSummaryPixelSvg('DISTRIBUIR', 'label'),
+      renderSummaryPixelSvg('INGRESO RECIENTE', 'label'),
       '</div>',
       '<div class="post-salary-list">',
       pending.map(renderPostSalaryItem).join(''),
@@ -856,25 +857,39 @@
 
   function salaryPartitionFromSummary(summary, config) {
     var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
-    var source = Array.isArray((summary || {}).particionSueldo) ? (summary || {}).particionSueldo : [];
-    var classes = {
-      fijos: 'segment-0',
-      ahorros: 'segment-1',
-      superfluos: 'segment-available'
-    };
-    if (source.length) {
-      return source.map(function (item) {
-        return {
-          label: item.nombre || item.clave || 'Particion',
-          amount: utils.normalizeAmount(item.monto),
-          percent: Number(item.porcentaje || 0),
-          className: classes[item.clave] || 'segment-2'
-        };
-      }).filter(function (item) {
-        return item.amount > 0;
-      });
+    var fixed = utils.normalizeAmount((summary || {}).gastosFijosConfigurados);
+    var savings = utils.normalizeAmount((summary || {}).ahorrosPlanificados);
+    var superfluous = utils.normalizeAmount((summary || {}).superfluosPlanificados);
+    if (!fixed) {
+      fixed = utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary).reduce(function (sum, item) {
+        return sum + utils.fixedExpenseAmount(item);
+      }, 0);
     }
-    return salaryPartitionSegments(utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary), salary, Math.max(0, salary));
+    if (!savings) {
+      savings = plannedSavingsFromSummary(summary);
+    }
+    if (!superfluous) {
+      superfluous = Math.max(0, salary - fixed - savings);
+    }
+    return [
+      { label: 'Gastos fijos', amount: fixed, className: 'segment-0' },
+      { label: 'Ahorros', amount: savings, className: 'segment-1' },
+      { label: 'Superfluos', amount: superfluous, className: 'segment-available' }
+    ].filter(function (item) {
+      return item.amount > 0;
+    });
+  }
+
+  function plannedSavingsFromSummary(summary) {
+    var source = summary || {};
+    var total = 0;
+    (source.ahorrosFuturo || []).forEach(function (item) {
+      total += utils.normalizeAmount(item.montoMensual);
+    });
+    (source.metas || []).forEach(function (item) {
+      total += utils.normalizeAmount(item.montoMensual);
+    });
+    return total;
   }
 
   function renderSalaryPartitionPie(segments, salary, total, excess) {

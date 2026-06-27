@@ -141,3 +141,22 @@
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
 - Busqueda de texto post-cobro anterior en frontend: sin resultados activos.
+
+## 2026-06-27 - Legibilidad panel y consistencia torta v2.82
+
+### Objetivo
+- Mejorar legibilidad del encabezado post-cobro y corregir inconsistencias visuales de la torta.
+
+### Cambios
+- El encabezado post-cobro se partio en dos lineas: `DISTRIBUIR` e `INGRESO RECIENTE`.
+- Se elimino el puntillismo de fondo detras del texto; quedan solo separadores pixelados entre filas.
+- Se reemplazo el highlight tactil disonante por un color de la paleta LCD.
+- La torta se deriva siempre de fijos configurados, ahorros planificados y superfluos.
+- Al crear/editar ahorros, metas o wishlist convertida, el resumen visual recalcula con el estado nuevo.
+- Se subio version visible a `v2.82` y service worker a `finanzas-lcd-v90`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda de encabezado/cache anterior en frontend: sin resultados activos.

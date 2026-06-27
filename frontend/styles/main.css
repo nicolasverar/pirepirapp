@@ -1013,6 +1013,94 @@ code {
   background: var(--lcd-bg);
 }
 
+.movements-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.movement-hero {
+  display: grid;
+  gap: 9px;
+  padding: 2px 0 0;
+  color: #071007;
+}
+
+.movement-title-pixel {
+  min-width: 0;
+  padding: 2px 2px 0;
+}
+
+.movement-title-pixel .summary-pixel-svg {
+  display: block;
+  width: 100%;
+  height: clamp(54px, 15vw, 88px);
+}
+
+.movement-filter-status {
+  margin: 0;
+  padding: 7px 8px;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.34), transparent 38%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #bccb84;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 2px 2px 0 rgba(7, 16, 7, 0.2),
+    inset -2px -2px 0 rgba(222, 232, 159, 0.28);
+  font-family: "Courier New", Consolas, monospace;
+  font-size: clamp(0.66rem, 3vw, 0.84rem);
+  font-weight: 900;
+  line-height: 1.12;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.movement-list-panel {
+  padding: 8px;
+}
+
+.movement-filter-dock {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0 1px 2px;
+}
+
+.movement-filter-dock .filter-chip {
+  min-height: 34px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 0 rgba(196, 208, 139, 0.12),
+    2px 2px 0 rgba(7, 16, 7, 0.45);
+}
+
+.movement-filter-dock .filter-chip small {
+  color: #071007;
+  background: #c4d08b;
+}
+
+.movement-filter-dock .filter-chip.is-active {
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.42), transparent 42%),
+    #bccb84;
+  box-shadow:
+    inset 2px 2px 0 rgba(7, 16, 7, 0.2),
+    2px 2px 0 rgba(7, 16, 7, 0.42);
+}
+
+.movement-filter-dock .filter-chip.is-active small {
+  color: #c4d08b;
+  background: #071007;
+}
+
 .lcd-button,
 .text-key {
   min-height: 32px;

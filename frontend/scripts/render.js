@@ -453,26 +453,33 @@
     var allMonths = !Array.isArray(source) && (source.allMonths || source.mes === null);
     var activeFilter = state.movementFilter || 'all';
     var filteredMovements = filterMovementsByType(movements, activeFilter);
-    var subtitle = allMonths
-      ? 'Mostrando todos los movimientos. Mes actual: ' + (config.mesActual || utils.currentMonth())
-      : 'Mes actual: ' + (config.mesActual || utils.currentMonth());
     return [
-      '<section class="system-window">',
-      '<div class="window-title">GASTOS TOTALES</div>',
-      '<p class="lcd-muted">' + utils.escapeHtml(subtitle) + '</p>',
-      '<div class="toolbar-line">',
-      '<button class="lcd-button js-refresh" type="button">Actualizar</button>',
-      '</div>',
-      renderMovementFilters(movements, activeFilter),
+      '<section class="movements-stack">',
+      '<article class="movement-hero" aria-label="Movimientos">',
+      '<div class="movement-title-pixel">' + renderSummaryPixelSvg('MOVIMIENTOS', 'movement-title') + '</div>',
+      '<p class="movement-filter-status">' + utils.escapeHtml(movementFilterStatus(activeFilter, filteredMovements.length, config, allMonths)) + '</p>',
+      '</article>',
+      '<section class="system-window movement-list-panel">',
       filteredMovements.length ? renderMovementTable(filteredMovements, allMonths) : '<p class="empty-state">No hay movimientos para este filtro.</p>',
+      '</section>',
+      renderMovementFilters(movements, activeFilter),
       '</section>'
     ].join('');
+  }
+
+  function movementFilterStatus(activeFilter, count, config, allMonths) {
+    var options = movementFilterOptions();
+    var selected = options.filter(function (option) {
+      return option.value === activeFilter;
+    })[0] || options[0];
+    var scope = allMonths ? 'todos los meses' : 'mes ' + ((config || {}).mesActual || utils.currentMonth());
+    return selected.label + ' / ' + count + ' movimientos / ' + scope;
   }
 
   function renderMovementFilters(movements, activeFilter) {
     var options = movementFilterOptions();
     return [
-      '<div class="movement-filters" aria-label="Filtrar movimientos">',
+      '<nav class="movement-filters movement-filter-dock" aria-label="Filtrar movimientos">',
       options.map(function (option) {
         var count = movementFilterCount(movements, option.value);
         var activeClass = option.value === activeFilter ? ' is-active' : '';
@@ -483,7 +490,7 @@
           '</button>'
         ].join('');
       }).join(''),
-      '</div>'
+      '</nav>'
     ].join('');
   }
 

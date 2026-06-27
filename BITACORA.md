@@ -232,3 +232,23 @@
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `node --check` paso para scripts frontend activos, service worker y smoke test.
 - `git diff --check`: OK.
+
+## 2026-06-27 - Cobro solo desde formulario y grilla fina v2.87
+
+### Objetivo
+- Igualar la hendidura de la cinta a la densidad real de pixeles del fondo superior.
+- Quitar el boton de sueldo/cobro de la seccion Resumen y dejar el cobro solo desde el formulario de ingreso.
+
+### Cambios
+- La hendidura usa la misma matriz fina de 2px, tono base y gradiente del fondo LCD superior, con sombreado apenas perceptible.
+- Se eliminaron los botones directos `Cobre`/`Sueldo cargado` de Resumen y Configuracion.
+- Se elimino la ruta UI/especial `claimSalary`; el sueldo se registra como movimiento `Ingreso` con motivo `Sueldo`.
+- El atajo `¡Cobré!` del formulario solo autocompleta monto, motivo y fecha/hora; el registro ocurre al guardar.
+- `createMovement` evita duplicar un ingreso de sueldo si ya existe en el mismo mes.
+- Se subio version visible a `v2.87` y service worker a `finanzas-lcd-v95`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa de `claimSalary`, `claimsalary`, `js-claim-salary` y `salary-paid-button`: sin resultados en frontend/scripts/docs activos.

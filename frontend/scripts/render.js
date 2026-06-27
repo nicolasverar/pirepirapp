@@ -129,7 +129,6 @@
       renderMoneyLineDetails(summary),
       '<div class="availability-b-divider"></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
-      '<button class="lcd-button primary salary-paid-button js-claim-salary" type="button">' + (summary.sueldoRegistrado ? 'Sueldo cargado' : 'Cobre') + '</button>',
       '</article>',
       renderSalaryPartition(config, summary),
       '</section>'
@@ -816,7 +815,6 @@
       '<p class="form-error" hidden></p>',
       '<div class="salary-config-panel">',
       '<label class="field"><span>Sueldo mensual</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
-      '<button class="lcd-button primary salary-paid-button js-claim-salary" type="button">Cobre</button>',
       '</div>',
       renderFixedExpensesEditor(config),
       '<div class="form-actions">',
@@ -1129,13 +1127,6 @@
     utils.qsa('.js-update-app', root).forEach(function (button) {
       button.addEventListener('click', function () {
         window.FinanzasApp.updateApp();
-      });
-    });
-
-    utils.qsa('.js-claim-salary', root).forEach(function (button) {
-      button.addEventListener('click', function () {
-        var salaryInput = utils.qs('[data-salary-input]', root);
-        window.FinanzasApp.claimSalary(salaryInput ? salaryInput.value : undefined);
       });
     });
 

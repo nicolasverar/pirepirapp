@@ -101,13 +101,16 @@ async function run() {
   const photo = await window.FinanzasApi.request('getPhoto', { fileId: wish.imageDriveId });
   assert.strictEqual(photo.dataUrl, 'data:image/png;base64,wish', 'La foto local debe recuperarse por ID');
 
-  const claim = await window.FinanzasApi.request('claimSalary', {
-    mes: '2026-05',
+  const claim = await window.FinanzasApi.request('createMovement', {
+    tipo: 'Ingreso',
+    motivo: 'Sueldo',
+    categoria: 'Ingreso',
     monto: 5000000,
     fecha: '2026-05-01',
-    hora: '08:00:00'
+    hora: '08:00:00',
+    descripcion: 'Cobro cargado desde formulario de ingreso'
   });
-  assert.strictEqual(claim.yaRegistrado, false, 'El primer cobro del mes debe crear movimiento');
+  assert.strictEqual(claim.yaRegistrado, false, 'El primer ingreso de sueldo del mes debe crear movimiento');
   assert.strictEqual(claim.resumen.remanenteAnterior, 1000000, 'Debe arrastrar remanente anterior');
   assert.strictEqual(claim.resumen.sueldoCobrado, 5000000, 'Debe registrar sueldo cobrado');
   assert.strictEqual(claim.resumen.disponible, 6000000, 'Al cobrar debe sumar sueldo nuevo y remanente');
@@ -115,13 +118,15 @@ async function run() {
   assert.strictEqual(claim.resumen.superfluosPlanificados, 3200000, 'Disponible completa la particion del sueldo');
   assert.strictEqual(claim.resumen.recordatoriosPendientes.length, 4, 'Post-cobro debe recordar fijos, futuro y metas');
 
-  const secondClaim = await window.FinanzasApi.request('claimSalary', {
-    mes: '2026-05',
+  const secondClaim = await window.FinanzasApi.request('createMovement', {
+    tipo: 'Ingreso',
+    motivo: 'Sueldo',
+    categoria: 'Ingreso',
     monto: 5000000,
     fecha: '2026-05-01',
     hora: '09:00:00'
   });
-  assert.strictEqual(secondClaim.yaRegistrado, true, 'Cobrar dos veces el mismo mes no debe duplicar sueldo');
+  assert.strictEqual(secondClaim.yaRegistrado, true, 'Guardar sueldo dos veces el mismo mes no debe duplicarlo');
 
   await window.FinanzasApi.request('createMovement', {
     tipo: 'Gasto',

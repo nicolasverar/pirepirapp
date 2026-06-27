@@ -50,9 +50,6 @@
         resumen: buildSummary(state)
       });
     }
-    if (route === 'claimsalary') {
-      return changed(claimSalary(state, payload || {}));
-    }
     if (route === 'getsummary') {
       return unchanged(buildSummary(state, monthFromPayload(payload) || state.config.mesActual));
     }
@@ -280,52 +277,25 @@
     };
   }
 
-  function claimSalary(state, payload) {
-    var month = monthFromPayload(payload) || state.config.mesActual || currentMonth();
-    var salary = utils.normalizeAmount(payload.monto !== undefined ? payload.monto : state.config.sueldoMensual);
-    if (!salary) {
-      throw new Error('Carga tu sueldo mensual primero.');
-    }
-    var existing = findSalaryMovement(state.movimientos, month);
-    state.config.mesActual = month;
-    state.config.estadoMesActual = 'cobrado';
-    state.config.ultimoMesCobrado = month;
-    if (existing) {
-      state.config.fechaUltimoCobro = existing.fecha;
-      return {
-        movimiento: clone(existing),
-        yaRegistrado: true,
-        mes: month,
-        resumen: buildSummary(state, month)
-      };
-    }
-
-    var date = payload.fecha || defaultDateForMonth(month);
-    var movement = movementFromPayload({
-      fecha: date,
-      hora: payload.hora || utils.toInputTime() + ':00',
-      tipo: 'Ingreso',
-      motivo: 'Sueldo',
-      categoria: 'Ingreso',
-      monto: salary,
-      descripcion: 'Cobro de sueldo ' + month
-    }, null, nextId('mov'));
-    state.movimientos.push(movement);
-    state.config.fechaUltimoCobro = movement.fecha;
-    return {
-      movimiento: clone(movement),
-      yaRegistrado: false,
-      mes: month,
-      resumen: buildSummary(state, month)
-    };
-  }
-
   function createMovement(state, payload) {
     var movement = movementFromPayload(payload, null, nextId('mov'));
+    if (isSalaryMovement(movement)) {
+      var existingSalary = findSalaryMovement(state.movimientos, movement.mes);
+      if (existingSalary) {
+        return {
+          movimiento: clone(existingSalary),
+          yaRegistrado: true,
+          resumen: buildSummary(state, movement.mes)
+        };
+      }
+      state.config.ultimoMesCobrado = movement.mes;
+      state.config.fechaUltimoCobro = movement.fecha;
+    }
     state.movimientos.push(movement);
     applyMovementImpact(state, movement, 1);
     return {
       movimiento: clone(movement),
+      yaRegistrado: false,
       resumen: buildSummary(state, movement.mes)
     };
   }
@@ -894,12 +864,6 @@
       return date.slice(0, 7);
     }
     return String((item || {}).mes || currentMonth()).slice(0, 7);
-  }
-
-  function defaultDateForMonth(month) {
-    var value = normalizeMonth(month);
-    var today = utils.toInputDate();
-    return today.slice(0, 7) === value ? today : value + '-01';
   }
 
   function findSalaryMovement(items, month) {

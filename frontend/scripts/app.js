@@ -226,31 +226,6 @@
     return merged;
   }
 
-  function claimSalary(amount) {
-    var config = window.FinanzasState.getState().data.config || {};
-    var salary = utils.normalizeAmount(amount !== undefined && amount !== null && amount !== '' ? amount : config.sueldoMensual || 0);
-    if (!salary) {
-      toast('Carga tu sueldo mensual primero.');
-      return Promise.resolve();
-    }
-    if (!window.confirm('Registrar ingreso de sueldo por ' + utils.formatMoney(salary) + '?')) {
-      return Promise.resolve();
-    }
-    var action = window.FinanzasApi.isLocalMode && window.FinanzasApi.isLocalMode() ? 'claimSalary' : 'createMovement';
-    return mutate(action, {
-      tipo: 'Ingreso',
-      motivo: 'Sueldo',
-      categoria: 'Ingreso',
-      monto: salary,
-      fecha: utils.toInputDate(),
-      hora: utils.toInputTime() + ':00',
-      descripcion: ''
-    }).then(function (result) {
-      toast('Sueldo registrado');
-      return result;
-    });
-  }
-
   function applyOptimisticMutation(action, payload) {
     var route = String(action || '').toLowerCase();
     if (route === 'createmovement') {
@@ -1043,11 +1018,6 @@
       return;
     }
 
-    if (route === 'claimsalary' && result.movimiento) {
-      applyClaimSalaryResult(result);
-      return;
-    }
-
     if (route === 'updateconfig' && result) {
       applyConfigResult(result);
       return;
@@ -1150,33 +1120,6 @@
       metas: current.metas,
       wishlist: current.wishlist
     });
-    saveCurrentBootstrap();
-  }
-
-  function applyClaimSalaryResult(result) {
-    var current = window.FinanzasState.getState().data;
-    var source = current.movimientos || {};
-    var items = movementItemsFromData(source).filter(function (item) {
-      return String(item.id) !== String(result.movimiento.id);
-    });
-    items.push(result.movimiento);
-    sortMovementItems(items);
-    var nextConfig = Object.assign({}, current.config || {}, {
-      mesActual: result.mes || (result.resumen || {}).mes || (current.config || {}).mesActual,
-      estadoMesActual: 'cobrado',
-      ultimoMesCobrado: result.mes || (result.resumen || {}).mes || '',
-      fechaUltimoCobro: result.movimiento.fecha || ''
-    });
-    var nextData = {
-      config: nextConfig,
-      resumen: result.resumen,
-      movimientos: movementDataWithItems(source, items),
-      ahorrosFuturo: (result.resumen && result.resumen.ahorrosFuturo) || current.ahorrosFuturo,
-      metas: (result.resumen && result.resumen.metas) || current.metas,
-      wishlist: (result.resumen && result.resumen.wishlist) || current.wishlist
-    };
-    nextData.resumen = nextData.resumen || recalculateSummary(current.resumen, nextConfig, items, nextData);
-    window.FinanzasState.setData(nextData);
     saveCurrentBootstrap();
   }
 
@@ -1405,7 +1348,6 @@
     refresh: refresh,
     mutate: mutate,
     convertWishlistInstant: convertWishlistInstant,
-    claimSalary: claimSalary,
     toast: toast,
     updateApp: updateApp,
     version: version,

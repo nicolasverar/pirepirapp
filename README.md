@@ -9,7 +9,7 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 - No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
 - La app arranca por defecto en modo local con IndexedDB mediante `frontend/scripts/local-store.js`; Apps Script queda solo como legado opcional.
 - El modelo financiero local trata el sueldo como una particion disjunta: gastos fijos, ahorros y disponible.
-- El boton `Cobre` registra el sueldo del mes, suma el remanente anterior y activa recordatorios post-cobro hasta cargar fijos, futuro y metas.
+- El sueldo se registra desde el formulario de ingreso usando motivo `Sueldo`; esto suma el remanente anterior y activa recordatorios post-cobro hasta cargar fijos, futuro y metas.
 
 ## Modelo Financiero
 

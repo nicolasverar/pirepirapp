@@ -242,10 +242,6 @@
     grid-template-columns: 1fr;
   }
 
-  .salary-paid-button {
-    min-height: 48px;
-  }
-
   .post-salary-item {
     grid-template-columns: minmax(48px, 0.28fr) minmax(0, 1fr);
   }

@@ -18,7 +18,7 @@
 
 - Ejecutar `npm run test:smoke`.
 - Configurar sueldo, gastos fijos, futuro y una meta.
-- Pulsar `Cobre` y confirmar que aparece el panel post-cobro.
+- Abrir el formulario de ingreso, usar `¡Cobré!` o cargar motivo `Sueldo`, guardar y confirmar que aparece el panel post-cobro.
 - Confirmar que el disponible inicial suma sueldo cobrado + remanente anterior.
 - Cargar pagos fijos y verificar que desaparecen del panel.
 - Cargar aportes a futuro/metas y verificar que desaparecen del panel.

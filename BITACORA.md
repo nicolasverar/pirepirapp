@@ -40,7 +40,7 @@
 - Generar APK debug.
 - Definir si el backend legacy en `backend/` se elimina despues de completar la migracion.
 
-## 2026-06-26 - Modo local IndexedDB v2.77
+## 2026-06-26 - Modo local IndexedDB v2.78
 
 ### Objetivo
 - Hacer que la APK arranque y guarde datos sin depender de Apps Script, URL, token, Sheets ni Drive.
@@ -50,7 +50,7 @@
 - `frontend/scripts/api.js` ahora usa modo local por defecto y conserva Apps Script solo como legado opcional.
 - La app ya no abre el modal de conexion al iniciar.
 - Se cubren configuracion, movimientos, gastos fijos, ahorros, metas, wishlist, conversion a meta y fotos locales.
-- Se subio la version visible a `v2.77` y se actualizo el service worker a `finanzas-lcd-v85`.
+- Se subio la version visible a `v2.78` y se actualizo el service worker a `finanzas-lcd-v86`.
 - Android Gradle ejecuta `npm run cap:copy` antes de compilar para copiar cambios web al APK.
 
 ### Verificacion
@@ -63,3 +63,25 @@
 - Ejecutar `npm run cap:sync` o directamente `Run` en Android Studio en la PC Android, donde el proyecto no esta bajo este OneDrive.
 - Probar `Run` desde Android Studio en el emulador.
 - Crear un gasto, una meta con foto y una wishlist para confirmar persistencia local.
+
+## 2026-06-27 - Auditoria de consistencia local v2.78
+
+### Objetivo
+- Revisar que la app local sea consistente antes de empezar nuevas modificaciones funcionales.
+- Simular flujos de uso sin Apps Script.
+
+### Cambios
+- Se corrigio el uso de `mesActual`: las acciones locales sin mes explicito ahora respetan el mes configurado.
+- Se ajustaron mensajes residuales que todavia hablaban de Apps Script como requisito obligatorio.
+- Se agrego `scripts/smoke-local-store.js`.
+- Se agrego `npm run test:smoke`.
+- Se subio cache/version visible a `v2.78`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check` paso para scripts frontend activos, service worker y smoke test.
+- Busqueda de versiones/cache previos y mensajes de Apps Script obligatorio: sin referencias activas.
+
+### Limitacion local
+- En esta PC dentro de OneDrive, `npm run cap:copy` sigue fallando por `EPERM`; esta vez sobre `android/app/src/main/assets/public/index.html`.
+- La prueba Android debe hacerse en la PC del emulador con `git pull` y `Run`, donde el build anterior ya funciono.

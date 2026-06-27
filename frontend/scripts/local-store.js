@@ -51,7 +51,7 @@
       });
     }
     if (route === 'getsummary') {
-      return unchanged(buildSummary(state, monthFromPayload(payload)));
+      return unchanged(buildSummary(state, monthFromPayload(payload) || state.config.mesActual));
     }
     if (route === 'getmovements') {
       return unchanged(listMovements(state, payload || {}));
@@ -658,7 +658,7 @@
 
   function activeItems(items) {
     return clone((items || []).filter(function (item) {
-      return !item.estado || item.estado === ACTIVE;
+      return !item.estado || String(item.estado).toLowerCase() === ACTIVE.toLowerCase();
     }));
   }
 
@@ -697,7 +697,11 @@
   }
 
   function monthFromPayload(payload) {
-    return normalizeMonth((payload || {}).mes || (payload || {}).month || '');
+    var value = (payload || {}).mes || (payload || {}).month || '';
+    if (!value) {
+      return '';
+    }
+    return normalizeMonth(value);
   }
 
   function normalizeMonth(value) {

@@ -84,9 +84,9 @@
     return [
       '<section class="system-window">',
       '<div class="window-title">CONFIGURACION</div>',
-      '<p class="lcd-strong">Falta conectar Apps Script.</p>',
-      '<p>Ingresa la URL del Web App y tu clave privada para sincronizar este dispositivo.</p>',
-      '<button class="lcd-button primary js-connect-backend" type="button">Conectar</button>',
+      '<p class="lcd-strong">Almacenamiento local no disponible.</p>',
+      '<p>Usa el modo local o configura el modo legado de Apps Script desde conexion.</p>',
+      '<button class="lcd-button primary js-connect-backend" type="button">Conexion</button>',
       renderAppVersionPanel(),
       '</section>'
     ].join('');

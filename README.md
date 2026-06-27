@@ -28,3 +28,11 @@ Para limpiar una instalacion ya usada en navegador o PWA, abrir `frontend/reset.
 2. Probar persistencia local en APK: config, gastos, metas, wishlist y fotos.
 3. Pulir releases Android firmadas.
 4. Definir si el backend legacy en `backend/` se elimina.
+
+## Pruebas Locales
+
+```powershell
+npm run test:smoke
+```
+
+El smoke test simula modo local, configuracion, gastos fijos, movimientos, ahorros, metas, wishlist, fotos y persistencia.

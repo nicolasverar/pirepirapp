@@ -115,7 +115,7 @@
 
   function mutate(action, payload) {
     if (!window.FinanzasApi.hasBackend()) {
-      var error = new Error('Primero configura la URL de Apps Script.');
+      var error = new Error('No se pudo iniciar el almacenamiento local.');
       toast(error.message);
       return Promise.reject(error);
     }

@@ -314,3 +314,21 @@
 - Busqueda activa en `frontend` de `v2.89`, `2.89`, `finanzas-lcd-v97`, `claimSalary`, `js-claim-salary`, `salary-paid-button`, `Eliminar cobro`, `eliminar cobro`, `Sueldo cargado` y `Agregar gasto fijo`: sin controles de cobro/config obsoletos activos.
 - URL publica verificada con `curl.exe -L --max-time 20 https://nicolasverar.github.io/pirepirapp/?v=2.90`: OK, responde HTML con `v2.90`.
 - `git push origin main`: OK.
+
+## 2026-06-27 - Correccion textura Resumen v2.91
+
+### Objetivo
+- Corregir la textura cuadriculada de `Resumen` y alinearla con la textura rayada de las tarjetas de `Metas`.
+- Dejar la tarjeta de fecha (`HOY ES`) fuera del marco/sombra global agregado en v2.90.
+
+### Cambios
+- `Resumen` ahora aplica textura rayada horizontal tipo Metas a las tarjetas de gasto mensual, plata disponible y particion.
+- Se retiro `summary-embedded.total-window` del selector global de tarjetas para recuperar el comportamiento sin fondo/marco de la fecha.
+- El bloque `Lo que va de junio gastaste` y el fondo de `Plata disponible` dejan de usar cuadricula y pasan a raya fina.
+- Se subio version visible a `v2.91` y service worker a `finanzas-lcd-v99`.
+
+### Verificacion
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `node --check`: OK para scripts frontend activos, service worker y smoke test.
+- `git diff --check`: OK.
+- Busqueda activa en `frontend` de `v2.90`, `2.90`, `finanzas-lcd-v98` y `summary-embedded.total-window`: sin resultados.

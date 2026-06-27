@@ -4057,70 +4057,61 @@ body::-webkit-scrollbar,
   height: 4px;
 }
 
-/* Resumen v2.90: todas las tarjetas usan la textura fisica de Metas. */
-.summary-stack > .summary-embedded.total-window,
+/* Resumen v2.91: textura rayada de Metas, sin enmarcar la tarjeta de fecha. */
 .summary-stack > .summary-combined-card,
 .summary-stack > .availability-card,
 .summary-stack > .salary-partition-card {
   position: relative;
   z-index: 0;
   overflow: visible;
-  margin: 0 8px 12px 0;
+  margin: 0 7px 7px 0;
   color: #071007;
   background:
-    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(0deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(180deg, rgba(139, 160, 88, 0.54), rgba(92, 122, 62, 0.5)),
-    rgba(126, 148, 82, 0.5);
-  border: 2px solid #0b1209;
-  border-radius: 7px;
+    linear-gradient(180deg, rgba(196, 208, 139, 0.44), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #8fa05f;
+  border: 2px solid #071007;
+  border-radius: 8px;
   box-shadow:
-    inset 1px 1px 0 rgba(195, 206, 133, 0.38),
-    inset -2px -2px 0 rgba(13, 21, 12, 0.22);
+    inset 1px 1px 0 rgba(196, 208, 139, 0.24),
+    inset -2px -2px 0 rgba(7, 16, 7, 0.18);
   image-rendering: pixelated;
 }
 
-.summary-stack > .summary-embedded.total-window::before,
 .summary-stack > .summary-combined-card::before,
 .summary-stack > .availability-card::before,
 .summary-stack > .salary-partition-card::before {
   content: "";
   position: absolute;
   z-index: -1;
-  top: 7px;
-  right: -8px;
-  bottom: -8px;
-  width: 8px;
+  top: 5px;
+  right: -7px;
+  bottom: -7px;
+  width: 7px;
   border: 0;
-  border-radius: 0 7px 7px 0;
+  border-radius: 0 8px 8px 0;
   background:
-    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
-    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
-    rgba(101, 115, 66, 0.9);
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
   pointer-events: none;
 }
 
-.summary-stack > .summary-embedded.total-window::after,
 .summary-stack > .summary-combined-card::after,
 .summary-stack > .availability-card::after,
 .summary-stack > .salary-partition-card::after {
   content: "";
   position: absolute;
   z-index: -1;
-  left: 7px;
-  right: -8px;
-  bottom: -8px;
-  height: 8px;
+  left: 5px;
+  right: -7px;
+  bottom: -7px;
+  height: 7px;
   border: 0;
-  border-radius: 0 0 7px 7px;
+  border-radius: 0 0 8px 8px;
   background:
-    linear-gradient(45deg, #0b1209 25%, transparent 25%, transparent 75%, #0b1209 75%) 0 0 / 4px 4px,
-    linear-gradient(45deg, transparent 25%, rgba(13, 21, 12, 0.7) 25%, rgba(13, 21, 12, 0.7) 75%, transparent 75%) 2px 2px / 4px 4px,
-    rgba(101, 115, 66, 0.9);
+    radial-gradient(circle, rgba(7, 16, 7, 0.72) 0 1px, transparent 1.2px) 0 0 / 4px 4px;
   pointer-events: none;
 }
 
-.summary-stack > .summary-embedded.total-window > *,
 .summary-stack > .summary-combined-card > *,
 .summary-stack > .availability-card > *,
 .summary-stack > .salary-partition-card > * {
@@ -4128,15 +4119,19 @@ body::-webkit-scrollbar,
   z-index: 2;
 }
 
-.summary-stack > .summary-embedded.total-window {
-  padding: 12px;
+.summary-embedded .summary-spent-line {
+  background: transparent;
+}
+
+.summary-embedded .summary-spent-line strong,
+.summary-stack > .availability-card.availability-card-b .available-line {
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.36), transparent 36%),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    #bccb84;
 }
 
 .summary-stack > .availability-card.availability-card-b .available-line {
-  background:
-    linear-gradient(90deg, rgba(7, 16, 7, 0.12) 1px, transparent 1px) 0 0 / 4px 4px,
-    linear-gradient(0deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 4px 4px,
-    #bccb84;
   box-shadow:
     inset 2px 2px 0 rgba(7, 16, 7, 0.2),
     inset -2px -2px 0 rgba(222, 232, 159, 0.32);

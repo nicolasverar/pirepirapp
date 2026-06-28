@@ -1325,3 +1325,24 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `CERRAR` sin resultados; `toggleFixedExpenseForm`, `v3.22` y `finanzas-lcd-v130` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Particion sueldo con leyendas limpias v3.23
+
+### Objetivo
+- Limpiar la tarjeta `PARTICION SUELDO`: quitar `DISP. xx%` del marco, eliminar la escala `0 / 50% / 100%` y reforzar las leyendas reales de las particiones.
+
+### Cambios
+- El encabezado de la tarjeta ahora muestra solo `PARTICION SUELDO`.
+- Se elimino la linea/etiqueta interna de `100%` y la escala inferior `0`, `50%`, `100% sueldo` y `exceso`.
+- Las leader lines se reacomodaron en cascadas mas verticales: fijos arriba, ahorros/metas abajo y disponible hacia el lado contrario.
+- Las etiquetas de leyenda se agrandaron y se aumento el espacio vertical de la tarjeta para mejorar lectura.
+- Se actualizo cache/version de `v3.22` a `v3.23` y `finanzas-lcd-v131`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android de la vista real: OK, `titleBadge`, `salary-b1-axis`, `salary-b1-salary-line` y `DISP. ` sin resultados; `v3.23` y `finanzas-lcd-v131` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

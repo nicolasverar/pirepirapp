@@ -77,16 +77,16 @@
 
   .salary-b1-bar {
     min-height: 82px;
-    margin: 92px 0 90px;
+    margin: 112px 0 108px;
   }
 
   .salary-b1-leader {
-    --leader-arm: 28px;
+    --leader-arm: 72px;
   }
 
   .salary-b1-leader-text {
-    max-width: 138px;
-    font-size: 0.4rem;
+    max-width: 178px;
+    font-size: 0.52rem;
   }
 
   .salary-b1-inside-pct {

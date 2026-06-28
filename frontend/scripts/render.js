@@ -1033,12 +1033,10 @@
   function renderSalaryPartition(config, summary, data) {
     var model = salaryPartitionB1Model(config, summary, data);
     var salary = model.salary;
-    var availablePercent = salary ? partitionPercent(model.available, salary) : 0;
-    var titleBadge = model.excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(availablePercent) || '0') + '%';
 
     return [
       '<article class="system-window salary-partition-card salary-partition-aaa' + (model.excess > 0 ? ' is-over-budget' : '') + '">',
-      '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span><span>' + utils.escapeHtml(titleBadge) + '</span></div>',
+      '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span></div>',
       salary ? '<div class="partition-summary partition-summary-top"><span>Sueldo distribuido</span><b>' + utils.escapeHtml(utils.formatMoney(salary)) + '</b></div>' : '',
       model.excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(model.excess)) + '</p>' : '',
       salary ? renderSalaryPartitionB1(model) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
@@ -1175,19 +1173,16 @@
 
   function renderSalaryPartitionB1(model) {
     var groups = salaryPartitionB1Groups(model);
-    var salaryLine = Math.min(100, Math.max(0, partitionPercent(model.salary, model.scale)));
     return [
       '<div class="salary-b1-stage" data-salary-partition-b1>',
-      '<div class="salary-b1-bar-wrap" style="' + cssVars({ '--salary-line': salaryLine + '%' }) + '">',
+      '<div class="salary-b1-bar-wrap">',
       '<div class="salary-b1-bar" role="group" aria-label="Particion del sueldo en barra interactiva">',
-      '<span class="salary-b1-salary-line" aria-hidden="true">100%</span>',
       groups.map(function (group, index) {
         return isSalaryB1GroupOpen(group.group) && canSalaryB1DrillGroup(group)
           ? renderSalaryB1ExpandedSegment(group, model, index)
           : renderSalaryB1MacroSegment(group, model, index);
       }).join(''),
       '</div>',
-      '<div class="salary-b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
       '</div>',
       '</div>'
     ].join('');
@@ -1282,39 +1277,49 @@
   function salaryB1LeaderPlacement(group, index, nested) {
     var side = index % 2 ? 'bottom' : 'top';
     var direction = index % 4 < 2 ? 'right' : 'left';
-    var run = 42;
-    var rise = 36;
-    var arm = 34;
+    var run = 26;
+    var rise = 44;
+    var arm = 96;
     var angle;
     var diag;
     if (nested && group === 'fixed') {
       side = 'top';
       direction = 'right';
-      rise = Math.max(38, 88 - (Math.min(index, 4) * 15));
-      run = 34 + (Math.min(index, 4) * 13);
+      rise = 110 - (Math.min(index, 5) * 18);
+      run = 22 + (Math.min(index, 5) * 8);
+      arm = 122;
     } else if (nested && group === 'saving') {
       side = 'bottom';
       direction = 'right';
-      rise = Math.max(38, 88 - (Math.min(index, 4) * 15));
-      run = 34 + (Math.min(index, 4) * 13);
+      rise = 110 - (Math.min(index, 5) * 18);
+      run = 22 + (Math.min(index, 5) * 8);
+      arm = 122;
     } else if (nested && group === 'excess') {
       side = 'top';
       direction = 'left';
-      rise = 48;
+      rise = 64;
+      arm = 100;
     } else if (!nested && group === 'fixed') {
       side = 'top';
       direction = 'right';
+      rise = 86;
+      arm = 118;
     } else if (!nested && group === 'saving') {
       side = 'bottom';
       direction = 'right';
+      rise = 86;
+      arm = 118;
     } else if (!nested && group === 'available') {
       side = 'bottom';
-      direction = 'right';
-      rise = 34;
-      run = 44;
+      direction = 'left';
+      rise = 58;
+      run = 34;
+      arm = 96;
     } else if (!nested && group === 'excess') {
       side = 'bottom';
       direction = 'left';
+      rise = 66;
+      arm = 100;
     }
     diag = Math.round(Math.sqrt((run * run) + (rise * rise)));
     angle = Math.round((Math.atan2(rise, run) * 1800) / Math.PI) / 10;

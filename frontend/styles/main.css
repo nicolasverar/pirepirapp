@@ -5014,8 +5014,8 @@ body::-webkit-scrollbar,
 
 .summary-stack > .salary-partition-card.salary-partition-aaa .salary-b1-stage {
   display: grid;
-  min-height: 278px;
-  padding: 6px 4px 2px;
+  min-height: 320px;
+  padding: 8px 4px 2px;
   overflow: visible;
   color: #071007;
 }
@@ -5030,27 +5030,10 @@ body::-webkit-scrollbar,
   position: relative;
   display: flex;
   min-height: 88px;
-  margin: 98px 0 96px;
+  margin: 122px 0 118px;
   overflow: visible;
   background: #071007;
   border: 2px solid #071007;
-}
-
-.salary-b1-salary-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--salary-line);
-  z-index: 5;
-  width: 2px;
-  color: #c4d08b;
-  background: #071007;
-  transform: translateX(-1px);
-  text-indent: 3px;
-  text-transform: uppercase;
-  font-size: 0.46rem;
-  font-weight: 900;
-  line-height: 1;
 }
 
 .salary-b1-segment {
@@ -5204,19 +5187,19 @@ body::-webkit-scrollbar,
 
 .salary-b1-leader-text {
   position: absolute;
-  top: calc(var(--leader-y) - 6px);
+  top: calc(var(--leader-y) - 8px);
   z-index: 2;
   display: block;
   width: max-content;
-  max-width: 178px;
-  padding: 1px 4px;
+  max-width: 228px;
+  padding: 2px 6px;
   overflow: hidden;
   background: rgba(196, 208, 139, 0.92);
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.44rem;
+  font-size: 0.58rem;
   font-weight: 900;
-  line-height: 1.12;
+  line-height: 1.1;
 }
 
 .salary-b1-leader.is-right .salary-b1-leader-text {
@@ -5231,20 +5214,6 @@ body::-webkit-scrollbar,
 .salary-b1-child.is-tiny .salary-b1-leader,
 .salary-b1-segment.is-tight .salary-b1-leader {
   --leader-arm: 28px;
-}
-
-.salary-b1-axis {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px;
-  text-transform: uppercase;
-  font-size: 0.48rem;
-  font-weight: 900;
-}
-
-.salary-b1-axis span:nth-child(3),
-.salary-b1-axis span:last-child {
-  text-align: right;
 }
 
 /* Carcasa PDA negra y botonera fisica de goma. */

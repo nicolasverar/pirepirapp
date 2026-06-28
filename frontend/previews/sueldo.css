@@ -639,7 +639,7 @@ button {
 }
 
 .pie-touch-part.is-available .pie-touch-label {
-  fill: var(--panel-hi);
+  fill: #071007;
 }
 
 .pie-touch-center-text {

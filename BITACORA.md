@@ -1002,6 +1002,28 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
+## 2026-06-28 - Senaladores de torta restaurados v3.31
+
+### Objetivo
+- Recuperar la belleza y legibilidad de los senaladores de la torta 2D despues de agrandarla.
+
+### Cambios
+- Los codos de los callouts se movieron a carriles exteriores para que la linea tenga diagonal clara y tramo horizontal limpio.
+- La posicion vertical de cada callout ahora se calcula con separacion respecto al punto de anclaje, evitando lineas aplastadas sobre el borde de la torta.
+- `DISP.` mantiene senalador visible por defecto y porcentaje interno legible.
+- El preview `frontend/previews/particion.html` actualiza cache-busting para revisar la variante corregida.
+- Version y cache pasan de `v3.30`/`finanzas-lcd-v138` a `v3.31`/`finanzas-lcd-v139`.
+
+### Verificacion
+- Captura headless Chrome del preview: OK, senalador con diagonal exterior, tramo horizontal y porcentaje visible.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\previews\sueldo.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Torta A final colapsable
 
 ### Objetivo

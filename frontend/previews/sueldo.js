@@ -1292,7 +1292,7 @@
     side = pieCalloutSide(anchor.x, cx);
     callouts.push({
       side: side,
-      y: Math.max(20, Math.min(240, anchor.y)),
+      y: pieCalloutY(anchor, cy, nested, item.group),
       anchor: anchor,
       group: item.group,
       label: pieCalloutText(item, model, nested)
@@ -1301,6 +1301,18 @@
 
   function pieCalloutSide(anchorX, centerX) {
     return anchorX >= centerX ? 'right' : 'left';
+  }
+
+  function pieCalloutY(anchor, centerY, nested, group) {
+    var offset = nested ? 24 : 34;
+    var y;
+    if (group === 'available') {
+      offset = 42;
+      y = anchor.y - offset;
+    } else {
+      y = anchor.y + (anchor.y >= centerY ? offset : -offset);
+    }
+    return Math.max(20, Math.min(240, y));
   }
 
   function pieCalloutText(item, model, nested) {
@@ -1336,8 +1348,8 @@
     return [
       '<g class="pie-touch-callouts">',
       rows.map(function (row) {
-        var elbowX = row.side === 'right' ? 274 : 46;
-        var labelX = row.side === 'right' ? elbowX + 6 : elbowX - 6;
+        var elbowX = row.side === 'right' ? 306 : 18;
+        var labelX = row.side === 'right' ? 316 : 8;
         var textAnchor = row.side === 'right' ? 'start' : 'end';
         return [
           '<polyline class="pie-touch-callout-line is-' + escapeHtml(row.group) + '" points="' + edgeNum(row.anchor.x) + ',' + edgeNum(row.anchor.y) + ' ' + edgeNum(elbowX) + ',' + edgeNum(row.y) + ' ' + edgeNum(labelX) + ',' + edgeNum(row.y) + '"></polyline>',

@@ -1272,11 +1272,23 @@
     anchor = salaryPie2dPolar(cx, cy, radius + 2, midAngle);
     callouts.push({
       side: anchor.x >= cx ? 'right' : 'left',
-      y: Math.max(20, Math.min(240, anchor.y)),
+      y: salaryPie2dCalloutY(anchor, cy, nested, item.group),
       anchor: anchor,
       group: item.group,
       label: salaryPie2dCalloutText(item, model, nested)
     });
+  }
+
+  function salaryPie2dCalloutY(anchor, centerY, nested, group) {
+    var offset = nested ? 24 : 34;
+    var y;
+    if (group === 'available') {
+      offset = 42;
+      y = anchor.y - offset;
+    } else {
+      y = anchor.y + (anchor.y >= centerY ? offset : -offset);
+    }
+    return Math.max(20, Math.min(240, y));
   }
 
   function salaryPie2dCalloutText(item, model, nested) {
@@ -1299,8 +1311,8 @@
     return [
       '<g class="salary-pie2d-callouts">',
       rows.map(function (row) {
-        var elbowX = row.side === 'right' ? 274 : 46;
-        var labelX = row.side === 'right' ? elbowX + 6 : elbowX - 6;
+        var elbowX = row.side === 'right' ? 306 : 18;
+        var labelX = row.side === 'right' ? 316 : 8;
         var anchor = row.side === 'right' ? 'start' : 'end';
         return [
           '<polyline class="salary-pie2d-callout-line is-' + utils.escapeHtml(row.group) + '" points="' + salaryPie2dNum(row.anchor.x) + ',' + salaryPie2dNum(row.anchor.y) + ' ' + salaryPie2dNum(elbowX) + ',' + salaryPie2dNum(row.y) + ' ' + salaryPie2dNum(labelX) + ',' + salaryPie2dNum(row.y) + '"></polyline>',

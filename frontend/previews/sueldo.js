@@ -112,15 +112,19 @@
   }
 
   function components(model) {
-    if (currentMode === 'macro') {
-      return [
-        { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], pattern: 0 },
-        { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], pattern: 1 },
-        { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 2 },
-        { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 3 }
-      ].filter(nonZero);
-    }
+    return currentMode === 'macro' ? macroComponents(model) : detailComponents(model);
+  }
 
+  function macroComponents(model) {
+    return [
+      { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], pattern: 0 },
+      { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], pattern: 1 },
+      { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 },
+      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }
+    ].filter(nonZero);
+  }
+
+  function detailComponents(model) {
     return []
       .concat(model.fixed.map(function (item, index) {
         return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index);
@@ -201,6 +205,155 @@
       '<div class="rail-scale"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
       '</div>',
       renderComponentLegend(model, list)
+    ].join(''));
+  }
+
+  function renderStackBar(items, model, options) {
+    var config = options || {};
+    var total = config.total || model.scale;
+    var salaryLine = Math.min(100, Math.max(0, pct(model.salary, total)));
+    var extraClass = config.className ? ' ' + config.className : '';
+    var caption = config.caption ? [
+      '<div class="stack-caption">',
+      '<span>' + escapeHtml(config.caption) + '</span>',
+      '<b>' + escapeHtml(config.value || '') + '</b>',
+      '</div>'
+    ].join('') : '';
+
+    return [
+      '<div class="stack-wrap' + extraClass + '" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
+      caption,
+      '<div class="stack-bar" role="img" aria-label="' + escapeHtml(config.aria || 'Barra apilada 100 del sueldo') + '">',
+      '<span class="stack-salary-line" aria-hidden="true">100%</span>',
+      items.map(function (item) {
+        var width = pct(item.amount, total);
+        var tightClass = width < 8 ? ' is-tiny' : width < 14 ? ' is-tight' : '';
+        return [
+          '<div class="stack-segment pat-' + escapeHtml(String(item.pattern || 0)) + ' is-' + escapeHtml(item.group) + tightClass + '" style="' + styleVars({ '--w': width + '%', '--c': item.color }) + '" title="' + escapeHtml(item.label + ' - ' + money(item.amount) + ' - ' + pctLabel(item.amount, model.salary)) + '">',
+          '<span>' + escapeHtml(item.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '<div class="stack-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderClassicStack(model) {
+    var list = components(model);
+    return renderPanel('A', 'Barra 100 principal', 'una sola fila; el selector cambia macro o detalle', [
+      renderStackBar(list, model, {
+        className: 'is-large',
+        caption: currentMode === 'macro' ? 'Familias del sueldo' : 'Componentes del sueldo',
+        value: 'Sueldo = 100%'
+      }),
+      renderComponentLegend(model, list)
+    ].join(''));
+  }
+
+  function renderDualStack(model) {
+    var macro = macroComponents(model);
+    var detail = detailComponents(model);
+    return renderPanel('B', 'Doble nivel', 'arriba familias, abajo componentes exactos', [
+      '<div class="tier-grid">',
+      renderStackBar(macro, model, { className: 'is-medium', caption: 'Nivel macro', value: pctLabel(model.committed + model.available, model.salary) }),
+      renderStackBar(detail, model, { className: 'is-medium', caption: 'Nivel desagregado', value: String(detail.length) + ' tramos' }),
+      '</div>',
+      renderCompactLegend(model, detail)
+    ].join(''));
+  }
+
+  function renderFamilyRows(model) {
+    var groups = [
+      { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], children: model.fixed.map(function (item, index) { return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index); }) },
+      { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], children: model.savings.map(function (item, index) { return componentFromItem(item, 'saving', palette.saving[index % palette.saving.length], index + model.fixed.length); }) },
+      { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], children: model.available > 0 ? [{ label: 'Libre', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 }] : [] },
+      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], children: model.excess > 0 ? [{ label: 'Sobreasignado', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : [] }
+    ].filter(nonZero);
+
+    return renderPanel('C', 'Filas por familia', 'cada fila mide cuanto ocupa esa familia del sueldo', [
+      '<div class="group-stack-list">',
+      groups.map(function (group) {
+        var familyWidth = Math.max(1.2, pct(group.amount, model.scale));
+        return [
+          '<section class="group-stack-card is-' + escapeHtml(group.group) + '">',
+          '<header><strong>' + escapeHtml(group.label) + '</strong><span>' + escapeHtml(money(group.amount)) + ' / ' + escapeHtml(pctLabel(group.amount, model.salary)) + '</span></header>',
+          '<div class="group-row-bar">',
+          '<div class="group-row-fill pat-' + escapeHtml(String(group.children[0] ? group.children[0].pattern : 0)) + '" style="' + styleVars({ '--w': familyWidth + '%', '--c': group.color }) + '">',
+          '<div class="mini-stack">',
+          group.children.map(function (item) {
+            return '<i class="mini-segment pat-' + escapeHtml(String(item.pattern || 0)) + ' is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--w': pct(item.amount, group.amount) + '%', '--c': item.color }) + '" title="' + escapeHtml(item.label + ' ' + pctLabel(item.amount, model.salary)) + '"></i>';
+          }).join(''),
+          '</div>',
+          '</div>',
+          '</div>',
+          '<div class="family-tags">',
+          group.children.map(function (item) {
+            return '<span>' + escapeHtml(item.label) + ' <b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b></span>';
+          }).join(''),
+          '</div>',
+          '</section>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderLedgerStack(model) {
+    var list = detailComponents(model).slice().sort(function (left, right) {
+      return right.amount - left.amount;
+    });
+    return renderPanel('D', 'Barra + ranking', 'la barra muestra totalidad; abajo se lee item por item', [
+      renderStackBar(list, model, { className: 'is-medium', caption: 'Distribucion ordenada por monto', value: 'mayor a menor' }),
+      '<div class="rank-list">',
+      list.map(function (item, index) {
+        return [
+          '<div class="rank-row is-' + escapeHtml(item.group) + '">',
+          '<i class="rank-index pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--c': item.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
+          '<span><strong>' + escapeHtml(item.label) + '</strong><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '<em>' + escapeHtml(money(item.amount)) + '</em>',
+          '<div class="rank-meter"><i class="pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--w': Math.min(100, pct(item.amount, model.salary)) + '%', '--c': item.color }) + '"></i></div>',
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderCompactStack(model) {
+    var macro = macroComponents(model);
+    return renderPanel('E', 'Version compacta', 'candidata para tarjeta de resumen sin ocupar mucho alto', [
+      '<div class="compact-board">',
+      renderStackBar(macro, model, { className: 'is-compact', caption: 'Sueldo particionado', value: pctLabel(model.committed, model.salary) + ' asignado' }),
+      '<div class="compact-kpis">',
+      '<span><b>' + escapeHtml(pctLabel(model.fixedTotal, model.salary)) + '</b> fijos</span>',
+      '<span><b>' + escapeHtml(pctLabel(model.savingsTotal, model.salary)) + '</b> ahorros</span>',
+      '<span><b>' + escapeHtml(model.excess ? pctLabel(model.excess, model.salary) : pctLabel(model.available, model.salary)) + '</b> ' + escapeHtml(model.excess ? 'exceso' : 'libre') + '</span>',
+      '</div>',
+      '</div>',
+      renderCompactLegend(model, macro)
+    ].join(''));
+  }
+
+  function renderOverflowStack(model) {
+    var committedItems = [
+      { label: 'Fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], pattern: 0 },
+      { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], pattern: 1 },
+      { label: 'Libre', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 },
+      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }
+    ].filter(nonZero);
+
+    return renderPanel('F', 'Umbral de sueldo', 'se ve claramente cuando lo asignado pasa del 100%', [
+      '<div class="overflow-board">',
+      renderStackBar(committedItems, model, { className: 'is-large is-threshold', caption: 'Linea negra = sueldo completo', value: model.excess ? 'pasado ' + pctLabel(model.excess, model.salary) : 'dentro del 100%' }),
+      '<div class="threshold-readout ' + (model.excess ? 'is-alert' : '') + '">',
+      '<strong>' + escapeHtml(model.excess ? 'Sobreasignacion detectada' : 'Particion dentro del sueldo') + '</strong>',
+      '<span>' + escapeHtml(model.excess ? money(model.excess) + ' por encima del sueldo' : money(model.available) + ' queda disponible') + '</span>',
+      '</div>',
+      '</div>'
     ].join(''));
   }
 
@@ -546,12 +699,12 @@
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderPieSolid(model),
-      renderPieDonut(model),
-      renderPieDoubleRing(model),
-      renderTiles(model),
-      renderTilesGrouped(model),
-      renderTilesPacked(model)
+      renderClassicStack(model),
+      renderDualStack(model),
+      renderFamilyRows(model),
+      renderLedgerStack(model),
+      renderCompactStack(model),
+      renderOverflowStack(model)
     ].join('');
   }
 

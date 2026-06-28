@@ -983,3 +983,26 @@
 - `node --check frontend\previews\sueldo.js`: OK.
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
+
+## 2026-06-27 - Variaciones stacked bar 100
+
+### Objetivo
+- Concentrar el laboratorio visual en barras apiladas 100% para representar la particion del sueldo.
+
+### Cambios
+- Se reemplazo la salida visible de tortas/mapas por seis variantes de `100 percent stacked bar chart`.
+- Nuevas opciones:
+  - `A` Barra 100 principal, con selector macro/desagregado.
+  - `B` Doble nivel: macro arriba, componentes abajo.
+  - `C` Filas por familia, con cada grupo medido contra el sueldo.
+  - `D` Barra + ranking ordenado por monto.
+  - `E` Version compacta candidata para tarjeta de resumen.
+  - `F` Umbral de sueldo para ver sobreasignacion/exceso.
+- Se reforzaron tramas, etiquetas y lectura proporcional sin depender solo del color.
+- La app principal sigue intacta; solo cambia el laboratorio de preview.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

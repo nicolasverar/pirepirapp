@@ -348,6 +348,203 @@ button {
   border: 2px solid var(--line);
 }
 
+.pie-layout {
+  display: grid;
+  gap: 7px;
+}
+
+.pie-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 244px;
+  padding: 6px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+    linear-gradient(0deg, rgba(7, 16, 7, 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+    rgba(113, 126, 75, 0.36);
+  border: 2px solid var(--line);
+}
+
+.pie-svg {
+  width: min(100%, 250px);
+  height: auto;
+  overflow: visible;
+}
+
+.pie-svg pattern line,
+.pie-svg pattern rect {
+  stroke: rgba(7, 16, 7, 0.7);
+  stroke-width: 1.5;
+  fill: rgba(7, 16, 7, 0.42);
+}
+
+.pie-shadow {
+  fill: rgba(7, 16, 7, 0.16);
+}
+
+.pie-slice {
+  fill: var(--c);
+  stroke: #071007;
+  stroke-width: 2.5;
+  paint-order: stroke fill;
+}
+
+.pie-slice.is-macro {
+  opacity: 0.82;
+  stroke-width: 2;
+}
+
+.pie-texture {
+  opacity: 0.7;
+  stroke: none;
+  pointer-events: none;
+}
+
+.pie-texture.pat-0,
+.legend-index.pat-0,
+.tile.pat-0,
+.pack-block.pat-0 {
+  fill: url("#pdiag");
+  background-image: repeating-linear-gradient(-35deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 6px);
+}
+
+.pie-texture.pat-1,
+.legend-index.pat-1,
+.tile.pat-1,
+.pack-block.pat-1 {
+  fill: url("#pvert");
+  background-image: repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.3) 0 1px, transparent 1px 6px);
+}
+
+.pie-texture.pat-2,
+.legend-index.pat-2,
+.tile.pat-2,
+.pack-block.pat-2 {
+  fill: url("#pdot");
+  background-image: radial-gradient(circle, rgba(7, 16, 7, 0.36) 0 1px, transparent 1px);
+  background-size: 7px 7px;
+}
+
+.pie-texture.pat-3,
+.legend-index.pat-3,
+.tile.pat-3,
+.pack-block.pat-3 {
+  fill: url("#pcross");
+  background-image:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.24) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.24) 0 1px, transparent 1px 7px);
+}
+
+.pie-texture.pat-4,
+.legend-index.pat-4,
+.tile.pat-4,
+.pack-block.pat-4 {
+  fill: url("#phoriz");
+  background-image: repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 6px);
+}
+
+.pie-texture.pat-5,
+.legend-index.pat-5,
+.tile.pat-5,
+.pack-block.pat-5 {
+  fill: url("#pgrid");
+  background-image:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.32) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(7, 16, 7, 0.32) 1px, transparent 1px);
+  background-size: 7px 7px;
+}
+
+.pie-rim,
+.pie-hole {
+  fill: none;
+  stroke: #071007;
+  stroke-width: 3;
+}
+
+.pie-hole {
+  fill: var(--panel-hi);
+}
+
+.pie-center-text,
+.pie-chip-text {
+  fill: #071007;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.pie-center-text.small {
+  font-size: 9px;
+}
+
+.pie-chip-text {
+  paint-order: stroke fill;
+  stroke: var(--panel-hi);
+  stroke-width: 4;
+}
+
+.pie-over {
+  position: absolute;
+  left: 7px;
+  bottom: 7px;
+  padding: 3px 5px;
+  color: #071007;
+  background: var(--alert);
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font-size: 0.54rem;
+  font-weight: 900;
+}
+
+.compact-legend {
+  display: grid;
+  gap: 4px;
+}
+
+.compact-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding: 4px;
+  background: rgba(196, 208, 139, 0.3);
+  border: 2px solid rgba(7, 16, 7, 0.58);
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.legend-index {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  min-height: 22px;
+  color: #071007;
+  background-color: var(--c);
+  border: 2px solid var(--line);
+  font-style: normal;
+  font-size: 0.58rem;
+}
+
+.compact-row span {
+  display: grid;
+  min-width: 0;
+}
+
+.compact-row strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.56rem;
+}
+
+.compact-row small,
+.compact-row b {
+  font-size: 0.5rem;
+}
+
 .tile {
   display: block;
   aspect-ratio: 1 / 1;
@@ -359,6 +556,83 @@ button {
 
 .tile.is-empty {
   background: rgba(196, 208, 139, 0.08);
+}
+
+.tile-board-serpent .tile:nth-child(20n + 11),
+.tile-board-serpent .tile:nth-child(20n + 12),
+.tile-board-serpent .tile:nth-child(20n + 13),
+.tile-board-serpent .tile:nth-child(20n + 14),
+.tile-board-serpent .tile:nth-child(20n + 15),
+.tile-board-serpent .tile:nth-child(20n + 16),
+.tile-board-serpent .tile:nth-child(20n + 17),
+.tile-board-serpent .tile:nth-child(20n + 18),
+.tile-board-serpent .tile:nth-child(20n + 19),
+.tile-board-serpent .tile:nth-child(20n + 20) {
+  transform: rotate(180deg);
+}
+
+.band-map {
+  display: grid;
+  gap: 7px;
+}
+
+.tile-band {
+  display: grid;
+  gap: 4px;
+  padding: 5px;
+  background: rgba(196, 208, 139, 0.26);
+  border: 2px solid rgba(7, 16, 7, 0.58);
+}
+
+.tile-band header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.tile-band-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 3px;
+  padding: 4px;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
+.pack-map {
+  display: grid;
+  gap: 6px;
+}
+
+.pack-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  width: var(--w);
+  min-width: 38%;
+  min-height: 34px;
+  align-items: center;
+  padding: 5px;
+  color: #071007;
+  background-color: var(--c);
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.pack-block span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.58rem;
+}
+
+.pack-block b {
+  font-size: 0.58rem;
 }
 
 .overflow-row {

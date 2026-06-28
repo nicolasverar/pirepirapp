@@ -114,34 +114,35 @@
   function components(model) {
     if (currentMode === 'macro') {
       return [
-        { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0] },
-        { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0] },
-        { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0] },
-        { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0] }
+        { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], pattern: 0 },
+        { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], pattern: 1 },
+        { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 2 },
+        { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 3 }
       ].filter(nonZero);
     }
 
     return []
       .concat(model.fixed.map(function (item, index) {
-        return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length]);
+        return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index);
       }))
       .concat(model.savings.map(function (item, index) {
-        return componentFromItem(item, 'saving', palette.saving[index % palette.saving.length]);
+        return componentFromItem(item, 'saving', palette.saving[index % palette.saving.length], index + model.fixed.length);
       }))
-      .concat(model.available > 0 ? [{ label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0] }] : [])
-      .concat(model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0] }] : []);
+      .concat(model.available > 0 ? [{ label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 }] : [])
+      .concat(model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : []);
   }
 
   function nonZero(item) {
     return Number(item.amount || 0) > 0;
   }
 
-  function componentFromItem(item, group, color) {
+  function componentFromItem(item, group, color, index) {
     return {
       label: item.label,
       group: group,
       amount: Number(item.amount || 0),
-      color: color
+      color: color,
+      pattern: index % 6
     };
   }
 
@@ -203,18 +204,96 @@
     ].join(''));
   }
 
+  function renderPieSolid(model) {
+    var list = components(model);
+    return renderPanel('A', 'Torta con callouts', 'sectores desagregados con indice y lista lateral', [
+      '<div class="pie-layout">',
+      renderPieSvg(list, model, { id: 'callout', donut: false, callouts: true }),
+      renderCompactLegend(model, list),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderPieDonut(model) {
+    var list = components(model);
+    return renderPanel('B', 'Torta anillada', 'centro limpio, componentes en corona con tramas', [
+      '<div class="pie-layout">',
+      renderPieSvg(list, model, { id: 'donut', donut: true, callouts: false }),
+      renderComponentLegend(model, list),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderPieDoubleRing(model) {
+    var detail = components(model);
+    var macro = [
+      { label: 'Fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], pattern: 0 },
+      { label: 'Ahorros', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], pattern: 1 },
+      { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 2 },
+      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 3 }
+    ].filter(nonZero);
+    return renderPanel('C', 'Doble anillo', 'adentro categorias, afuera componentes', [
+      '<div class="pie-layout">',
+      renderDoubleRingSvg(macro, detail, model),
+      renderCompactLegend(model, detail),
+      '</div>'
+    ].join(''));
+  }
+
   function renderTiles(model) {
     var list = components(model);
     var units = buildUnits(list, model);
-    return renderPanel('B', 'Mapa 100 casillas', 'cada cuadro representa cerca de 1% del sueldo', [
-      '<div class="tile-board" aria-label="Mapa de sueldo en 100 casillas">',
+    return renderPanel('D', 'Mapa 100 serpiente', 'lectura clasica: cien pixeles seguidos', [
+      '<div class="tile-board tile-board-serpent" aria-label="Mapa de sueldo en 100 casillas">',
       units.salary.map(function (item) {
-        return '<i class="tile is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--c': item.color }) + '" title="' + escapeHtml(item.label) + '"></i>';
+        return renderTile(item);
       }).join(''),
       '</div>',
       model.excess ? '<div class="overflow-row"><span>EXCESO FUERA DEL 100%</span><div>' + units.overflow.map(function (item) {
-        return '<i class="tile is-excess" style="' + styleVars({ '--c': item.color }) + '" title="' + escapeHtml(item.label) + '"></i>';
+        return renderTile(item);
       }).join('') + '</div></div>' : '',
+      renderComponentLegend(model, list)
+    ].join(''));
+  }
+
+  function renderTilesGrouped(model) {
+    var list = components(model).filter(function (item) {
+      return item.group !== 'excess';
+    });
+    var groups = ['fixed', 'saving', 'available'].map(function (group) {
+      return {
+        group: group,
+        label: groupName(group),
+        items: list.filter(function (item) { return item.group === group; })
+      };
+    }).filter(function (group) {
+      return group.items.length;
+    });
+    return renderPanel('E', 'Mapa 100 por bandas', 'las casillas se ordenan por familia antes de detallar', [
+      '<div class="band-map">',
+      groups.map(function (group) {
+        return renderTileBand(group, model);
+      }).join(''),
+      '</div>',
+      model.excess ? renderExcessStrip(model) : '',
+      renderCompactLegend(model, components(model))
+    ].join(''));
+  }
+
+  function renderTilesPacked(model) {
+    var list = components(model);
+    return renderPanel('F', 'Mapa 100 compacto', 'bloques rectangulares con proporcion y etiqueta', [
+      '<div class="pack-map">',
+      list.map(function (item) {
+        var width = Math.max(12, Math.min(100, pct(item.amount, model.salary)));
+        return [
+          '<div class="pack-block pat-' + escapeHtml(String(item.pattern || 0)) + ' is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--w': width + '%', '--c': item.color }) + '">',
+          '<span>' + escapeHtml(item.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>',
       renderComponentLegend(model, list)
     ].join(''));
   }
@@ -242,6 +321,39 @@
       salary: salaryUnits.slice(0, 100),
       overflow: overflowUnits
     };
+  }
+
+  function renderTile(item) {
+    return '<i class="tile is-' + escapeHtml(item.group) + ' pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--c': item.color }) + '" title="' + escapeHtml(item.label) + '"></i>';
+  }
+
+  function renderTileBand(group, model) {
+    var units = buildUnits(group.items, model).salary.filter(function (item) {
+      return item.group !== 'empty';
+    });
+    var total = sum(group.items);
+    return [
+      '<section class="tile-band is-' + escapeHtml(group.group) + '">',
+      '<header><strong>' + escapeHtml(group.label) + '</strong><span>' + escapeHtml(pctLabel(total, model.salary)) + '</span></header>',
+      '<div class="tile-band-grid">',
+      units.map(renderTile).join(''),
+      '</div>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderExcessStrip(model) {
+    var units = buildUnits([{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }], model).salary.filter(function (item) {
+      return item.group !== 'empty';
+    });
+    if (!units.length) {
+      units = buildUnits([{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }], model).overflow;
+    }
+    return [
+      '<div class="overflow-row"><span>EXCESO FUERA DEL 100%</span><div>',
+      units.map(renderTile).join(''),
+      '</div></div>'
+    ].join('');
   }
 
   function renderLedger(model) {
@@ -297,13 +409,149 @@
     ].join('');
   }
 
+  function renderCompactLegend(model, list) {
+    return [
+      '<div class="compact-legend">',
+      list.map(function (item, index) {
+        return [
+          '<div class="compact-row">',
+          '<i class="legend-index pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--c': item.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
+          '<span><strong>' + escapeHtml(item.label) + '</strong><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function renderPieSvg(list, model, options) {
+    var cfg = options || {};
+    var cx = 110;
+    var cy = 110;
+    var radius = 82;
+    var inner = cfg.donut ? 43 : 0;
+    var start = -90;
+    var total = model.scale;
+    var labelIndex = 0;
+    var pieces = list.map(function (item) {
+      var sweep = (item.amount / total) * 360;
+      var end = start + sweep;
+      var path = cfg.donut ? donutPath(cx, cy, radius, inner, start, end) : piePath(cx, cy, radius, start, end);
+      var mid = start + (sweep / 2);
+      var labelPoint = polar(cx, cy, radius + 18, mid);
+      var chip = '';
+      labelIndex += 1;
+      if (cfg.callouts && sweep > 7) {
+        chip = '<text class="pie-chip-text" x="' + labelPoint.x + '" y="' + labelPoint.y + '">' + labelIndex + '</text>';
+      }
+      start = end;
+      return [
+        '<path class="pie-slice is-' + escapeHtml(item.group) + '" d="' + path + '" style="' + styleVars({ '--c': item.color }) + '"></path>',
+        '<path class="pie-texture pat-' + escapeHtml(String(item.pattern || 0)) + '" d="' + path + '"></path>',
+        chip
+      ].join('');
+    }).join('');
+
+    return [
+      '<div class="pie-stage">',
+      '<svg class="pie-svg" viewBox="0 0 220 220" role="img" aria-label="Torta de sueldo">',
+      patternDefs(),
+      '<circle class="pie-shadow" cx="110" cy="114" r="85"></circle>',
+      pieces,
+      '<circle class="pie-rim" cx="110" cy="110" r="' + radius + '"></circle>',
+      cfg.donut ? '<circle class="pie-hole" cx="110" cy="110" r="' + inner + '"></circle>' : '',
+      cfg.donut ? '<text class="pie-center-text" x="110" y="106">SUELDO</text><text class="pie-center-text small" x="110" y="122">100%</text>' : '',
+      '</svg>',
+      model.excess ? '<span class="pie-over">EXCESO ' + escapeHtml(money(model.excess)) + '</span>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function renderDoubleRingSvg(macro, detail, model) {
+    var cx = 110;
+    var cy = 110;
+    return [
+      '<div class="pie-stage">',
+      '<svg class="pie-svg" viewBox="0 0 220 220" role="img" aria-label="Torta de doble anillo">',
+      patternDefs(),
+      renderRing(macro, model.scale, cx, cy, 58, 30, true),
+      renderRing(detail, model.scale, cx, cy, 88, 63, false),
+      '<circle class="pie-hole" cx="110" cy="110" r="25"></circle>',
+      '<text class="pie-center-text" x="110" y="107">100%</text>',
+      '<text class="pie-center-text small" x="110" y="122">SAL</text>',
+      '</svg>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderRing(list, total, cx, cy, outer, inner, macro) {
+    var start = -90;
+    return list.map(function (item) {
+      var sweep = (item.amount / total) * 360;
+      var end = start + sweep;
+      var path = donutPath(cx, cy, outer, inner, start, end);
+      start = end;
+      return [
+        '<path class="pie-slice ' + (macro ? 'is-macro ' : '') + 'is-' + escapeHtml(item.group) + '" d="' + path + '" style="' + styleVars({ '--c': item.color }) + '"></path>',
+        '<path class="pie-texture pat-' + escapeHtml(String(item.pattern || 0)) + '" d="' + path + '"></path>'
+      ].join('');
+    }).join('');
+  }
+
+  function patternDefs() {
+    return [
+      '<defs>',
+      '<pattern id="pdiag" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="8"></line></pattern>',
+      '<pattern id="pvert" width="7" height="7" patternUnits="userSpaceOnUse"><line x1="2" y1="0" x2="2" y2="7"></line></pattern>',
+      '<pattern id="pdot" width="7" height="7" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="2" height="2"></rect></pattern>',
+      '<pattern id="pcross" width="8" height="8" patternUnits="userSpaceOnUse"><line x1="0" y1="4" x2="8" y2="4"></line><line x1="4" y1="0" x2="4" y2="8"></line></pattern>',
+      '<pattern id="phoriz" width="7" height="7" patternUnits="userSpaceOnUse"><line x1="0" y1="2" x2="7" y2="2"></line></pattern>',
+      '<pattern id="pgrid" width="8" height="8" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="5" height="5"></rect></pattern>',
+      '</defs>'
+    ].join('');
+  }
+
+  function piePath(cx, cy, radius, startAngle, endAngle) {
+    var start = polar(cx, cy, radius, startAngle);
+    var end = polar(cx, cy, radius, endAngle);
+    var large = endAngle - startAngle > 180 ? 1 : 0;
+    return ['M', cx, cy, 'L', start.x, start.y, 'A', radius, radius, 0, large, 1, end.x, end.y, 'Z'].join(' ');
+  }
+
+  function donutPath(cx, cy, outer, inner, startAngle, endAngle) {
+    var startOuter = polar(cx, cy, outer, startAngle);
+    var endOuter = polar(cx, cy, outer, endAngle);
+    var startInner = polar(cx, cy, inner, endAngle);
+    var endInner = polar(cx, cy, inner, startAngle);
+    var large = endAngle - startAngle > 180 ? 1 : 0;
+    return [
+      'M', startOuter.x, startOuter.y,
+      'A', outer, outer, 0, large, 1, endOuter.x, endOuter.y,
+      'L', startInner.x, startInner.y,
+      'A', inner, inner, 0, large, 0, endInner.x, endInner.y,
+      'Z'
+    ].join(' ');
+  }
+
+  function polar(cx, cy, radius, angleDeg) {
+    var angle = angleDeg * Math.PI / 180;
+    return {
+      x: Math.round((cx + (Math.cos(angle) * radius)) * 100) / 100,
+      y: Math.round((cy + (Math.sin(angle) * radius)) * 100) / 100
+    };
+  }
+
   function render() {
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderRail(model),
+      renderPieSolid(model),
+      renderPieDonut(model),
+      renderPieDoubleRing(model),
       renderTiles(model),
-      renderLedger(model)
+      renderTilesGrouped(model),
+      renderTilesPacked(model)
     ].join('');
   }
 

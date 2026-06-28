@@ -960,3 +960,26 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Explorar torta y mapa 100 con tramas
+
+### Objetivo
+- Explorar enfoques de torta y mapa 100 que no dependan tanto de una paleta de colores limitada.
+
+### Cambios
+- El laboratorio ahora muestra seis opciones:
+  - `A` Torta con callouts e indice lateral.
+  - `B` Torta anillada con centro limpio y tramas.
+  - `C` Doble anillo: categorias internas y componentes externos.
+  - `D` Mapa 100 serpiente.
+  - `E` Mapa 100 por bandas/familias.
+  - `F` Mapa 100 compacto por bloques proporcionales.
+- Se agregaron patrones visuales: diagonales, verticales, puntos, cruz, horizontales y grilla.
+- Se conserva el selector `DESAGREGADO / MACRO`.
+- La app principal sigue intacta; solo cambia el laboratorio de preview.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.

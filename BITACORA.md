@@ -1024,6 +1024,29 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Leyenda natural de torta v3.32
+
+### Objetivo
+- Rehacer la leyenda de la torta porque la version anterior se sentia artificial: un solo senalador externo y otra leyenda compitiendo abajo.
+
+### Cambios
+- `FIJOS`, `AHORROS` y `DISP.` ahora muestran senaladores externos por defecto, cada uno saliendo de su propio sector.
+- Las lineas usan una geometria orbital: tramo corto desde el borde de la torta y remate hacia la etiqueta cercana, sin carriles fijos laterales.
+- El SVG gana aire vertical para que la etiqueta inferior de `AHORROS` no quede apretada.
+- Se elimina la fila inferior de leyenda principal; abajo queda solo la lectura/estado de la seleccion y el boton `TOTAL`.
+- La tipografia de los callouts gana tamano y pierde borde excesivo.
+- Version y cache pasan de `v3.31`/`finanzas-lcd-v139` a `v3.32`/`finanzas-lcd-v140`.
+
+### Verificacion
+- Captura headless Chrome del preview: OK, leyenda externa en tres sectores y sin duplicacion inferior.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\previews\sueldo.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Torta A final colapsable
 
 ### Objetivo

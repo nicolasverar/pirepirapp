@@ -1146,7 +1146,6 @@
   function renderPieBottomReadout(model, variant) {
     return [
       '<div class="pie-touch-bottom">',
-      renderPiePrincipalLegend(model, variant),
       renderPieSelectionDetail(model, variant),
       '<button class="pie-touch-reset" type="button" data-pie-reset="1">TOTAL</button>',
       '</div>'
@@ -1230,7 +1229,7 @@
     var calloutHtml = renderPieCallouts(callouts, cfg);
 
     return [
-      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-42 0 404 264" role="img" aria-label="Torta 2D interactiva de sueldo">',
+      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-42 -8 404 304" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
       '<circle class="pie-touch-shadow" cx="160" cy="134" r="128"></circle>',
       pieces,
@@ -1280,39 +1279,36 @@
   }
 
   function addPieCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested, cfg) {
-    var selectedMacro = !nested && isPieGroupOpen(item.group);
-    var persistentAvailable = !nested && item.group === 'available';
-    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && ((nested && sweep >= 8) || (selectedMacro && sweep >= 8) || (persistentAvailable && item.amount > 0)));
-    var side;
-    var anchor;
+    var principal = !nested && ['fixed', 'saving', 'available', 'excess'].indexOf(item.group) !== -1;
+    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && ((principal && item.amount > 0 && sweep >= 8) || (nested && sweep >= 8)));
+    var placement;
     if (!shouldShow || !callouts) {
       return;
     }
-    anchor = polar(cx, cy, radius + 2, midAngle);
-    side = pieCalloutSide(anchor.x, cx);
+    placement = pieCalloutPlacement(cx, cy, radius, midAngle, nested);
     callouts.push({
-      side: side,
-      y: pieCalloutY(anchor, cy, nested, item.group),
-      anchor: anchor,
+      side: placement.side,
+      y: placement.y,
+      anchor: placement.anchor,
+      elbowX: placement.elbowX,
+      labelX: placement.labelX,
       group: item.group,
       label: pieCalloutText(item, model, nested)
     });
   }
 
-  function pieCalloutSide(anchorX, centerX) {
-    return anchorX >= centerX ? 'right' : 'left';
-  }
-
-  function pieCalloutY(anchor, centerY, nested, group) {
-    var offset = nested ? 24 : 34;
-    var y;
-    if (group === 'available') {
-      offset = 42;
-      y = anchor.y - offset;
-    } else {
-      y = anchor.y + (anchor.y >= centerY ? offset : -offset);
-    }
-    return Math.max(20, Math.min(240, y));
+  function pieCalloutPlacement(cx, cy, radius, midAngle, nested) {
+    var anchor = polar(cx, cy, radius + 2, midAngle);
+    var elbow = polar(cx, cy, radius + (nested ? 18 : 24), midAngle);
+    var side = elbow.x >= cx ? 'right' : 'left';
+    var gap = nested ? 12 : 18;
+    return {
+      side: side,
+      y: Math.max(10, Math.min(286, elbow.y)),
+      anchor: anchor,
+      elbowX: elbow.x,
+      labelX: side === 'right' ? elbow.x + gap : elbow.x - gap
+    };
   }
 
   function pieCalloutText(item, model, nested) {
@@ -1348,8 +1344,8 @@
     return [
       '<g class="pie-touch-callouts">',
       rows.map(function (row) {
-        var elbowX = row.side === 'right' ? 306 : 18;
-        var labelX = row.side === 'right' ? 316 : 8;
+        var elbowX = row.elbowX;
+        var labelX = pieCalloutLabelX(row);
         var textAnchor = row.side === 'right' ? 'start' : 'end';
         return [
           '<polyline class="pie-touch-callout-line is-' + escapeHtml(row.group) + '" points="' + edgeNum(row.anchor.x) + ',' + edgeNum(row.anchor.y) + ' ' + edgeNum(elbowX) + ',' + edgeNum(row.y) + ' ' + edgeNum(labelX) + ',' + edgeNum(row.y) + '"></polyline>',
@@ -1360,6 +1356,14 @@
     ].join('');
   }
 
+  function pieCalloutLabelX(row) {
+    var width = Math.min(118, Math.max(34, String(row.label || '').length * 5.2));
+    if (row.side === 'right') {
+      return Math.min(row.labelX, 356 - width);
+    }
+    return Math.max(row.labelX, -36 + width);
+  }
+
   function normalizePieCallouts(callouts) {
     var rows = [];
     ['left', 'right'].forEach(function (side) {
@@ -1368,9 +1372,9 @@
       }).sort(function (a, b) {
         return a.y - b.y;
       });
-      var minY = 20;
-      var maxY = 240;
-      var gap = 15;
+      var minY = 10;
+      var maxY = 286;
+      var gap = 17;
       sideRows.forEach(function (row, index) {
         row.y = Math.max(minY + (index * gap), Math.min(maxY, row.y));
         if (index && row.y < sideRows[index - 1].y + gap) {

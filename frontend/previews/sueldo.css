@@ -908,10 +908,10 @@ button {
   fill: #071007;
   paint-order: stroke fill;
   stroke: var(--panel-hi);
-  stroke-width: 3;
+  stroke-width: 2.35;
   dominant-baseline: middle;
   text-transform: uppercase;
-  font-size: 8.6px;
+  font-size: 9.4px;
   font-weight: 900;
   letter-spacing: 0;
 }

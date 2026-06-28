@@ -1189,7 +1189,7 @@
       return html;
     }).join('');
     return [
-      '<svg class="salary-pie2d-svg" viewBox="-42 0 404 264" role="img" aria-label="Torta 2D interactiva de particion del sueldo">',
+      '<svg class="salary-pie2d-svg" viewBox="-42 -8 404 304" role="img" aria-label="Torta 2D interactiva de particion del sueldo">',
       '<circle class="salary-pie2d-shadow" cx="160" cy="134" r="128"></circle>',
       pieces,
       '<circle class="salary-pie2d-rim" cx="160" cy="130" r="' + radius + '"></circle>',
@@ -1262,33 +1262,36 @@
   }
 
   function addSalaryPie2dCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested) {
-    var selectedMacro = !nested && isSalaryB1GroupOpen(item.group);
-    var persistentAvailable = !nested && item.group === 'available';
-    var shouldShow = (nested && sweep >= 8) || (selectedMacro && sweep >= 8) || (persistentAvailable && item.amount > 0);
-    var anchor;
+    var principal = !nested && ['fixed', 'saving', 'available', 'excess'].indexOf(item.group) !== -1;
+    var shouldShow = (principal && item.amount > 0 && sweep >= 8) || (nested && sweep >= 8);
+    var placement;
     if (!shouldShow || !callouts) {
       return;
     }
-    anchor = salaryPie2dPolar(cx, cy, radius + 2, midAngle);
+    placement = salaryPie2dCalloutPlacement(cx, cy, radius, midAngle, nested);
     callouts.push({
-      side: anchor.x >= cx ? 'right' : 'left',
-      y: salaryPie2dCalloutY(anchor, cy, nested, item.group),
-      anchor: anchor,
+      side: placement.side,
+      y: placement.y,
+      anchor: placement.anchor,
+      elbowX: placement.elbowX,
+      labelX: placement.labelX,
       group: item.group,
       label: salaryPie2dCalloutText(item, model, nested)
     });
   }
 
-  function salaryPie2dCalloutY(anchor, centerY, nested, group) {
-    var offset = nested ? 24 : 34;
-    var y;
-    if (group === 'available') {
-      offset = 42;
-      y = anchor.y - offset;
-    } else {
-      y = anchor.y + (anchor.y >= centerY ? offset : -offset);
-    }
-    return Math.max(20, Math.min(240, y));
+  function salaryPie2dCalloutPlacement(cx, cy, radius, midAngle, nested) {
+    var anchor = salaryPie2dPolar(cx, cy, radius + 2, midAngle);
+    var elbow = salaryPie2dPolar(cx, cy, radius + (nested ? 18 : 24), midAngle);
+    var side = elbow.x >= cx ? 'right' : 'left';
+    var gap = nested ? 12 : 18;
+    return {
+      side: side,
+      y: Math.max(10, Math.min(286, elbow.y)),
+      anchor: anchor,
+      elbowX: elbow.x,
+      labelX: side === 'right' ? elbow.x + gap : elbow.x - gap
+    };
   }
 
   function salaryPie2dCalloutText(item, model, nested) {
@@ -1311,8 +1314,8 @@
     return [
       '<g class="salary-pie2d-callouts">',
       rows.map(function (row) {
-        var elbowX = row.side === 'right' ? 306 : 18;
-        var labelX = row.side === 'right' ? 316 : 8;
+        var elbowX = row.elbowX;
+        var labelX = salaryPie2dCalloutLabelX(row);
         var anchor = row.side === 'right' ? 'start' : 'end';
         return [
           '<polyline class="salary-pie2d-callout-line is-' + utils.escapeHtml(row.group) + '" points="' + salaryPie2dNum(row.anchor.x) + ',' + salaryPie2dNum(row.anchor.y) + ' ' + salaryPie2dNum(elbowX) + ',' + salaryPie2dNum(row.y) + ' ' + salaryPie2dNum(labelX) + ',' + salaryPie2dNum(row.y) + '"></polyline>',
@@ -1323,6 +1326,14 @@
     ].join('');
   }
 
+  function salaryPie2dCalloutLabelX(row) {
+    var width = Math.min(118, Math.max(34, String(row.label || '').length * 5.2));
+    if (row.side === 'right') {
+      return Math.min(row.labelX, 356 - width);
+    }
+    return Math.max(row.labelX, -36 + width);
+  }
+
   function normalizeSalaryPie2dCallouts(callouts) {
     var rows = [];
     ['left', 'right'].forEach(function (side) {
@@ -1331,9 +1342,9 @@
       }).sort(function (a, b) {
         return a.y - b.y;
       });
-      var minY = 20;
-      var maxY = 240;
-      var gap = 15;
+      var minY = 10;
+      var maxY = 286;
+      var gap = 17;
       sideRows.forEach(function (row, index) {
         row.y = Math.max(minY + (index * gap), Math.min(maxY, row.y));
         if (index && row.y < sideRows[index - 1].y + gap) {
@@ -1353,7 +1364,6 @@
   function renderSalaryPie2dBottom(model, groups) {
     return [
       '<div class="salary-pie2d-bottom">',
-      renderSalaryPie2dLegend(model, groups),
       renderSalaryPie2dSelection(model),
       '</div>'
     ].join('');

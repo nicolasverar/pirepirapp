@@ -7,7 +7,10 @@
     available: '#68794a',
     future: '#c8d38d',
     wish: '#7b8c55',
-    excess: '#d6aa52'
+    excess: '#d6aa52',
+    locked: '#72824e',
+    flexible: '#a4b573',
+    free: '#c4d08b'
   };
 
   var scenarios = {
@@ -220,6 +223,172 @@
     ].join(''));
   }
 
+  function renderEnvelopes(data) {
+    var d = model(data);
+    var envelopes = [
+      {
+        label: 'Obligatorio',
+        code: 'LOCK',
+        amount: d.fixed,
+        color: colors.locked,
+        items: d.fixedItems,
+        note: 'lo que no se negocia'
+      },
+      {
+        label: 'Construccion',
+        code: 'SAVE',
+        amount: d.savings,
+        color: colors.saving,
+        items: d.savingItems,
+        note: 'metas y futuro'
+      },
+      {
+        label: 'Libre',
+        code: 'LIVE',
+        amount: d.available,
+        color: colors.free,
+        items: [{ label: 'Disponible del mes', amount: d.available }],
+        note: 'margen de decision'
+      }
+    ];
+    if (d.excess) {
+      envelopes.push({
+        label: 'Exceso',
+        code: 'WARN',
+        amount: d.excess,
+        color: colors.excess,
+        items: [{ label: 'Sobreasignado', amount: d.excess }],
+        note: 'rompe el sueldo'
+      });
+    }
+    return renderPrototype('D', 'Sobres de sueldo', 'clasificacion por cajones mentales', [
+      renderMoneyLine('Sueldo mensual', money(d.salary)),
+      '<div class="envelope-grid">',
+      envelopes.map(function (item) {
+        return renderEnvelope(item, d.salary);
+      }).join(''),
+      '</div>',
+      '<div class="tag-line"><span class="tag">Paradigma: separar antes de gastar</span></div>'
+    ].join(''));
+  }
+
+  function renderEnvelope(item, salary) {
+    var fill = Math.min(pctValue(item.amount, salary), 100);
+    return [
+      '<details class="envelope" style="' + styleVars({ '--c': item.color, '--fill': fill + '%' }) + '">',
+      '<summary>',
+      '<span class="envelope-code">' + escapeHtml(item.code) + '</span>',
+      '<span><strong>' + escapeHtml(item.label) + '</strong><small>' + escapeHtml(item.note) + '</small></span>',
+      '<b>' + escapeHtml(percent(item.amount, salary)) + '</b>',
+      '</summary>',
+      '<div class="envelope-fill" aria-hidden="true"><i></i></div>',
+      '<div class="envelope-amount">' + escapeHtml(money(item.amount)) + '</div>',
+      '<div class="envelope-lines">',
+      (item.items || []).map(function (entry) {
+        return '<span><i>' + escapeHtml(entry.label) + '</i><b>' + escapeHtml(money(entry.amount)) + '</b></span>';
+      }).join(''),
+      '</div>',
+      '</details>'
+    ].join('');
+  }
+
+  function renderFlow(data) {
+    var d = model(data);
+    var lanes = [
+      { label: 'Fijos', amount: d.fixed, color: colors.fixed, items: d.fixedItems },
+      { label: 'Ahorros', amount: d.savings, color: colors.saving, items: d.savingItems },
+      { label: 'Disponible', amount: d.available, color: colors.available, items: [{ label: 'Respirar el mes', amount: d.available }] }
+    ].filter(function (item) {
+      return item.amount > 0;
+    });
+    if (d.excess) {
+      lanes.push({ label: 'Exceso', amount: d.excess, color: colors.excess, items: [{ label: 'Ajustar particion', amount: d.excess }] });
+    }
+    return renderPrototype('E', 'Flujo de sueldo', 'el sueldo como corriente continua', [
+      renderMoneyLine('Entrada', money(d.salary)),
+      '<div class="flow-board">',
+      '<div class="flow-source"><strong>SUELDO</strong><b>' + escapeHtml(money(d.salary)) + '</b></div>',
+      '<div class="flow-lines">',
+      lanes.map(function (lane) {
+        return renderFlowLane(lane, d.scale);
+      }).join(''),
+      '</div>',
+      '</div>',
+      renderTags(d)
+    ].join(''));
+  }
+
+  function renderFlowLane(lane, scale) {
+    return [
+      '<details class="flow-lane" style="' + styleVars({ '--w': Math.max(8, pctValue(lane.amount, scale)) + '%', '--c': lane.color }) + '">',
+      '<summary><span>' + escapeHtml(lane.label) + '</span><b>' + escapeHtml(money(lane.amount)) + '</b></summary>',
+      '<div class="flow-track"><i></i></div>',
+      '<div class="flow-detail">',
+      lane.items.map(function (item) {
+        return '<span><i>' + escapeHtml(item.label) + '</i><b>' + escapeHtml(money(item.amount)) + '</b></span>';
+      }).join(''),
+      '</div>',
+      '</details>'
+    ].join('');
+  }
+
+  function renderCommitmentMap(data) {
+    var d = model(data);
+    var cells = [
+      {
+        label: 'Ahora / Obligatorio',
+        amount: d.fixed,
+        color: colors.fixed,
+        items: d.fixedItems,
+        axis: 'presente duro'
+      },
+      {
+        label: 'Futuro / Elegido',
+        amount: d.savings,
+        color: colors.saving,
+        items: d.savingItems,
+        axis: 'manana decidido'
+      },
+      {
+        label: 'Ahora / Flexible',
+        amount: d.available,
+        color: colors.free,
+        items: [{ label: 'Disponible real', amount: d.available }],
+        axis: 'presente libre'
+      },
+      {
+        label: d.excess ? 'Alerta / Exceso' : 'Futuro / Deseable',
+        amount: d.excess || Math.round(d.available * 0.25),
+        color: d.excess ? colors.excess : colors.wish,
+        items: d.excess ? [{ label: 'Reducir asignacion', amount: d.excess }] : [{ label: 'Wishlist posible', amount: Math.round(d.available * 0.25) }],
+        axis: d.excess ? 'limite roto' : 'no comprometido'
+      }
+    ];
+    return renderPrototype('F', 'Mapa compromiso-tiempo', 'clasifica por obligacion y horizonte', [
+      '<div class="commit-map">',
+      cells.map(function (cell) {
+        return renderCommitCell(cell, d.salary);
+      }).join(''),
+      '</div>',
+      '<div class="axis-note"><span>horizontal: hoy a futuro</span><span>vertical: flexible a obligatorio</span></div>'
+    ].join(''));
+  }
+
+  function renderCommitCell(cell, salary) {
+    return [
+      '<details class="commit-cell" style="' + styleVars({ '--c': cell.color, '--w': Math.min(pctValue(cell.amount, salary), 100) + '%' }) + '">',
+      '<summary><strong>' + escapeHtml(cell.label) + '</strong><small>' + escapeHtml(cell.axis) + '</small></summary>',
+      '<div class="commit-meter"><i></i></div>',
+      '<b class="commit-amount">' + escapeHtml(money(cell.amount)) + '</b>',
+      '<div class="commit-lines">',
+      cell.items.map(function (item) {
+        return '<span><i>' + escapeHtml(item.label) + '</i><b>' + escapeHtml(money(item.amount)) + '</b></span>';
+      }).join(''),
+      '</div>',
+      '</details>'
+    ].join('');
+  }
+
   function renderTags(d) {
     return [
       '<div class="tag-line">',
@@ -285,7 +454,10 @@
     grid.innerHTML = [
       renderRail(data),
       renderGauge(data),
-      renderMatrix(data)
+      renderMatrix(data),
+      renderEnvelopes(data),
+      renderFlow(data),
+      renderCommitmentMap(data)
     ].join('');
   }
 

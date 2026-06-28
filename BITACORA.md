@@ -920,3 +920,23 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Nuevos paradigmas visuales de sueldo
+
+### Objetivo
+- Probar paradigmas de clasificacion de sueldo distintos a los graficos proporcionales iniciales.
+
+### Cambios
+- Se amplio `frontend/previews/particion.html` con un texto de laboratorio para comparar modelos mentales.
+- Se agregaron tres paradigmas nuevos:
+  - `D` Sobres de sueldo: cajones mentales obligatorio/construccion/libre/exceso.
+  - `E` Flujo de sueldo: corriente desde ingreso hacia destinos.
+  - `F` Mapa compromiso-tiempo: clasificacion por obligacion y horizonte temporal.
+- Se conservaron los escenarios base, fijos altos y exceso.
+- No se reemplazo todavia la torta de la app principal.
+
+### Verificacion
+- `node --check frontend\previews\particion.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

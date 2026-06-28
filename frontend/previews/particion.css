@@ -71,6 +71,7 @@ summary {
 .preview-brand,
 .preview-terminal,
 .preview-controls,
+.preview-note,
 .prototype {
   border: 2px solid var(--line);
 }
@@ -112,6 +113,33 @@ summary {
 .preview-terminal span {
   display: inline-block;
   min-width: 100%;
+}
+
+.preview-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 9px;
+  padding: 5px 6px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.07) 0 1px, transparent 1px 4px),
+    #071007;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.preview-note strong {
+  padding: 2px 5px;
+  color: var(--ink);
+  background: var(--panel-hi);
+}
+
+.preview-note span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .preview-controls {
@@ -510,6 +538,317 @@ summary {
   background: var(--danger);
 }
 
+.envelope-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.envelope {
+  position: relative;
+  min-height: 126px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, transparent 0 62%, rgba(7, 16, 7, 0.13) 62% 63%, transparent 63%),
+    linear-gradient(225deg, transparent 0 62%, rgba(7, 16, 7, 0.16) 62% 63%, transparent 63%),
+    rgba(196, 208, 139, 0.34);
+  border: 2px solid var(--line);
+}
+
+.envelope summary {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  min-height: 45px;
+  padding: 6px;
+  cursor: pointer;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.envelope summary::-webkit-details-marker,
+.flow-lane summary::-webkit-details-marker,
+.commit-cell summary::-webkit-details-marker {
+  display: none;
+}
+
+.envelope-code {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  min-height: 27px;
+  color: var(--panel-hi);
+  background: #071007;
+  border: 2px solid var(--line);
+  font-size: 0.52rem;
+  font-weight: 900;
+}
+
+.envelope strong,
+.envelope small,
+.envelope b {
+  display: block;
+  min-width: 0;
+}
+
+.envelope strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.envelope small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.5rem;
+  font-weight: 900;
+}
+
+.envelope-fill {
+  position: absolute;
+  inset: auto 6px 30px 6px;
+  height: 46px;
+  background: rgba(7, 16, 7, 0.74);
+  border: 2px solid var(--line);
+}
+
+.envelope-fill i {
+  position: absolute;
+  inset: auto 0 0;
+  height: var(--fill);
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
+    var(--c);
+}
+
+.envelope-amount {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  z-index: 2;
+  padding: 2px 4px;
+  color: var(--panel-hi);
+  background: #071007;
+  border: 2px solid var(--line);
+  font-size: 0.5rem;
+  font-weight: 900;
+}
+
+.envelope-lines {
+  position: relative;
+  z-index: 2;
+  display: none;
+  gap: 4px;
+  padding: 52px 6px 7px;
+  font-size: 0.52rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.envelope[open] .envelope-lines {
+  display: grid;
+}
+
+.envelope-lines span,
+.flow-detail span,
+.commit-lines span {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.envelope-lines i,
+.flow-detail i,
+.commit-lines i {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: normal;
+}
+
+.flow-board {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 7px;
+  align-items: stretch;
+  min-height: 240px;
+}
+
+.flow-source {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 6px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(180deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid var(--line);
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.flow-source b {
+  overflow-wrap: anywhere;
+  color: var(--panel-hi);
+  font-size: 0.52rem;
+}
+
+.flow-lines {
+  display: grid;
+  gap: 7px;
+  align-content: stretch;
+}
+
+.flow-lane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding: 5px;
+  background: rgba(196, 208, 139, 0.32);
+  border: 2px solid var(--line);
+}
+
+.flow-lane summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  cursor: pointer;
+  list-style: none;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.flow-track {
+  height: 18px;
+  overflow: hidden;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
+.flow-track i {
+  display: block;
+  width: var(--w);
+  height: 100%;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
+    var(--c);
+}
+
+.flow-detail {
+  display: none;
+  gap: 4px;
+  padding-top: 2px;
+  font-size: 0.52rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flow-lane[open] .flow-detail {
+  display: grid;
+}
+
+.commit-map {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.commit-cell {
+  display: grid;
+  gap: 5px;
+  min-height: 128px;
+  padding: 6px;
+  background:
+    linear-gradient(90deg, rgba(7, 16, 7, 0.12) 1px, transparent 1px) 0 0 / 10px 10px,
+    rgba(196, 208, 139, 0.34);
+  border: 2px solid var(--line);
+}
+
+.commit-cell summary {
+  display: grid;
+  gap: 2px;
+  cursor: pointer;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.commit-cell strong {
+  min-height: 2.1em;
+  font-size: 0.62rem;
+  line-height: 1.05;
+}
+
+.commit-cell small {
+  color: var(--muted);
+  font-size: 0.5rem;
+  font-weight: 900;
+}
+
+.commit-meter {
+  height: 16px;
+  overflow: hidden;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
+.commit-meter i {
+  display: block;
+  width: var(--w);
+  height: 100%;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
+    var(--c);
+}
+
+.commit-amount {
+  width: max-content;
+  max-width: 100%;
+  padding: 2px 4px;
+  overflow-wrap: anywhere;
+  color: var(--panel-hi);
+  background: #071007;
+  border: 2px solid var(--line);
+  font-size: 0.52rem;
+}
+
+.commit-lines {
+  display: none;
+  gap: 4px;
+  font-size: 0.52rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.commit-cell[open] .commit-lines {
+  display: grid;
+}
+
+.axis-note {
+  display: grid;
+  gap: 4px;
+  color: var(--panel-hi);
+  text-transform: uppercase;
+  font-size: 0.52rem;
+  font-weight: 900;
+}
+
+.axis-note span {
+  padding: 4px 5px;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
 @media (max-width: 940px) {
   .preview-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -540,5 +879,15 @@ summary {
 
   .preview-chip {
     min-height: 32px;
+  }
+
+  .envelope-grid,
+  .commit-map,
+  .flow-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flow-board {
+    min-height: auto;
   }
 }

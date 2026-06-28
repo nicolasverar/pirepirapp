@@ -700,27 +700,35 @@
     return true;
   }
 
-  function openFixedExpenseForm() {
-    var budget = fixedExpenseFormBudget();
+  function openFixedExpenseForm(existing, existingIndex) {
+    var editIndex = Number(existingIndex);
+    var isEditing = isFixedExpenseEditIndex(existingIndex);
+    var budget = fixedExpenseFormBudget(isEditing ? editIndex : null);
+    var source = existing || {};
+    var initialName = utils.fixedExpenseName(source);
+    var initialAmount = utils.fixedExpenseAmount(source);
+    var initialPercent = utils.fixedExpensePercent(source, budget.salary);
     var maxPercent = budget.salary ? roundFixedPercent((budget.maxAmount / budget.salary) * 100) : 0;
     var html = [
       '<form class="lcd-form fixed-expense-form" id="fixed-expense-form">',
       '<p class="form-error" hidden></p>',
       fixedExpenseBudgetPanel(budget),
-      field('Nombre del gasto', 'nombre', 'text', '', 'required maxlength="80" autocomplete="off" data-fixed-form-name'),
-      field('Monto mensual', 'monto', 'number', '', 'required min="1" step="1" inputmode="numeric" data-fixed-form-amount'),
+      field('Nombre del gasto', 'nombre', 'text', initialName || '', 'required maxlength="80" autocomplete="off" data-fixed-form-name'),
+      field('Monto mensual', 'monto', 'number', initialAmount || '', 'required min="1" step="1" inputmode="numeric" data-fixed-form-amount'),
       '<label class="field fixed-percent-control"><span>Porcentaje del sueldo</span>',
       '<span class="fixed-slider-shell">',
-      '<input data-fixed-form-percent name="porcentajeSueldo" type="range" min="0" max="' + utils.escapeHtml(maxPercent) + '" step="0.5" value="0">',
+      '<input data-fixed-form-percent name="porcentajeSueldo" type="range" min="0" max="' + utils.escapeHtml(maxPercent) + '" step="0.5" value="' + utils.escapeHtml(formatFixedPercent(initialPercent)) + '">',
       '<b data-fixed-form-percent-display>0%</b>',
       '</span>',
       '<small class="fixed-limit-message" data-fixed-form-limit></small>',
       '</label>',
-      formActions('Guardar'),
+      formActions(isEditing ? 'Actualizar' : 'Guardar'),
       '</form>'
     ].join('');
 
-    openModal('GASTO FIJO', html, bindFixedExpenseForm, 'ticket-form-modal action-menu-modal anchored-form-modal fixed-expense-form-modal');
+    openModal('GASTO FIJO', html, function (root) {
+      bindFixedExpenseForm(root, isEditing ? editIndex : null);
+    }, 'ticket-form-modal action-menu-modal anchored-form-modal fixed-expense-form-modal');
   }
 
   function fixedExpenseBudgetPanel(budget) {
@@ -735,7 +743,7 @@
     ].join('');
   }
 
-  function bindFixedExpenseForm(root) {
+  function bindFixedExpenseForm(root, editIndex) {
     var form = utils.qs('#fixed-expense-form', root);
     var amountInput = utils.qs('[data-fixed-form-amount]', root);
     var percentInput = utils.qs('[data-fixed-form-percent]', root);
@@ -743,7 +751,7 @@
     var message = utils.qs('[data-fixed-form-limit]', root);
 
     function currentBudget() {
-      var budget = fixedExpenseFormBudget();
+      var budget = fixedExpenseFormBudget(editIndex);
       var maxPercent = budget.salary ? roundFixedPercent((budget.maxAmount / budget.salary) * 100) : 0;
       if (percentInput) {
         percentInput.max = String(maxPercent);
@@ -809,11 +817,18 @@
     syncPercentDisplay();
 
     bindForm(root, '#fixed-expense-form', function () {
-      var budget = fixedExpenseFormBudget();
+      var budget = fixedExpenseFormBudget(editIndex);
       var payload = utils.formDataToObject(form);
       var name = String(payload.nombre || '').trim();
       var amount = utils.normalizeAmount(payload.monto);
       var percent = budget.salary ? roundFixedPercent((amount / budget.salary) * 100) : parseFixedPercent(payload.porcentajeSueldo);
+      var nextItems = budget.items.slice();
+      var fixedExpense = {
+        categoria: name,
+        nombre: name,
+        monto: amount,
+        porcentajeSueldo: percent
+      };
       if (!budget.salary) {
         throw new Error('Carga el sueldo mensual antes de agregar fijos.');
       }
@@ -826,24 +841,27 @@
       if (amount > budget.maxAmount) {
         throw new Error('Ese gasto supera el disponible para fijos: ' + utils.formatMoney(budget.maxAmount) + '.');
       }
+      if (isFixedExpenseEditIndex(editIndex) && Number(editIndex) < nextItems.length) {
+        nextItems[Number(editIndex)] = fixedExpense;
+      } else {
+        nextItems = nextItems.concat([fixedExpense]);
+      }
       return window.FinanzasApp.mutate('updateConfig', Object.assign({}, budget.config, {
         sueldoMensual: budget.salary,
-        gastosFijos: budget.items.concat([{
-          categoria: name,
-          nombre: name,
-          monto: amount,
-          porcentajeSueldo: percent
-        }])
+        gastosFijos: nextItems
       })).then(closeModal);
     });
   }
 
-  function fixedExpenseFormBudget() {
+  function fixedExpenseFormBudget(editIndex) {
     var data = window.FinanzasState.getState().data || {};
     var config = data.config || {};
     var salary = utils.normalizeAmount(config.sueldoMensual || 0);
     var items = utils.normalizeFixedExpenses(config.gastosFijos || [], salary);
-    var usedFixed = sumFixedExpenses(items);
+    var excludedIndex = isFixedExpenseEditIndex(editIndex) ? Number(editIndex) : -1;
+    var usedFixed = sumFixedExpenses(items.filter(function (item, index) {
+      return index !== excludedIndex;
+    }));
     var plannedSavings = plannedSavingsForFixedExpenseForm(data);
     return {
       config: config,
@@ -853,6 +871,10 @@
       plannedSavings: plannedSavings,
       maxAmount: Math.max(0, salary - usedFixed - plannedSavings)
     };
+  }
+
+  function isFixedExpenseEditIndex(value) {
+    return value !== undefined && value !== null && value !== '' && isFinite(Number(value)) && Number(value) >= 0;
   }
 
   function plannedSavingsForFixedExpenseForm(data) {

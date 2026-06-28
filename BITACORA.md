@@ -1259,3 +1259,26 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend`: OK, selector `AGREGAR OBJETIVO`, formulario fijo anclado, fuente de boton y version/cache presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Lectura vertical de gastos fijos v3.20
+
+### Objetivo
+- Reordenar la tarjeta de cada gasto fijo para que se lea como titulo, porcentaje/monto en una sola linea, y acciones `Editar`/`Eliminar` abajo.
+- Rehacer la tarjeta `Total fijo` con lectura vertical y mover `Actualizar app` debajo del total de fijos, antes de `Papelera`.
+
+### Cambios
+- Cada gasto fijo ahora muestra el nombre arriba, una linea compacta con `% del sueldo` y monto mensual, y una ultima linea con `Editar` y `Eliminar`.
+- `Editar` abre el mismo formulario de gasto fijo, precargado, y calcula el margen disponible excluyendo el gasto que se esta editando.
+- `Total fijo` muestra monto, porcentaje del sueldo y `Disponible tras fijos y ahorros` en lineas separadas.
+- El boton `Actualizar app` se movio debajo del bloque de gastos fijos y usa el formulario de sueldo por atributo `form="settings-form"`.
+- Se actualizo cache/version de `v3.19` a `v3.20` y `finanzas-lcd-v128`.
+
+### Verificacion
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `v3.20`, `finanzas-lcd-v128`, `js-edit-fixed-expense-card`, `settings-update-actions` y `fixed-expense-total-available` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

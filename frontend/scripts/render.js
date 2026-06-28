@@ -905,13 +905,19 @@
       '<label class="field"><span>Monto</span><input name="sueldoMensual" data-salary-input type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(config.sueldoMensual || 0) + '"></label>',
       '</div>',
       '</section>',
-      '<div class="form-actions">',
-      '<button class="lcd-button primary" type="submit">Actualizar app</button>',
-      '</div>',
       '</form>',
       renderFixedExpensesList(config, summary),
+      renderSettingsUpdateAction(),
       renderArchiveSection(archive),
       '</section>'
+    ].join('');
+  }
+
+  function renderSettingsUpdateAction() {
+    return [
+      '<div class="settings-update-actions">',
+      '<button class="lcd-button primary" type="submit" form="settings-form">Actualizar app</button>',
+      '</div>'
     ].join('');
   }
 
@@ -938,15 +944,15 @@
     var percent = utils.fixedExpensePercent(item, salary);
     return [
       '<article class="fixed-expense-card">',
-      '<div class="fixed-expense-card-main">',
       '<strong class="fixed-expense-card-name">' + utils.escapeHtml(name || 'Gasto fijo') + '</strong>',
-      '<small class="fixed-expense-card-kind">Gasto fijo</small>',
+      '<div class="fixed-expense-card-line">',
+      '<span><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b> del sueldo</span>',
+      '<strong>' + utils.escapeHtml(utils.formatMoney(amount)) + '</strong>',
       '</div>',
-      '<div class="fixed-expense-card-values">',
-      '<span class="fixed-expense-card-value"><b>' + utils.escapeHtml(formatPercentInput(percent) || '0') + '%</b><small>del sueldo</small></span>',
-      '<span class="fixed-expense-card-value"><b>' + utils.escapeHtml(utils.formatMoney(amount)) + '</b><small>mensual</small></span>',
-      '</div>',
+      '<div class="fixed-expense-card-actions">',
+      '<button class="tiny-key js-edit-fixed-expense-card" type="button" data-fixed-index="' + utils.escapeHtml(index) + '">Editar</button>',
       '<button class="tiny-key js-remove-fixed-expense-card" type="button" data-fixed-index="' + utils.escapeHtml(index) + '">Eliminar</button>',
+      '</div>',
       '</article>'
     ].join('');
   }
@@ -958,16 +964,14 @@
     var percent = salary ? Math.round((total / salary) * 10000) / 100 : 0;
     var availableAfterFixed = Math.max(0, salary - total - plannedSavings);
     var overBudget = Boolean(salary && total + plannedSavings > salary);
-    var detail = salary
-      ? (overBudget
-        ? 'Excede por ' + utils.formatMoney(total + plannedSavings - salary) + ' contando ahorros'
-        : (formatPercentInput(percent) || '0') + '% del sueldo - Disponible tras fijos y ahorros ' + utils.formatMoney(availableAfterFixed))
-      : 'Carga el sueldo para calcular disponible';
+    var availableLabel = overBudget ? 'Exceso tras fijos y ahorros' : 'Disponible tras fijos y ahorros';
+    var availableValue = overBudget ? (total + plannedSavings - salary) : availableAfterFixed;
     return [
       '<div class="fixed-expense-total' + (overBudget ? ' is-over-budget' : '') + '">',
-      '<span>Total fijo</span>',
-      '<strong>' + utils.escapeHtml(utils.formatMoney(total)) + '</strong>',
-      '<small>' + utils.escapeHtml(detail) + '</small>',
+      '<span class="fixed-expense-total-label">Total fijo</span>',
+      '<strong class="fixed-expense-total-amount">' + utils.escapeHtml(utils.formatMoney(total)) + '</strong>',
+      '<small class="fixed-expense-total-percent">' + utils.escapeHtml((formatPercentInput(percent) || '0') + '% del sueldo') + '</small>',
+      '<small class="fixed-expense-total-available"><span>' + utils.escapeHtml(availableLabel) + '</span><b>' + utils.escapeHtml(utils.formatMoney(availableValue)) + '</b></small>',
       '</div>'
     ].join('');
   }
@@ -1732,7 +1736,7 @@
       return;
     }
     list.addEventListener('click', function (event) {
-      var button = event.target.closest ? event.target.closest('.js-remove-fixed-expense-card') : null;
+      var button = event.target.closest ? event.target.closest('.js-edit-fixed-expense-card, .js-remove-fixed-expense-card') : null;
       if (!button || !list.contains(button)) {
         return;
       }
@@ -1742,6 +1746,12 @@
       var salary = utils.normalizeAmount(config.sueldoMensual || 0);
       var items = utils.normalizeFixedExpenses(config.gastosFijos || [], salary);
       if (!isFinite(index) || index < 0 || index >= items.length) {
+        return;
+      }
+      if (button.classList.contains('js-edit-fixed-expense-card')) {
+        if (window.FinanzasForms && window.FinanzasForms.openFixedExpenseForm) {
+          window.FinanzasForms.openFixedExpenseForm(items[index], index);
+        }
         return;
       }
       items.splice(index, 1);

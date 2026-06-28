@@ -2276,11 +2276,11 @@ dd {
 .fixed-expense-card {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(142px, auto) auto;
-  gap: 8px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+  align-items: stretch;
   min-width: 0;
-  padding: 8px;
+  padding: 8px 9px;
   color: #071007;
   background:
     linear-gradient(180deg, rgba(196, 208, 139, 0.28), transparent 28%),
@@ -2302,9 +2302,54 @@ dd {
 .fixed-expense-card-name {
   overflow-wrap: anywhere;
   text-transform: uppercase;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 900;
   line-height: 1.05;
+}
+
+.fixed-expense-card-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 6px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.12);
+  text-transform: uppercase;
+  line-height: 1.08;
+}
+
+.fixed-expense-card-line span,
+.fixed-expense-card-line strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fixed-expense-card-line span {
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.fixed-expense-card-line b {
+  font-size: 0.76rem;
+}
+
+.fixed-expense-card-line strong {
+  text-align: right;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.fixed-expense-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .fixed-expense-card-kind {
@@ -2366,6 +2411,15 @@ dd {
   text-transform: uppercase;
   font-size: 0.58rem;
   font-weight: 900;
+}
+
+.settings-update-actions {
+  display: grid;
+  margin: -2px 7px 7px 0;
+}
+
+.settings-update-actions .lcd-button {
+  width: 100%;
 }
 
 .fixed-form-budget {
@@ -2536,6 +2590,11 @@ dd {
 }
 
 .fixed-expense-total {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3px;
+  align-items: start;
+  padding: 8px;
   color: #c4d08b;
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
@@ -2543,11 +2602,49 @@ dd {
   border: 2px solid #071007;
   border-radius: 5px;
   box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.12);
+  text-transform: uppercase;
 }
 
 .fixed-expense-total small {
   color: #c4d08b;
   opacity: 0.82;
+}
+
+.fixed-expense-total-label {
+  font-size: 0.62rem;
+  font-weight: 900;
+  opacity: 0.82;
+}
+
+.fixed-expense-total-amount {
+  overflow-wrap: anywhere;
+  font-size: 1.08rem;
+  line-height: 1.02;
+}
+
+.fixed-expense-total-percent {
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.fixed-expense-total-available {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.fixed-expense-total-available span,
+.fixed-expense-total-available b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fixed-expense-total-available b {
+  text-align: right;
 }
 
 .settings-card .fixed-expense-total.is-over-budget {

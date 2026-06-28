@@ -15,7 +15,7 @@
     fixed: ['#87985d', '#768851', '#9aaa6b', '#68794a', '#aebd7a'],
     saving: ['#b7c67f', '#c8d38d', '#9daf70', '#a4b573', '#d1dc94'],
     available: ['#68794a'],
-    excess: ['#d6aa52']
+    excess: ['#b7615f']
   };
 
   var scenarios = {
@@ -277,7 +277,7 @@
       { label: 'Gastos fijos', group: 'fixed', amount: model.fixedTotal, color: palette.fixed[0], children: model.fixed.map(function (item, index) { return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index); }) },
       { label: 'Ahorros/metas', group: 'saving', amount: model.savingsTotal, color: palette.saving[0], children: model.savings.map(function (item, index) { return componentFromItem(item, 'saving', palette.saving[index % palette.saving.length], index + model.fixed.length); }) },
       { label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], children: model.available > 0 ? [{ label: 'Libre', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 }] : [] },
-      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], children: model.excess > 0 ? [{ label: 'Sobreasignado', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : [] }
+      { label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], children: model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : [] }
     ].filter(nonZero);
 
     return renderPanel('C', 'Filas por familia', 'cada fila mide cuanto ocupa esa familia del sueldo', [
@@ -400,7 +400,7 @@
         amount: model.excess,
         color: palette.excess[0],
         pattern: 5,
-        children: model.excess > 0 ? [{ label: 'Sobreasignado', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : []
+        children: model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : []
       }
     ].filter(nonZero);
   }
@@ -610,7 +610,7 @@
 
   function renderB1InlineFocus(model) {
     var groups = familyGroups(model);
-    var active = activeFamily(model, selectedRevealGroup);
+    var active = selectedRevealGroup ? activeFamily(model, selectedRevealGroup) : null;
     var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
     return renderPanel('B1', 'Desagrega en el mismo tramo', 'leader lines; ahorros/metas abre un segundo nivel dentro del mismo rectangulo', [
       '<div class="b1-focus">',
@@ -618,7 +618,7 @@
       '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
       '<span class="b1-salary-line" aria-hidden="true">100%</span>',
       groups.map(function (group, index) {
-        return group.group === active.group ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
+        return active && group.group === active.group ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
       }).join(''),
       '</div>',
       '<div class="b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
@@ -632,6 +632,7 @@
     var tightClass = width < 10 ? ' is-tight' : '';
     return [
       '<button class="b1-segment is-' + escapeHtml(group.group) + tightClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+      renderB1InsidePct(group, model),
       renderB1Leader(group, model, index, false),
       '</button>'
     ].join('');
@@ -649,6 +650,7 @@
         var drillAttr = item.drillNode ? ' data-saving-node="' + escapeHtml(item.drillNode) + '"' : '';
         return [
           '<button class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" type="button"' + drillAttr + ' title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
+          renderB1InsidePct(item, model),
           renderB1Leader(item, model, childIndex, true),
           '</button>'
         ].join('');
@@ -677,7 +679,7 @@
         group: 'saving-future',
         amount: sum(future),
         color: palette.saving[0],
-        drillNode: 'summary'
+        drillNode: 'collapse'
       },
       {
         label: 'Metas',
@@ -697,9 +699,14 @@
         group: group,
         amount: Number(item.amount || 0),
         color: palette.saving[index % palette.saving.length],
-        pattern: index % 6
+        pattern: index % 6,
+        drillNode: 'collapse'
       };
     }).filter(nonZero);
+  }
+
+  function renderB1InsidePct(item, model) {
+    return '<span class="b1-inside-pct">' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>';
   }
 
   function renderB1Leader(item, model, index, nested) {
@@ -708,6 +715,7 @@
     var amountLabel = currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>';
     return [
       '<span class="b1-leader is-' + side + ' is-' + direction + (nested ? ' is-nested' : '') + '">',
+      '<i aria-hidden="true"></i>',
       '<strong>' + escapeHtml(item.label) + '</strong>',
       '<span>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>',
       amountLabel,
@@ -1076,6 +1084,11 @@
         return item.group;
       }).indexOf(validGroup);
     } else {
+      if (selectedRevealGroup === validGroup) {
+        selectedRevealGroup = '';
+        selectedSavingNode = 'summary';
+        return;
+      }
       selectedRevealGroup = validGroup;
       if (validGroup === 'saving') {
         selectedSavingNode = 'summary';
@@ -1097,17 +1110,28 @@
       return;
     }
     if (savingButton) {
-      selectedRevealGroup = 'saving';
-      selectedSavingNode = savingButton.getAttribute('data-saving-node') || 'summary';
+      if (savingButton.getAttribute('data-saving-node') === 'collapse') {
+        selectedRevealGroup = '';
+        selectedSavingNode = 'summary';
+      } else {
+        selectedRevealGroup = 'saving';
+        selectedSavingNode = savingButton.getAttribute('data-saving-node') || 'summary';
+      }
       render();
       return;
     }
     revealButton = event.target.closest('[data-reveal-group]');
-    if (!revealButton) {
+    if (revealButton) {
+      setRevealGroup(revealButton.getAttribute('data-reveal-scope'), revealButton.getAttribute('data-reveal-group'), model);
+      render();
       return;
     }
-    setRevealGroup(revealButton.getAttribute('data-reveal-scope'), revealButton.getAttribute('data-reveal-group'), model);
-    render();
+
+    if (selectedRevealGroup) {
+      selectedRevealGroup = '';
+      selectedSavingNode = 'summary';
+      render();
+    }
   }
 
   function bindChoice(selector, attr, callback) {

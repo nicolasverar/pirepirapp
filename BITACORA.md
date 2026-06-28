@@ -1088,3 +1088,26 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `baseHasLeader=true`, `savingHasAhorros=true`, `savingHasMetas=true`, `savingHasDrill=true`, `metasHasIMPA=true`, `metasHasViaje=true`, `metasHasFuture=true`, `hasBottomLegend=false`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 callouts y colapso tactil
+
+### Objetivo
+- Rehacer las lineas de B1 como callouts legibles: punto de anclaje, diagonal y tramo horizontal.
+- Mantener el porcentaje visible dentro de cada rectangulo.
+- Permitir colapsar niveles tocando de nuevo o tocando afuera.
+
+### Cambios
+- Las lineas de B1 ahora usan circulo de origen, diagonal y tramo horizontal hacia la etiqueta.
+- Cada porcion muestra una chapita interna `b1-inside-pct` con porcentaje permanente.
+- `Gastos fijos`, que solo tiene un nivel, se vuelve a agregar si se toca adentro o afuera.
+- En `Ahorros/metas`, tocar `Metas` abre el ultimo nivel; tocar una meta concreta vuelve a agregar todo a `Ahorros/metas`.
+- Tocar afuera de un tramo abierto vuelve a la vista macro.
+- `Exceso` ahora se muestra como una porcion propia en rojo apagado compatible con la paleta.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `fixedClosed=true`, `fixedOpen=true`, `savingDetail=true`, `savingCollapsed=true`, `outsideCollapsed=true`, `insidePct=true`, `leaderCircle=true`.
+- Render smoke escenario `EXCESO`: OK, `hasMutedRed=true`, `closedHasExcess=true`, `excessOpen=true`, `excessClosed=true`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

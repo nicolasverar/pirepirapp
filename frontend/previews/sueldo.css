@@ -7,7 +7,7 @@
   --panel-lo: #717e4b;
   --line: #071007;
   --shadow: rgba(7, 16, 7, 0.42);
-  --alert: #d6aa52;
+  --alert: #b7615f;
   font-family: "Courier New", Courier, monospace;
 }
 
@@ -1393,7 +1393,7 @@ button {
   position: relative;
   display: flex;
   min-height: 122px;
-  margin: 78px 0 72px;
+  margin: 88px 0 82px;
   overflow: visible;
   background: #071007;
   border: 2px solid var(--line);
@@ -1470,6 +1470,34 @@ button {
   border-right: 0;
 }
 
+.b1-inside-pct {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  max-width: calc(100% - 8px);
+  padding: 2px 5px;
+  overflow: hidden;
+  color: var(--panel-hi);
+  background: #071007;
+  border: 1px solid rgba(196, 208, 139, 0.5);
+  transform: translate(-50%, -50%);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.05;
+  pointer-events: none;
+}
+
+.b1-child.is-tight .b1-inside-pct,
+.b1-child.is-tiny .b1-inside-pct,
+.b1-segment.is-tight .b1-inside-pct {
+  padding: 1px 3px;
+  font-size: 0.5rem;
+}
+
 .b1-leader {
   position: absolute;
   left: 50%;
@@ -1489,59 +1517,110 @@ button {
   content: "";
   position: absolute;
   background: #071007;
-  opacity: 0.82;
+  opacity: 0.88;
+  pointer-events: none;
 }
 
 .b1-leader::before {
-  width: 2px;
-  height: 24px;
+  width: 58px;
+  height: 2px;
+}
+
+.b1-leader i {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: rgba(196, 208, 139, 0.76);
+  border: 2px solid #071007;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(196, 208, 139, 0.62);
 }
 
 .b1-leader::after {
-  width: 18px;
+  width: 36px;
   height: 2px;
 }
 
 .b1-leader.is-top {
-  bottom: calc(100% + 24px);
+  bottom: calc(100% + 38px);
 }
 
 .b1-leader.is-top::before {
-  top: 100%;
+  top: calc(100% + 8px);
 }
 
 .b1-leader.is-top::after {
-  top: calc(100% + 23px);
+  top: calc(100% + 8px);
+}
+
+.b1-leader.is-top i {
+  top: calc(100% + 38px);
 }
 
 .b1-leader.is-bottom {
-  top: calc(100% + 24px);
+  top: calc(100% + 38px);
 }
 
 .b1-leader.is-bottom::before {
-  bottom: 100%;
+  bottom: calc(100% + 8px);
 }
 
 .b1-leader.is-bottom::after {
-  bottom: calc(100% + 23px);
+  bottom: calc(100% + 8px);
+}
+
+.b1-leader.is-bottom i {
+  bottom: calc(100% + 38px);
 }
 
 .b1-leader.is-right {
-  transform: translateX(18px);
+  transform: translateX(42px);
 }
 
-.b1-leader.is-right::before,
 .b1-leader.is-right::after {
-  left: -18px;
+  left: -36px;
+}
+
+.b1-leader.is-right.is-top::before {
+  left: -93px;
+  transform: rotate(-38deg);
+  transform-origin: 100% 50%;
+}
+
+.b1-leader.is-right.is-bottom::before {
+  left: -93px;
+  transform: rotate(38deg);
+  transform-origin: 100% 50%;
+}
+
+.b1-leader.is-right i {
+  left: -105px;
 }
 
 .b1-leader.is-left {
-  transform: translateX(calc(-100% - 18px));
+  transform: translateX(calc(-100% - 42px));
 }
 
-.b1-leader.is-left::before,
 .b1-leader.is-left::after {
-  right: -18px;
+  right: -36px;
+}
+
+.b1-leader.is-left.is-top::before {
+  right: -93px;
+  transform: rotate(38deg);
+  transform-origin: 0 50%;
+}
+
+.b1-leader.is-left.is-bottom::before {
+  right: -93px;
+  transform: rotate(-38deg);
+  transform-origin: 0 50%;
+}
+
+.b1-leader.is-left i {
+  right: -105px;
 }
 
 .b1-leader strong,
@@ -1741,7 +1820,7 @@ button {
 
   .b1-bar {
     min-height: 116px;
-    margin: 88px 0 82px;
+    margin: 96px 0 90px;
   }
 
   .b1-leader {
@@ -1761,21 +1840,42 @@ button {
     display: none;
   }
 
+  .b1-inside-pct {
+    padding: 1px 3px;
+    font-size: 0.5rem;
+  }
+
   .b1-leader.is-right {
-    transform: translateX(12px);
+    transform: translateX(34px);
   }
 
   .b1-leader.is-left {
-    transform: translateX(calc(-100% - 12px));
+    transform: translateX(calc(-100% - 34px));
   }
 
-  .b1-leader.is-right::before,
   .b1-leader.is-right::after {
-    left: -12px;
+    left: -30px;
   }
 
-  .b1-leader.is-left::before,
   .b1-leader.is-left::after {
-    right: -12px;
+    right: -30px;
+  }
+
+  .b1-leader.is-right.is-top::before,
+  .b1-leader.is-right.is-bottom::before {
+    left: -78px;
+  }
+
+  .b1-leader.is-left.is-top::before,
+  .b1-leader.is-left.is-bottom::before {
+    right: -78px;
+  }
+
+  .b1-leader.is-right i {
+    left: -89px;
+  }
+
+  .b1-leader.is-left i {
+    right: -89px;
   }
 }

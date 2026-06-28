@@ -864,6 +864,7 @@ button {
   background: #071007;
 }
 
+.pie-touch-layout.is-a-final .pie-touch-stage,
 .pie-touch-layout.is-a-max .pie-touch-stage {
   background:
     repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),

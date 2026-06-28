@@ -1002,6 +1002,25 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
+## 2026-06-28 - Torta A final colapsable
+
+### Objetivo
+- Dejar un unico candidato de torta 2D y corregir la interaccion final: categorias colapsables y `Disponible` tratado como los demas.
+
+### Cambios
+- `frontend/previews/sueldo.js` ahora renderiza un solo panel `Torta final` en lugar de tres variantes A.
+- `Fijos`, `Ahorros` y `Disponible` se pueden seleccionar desde la torta o desde la lectura inferior, y volver a tocar el mismo grupo lo colapsa.
+- Al entrar en `Metas`, tocar de nuevo vuelve al nivel agregado de `Ahorros`.
+- `Disponible` queda seleccionable, aparece en la lectura inferior y genera callout exterior cuando esta activo.
+- `frontend/previews/particion.html` actualiza titulo y cache-busting a `pie-a-final`.
+- El cambio sigue limitado a `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Callouts de torta A hacia afuera
 
 ### Objetivo

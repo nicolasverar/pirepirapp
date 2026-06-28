@@ -1052,15 +1052,26 @@
   }
 
   function renderPieVariantSet(model) {
-    return [
-      renderInteractivePie2D(model, 'a-max'),
-      renderInteractivePie2D(model, 'a-edge'),
-      renderInteractivePie2D(model, 'a-clean')
-    ].join('');
+    return renderInteractivePie2D(model, 'a-final');
   }
 
   function pieVariantConfig(name) {
     var variants = {
+      'a-final': {
+        code: 'A',
+        title: 'Torta final',
+        detail: 'un solo candidato; categorias colapsables y disponible seleccionable',
+        labels: 'none',
+        callouts: 'open',
+        texture: false,
+        money: false,
+        colors: {
+          fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
+          saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
+          available: ['#071007'],
+          excess: ['#a95c5a']
+        }
+      },
       'a-max': {
         code: 'A1',
         title: 'A grande',
@@ -1107,7 +1118,7 @@
         }
       }
     };
-    return variants[name] || variants['a-max'];
+    return variants[name] || variants['a-final'];
   }
 
   function pieColor(group, index, variant) {
@@ -1269,7 +1280,8 @@
   }
 
   function addPieCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested, cfg) {
-    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && nested && sweep >= 8);
+    var selectedMacro = !nested && isPieGroupOpen(item.group);
+    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && ((nested && sweep >= 8) || (selectedMacro && sweep >= 8)));
     var side;
     var anchor;
     if (!shouldShow || !callouts) {
@@ -1380,13 +1392,13 @@
       return 'data-pie-saving-node="goals"';
     }
     if (item.drillNode === 'collapse') {
-      return '';
+      return 'data-pie-saving-node="summary"';
     }
     if (ownerGroup === 'fixed') {
-      return '';
+      return 'data-pie-group="fixed"';
     }
     if (ownerGroup === 'saving') {
-      return '';
+      return 'data-pie-group="saving"';
     }
     return 'data-pie-group="' + escapeHtml(item.group) + '"';
   }
@@ -1427,8 +1439,11 @@
         lines.push(renderPieDetailLine('AHORROS', model.savingsTotal, pieSavingSummaryDetailItems(model), model));
       }
     }
+    if (isPieGroupOpen('available')) {
+      lines.push(renderPieDetailLine('DISPONIBLE', model.available, [{ label: 'Libre', group: 'available', amount: model.available }], model));
+    }
     if (!lines.length) {
-      return '<div class="pie-touch-selection is-empty">TOCA FIJOS O AHORROS PARA DESAGREGAR</div>';
+      return '<div class="pie-touch-selection is-empty">TOCA FIJOS, AHORROS O DISPONIBLE</div>';
     }
     return '<div class="pie-touch-selection">' + lines.join('') + '</div>';
   }
@@ -1496,7 +1511,7 @@
     if (item.drillNode === 'collapse') {
       return ' data-pie-saving-node="summary"';
     }
-    if (item.group === 'fixed' || item.group === 'saving') {
+    if (item.group === 'fixed' || item.group === 'saving' || item.group === 'available') {
       return ' data-pie-group="' + escapeHtml(item.group) + '"';
     }
     return '';
@@ -1507,7 +1522,7 @@
   }
 
   function setPieGroupOpen(group, open) {
-    if (group !== 'fixed' && group !== 'saving') {
+    if (group !== 'fixed' && group !== 'saving' && group !== 'available') {
       return;
     }
     if (open) {
@@ -1533,6 +1548,19 @@
     setPieGroupOpen(group, !isPieGroupOpen(group));
   }
 
+  function handlePieSavingTap(node) {
+    if (node === 'goals' && isPieGroupOpen('saving') && pieSavingNode === 'goals') {
+      pieSavingNode = 'summary';
+      return;
+    }
+    if (node === 'summary' && isPieGroupOpen('saving') && pieSavingNode === 'summary') {
+      setPieGroupOpen('saving', false);
+      return;
+    }
+    setPieGroupOpen('saving', true);
+    pieSavingNode = node || 'summary';
+  }
+
   function pieOpenLabel() {
     var labels = [];
     if (isPieGroupOpen('fixed')) {
@@ -1540,6 +1568,9 @@
     }
     if (isPieGroupOpen('saving')) {
       labels.push(pieSavingNode === 'goals' ? 'METAS' : 'AHORROS');
+    }
+    if (isPieGroupOpen('available')) {
+      labels.push('DISP.');
     }
     return labels.length ? labels.join(' + ') : 'MACRO';
   }
@@ -1958,8 +1989,7 @@
       return;
     }
     if (pieSavingButton) {
-      setPieGroupOpen('saving', true);
-      pieSavingNode = pieSavingButton.getAttribute('data-pie-saving-node') || 'summary';
+      handlePieSavingTap(pieSavingButton.getAttribute('data-pie-saving-node') || 'summary');
       render();
       return;
     }

@@ -98,7 +98,6 @@
       '<article class="system-window availability-card availability-card-b">',
       '<div class="availability-b-title"><span>PLATA DISPONIBLE</span></div>',
       '<div class="available-line"><span>Te queda</span><strong class="available-money-pixel">' + renderSummaryPixelSvg(utils.formatMoney(summary.disponible || 0), 'amount') + '</strong></div>',
-      renderMoneyLineDetails(summary),
       '<div class="availability-b-divider"></div>',
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
       '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
@@ -182,16 +181,6 @@
       '<strong>' + utils.escapeHtml(item.nombre || 'Pendiente') + '</strong>',
       '<b>' + utils.escapeHtml(utils.formatMoney(item.monto || 0)) + '</b>',
       '</button>'
-    ].join('');
-  }
-
-  function renderMoneyLineDetails(summary) {
-    var source = summary || {};
-    return [
-      '<div class="money-line-details">',
-      '<span>Remanente anterior <b>' + utils.escapeHtml(utils.formatMoney(source.remanenteAnterior || 0)) + '</b></span>',
-      '<span>Cobro del mes <b>' + utils.escapeHtml(utils.formatMoney(source.sueldoCobrado || 0)) + '</b></span>',
-      '</div>'
     ].join('');
   }
 

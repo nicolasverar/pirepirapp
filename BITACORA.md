@@ -1346,3 +1346,23 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android de la vista real: OK, `titleBadge`, `salary-b1-axis`, `salary-b1-salary-line` y `DISP. ` sin resultados; `v3.23` y `finanzas-lcd-v131` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Resumen sin detalle de cobro v3.24
+
+### Objetivo
+- Quitar de la pantalla de Resumen las lineas `Remanente anterior` y `Cobro del mes` dentro de `PLATA DISPONIBLE`.
+
+### Cambios
+- Se elimino `renderMoneyLineDetails(summary)` de la tarjeta `PLATA DISPONIBLE`.
+- Se elimino la funcion `renderMoneyLineDetails`.
+- Se retiro el CSS muerto `.money-line-details`.
+- Se actualizo cache/version de `v3.23` a `v3.24` y `finanzas-lcd-v132`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `Remanente anterior`, `Cobro del mes`, `renderMoneyLineDetails` y `money-line-details` sin resultados; `v3.24` y `finanzas-lcd-v132` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

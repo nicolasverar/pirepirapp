@@ -6667,22 +6667,3 @@ body::-webkit-scrollbar,
   font-size: 0.8rem;
   text-align: right;
 }
-
-.money-line-details {
-  display: grid;
-  gap: 4px;
-  margin-top: 8px;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-}
-
-.money-line-details span {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-}
-
-.money-line-details b {
-  white-space: nowrap;
-}

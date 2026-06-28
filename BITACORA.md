@@ -1216,3 +1216,25 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda de etiquetas/version en `frontend` y assets Android: OK, `v3.17`, `finanzas-lcd-v125`, tarjetas de gasto fijo y nuevas etiquetas contextuales presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Control legible de acumulado futuro v3.18
+
+### Objetivo
+- Corregir el formulario de `Ahorro futuro`, donde `Monto acumulado` aparecia como campo permanente y el switch se leia como un marco negro sin texto claro.
+
+### Cambios
+- El formulario de `Ahorro futuro` ya no muestra `Monto acumulado` como input permanente.
+- Se agrego un control compacto y legible `Monto acumulado` con estado `NO/SI`.
+- El campo `Valor acumulado` aparece solo cuando el control esta activo.
+- Para ahorros nuevos, el acumulado arranca oculto; para ahorros existentes se conserva una preferencia guardada real o el valor acumulado si ya existia.
+- Se actualizaron estilos del control para mantener la estetica LCD sin perder lectura.
+- Se actualizo cache/version de `v3.17` a `v3.18` y `finanzas-lcd-v126`.
+
+### Verificacion
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `v3.18`, `finanzas-lcd-v126`, `future-accumulated-toggle`, `Monto acumulado` y `Valor acumulado` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

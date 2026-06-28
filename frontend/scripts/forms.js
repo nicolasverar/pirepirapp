@@ -3,6 +3,7 @@
 
   var utils = window.FinanzasUtils;
   var DUPLICATE_SALARY_MESSAGE = "Cobraste otra vez gua'u? que bola que sos en serio";
+  var FUTURE_PREFS_KEY = 'finanzasFutureSavingsPrefs';
 
   function openModal(title, content, afterOpen, className) {
     var root = utils.qs('#modal-root');
@@ -1457,22 +1458,19 @@
 
   function openFutureSavingForm(existing) {
     var item = existing || {};
-    var prefs = window.FinanzasFuturePrefs ? window.FinanzasFuturePrefs.get(item) : {
-      mostrarAcumulado: item.mostrarAcumulado !== false,
-      montoAcumulado: item.montoAcumulado || 0
-    };
+    var prefs = futureAccumulatedPrefs(item, existing);
     var html = [
       '<form class="lcd-form" id="future-form" data-close-on-submit="true">',
       '<p class="form-error" hidden></p>',
       field('Titulo', 'titulo', 'text', item.titulo || '', 'required maxlength="100"'),
       field('Monto mensual', 'montoMensual', 'number', item.montoMensual || '', 'required min="0" step="1" inputmode="numeric"'),
-      field('Monto acumulado', 'montoAcumulado', 'number', prefs.montoAcumulado || 0, 'min="0" step="1" inputmode="numeric"'),
-      checkbox('Mostrar acumulado', 'mostrarAcumulado', prefs.mostrarAcumulado),
+      futureAccumulatedControl(prefs),
       textarea('Descripcion', 'descripcion', item.descripcion || '', 'maxlength="500" rows="3"'),
       formActions(existing ? 'Actualizar' : 'Guardar'),
       '</form>'
     ].join('');
     openModal('AHORRO FUTURO', html, function (root) {
+      bindFutureAccumulatedControl(root);
       bindForm(root, '#future-form', function (form) {
         var payload = utils.formDataToObject(form);
         var showAccumulated = Boolean(utils.qs('[name="mostrarAcumulado"]', form).checked);
@@ -1496,6 +1494,71 @@
           });
       });
     }, 'ticket-form-modal future-saving-modal');
+  }
+
+  function futureAccumulatedPrefs(item, existing) {
+    var source = item || {};
+    var saved = existing ? readSavedFuturePrefs(source.id) : null;
+    var fallbackAmount = utils.normalizeAmount(source.montoAcumulado || 0);
+    if (existing && saved) {
+      return {
+        mostrarAcumulado: futureBoolean(saved.mostrarAcumulado, false),
+        montoAcumulado: utils.normalizeAmount(saved.montoAcumulado)
+      };
+    }
+    return {
+      mostrarAcumulado: existing ? futureBoolean(source.mostrarAcumulado, fallbackAmount > 0) : false,
+      montoAcumulado: fallbackAmount
+    };
+  }
+
+  function readSavedFuturePrefs(id) {
+    if (!id) {
+      return null;
+    }
+    try {
+      return (JSON.parse(localStorage.getItem(FUTURE_PREFS_KEY) || '{}') || {})[String(id)] || null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function futureBoolean(value, fallback) {
+    if (value === undefined || value === null || value === '') {
+      return Boolean(fallback);
+    }
+    return !(value === false || value === 'false' || value === '0' || value === 0);
+  }
+
+  function futureAccumulatedControl(prefs) {
+    var show = Boolean((prefs || {}).mostrarAcumulado);
+    var amount = utils.normalizeAmount((prefs || {}).montoAcumulado || 0);
+    return [
+      '<div class="future-accumulated-control" data-future-accumulated-control>',
+      '<label class="future-accumulated-toggle">',
+      '<input name="mostrarAcumulado" type="checkbox" value="true" data-future-accumulated-toggle' + (show ? ' checked' : '') + '>',
+      '<span class="future-accumulated-toggle-copy"><strong>Monto acumulado</strong><small>Mostrar en tarjeta</small></span>',
+      '<b class="future-accumulated-switch" aria-hidden="true"><span>NO</span><span>SI</span></b>',
+      '</label>',
+      '<label class="field future-accumulated-amount" data-future-accumulated-amount' + (show ? '' : ' hidden') + '>',
+      '<span>Valor acumulado</span>',
+      '<input name="montoAcumulado" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(amount || 0) + '">',
+      '</label>',
+      '</div>'
+    ].join('');
+  }
+
+  function bindFutureAccumulatedControl(root) {
+    var toggle = utils.qs('[data-future-accumulated-toggle]', root);
+    var amountField = utils.qs('[data-future-accumulated-amount]', root);
+    if (!toggle || !amountField) {
+      return;
+    }
+    function sync() {
+      amountField.hidden = !toggle.checked;
+    }
+    toggle.addEventListener('change', sync);
+    sync();
   }
 
   function saveFuturePrefs(id, payload) {

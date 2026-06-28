@@ -2685,6 +2685,99 @@ dd {
   left: 31px;
 }
 
+.future-accumulated-control {
+  display: grid;
+  gap: 7px;
+}
+
+.future-accumulated-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 7px 8px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 0 rgba(196, 208, 139, 0.14);
+  cursor: pointer;
+}
+
+.future-accumulated-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.future-accumulated-toggle-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-transform: uppercase;
+}
+
+.future-accumulated-toggle-copy strong {
+  overflow-wrap: anywhere;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.future-accumulated-toggle-copy small {
+  font-size: 0.52rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.78;
+}
+
+.future-accumulated-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 28px;
+  padding: 3px;
+  color: rgba(196, 208, 139, 0.62);
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 2px, transparent 2px 5px),
+    #2a371f;
+  border: 2px solid #c4d08b;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.future-accumulated-switch span {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.future-accumulated-toggle input:not(:checked) ~ .future-accumulated-switch span:first-child,
+.future-accumulated-toggle input:checked ~ .future-accumulated-switch span:last-child {
+  color: #071007;
+  background: #c4d08b;
+}
+
+.future-accumulated-toggle:focus-within {
+  outline: 2px solid rgba(196, 208, 139, 0.7);
+  outline-offset: 2px;
+}
+
+.future-saving-modal .future-accumulated-amount {
+  margin-top: -2px;
+}
+
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1002,6 +1002,24 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
+## 2026-06-28 - Callouts de torta A hacia afuera
+
+### Objetivo
+- Corregir la apertura torpe de las leyendas de la torta 2D A, que todavia podian orientarse hacia adentro de la torta.
+
+### Cambios
+- `frontend/previews/sueldo.js` calcula el lado del callout desde el punto real de anclaje de cada porcion, no desde una regla fija por categoria.
+- Las etiquetas ahora crecen hacia afuera: a la derecha usan anclaje inicial y a la izquierda anclaje final.
+- El SVG de la torta gana margen lateral logico y el preview aumenta su ancho maximo para conservar el tamano visual sin cortar las leyendas.
+- `frontend/previews/particion.html` actualiza cache-busting de CSS/JS para forzar la version nueva del laboratorio.
+- Este ajuste queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Correccion tactil y leyenda de torta A
 
 ### Objetivo

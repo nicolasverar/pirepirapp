@@ -1219,7 +1219,7 @@
     var calloutHtml = renderPieCallouts(callouts, cfg);
 
     return [
-      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="0 0 320 260" role="img" aria-label="Torta 2D interactiva de sueldo">',
+      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-62 0 444 260" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
       '<circle class="pie-touch-shadow" cx="160" cy="134" r="110"></circle>',
       pieces,
@@ -1275,8 +1275,8 @@
     if (!shouldShow || !callouts) {
       return;
     }
-    side = pieCalloutSide(item.group, midAngle);
     anchor = polar(cx, cy, radius + 2, midAngle);
+    side = pieCalloutSide(anchor.x, cx);
     callouts.push({
       side: side,
       y: Math.max(20, Math.min(240, anchor.y)),
@@ -1286,14 +1286,8 @@
     });
   }
 
-  function pieCalloutSide(group, midAngle) {
-    if (group === 'fixed') {
-      return 'left';
-    }
-    if (group === 'saving' || group === 'saving-future' || group === 'saving-goals' || group === 'saving-goal' || group === 'available') {
-      return 'right';
-    }
-    return Math.cos(midAngle * Math.PI / 180) >= 0 ? 'right' : 'left';
+  function pieCalloutSide(anchorX, centerX) {
+    return anchorX >= centerX ? 'right' : 'left';
   }
 
   function pieCalloutText(item, model, nested) {
@@ -1329,9 +1323,9 @@
     return [
       '<g class="pie-touch-callouts">',
       rows.map(function (row) {
-        var labelX = row.side === 'right' ? 316 : 4;
         var elbowX = row.side === 'right' ? 274 : 46;
-        var textAnchor = row.side === 'right' ? 'end' : 'start';
+        var labelX = row.side === 'right' ? elbowX + 6 : elbowX - 6;
+        var textAnchor = row.side === 'right' ? 'start' : 'end';
         return [
           '<polyline class="pie-touch-callout-line is-' + escapeHtml(row.group) + '" points="' + edgeNum(row.anchor.x) + ',' + edgeNum(row.anchor.y) + ' ' + edgeNum(elbowX) + ',' + edgeNum(row.y) + ' ' + edgeNum(labelX) + ',' + edgeNum(row.y) + '"></polyline>',
           '<text class="pie-touch-callout-text is-' + escapeHtml(row.group) + '" x="' + edgeNum(labelX) + '" y="' + edgeNum(row.y) + '" text-anchor="' + textAnchor + '">' + escapeHtml(row.label) + '</text>'

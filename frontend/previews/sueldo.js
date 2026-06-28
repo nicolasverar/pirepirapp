@@ -767,7 +767,7 @@
     } else if (nested && group === 'saving') {
       side = 'bottom';
       direction = 'right';
-      rise = 42 + (Math.min(index, 4) * 18);
+      rise = Math.max(42, 104 - (Math.min(index, 4) * 18));
       run = 42 + (Math.min(index, 4) * 16);
     } else if (nested && group === 'excess') {
       side = 'top';
@@ -780,8 +780,10 @@
       side = 'bottom';
       direction = 'right';
     } else if (!nested && group === 'available') {
-      side = 'top';
-      direction = 'left';
+      side = 'bottom';
+      direction = 'right';
+      rise = 36;
+      run = 48;
     } else if (!nested && group === 'excess') {
       side = 'bottom';
       direction = 'left';
@@ -813,14 +815,11 @@
 
   function renderB1Leader(item, model, index, nested, ownerGroup) {
     var placement = b1LeaderPlacement(ownerGroup || item.group, index, nested);
-    var amountLabel = currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>';
+    var amountLabel = currentMode === 'macro' ? '' : ' ' + money(item.amount);
+    var labelText = item.label + ' ' + pctLabel(item.amount, model.salary) + amountLabel;
     return [
       '<span class="b1-leader is-' + escapeHtml(placement.side) + ' is-' + escapeHtml(placement.direction) + (nested ? ' is-nested is-cascade-' + escapeHtml(String(placement.cascade)) : '') + '" style="' + placement.style + '">',
-      '<span class="b1-leader-text">',
-      '<strong>' + escapeHtml(item.label) + '</strong>',
-      '<span>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>',
-      amountLabel,
-      '</span>',
+      '<span class="b1-leader-text">' + escapeHtml(labelText) + '</span>',
       '</span>'
     ].join('');
   }

@@ -1571,21 +1571,19 @@ button {
 
 .b1-leader-text {
   position: absolute;
-  top: calc(var(--leader-y) - 8px);
+  top: calc(var(--leader-y) - 7px);
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  display: block;
   width: max-content;
-  max-width: 240px;
-  padding: 2px 5px;
+  max-width: 260px;
+  padding: 1px 4px;
   overflow: hidden;
   background: rgba(196, 208, 139, 0.9);
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 900;
-  line-height: 1.15;
-  font-size: 0.56rem;
+  line-height: 1.12;
+  font-size: 0.5rem;
 }
 
 .b1-leader.is-right .b1-leader-text {
@@ -1596,39 +1594,10 @@ button {
   right: var(--leader-label-x);
 }
 
-.b1-leader strong,
-.b1-leader span,
-.b1-leader em {
-  display: inline;
-  min-width: max-content;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: inherit;
-  font-weight: 900;
-}
-
-.b1-leader em {
-  font-style: normal;
-  font-size: 0.5rem;
-}
-
 .b1-child.is-tight .b1-leader,
 .b1-child.is-tiny .b1-leader,
 .b1-segment.is-tight .b1-leader {
   --leader-arm: 30px;
-}
-
-.b1-child.is-tight .b1-leader strong,
-.b1-child.is-tiny .b1-leader strong,
-.b1-segment.is-tight .b1-leader strong {
-  font-size: inherit;
-}
-
-.b1-child.is-tight .b1-leader span,
-.b1-child.is-tiny .b1-leader span,
-.b1-segment.is-tight .b1-leader span {
-  font-size: inherit;
 }
 
 .b1-axis {
@@ -1789,19 +1758,9 @@ button {
   }
 
   .b1-leader-text {
-    max-width: 170px;
-    gap: 3px;
+    max-width: 190px;
     padding: 1px 4px;
-    font-size: 0.48rem;
-  }
-
-  .b1-leader strong,
-  .b1-leader span {
-    font-size: inherit;
-  }
-
-  .b1-leader em {
-    display: none;
+    font-size: 0.46rem;
   }
 
   .b1-inside-pct {

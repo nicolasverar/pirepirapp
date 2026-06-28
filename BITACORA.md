@@ -1151,3 +1151,21 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `initial_fixed_open`, `leader_has_no_circle_tag`, `leader_uses_single_text_strip`, `fixed_leftmost_highest`, `pct_is_larger`, `fixed_stays_open_when_saving_opens`, `saving_detail_keeps_fixed_open`, `available_does_not_close_others`, `closing_fixed_keeps_saving_open`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 ajuste de escala de callouts
+
+### Objetivo
+- Corregir la lectura visual de B1: el texto de callouts se veia desproporcionado y `Disponible` competia visualmente con los callouts superiores de gastos fijos.
+
+### Cambios
+- La etiqueta del callout ahora se renderiza como una sola cadena uniforme: nombre, porcentaje y monto con la misma escala.
+- Se eliminaron reglas CSS heredadas para `strong/span/em` dentro de los callouts que pisaban el estilo de la tira principal.
+- La cascada inferior de `Ahorros/metas` se invirtio para que el item inferior mas a la izquierda sea el mas largo.
+- `Disponible` ahora orienta su callout hacia abajo/derecha para no chocar con `Gastos fijos`.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `callout_single_text`, `callout_no_inner_title_markup`, `available_bottom_right`, `leader_text_scale_uniform`, `saving_bottom_left_longest`, `saving_detail_bottom_left_longest`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

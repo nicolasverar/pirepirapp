@@ -4,35 +4,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#070808">
-    <title>Pirepirapp - previews particion</title>
-    <link rel="stylesheet" href="./particion.css">
+    <title>Pirepirapp - laboratorio sueldo</title>
+    <link rel="stylesheet" href="./sueldo.css">
   </head>
   <body>
     <main class="preview-shell">
       <header class="preview-top">
         <div class="preview-brand">
           <strong>PIREPIRAPP</strong>
-          <span>PARTICION LAB</span>
+          <span>SUELDO 100%</span>
         </div>
         <div class="preview-terminal" aria-live="polite">
-          <span>comparador de paradigmas de sueldo</span>
+          <span>cada peso del sueldo debe tener un destino visible</span>
         </div>
       </header>
 
       <section class="preview-note">
-        <strong>LAB</strong>
-        <span>Elegir no solo un grafico: elegir una manera de pensar el sueldo.</span>
+        <strong>IDEA</strong>
+        <span>Mostrar que parte exacta del sueldo queda dedicada a cada gasto fijo, ahorro/meta y disponible.</span>
       </section>
 
-      <section class="preview-controls" aria-label="Escenarios de prueba">
-        <button class="preview-chip is-active" type="button" data-scenario="normal">BASE</button>
-        <button class="preview-chip" type="button" data-scenario="fixed">FIJOS ALTOS</button>
-        <button class="preview-chip" type="button" data-scenario="over">EXCESO</button>
+      <section class="preview-controls" aria-label="Escenarios y nivel de detalle">
+        <div class="control-group" aria-label="Escenario">
+          <button class="preview-chip is-active" type="button" data-scenario="normal">BASE</button>
+          <button class="preview-chip" type="button" data-scenario="fixed">FIJOS ALTOS</button>
+          <button class="preview-chip" type="button" data-scenario="over">EXCESO</button>
+        </div>
+        <div class="control-group" aria-label="Detalle">
+          <button class="preview-chip is-active" type="button" data-mode="detail">DESAGREGADO</button>
+          <button class="preview-chip" type="button" data-mode="macro">MACRO</button>
+        </div>
       </section>
 
-      <section class="preview-grid" id="preview-grid" aria-label="Previsualizaciones de particion de sueldo"></section>
+      <section class="salary-summary" id="salary-summary" aria-label="Resumen del sueldo"></section>
+      <section class="preview-grid" id="preview-grid" aria-label="Previsualizaciones de asignacion del sueldo"></section>
     </main>
 
-    <script src="./particion.js"></script>
+    <script src="./sueldo.js"></script>
   </body>
 </html>

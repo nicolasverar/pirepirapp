@@ -940,3 +940,23 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Rehacer laboratorio sueldo 100 desagregado
+
+### Objetivo
+- Corregir el laboratorio visual porque no capturaba la idea central: cuanto del sueldo queda dedicado a cada cosa.
+
+### Cambios
+- Se reemplazo el enfoque de paradigmas abstractos por tres vistas centradas en `sueldo = 100%`.
+- Nueva vista `A`: regla horizontal donde cada componente ocupa su tramo proporcional del sueldo.
+- Nueva vista `B`: mapa de 100 casillas, donde cada casilla representa cerca de 1% del sueldo.
+- Nueva vista `C`: desglose jerarquico con grupos y componentes visibles.
+- Se agrego selector `DESAGREGADO / MACRO`; por defecto abre en desagregado.
+- Gastos fijos y ahorros/metas se muestran en sus componentes individuales.
+- La app principal sigue intacta; solo cambia el laboratorio `frontend/previews/particion.html`.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

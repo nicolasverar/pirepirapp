@@ -1614,6 +1614,293 @@ button {
   text-align: right;
 }
 
+.edge-sim {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.edge-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 7px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.edge-title span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edge-title b {
+  padding: 1px 5px;
+  color: var(--ink);
+  background: var(--panel-hi);
+  font-size: 0.54rem;
+}
+
+.edge-total {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px 8px;
+  background:
+    linear-gradient(180deg, rgba(196, 208, 139, 0.48), rgba(113, 126, 75, 0.22)),
+    rgba(196, 208, 139, 0.32);
+  border: 2px solid var(--line);
+  box-shadow: 2px 2px 0 rgba(7, 16, 7, 0.22);
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.edge-total span,
+.edge-total b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.66rem;
+}
+
+.edge-stage {
+  --edge-stage-height: 350px;
+  --bar-y: 54;
+  position: relative;
+  min-height: var(--edge-stage-height);
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.14) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 18px 18px,
+    rgba(154, 165, 104, 0.66);
+  border: 2px solid var(--line);
+}
+
+.edge-stage::before,
+.edge-stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(7, 16, 7, 0.34);
+  pointer-events: none;
+}
+
+.edge-stage::before {
+  top: calc(var(--bar-y) * 1% - 47px);
+}
+
+.edge-stage::after {
+  top: calc(var(--bar-y) * 1% + 47px);
+}
+
+.edge-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.edge-line {
+  fill: none;
+  stroke: #071007;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 2.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.edge-line.is-saving {
+  stroke-width: 2;
+}
+
+.edge-bar {
+  position: absolute;
+  top: calc(var(--bar-y) * 1% - 44px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 88px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.06) 0 1px, transparent 1px 5px),
+    #071007;
+  border: 2px solid var(--line);
+}
+
+.edge-segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--x);
+  width: var(--w);
+  min-width: 2px;
+  color: #071007;
+  background:
+    linear-gradient(180deg, rgba(230, 238, 166, 0.18), transparent 38%),
+    var(--c);
+  border-right: 2px solid rgba(7, 16, 7, 0.86);
+}
+
+.edge-segment:last-child {
+  border-right: 0;
+}
+
+.edge-segment.is-available {
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.09) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(180deg, rgba(196, 208, 139, 0.04) 0 1px, transparent 1px 7px),
+    #071007;
+}
+
+.edge-segment.is-excess {
+  background:
+    repeating-linear-gradient(45deg, rgba(7, 16, 7, 0.24) 0 1px, transparent 1px 6px),
+    var(--alert);
+}
+
+.edge-segment b {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  max-width: calc(100% - 8px);
+  padding: 3px 6px;
+  overflow: hidden;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 1px solid rgba(196, 208, 139, 0.58);
+  transform: translate(-50%, -50%);
+  text-overflow: clip;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.edge-segment.is-available b {
+  padding: 4px 8px;
+  color: var(--panel-hi);
+  border-color: rgba(196, 208, 139, 0.72);
+  font-size: 0.86rem;
+}
+
+.edge-segment.is-slim b {
+  padding: 2px 4px;
+  font-size: 0.64rem;
+}
+
+.edge-segment.is-micro b {
+  right: 2px;
+  left: 2px;
+  max-width: none;
+  padding: 2px 1px;
+  transform: translateY(-50%);
+  font-size: 0.54rem;
+}
+
+.edge-label,
+.edge-side-note {
+  position: absolute;
+  top: calc(var(--label-y) * 1%);
+  z-index: 7;
+  display: block;
+  width: min(286px, calc(100% - 18px));
+  max-width: calc(100% - 18px);
+  padding: 2px 5px;
+  color: #071007;
+  background: rgba(196, 208, 139, 0.92);
+  border: 1px solid rgba(7, 16, 7, 0.52);
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.edge-label.is-right,
+.edge-side-note.is-right {
+  right: 6px;
+  text-align: right;
+}
+
+.edge-label.is-left,
+.edge-side-note.is-left {
+  left: 6px;
+  text-align: left;
+}
+
+.edge-label.is-fixed {
+  box-shadow: -2px 2px 0 rgba(7, 16, 7, 0.12);
+}
+
+.edge-label.is-saving {
+  box-shadow: 2px -2px 0 rgba(7, 16, 7, 0.12);
+}
+
+.edge-side-note {
+  z-index: 5;
+  width: min(220px, calc(100% - 18px));
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 1px solid rgba(196, 208, 139, 0.55);
+  font-size: 0.5rem;
+}
+
+.edge-side-note.is-excess {
+  color: #071007;
+  background: var(--alert);
+  border-color: #071007;
+}
+
+.edge-sim.is-single-rail .edge-label.is-right {
+  width: min(300px, calc(100% - 18px));
+}
+
+.edge-sim.is-wide-gutter .edge-stage {
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 4px),
+    rgba(154, 165, 104, 0.7);
+}
+
+.edge-sim.is-wide-gutter .edge-label {
+  width: min(318px, calc(100% - 18px));
+  padding: 3px 6px;
+  font-size: 0.58rem;
+}
+
+.edge-sim.is-official-draft .edge-stage {
+  box-shadow:
+    inset 0 0 0 3px rgba(7, 16, 7, 0.16),
+    inset -5px 0 0 rgba(7, 16, 7, 0.18);
+}
+
+.edge-sim.is-official-draft .edge-label {
+  width: min(300px, calc(100% - 18px));
+  font-size: 0.58rem;
+}
+
 .stack-segment.pat-0,
 .detail-chip.pat-0,
 .swatch.pat-0,

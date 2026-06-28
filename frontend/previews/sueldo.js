@@ -824,6 +824,225 @@
     ].join('');
   }
 
+  function edgeComponents(model) {
+    var cursor = 0;
+    return components(model).map(function (item) {
+      var amount = Number(item.amount || 0);
+      var start = pct(cursor, model.scale);
+      var width = pct(amount, model.scale);
+      cursor += amount;
+      return {
+        label: item.label,
+        group: item.group,
+        amount: amount,
+        color: item.color,
+        pattern: item.pattern,
+        start: start,
+        width: width,
+        mid: start + (width / 2)
+      };
+    });
+  }
+
+  function edgeRowsFor(items, model, side, direction, startY, gap, bendBase, labelPrefix) {
+    return items.map(function (item, index) {
+      var y = side === 'top' ? startY + (index * gap) : startY - (index * gap);
+      var edgeX = direction === 'right' ? 98 : 2;
+      var bend;
+      var run = bendBase + (index * 2.4);
+      if (direction === 'right') {
+        bend = Math.min(94, Math.max(item.mid + run, 62 + (index * 3)));
+      } else {
+        bend = Math.max(6, Math.min(item.mid - run, 38 - (index * 3)));
+      }
+      return {
+        item: item,
+        group: item.group,
+        side: side,
+        direction: direction,
+        y: y,
+        edgeX: edgeX,
+        bendX: bend,
+        label: edgeLabelText(item, model, labelPrefix)
+      };
+    });
+  }
+
+  function edgeLabelText(item, model, prefix) {
+    var lead = prefix ? prefix + ' / ' : '';
+    return lead + item.label + ' ' + pctLabel(item.amount, model.salary) + ' ' + money(item.amount);
+  }
+
+  function renderEdgeCalloutPreview(model, code, title, detail, options) {
+    var opts = options || {};
+    var items = edgeComponents(model);
+    var fixed = items.filter(function (item) { return item.group === 'fixed'; });
+    var saving = items.filter(function (item) { return item.group === 'saving'; });
+    var other = items.filter(function (item) {
+      return item.group === 'available' || item.group === 'excess';
+    });
+    var rows = []
+      .concat(edgeRowsFor(
+        fixed,
+        model,
+        'top',
+        opts.fixedDirection || 'right',
+        opts.topStart || 12,
+        opts.topGap || 8,
+        opts.fixedBend || 9,
+        opts.labelPrefix ? 'Fijo' : ''
+      ))
+      .concat(edgeRowsFor(
+        saving,
+        model,
+        'bottom',
+        opts.savingDirection || 'left',
+        opts.bottomStart || 88,
+        opts.bottomGap || 8,
+        opts.savingBend || 9,
+        opts.labelPrefix ? 'Ahorro' : ''
+      ));
+    var stageHeight = opts.height || Math.max(330, 214 + (Math.max(fixed.length, saving.length) * 32));
+    var stageStyle = styleVars({
+      '--edge-stage-height': stageHeight + 'px',
+      '--bar-y': (opts.barY || 54)
+    });
+    var classes = 'edge-sim is-' + escapeHtml(opts.variant || 'mirror');
+    return renderPanel(code, title, detail, [
+      '<div class="' + classes + '">',
+      '<div class="edge-title"><span>PARTICION SUELDO</span><b>' + escapeHtml(opts.badge || '100%') + '</b></div>',
+      '<div class="edge-total"><span>SUELDO DISTRIBUIDO</span><b>' + escapeHtml(money(model.salary)) + '</b></div>',
+      '<div class="edge-stage" style="' + stageStyle + '">',
+      '<svg class="edge-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">',
+      rows.map(renderEdgeLine).join(''),
+      '</svg>',
+      '<div class="edge-bar" role="img" aria-label="Particion del sueldo">',
+      items.map(function (item) {
+        return renderEdgeSegment(item, model);
+      }).join(''),
+      '</div>',
+      rows.map(renderEdgeLabel).join(''),
+      other.map(function (item, index) {
+        return renderEdgeSideNote(item, model, index, opts);
+      }).join(''),
+      '</div>',
+      '</div>'
+    ].join(''));
+  }
+
+  function renderEdgeLine(row) {
+    var points = [
+      edgeNum(row.item.mid), '54',
+      edgeNum(row.bendX), edgeNum(row.y),
+      edgeNum(row.edgeX), edgeNum(row.y)
+    ].join(' ');
+    return '<polyline class="edge-line is-' + escapeHtml(row.group) + ' is-' + escapeHtml(row.side) + ' is-' + escapeHtml(row.direction) + '" points="' + points + '"></polyline>';
+  }
+
+  function renderEdgeLabel(row) {
+    return [
+      '<span class="edge-label is-' + escapeHtml(row.side) + ' is-' + escapeHtml(row.direction) + ' is-' + escapeHtml(row.group) + '" style="' + styleVars({ '--label-y': edgeNum(row.y) }) + '">',
+      escapeHtml(row.label),
+      '</span>'
+    ].join('');
+  }
+
+  function renderEdgeSegment(item, model) {
+    var slim = item.width < 7 ? ' is-micro' : item.width < 12 ? ' is-slim' : '';
+    var label = item.group === 'available'
+      ? 'DISP. ' + pctLabel(item.amount, model.salary)
+      : item.group === 'excess'
+        ? 'EXC. ' + pctLabel(item.amount, model.salary)
+        : pctLabel(item.amount, model.salary);
+    return [
+      '<span class="edge-segment is-' + escapeHtml(item.group) + ' pat-' + escapeHtml(String(item.pattern || 0)) + slim + '" style="' + styleVars({ '--x': edgeNum(item.start) + '%', '--w': edgeNum(item.width) + '%', '--c': item.color }) + '">',
+      '<b>' + escapeHtml(label) + '</b>',
+      '</span>'
+    ].join('');
+  }
+
+  function renderEdgeSideNote(item, model, index, opts) {
+    var direction = opts.availableDirection || 'right';
+    var y = 44 + (index * 14);
+    var label = edgeLabelText(item, model, '');
+    return [
+      '<span class="edge-side-note is-' + escapeHtml(direction) + ' is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--label-y': edgeNum(y) }) + '">',
+      escapeHtml(label),
+      '</span>'
+    ].join('');
+  }
+
+  function edgeNum(value) {
+    return String(Math.round(Number(value || 0) * 100) / 100);
+  }
+
+  function renderEdgeMirror(model) {
+    return renderEdgeCalloutPreview(model, 'B1-A', 'Riel espejo', 'fijos arriba al borde derecho; ahorros abajo al borde izquierdo', {
+      variant: 'mirror',
+      fixedDirection: 'right',
+      savingDirection: 'left',
+      availableDirection: 'right',
+      topStart: 11,
+      bottomStart: 89,
+      topGap: 8.4,
+      bottomGap: 8.4,
+      height: 350,
+      badge: 'BORDE'
+    });
+  }
+
+  function renderEdgeSingleRail(model) {
+    return renderEdgeCalloutPreview(model, 'B1-B', 'Riel derecho unico', 'todas las leyendas terminan en el mismo borde para lectura vertical', {
+      variant: 'single-rail',
+      fixedDirection: 'right',
+      savingDirection: 'right',
+      availableDirection: 'left',
+      topStart: 11,
+      bottomStart: 89,
+      topGap: 8.2,
+      bottomGap: 8.2,
+      fixedBend: 8,
+      savingBend: 14,
+      height: 356,
+      badge: 'RIEL'
+    });
+  }
+
+  function renderEdgeWideGutter(model) {
+    return renderEdgeCalloutPreview(model, 'B1-C', 'Margen ancho', 'cajas mas grandes y sin elipsis para probar legibilidad extrema', {
+      variant: 'wide-gutter',
+      fixedDirection: 'left',
+      savingDirection: 'right',
+      availableDirection: 'right',
+      topStart: 13,
+      bottomStart: 87,
+      topGap: 9.2,
+      bottomGap: 9.2,
+      fixedBend: 12,
+      savingBend: 12,
+      height: 372,
+      badge: 'ANCHO',
+      labelPrefix: true
+    });
+  }
+
+  function renderEdgeOfficialDraft(model) {
+    return renderEdgeCalloutPreview(model, 'B1-D', 'Candidato oficial', 'alto adaptable, cascada limpia y disponible con textura oscura', {
+      variant: 'official-draft',
+      fixedDirection: 'right',
+      savingDirection: 'left',
+      availableDirection: 'right',
+      topStart: 10,
+      bottomStart: 90,
+      topGap: 9,
+      bottomGap: 9,
+      fixedBend: 10,
+      savingBend: 10,
+      height: Math.max(390, 238 + (model.fixed.length + model.savings.length) * 24),
+      badge: 'APP'
+    });
+  }
+
   function renderPieSolid(model) {
     var list = components(model);
     return renderPanel('A', 'Torta con callouts', 'sectores desagregados con indice y lista lateral', [
@@ -1166,7 +1385,10 @@
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderB1InlineFocus(model)
+      renderEdgeMirror(model),
+      renderEdgeSingleRail(model),
+      renderEdgeWideGutter(model),
+      renderEdgeOfficialDraft(model)
     ].join('');
   }
 

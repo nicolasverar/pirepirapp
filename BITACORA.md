@@ -1431,3 +1431,21 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - Validacion seed JSON: OK, 0 movimientos.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Simulacros B1 con callouts al borde
+
+### Objetivo
+- Crear otra tanda de simulacros para `PARTICION SUELDO` con flechas diagonales + tramo horizontal hasta el borde de la tarjeta, evitando que las leyendas se corten.
+
+### Cambios
+- `frontend/previews/particion.html` ahora identifica el laboratorio como `B1 CALLOUT` y usa cache-busting para CSS/JS.
+- `frontend/previews/sueldo.js` renderiza cuatro variantes: `Riel espejo`, `Riel derecho unico`, `Margen ancho` y `Candidato oficial`.
+- Las nuevas variantes fijan las leyendas a carriles internos de borde; la barra central y el SVG de lineas usan el mismo ancho logico para alinear el origen de cada flecha con su porcion.
+- `Disponible` conserva una textura oscura tipo marco LCD y los porcentajes internos quedan en pastillas oscuras.
+- Este cambio queda solo como simulacro/previsualizacion; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

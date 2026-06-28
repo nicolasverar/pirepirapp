@@ -1002,6 +1002,26 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
+## 2026-06-28 - Variantes A grandes con callouts
+
+### Objetivo
+- Tomar la variante A como base y hacerla mas grande, limpia y coherente con la app.
+
+### Cambios
+- El laboratorio ahora muestra `A1`, `A2` y `A3`, todas derivadas de la variante A.
+- La torta ocupa mucho mas espacio util de cada tarjeta.
+- `Disponible` queda siempre en negro.
+- Los desagregados son acumulables: abrir `Fijos` y luego `Ahorros` ya no cierra lo anterior; `TOTAL` es el reset explicito.
+- Se incorporaron callout lines para leer particiones desagregadas sin meter texto excesivo dentro del circulo.
+- La leyenda principal queda sin texturas y solo muestra las categorias principales: `Fijos`, `Ahorros` y `Disponible`.
+- El simulacro queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-27 - Variaciones stacked bar 100
 
 ### Objetivo

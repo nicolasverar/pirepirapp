@@ -202,7 +202,7 @@ button {
 
 .preview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -517,7 +517,8 @@ button {
 }
 
 .pie-touch-layout.is-variant {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 250px);
+  align-items: stretch;
 }
 
 .pie-touch-layout.is-clean {
@@ -525,7 +526,7 @@ button {
 }
 
 .pie-touch-layout.is-clean .pie-touch-stage {
-  min-height: 430px;
+  min-height: 560px;
 }
 
 .pie-touch-stage {
@@ -545,7 +546,7 @@ button {
 }
 
 .pie-touch-layout.is-variant .pie-touch-stage {
-  min-height: 305px;
+  min-height: 540px;
 }
 
 .pie-touch-svg {
@@ -555,7 +556,7 @@ button {
 }
 
 .pie-touch-layout.is-variant .pie-touch-svg {
-  width: min(100%, 282px);
+  width: min(100%, 670px);
 }
 
 .pie-touch-part {
@@ -712,9 +713,7 @@ button {
 .pie-touch-row i {
   width: 15px;
   min-height: 19px;
-  background:
-    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
-    var(--c);
+  background: var(--c);
   border: 2px solid var(--line);
 }
 
@@ -748,9 +747,7 @@ button {
 
 .pie-touch-row.is-available {
   color: var(--panel-hi);
-  background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
-    #071007;
+  background: #071007;
 }
 
 .pie-touch-row.is-available small {
@@ -782,34 +779,54 @@ button {
   cursor: pointer;
 }
 
-.pie-touch-layout.is-plain .pie-touch-stage {
+.pie-touch-layout.is-a-max .pie-touch-stage {
   background:
     repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),
     rgba(170, 181, 116, 0.62);
 }
 
-.pie-touch-layout.is-lcd .pie-touch-stage {
+.pie-touch-layout.is-a-edge .pie-touch-stage {
   background:
-    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.14) 0 1px, transparent 1px 4px),
-    linear-gradient(90deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 16px 16px,
-    rgba(151, 164, 99, 0.68);
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.09) 0 1px, transparent 1px 5px),
+    rgba(168, 180, 116, 0.66);
 }
 
-.pie-touch-layout.is-mono .pie-touch-stage {
+.pie-touch-layout.is-a-clean .pie-touch-stage {
   background:
-    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 5px),
-    rgba(155, 166, 103, 0.58);
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.07) 0 1px, transparent 1px 5px),
+    rgba(172, 182, 118, 0.56);
 }
 
-.pie-touch-layout.is-mono .pie-touch-slice {
+.pie-touch-layout.is-a-clean .pie-touch-slice {
   stroke-width: 2.8;
 }
 
-.pie-touch-layout.is-mono .pie-touch-center {
-  fill: #071007;
+.pie-touch-callouts {
+  pointer-events: none;
 }
 
-.pie-touch-layout.is-mono .pie-touch-center-text {
+.pie-touch-callout-line {
+  fill: none;
+  stroke: #071007;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.pie-touch-callout-text {
+  fill: #071007;
+  paint-order: stroke fill;
+  stroke: var(--panel-hi);
+  stroke-width: 3;
+  dominant-baseline: middle;
+  text-transform: uppercase;
+  font-size: 8.6px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.pie-touch-callout-text.is-available {
   fill: var(--panel-hi);
   stroke: #071007;
 }

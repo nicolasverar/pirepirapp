@@ -10,7 +10,7 @@
   var accordionRevealGroup = 'fixed';
   var stepRevealIndex = 0;
   var trayRevealGroup = 'fixed';
-  var pieOpenGroup = 'fixed';
+  var pieOpenGroups = { fixed: true };
   var pieSavingNode = 'summary';
 
   var palette = {
@@ -1053,58 +1053,61 @@
 
   function renderPieVariantSet(model) {
     return [
-      renderInteractivePie2D(model, 'plain'),
-      renderInteractivePie2D(model, 'lcd'),
-      renderInteractivePie2D(model, 'mono')
+      renderInteractivePie2D(model, 'a-max'),
+      renderInteractivePie2D(model, 'a-edge'),
+      renderInteractivePie2D(model, 'a-clean')
     ].join('');
   }
 
   function pieVariantConfig(name) {
     var variants = {
-      plain: {
-        code: 'A',
-        title: 'Plana',
-        detail: 'colores calmos, texto minimo',
-        labels: 'percent',
+      'a-max': {
+        code: 'A1',
+        title: 'A grande',
+        detail: 'torta maxima, callouts solo en lo desagregado',
+        labels: 'none',
+        callouts: 'open',
         texture: false,
         money: false,
         colors: {
           fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
           saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
-          available: ['#111911'],
+          available: ['#071007'],
           excess: ['#a95c5a']
         }
       },
-      lcd: {
-        code: 'B',
-        title: 'LCD sobria',
-        detail: 'misma paleta, contraste ordenado',
-        labels: 'large',
-        texture: true,
+      'a-edge': {
+        code: 'A2',
+        title: 'A con borde lector',
+        detail: 'mismos colores, callouts tambien para categorias macro',
+        labels: 'none',
+        callouts: 'all',
+        texture: false,
         money: false,
         colors: {
-          fixed: ['#6f8052', '#7f905e', '#5f7048', '#8c9c66'],
-          saving: ['#aebf78', '#bdca85', '#9fb26e', '#c9d48f'],
+          fixed: ['#7f8f5b', '#8c9b65', '#718252', '#98a96f'],
+          saving: ['#b7c982', '#c5d58d', '#a8bb75', '#d0dd98'],
           available: ['#071007'],
-          excess: ['#a65654']
+          excess: ['#a95c5a']
         }
       },
-      mono: {
-        code: 'C',
-        title: 'Monocroma',
-        detail: 'sin texto dentro del circulo',
+      'a-clean': {
+        code: 'A3',
+        title: 'A limpia',
+        detail: 'sin porcentajes internos, leyenda solida de tres categorias',
         labels: 'none',
+        callouts: 'open',
         texture: false,
-        money: true,
+        money: false,
         colors: {
-          fixed: ['#81915e', '#92a36d', '#748557', '#a0ae76'],
-          saving: ['#aab978', '#bac883', '#98aa6c', '#c7d48f'],
+          fixed: ['#839361', '#93a36e', '#758658', '#a1af77'],
+          saving: ['#b4c681', '#c2d18b', '#a4b975', '#cdd993'],
           available: ['#071007'],
-          excess: ['#9e5856']
+          excess: ['#a95c5a']
         }
       }
     };
-    return variants[name] || variants.plain;
+    return variants[name] || variants['a-max'];
   }
 
   function pieColor(group, index, variant) {
@@ -1117,12 +1120,11 @@
   function renderInteractivePie2D(model, variant) {
     var cfg = pieVariantConfig(variant);
     var groups = pieGroups(model, variant);
-    var active = activePieGroup(model, variant);
     var cleanClass = currentMode === 'macro' ? ' is-clean' : '';
     var readout = currentMode === 'macro' ? '' : [
       '<aside class="pie-touch-readout">',
-      '<header><span>Vista</span><b>' + escapeHtml(active.label) + '</b></header>',
-      renderPieTouchLegend(active, model, variant),
+      '<header><span>Categorias</span><b>' + escapeHtml(pieOpenLabel()) + '</b></header>',
+      renderPiePrincipalLegend(model, variant),
       '<div class="pie-touch-actions">',
       '<button type="button" data-pie-group="fixed">FIJOS</button>',
       '<button type="button" data-pie-group="saving">AHORROS</button>',
@@ -1198,69 +1200,50 @@
     }).filter(nonZero);
   }
 
-  function activePieGroup(model, variant) {
-    var groups = pieGroups(model, variant);
-    return groups.filter(function (group) {
-      return group.group === pieOpenGroup;
-    })[0] || {
-      label: 'Total sueldo',
-      group: 'total',
-      amount: model.salary,
-      children: groups
-    };
-  }
-
   function renderInteractivePieSvg(groups, model, variant) {
     var cfg = pieVariantConfig(variant);
-    var cx = 120;
-    var cy = 120;
-    var radius = 92;
+    var cx = 160;
+    var cy = 130;
+    var radius = 108;
     var start = -90;
+    var callouts = [];
     var pieces = groups.map(function (group) {
       var sweep = (group.amount / model.scale) * 360;
       var end = start + sweep;
-      var html = pieOpenGroup === group.group && group.children && group.children.length && group.group !== 'available' && group.group !== 'excess'
-        ? renderPieSubSlices(group, model, cx, cy, radius, start, end, variant)
-        : renderPieTouchSlice(group, model, cx, cy, radius, start, end, false, null, variant);
+      var html = isPieGroupOpen(group.group) && group.children && group.children.length && group.group !== 'available' && group.group !== 'excess'
+        ? renderPieSubSlices(group, model, cx, cy, radius, start, end, variant, callouts)
+        : renderPieTouchSlice(group, model, cx, cy, radius, start, end, false, null, variant, callouts);
       start = end;
       return html;
     }).join('');
+    var calloutHtml = renderPieCallouts(callouts, cfg);
 
     return [
-      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="0 0 240 240" role="img" aria-label="Torta 2D interactiva de sueldo">',
+      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="0 0 320 260" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
-      '<circle class="pie-touch-shadow" cx="120" cy="124" r="94"></circle>',
+      '<circle class="pie-touch-shadow" cx="160" cy="134" r="110"></circle>',
       pieces,
-      '<circle class="pie-touch-rim" cx="120" cy="120" r="' + radius + '"></circle>',
-      '<circle class="pie-touch-center" cx="120" cy="120" r="31"></circle>',
-      '<text class="pie-touch-center-text" x="120" y="116">' + escapeHtml(pieCenterTitle(model, cfg)) + '</text>',
-      '<text class="pie-touch-center-text small" x="120" y="132">' + escapeHtml(pieCenterSub(model)) + '</text>',
+      '<circle class="pie-touch-rim" cx="160" cy="130" r="' + radius + '"></circle>',
+      calloutHtml,
+      '<circle class="pie-touch-center" cx="160" cy="130" r="34"></circle>',
+      '<text class="pie-touch-center-text" x="160" y="126">' + escapeHtml(pieCenterTitle(cfg)) + '</text>',
+      '<text class="pie-touch-center-text small" x="160" y="143">' + escapeHtml(pieCenterSub()) + '</text>',
       '</svg>'
     ].join('');
   }
 
-  function pieCenterTitle(model, cfg) {
-    var active = activePieGroup(model, 'plain');
-    if (!pieOpenGroup) {
-      return cfg.labels === 'none' ? '100%' : 'SUELDO';
+  function pieCenterTitle(cfg) {
+    if (cfg.callouts === 'all') {
+      return '100%';
     }
-    return pctLabel(active.amount, model.salary);
+    return 'SUELDO';
   }
 
-  function pieCenterSub(model) {
-    if (!pieOpenGroup) {
-      return 'TOTAL';
-    }
-    if (pieOpenGroup === 'fixed') {
-      return 'FIJOS';
-    }
-    if (pieOpenGroup === 'saving') {
-      return pieSavingNode === 'goals' ? 'METAS' : 'AHORROS';
-    }
-    return groupName(pieOpenGroup).toUpperCase();
+  function pieCenterSub() {
+    return pieOpenLabel();
   }
 
-  function renderPieSubSlices(group, model, cx, cy, radius, startAngle, endAngle, variant) {
+  function renderPieSubSlices(group, model, cx, cy, radius, startAngle, endAngle, variant, callouts) {
     var cursor = startAngle;
     return group.children.map(function (item, index) {
       var sweep = group.amount ? ((item.amount / group.amount) * (endAngle - startAngle)) : 0;
@@ -1273,13 +1256,13 @@
         pattern: item.pattern === undefined ? index : item.pattern,
         drillNode: item.drillNode
       };
-      var html = renderPieTouchSlice(child, model, cx, cy, radius, cursor, end, true, group.group, variant);
+      var html = renderPieTouchSlice(child, model, cx, cy, radius, cursor, end, true, group.group, variant, callouts);
       cursor = end;
       return html;
     }).join('');
   }
 
-  function renderPieTouchSlice(item, model, cx, cy, radius, startAngle, endAngle, nested, ownerGroup, variant) {
+  function renderPieTouchSlice(item, model, cx, cy, radius, startAngle, endAngle, nested, ownerGroup, variant, callouts) {
     var cfg = pieVariantConfig(variant);
     var path = piePath(cx, cy, radius, startAngle, endAngle);
     var mid = startAngle + ((endAngle - startAngle) / 2);
@@ -1288,6 +1271,7 @@
     var action = pieTouchAttrs(item, ownerGroup);
     var tightClass = Math.abs(endAngle - startAngle) < 22 ? ' is-tight' : '';
     var labelHtml = pieTouchSliceLabel(label, labelPoint, endAngle - startAngle, nested, cfg);
+    addPieCallout(callouts, item, model, cx, cy, radius, mid, endAngle - startAngle, nested, cfg);
     return [
       '<g class="pie-touch-part' + (nested ? ' is-nested' : ' is-macro') + tightClass + ' is-' + escapeHtml(item.group) + '" ' + action + '>',
       '<path class="pie-touch-slice" d="' + path + '" style="' + styleVars({ '--c': item.color }) + '"></path>',
@@ -1295,6 +1279,96 @@
       labelHtml,
       '</g>'
     ].join('');
+  }
+
+  function addPieCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested, cfg) {
+    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && nested && sweep >= 8);
+    var side;
+    var anchor;
+    if (!shouldShow || !callouts) {
+      return;
+    }
+    side = Math.cos(midAngle * Math.PI / 180) >= 0 ? 'right' : 'left';
+    anchor = polar(cx, cy, radius + 2, midAngle);
+    callouts.push({
+      side: side,
+      y: Math.max(20, Math.min(240, anchor.y)),
+      anchor: anchor,
+      group: item.group,
+      label: pieCalloutText(item, model, nested)
+    });
+  }
+
+  function pieCalloutText(item, model, nested) {
+    var label = pieShortLabel(item.label, item.group);
+    if (!nested && item.group === 'fixed') {
+      label = 'FIJOS';
+    } else if (!nested && item.group === 'saving') {
+      label = 'AHORROS';
+    } else if (!nested && item.group === 'available') {
+      label = 'DISP.';
+    }
+    return label + ' ' + pctLabel(item.amount, model.salary);
+  }
+
+  function pieShortLabel(label, group) {
+    if (group === 'available') {
+      return 'DISP.';
+    }
+    if (group === 'saving-future') {
+      return 'FUTURO';
+    }
+    if (group === 'saving-goals') {
+      return 'METAS';
+    }
+    return String(label || '').toUpperCase();
+  }
+
+  function renderPieCallouts(callouts) {
+    var rows = normalizePieCallouts(callouts);
+    if (!rows.length) {
+      return '';
+    }
+    return [
+      '<g class="pie-touch-callouts">',
+      rows.map(function (row) {
+        var labelX = row.side === 'right' ? 306 : 14;
+        var elbowX = row.side === 'right' ? 244 : 76;
+        var textAnchor = row.side === 'right' ? 'end' : 'start';
+        return [
+          '<polyline class="pie-touch-callout-line is-' + escapeHtml(row.group) + '" points="' + edgeNum(row.anchor.x) + ',' + edgeNum(row.anchor.y) + ' ' + edgeNum(elbowX) + ',' + edgeNum(row.y) + ' ' + edgeNum(labelX) + ',' + edgeNum(row.y) + '"></polyline>',
+          '<text class="pie-touch-callout-text is-' + escapeHtml(row.group) + '" x="' + edgeNum(labelX) + '" y="' + edgeNum(row.y) + '" text-anchor="' + textAnchor + '">' + escapeHtml(row.label) + '</text>'
+        ].join('');
+      }).join(''),
+      '</g>'
+    ].join('');
+  }
+
+  function normalizePieCallouts(callouts) {
+    var rows = [];
+    ['left', 'right'].forEach(function (side) {
+      var sideRows = callouts.filter(function (row) {
+        return row.side === side;
+      }).sort(function (a, b) {
+        return a.y - b.y;
+      });
+      var minY = 20;
+      var maxY = 240;
+      var gap = 15;
+      sideRows.forEach(function (row, index) {
+        row.y = Math.max(minY + (index * gap), Math.min(maxY, row.y));
+        if (index && row.y < sideRows[index - 1].y + gap) {
+          row.y = sideRows[index - 1].y + gap;
+        }
+      });
+      for (var index = sideRows.length - 1; index >= 0; index -= 1) {
+        if (sideRows[index].y > maxY - ((sideRows.length - 1 - index) * gap)) {
+          sideRows[index].y = maxY - ((sideRows.length - 1 - index) * gap);
+        }
+      }
+      rows = rows.concat(sideRows);
+    });
+    return rows;
   }
 
   function pieTouchSliceLabel(label, point, sweep, nested, cfg) {
@@ -1318,27 +1392,27 @@
       return 'data-pie-saving-node="summary"';
     }
     if (ownerGroup === 'fixed') {
-      return 'data-pie-collapse="fixed"';
+      return '';
     }
     if (ownerGroup === 'saving') {
-      return 'data-pie-saving-node="summary"';
+      return '';
     }
     return 'data-pie-group="' + escapeHtml(item.group) + '"';
   }
 
-  function renderPieTouchLegend(active, model, variant) {
-    var cfg = pieVariantConfig(variant);
-    var list = active.children && active.children.length ? active.children : pieGroups(model, variant);
+  function renderPiePrincipalLegend(model, variant) {
+    var list = pieGroups(model, variant).filter(function (item) {
+      return item.group === 'fixed' || item.group === 'saving' || item.group === 'available';
+    });
     return [
       '<div class="pie-touch-legend">',
       list.map(function (item) {
-        var action = pieLegendAction(item, active);
+        var action = pieLegendAction(item);
         return [
           '<button type="button" class="pie-touch-row is-' + escapeHtml(item.group) + '"' + action + '>',
           '<i style="' + styleVars({ '--c': item.color || palette.available[0] }) + '"></i>',
-          '<span><b>' + escapeHtml(item.label) + '</b></span>',
+          '<span><b>' + escapeHtml(pieShortLabel(item.label, item.group)) + '</b></span>',
           '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
-          cfg.money ? '<em>' + escapeHtml(money(item.amount)) + '</em>' : '',
           '</button>'
         ].join('');
       }).join(''),
@@ -1346,20 +1420,46 @@
     ].join('');
   }
 
-  function pieLegendAction(item, active) {
+  function pieLegendAction(item) {
     if (item.drillNode === 'metas') {
       return ' data-pie-saving-node="goals"';
     }
     if (item.drillNode === 'collapse') {
       return ' data-pie-saving-node="summary"';
     }
-    if (active.group === 'fixed' && item.group === 'fixed') {
-      return ' data-pie-collapse="fixed"';
-    }
-    if (item.group === 'fixed' || item.group === 'saving' || item.group === 'available' || item.group === 'excess') {
+    if (item.group === 'fixed' || item.group === 'saving') {
       return ' data-pie-group="' + escapeHtml(item.group) + '"';
     }
     return '';
+  }
+
+  function isPieGroupOpen(group) {
+    return !!pieOpenGroups[group];
+  }
+
+  function setPieGroupOpen(group, open) {
+    if (group !== 'fixed' && group !== 'saving') {
+      return;
+    }
+    if (open) {
+      pieOpenGroups[group] = true;
+    } else {
+      delete pieOpenGroups[group];
+      if (group === 'saving') {
+        pieSavingNode = 'summary';
+      }
+    }
+  }
+
+  function pieOpenLabel() {
+    var labels = [];
+    if (isPieGroupOpen('fixed')) {
+      labels.push('FIJOS');
+    }
+    if (isPieGroupOpen('saving')) {
+      labels.push(pieSavingNode === 'goals' ? 'METAS' : 'AHORROS');
+    }
+    return labels.length ? labels.join(' + ') : 'MACRO';
   }
 
   function renderPieSolid(model) {
@@ -1744,7 +1844,6 @@
     var childButton = event.target.closest('[data-b1-child-group]');
     var pieGroupButton = event.target.closest('[data-pie-group]');
     var pieSavingButton = event.target.closest('[data-pie-saving-node]');
-    var pieCollapseButton = event.target.closest('[data-pie-collapse]');
     var pieResetButton = event.target.closest('[data-pie-reset]');
     var revealButton;
     var groups;
@@ -1771,28 +1870,19 @@
       return;
     }
     if (pieResetButton) {
-      pieOpenGroup = '';
+      pieOpenGroups = {};
       pieSavingNode = 'summary';
       render();
       return;
     }
     if (pieSavingButton) {
-      pieOpenGroup = 'saving';
+      setPieGroupOpen('saving', true);
       pieSavingNode = pieSavingButton.getAttribute('data-pie-saving-node') || 'summary';
       render();
       return;
     }
-    if (pieCollapseButton) {
-      pieOpenGroup = '';
-      pieSavingNode = 'summary';
-      render();
-      return;
-    }
     if (pieGroupButton) {
-      pieOpenGroup = pieOpenGroup === pieGroupButton.getAttribute('data-pie-group') ? '' : pieGroupButton.getAttribute('data-pie-group');
-      if (pieOpenGroup !== 'saving') {
-        pieSavingNode = 'summary';
-      }
+      setPieGroupOpen(pieGroupButton.getAttribute('data-pie-group'), true);
       render();
       return;
     }

@@ -1288,7 +1288,7 @@
     if (!shouldShow || !callouts) {
       return;
     }
-    side = Math.cos(midAngle * Math.PI / 180) >= 0 ? 'right' : 'left';
+    side = pieCalloutSide(item.group, midAngle);
     anchor = polar(cx, cy, radius + 2, midAngle);
     callouts.push({
       side: side,
@@ -1297,6 +1297,16 @@
       group: item.group,
       label: pieCalloutText(item, model, nested)
     });
+  }
+
+  function pieCalloutSide(group, midAngle) {
+    if (group === 'fixed') {
+      return 'left';
+    }
+    if (group === 'saving' || group === 'saving-future' || group === 'saving-goals' || group === 'saving-goal' || group === 'available') {
+      return 'right';
+    }
+    return Math.cos(midAngle * Math.PI / 180) >= 0 ? 'right' : 'left';
   }
 
   function pieCalloutText(item, model, nested) {
@@ -1389,7 +1399,7 @@
       return 'data-pie-saving-node="goals"';
     }
     if (item.drillNode === 'collapse') {
-      return 'data-pie-saving-node="summary"';
+      return '';
     }
     if (ownerGroup === 'fixed') {
       return '';
@@ -1401,15 +1411,15 @@
   }
 
   function renderPiePrincipalLegend(model, variant) {
-    var list = pieGroups(model, variant).filter(function (item) {
-      return item.group === 'fixed' || item.group === 'saving' || item.group === 'available';
-    });
+    var list = piePrincipalLegendItems(model, variant);
     return [
       '<div class="pie-touch-legend">',
       list.map(function (item) {
         var action = pieLegendAction(item);
+        var openClass = isPieGroupOpen(item.group) ? ' is-open' : '';
+        var staticClass = action ? '' : ' is-static';
         return [
-          '<button type="button" class="pie-touch-row is-' + escapeHtml(item.group) + '"' + action + '>',
+          '<button type="button" class="pie-touch-row is-' + escapeHtml(item.group) + openClass + staticClass + '"' + action + '>',
           '<i style="' + styleVars({ '--c': item.color || palette.available[0] }) + '"></i>',
           '<span><b>' + escapeHtml(pieShortLabel(item.label, item.group)) + '</b></span>',
           '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
@@ -1418,6 +1428,29 @@
       }).join(''),
       '</div>'
     ].join('');
+  }
+
+  function piePrincipalLegendItems(model, variant) {
+    return [
+      {
+        label: 'Fijos',
+        group: 'fixed',
+        amount: model.fixedTotal,
+        color: pieColor('fixed', 0, variant)
+      },
+      {
+        label: 'Ahorros',
+        group: 'saving',
+        amount: model.savingsTotal,
+        color: pieColor('saving', 0, variant)
+      },
+      {
+        label: 'Disponible',
+        group: 'available',
+        amount: model.available,
+        color: pieColor('available', 0, variant)
+      }
+    ];
   }
 
   function pieLegendAction(item) {
@@ -1449,6 +1482,17 @@
         pieSavingNode = 'summary';
       }
     }
+  }
+
+  function handlePieGroupTap(group) {
+    if (group === 'saving') {
+      if (isPieGroupOpen('saving') && pieSavingNode === 'summary') {
+        pieSavingNode = 'goals';
+      }
+      setPieGroupOpen('saving', true);
+      return;
+    }
+    setPieGroupOpen(group, true);
   }
 
   function pieOpenLabel() {
@@ -1842,9 +1886,9 @@
     var cycleButton = event.target.closest('[data-cycle]');
     var savingButton = event.target.closest('[data-saving-node]');
     var childButton = event.target.closest('[data-b1-child-group]');
-    var pieGroupButton = event.target.closest('[data-pie-group]');
-    var pieSavingButton = event.target.closest('[data-pie-saving-node]');
-    var pieResetButton = event.target.closest('[data-pie-reset]');
+    var pieGroupButton = closestByAttribute(event.target, 'data-pie-group');
+    var pieSavingButton = closestByAttribute(event.target, 'data-pie-saving-node');
+    var pieResetButton = closestByAttribute(event.target, 'data-pie-reset');
     var revealButton;
     var groups;
     if (cycleButton) {
@@ -1882,7 +1926,7 @@
       return;
     }
     if (pieGroupButton) {
-      setPieGroupOpen(pieGroupButton.getAttribute('data-pie-group'), true);
+      handlePieGroupTap(pieGroupButton.getAttribute('data-pie-group'));
       render();
       return;
     }
@@ -1898,6 +1942,17 @@
       selectedSavingNode = 'summary';
       render();
     }
+  }
+
+  function closestByAttribute(node, attr) {
+    var current = node;
+    while (current && current !== document) {
+      if (current.getAttribute && current.getAttribute(attr) !== null) {
+        return current;
+      }
+      current = current.parentNode;
+    }
+    return null;
   }
 
   function bindChoice(selector, attr, callback) {

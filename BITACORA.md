@@ -1002,6 +1002,26 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
+## 2026-06-28 - Correccion tactil y leyenda de torta A
+
+### Objetivo
+- Corregir el laboratorio de torta A para que siga desagregando al tocar y ordenar la leyenda principal.
+
+### Cambios
+- El segundo toque sobre `AHORROS` ahora avanza desde `Futuro/Metas` hacia el detalle de metas.
+- Tocar una meta o un componente desagregado ya no colapsa accidentalmente la torta.
+- Se agrego un fallback de busqueda de atributos para toques sobre SVG en WebView.
+- La leyenda principal se arma siempre en orden fijo: `FIJOS`, `AHORROS`, `DISP.`.
+- `DISP.` aparece siempre en la leyenda, incluso cuando el disponible es 0%, y se mantiene negro.
+- Las filas activas de la leyenda muestran estado abierto.
+- El cambio queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Variantes A grandes con callouts
 
 ### Objetivo

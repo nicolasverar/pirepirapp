@@ -1050,3 +1050,21 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, genera `Desagrega en el mismo tramo`, no renderiza `Drill alineado`, mantiene `b1-subbar` y porcentajes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 particion dentro del rectangulo
+
+### Objetivo
+- Corregir la interpretacion de B1: al tocar `Gastos fijos` o cualquier familia, la desagregacion debe revelarse dentro del mismo rectangulo completo, no como cabecera mas subbarra ni como tarjeta incrustada.
+
+### Cambios
+- El tramo activo de B1 ahora se reemplaza por sus componentes internos ocupando toda la altura del rectangulo.
+- Se elimino la cabecera interna `b1-expanded-head` y la subbarra `b1-subbar`.
+- Los componentes se distinguen por numero, porcentaje permanente, divisores y leyenda inferior; no se usan texturas diferentes.
+- La leyenda conserva el nombre, categoria, porcentaje y monto del componente seleccionado.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `hasChild=true`, `hasSubbar=false`, `hasExpandedHead=false`, `activeInsideSameSegment=true`, `hasPct=true`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

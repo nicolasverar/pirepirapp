@@ -1481,65 +1481,27 @@ button {
 }
 
 .b1-segment.is-expanded {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  display: flex;
+  align-items: stretch;
   box-shadow:
     inset 0 0 0 3px #071007,
     inset 0 0 0 5px rgba(196, 208, 139, 0.42);
 }
 
-.b1-expanded-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 6px;
-  align-items: center;
-  min-width: 0;
-  padding: 7px;
-  background: rgba(196, 208, 139, 0.22);
-  border-bottom: 2px solid var(--line);
-  text-transform: uppercase;
-  font-weight: 900;
-}
-
-.b1-expanded-head i {
-  display: grid;
-  place-items: center;
-  width: 27px;
-  min-height: 24px;
-  color: var(--panel-hi);
-  background: #071007;
-  border: 2px solid var(--line);
-  font-style: normal;
-  font-size: 0.6rem;
-}
-
-.b1-expanded-head span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.62rem;
-}
-
-.b1-expanded-head b {
-  font-size: 0.7rem;
-  white-space: nowrap;
-}
-
-.b1-subbar {
-  display: flex;
-  min-height: 0;
-}
-
 .b1-child {
   position: relative;
   flex: 0 0 var(--w);
-  min-width: 4px;
+  min-width: 0;
   overflow: hidden;
-  background: var(--c);
-  border-right: 1px solid rgba(7, 16, 7, 0.76);
+  background:
+    linear-gradient(180deg, rgba(7, 16, 7, var(--shade)), rgba(7, 16, 7, var(--shade))),
+    var(--c);
+  border-right: 2px solid rgba(7, 16, 7, 0.82);
   font-style: normal;
+}
+
+.b1-child:last-child {
+  border-right: 0;
 }
 
 .b1-child i,
@@ -1555,19 +1517,47 @@ button {
 }
 
 .b1-child i {
-  top: 6px;
+  top: 8px;
   display: grid;
   place-items: center;
-  width: 20px;
-  min-height: 18px;
+  width: 22px;
+  min-height: 20px;
   color: var(--panel-hi);
   background: #071007;
+  border: 1px solid rgba(196, 208, 139, 0.46);
   font-size: 0.52rem;
 }
 
 .b1-child b {
-  bottom: 7px;
-  font-size: 0.58rem;
+  bottom: 8px;
+  font-size: 0.62rem;
+}
+
+.b1-child.is-tight i {
+  left: 3px;
+  width: 18px;
+  min-height: 18px;
+  font-size: 0.48rem;
+}
+
+.b1-child.is-tight b {
+  left: 3px;
+  right: 3px;
+  font-size: 0.5rem;
+}
+
+.b1-child.is-tiny i {
+  width: 100%;
+  border-left: 0;
+  border-right: 0;
+}
+
+.b1-child.is-tiny b {
+  bottom: 33px;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  width: 52px;
+  max-width: 52px;
 }
 
 .b1-axis {
@@ -1872,14 +1862,6 @@ button {
   .b1-segment > b,
   .b1-child b {
     font-size: 0.52rem;
-  }
-
-  .b1-expanded-head {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .b1-expanded-head b {
-    grid-column: 1 / -1;
   }
 
   .b1-legend-row {

@@ -611,7 +611,7 @@
     var groups = familyGroups(model);
     var active = activeFamily(model, selectedRevealGroup);
     var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
-    return renderPanel('B1', 'Desagrega en el mismo tramo', 'toque una familia: se abre ahi mismo, sin texturas distintas', [
+    return renderPanel('B1', 'Desagrega en el mismo tramo', 'el tramo tocado se reemplaza por sus componentes dentro del mismo rectangulo', [
       '<div class="b1-focus">',
       '<div class="b1-bar-wrap" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
       '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
@@ -647,19 +647,18 @@
   function renderB1ExpandedSegment(group, model, index) {
     var width = pct(group.amount, model.scale);
     return [
-      '<button class="b1-segment is-expanded is-' + escapeHtml(group.group) + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
-      '<span class="b1-expanded-head"><i>' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i><span>' + escapeHtml(group.label) + '</span><b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b></span>',
-      '<span class="b1-subbar">',
+      '<button class="b1-segment is-expanded is-' + escapeHtml(group.group) + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" aria-label="' + escapeHtml(group.label + ' abierto ' + pctLabel(group.amount, model.salary)) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
       group.children.map(function (item, childIndex) {
         var childWidth = pct(item.amount, group.amount);
+        var tightClass = childWidth < 14 ? ' is-tight' : '';
+        var tinyClass = childWidth < 8 ? ' is-tiny' : '';
         return [
-          '<em class="b1-child is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': item.color }) + '">',
+          '<em class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
           '<i>' + escapeHtml(String(childIndex + 1)) + '</i>',
           '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
           '</em>'
         ].join('');
       }).join(''),
-      '</span>',
       '</button>'
     ].join('');
   }
@@ -671,7 +670,7 @@
       group.children.map(function (item, index) {
         return [
           '<div class="b1-legend-row">',
-          '<i style="' + styleVars({ '--c': item.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
+          '<i style="' + styleVars({ '--c': group.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
           '<span><b>' + escapeHtml(item.label) + '</b><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
           '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
           currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>',

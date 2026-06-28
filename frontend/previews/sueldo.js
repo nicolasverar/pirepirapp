@@ -618,7 +618,7 @@
       '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
       '<span class="b1-salary-line" aria-hidden="true">100%</span>',
       groups.map(function (group, index) {
-        return active && group.group === active.group ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
+        return active && group.group === active.group && canB1DrillGroup(group) ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
       }).join(''),
       '</div>',
       '<div class="b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
@@ -630,10 +630,20 @@
   function renderB1MacroSegment(group, model, index) {
     var width = pct(group.amount, model.scale);
     var tightClass = width < 10 ? ' is-tight' : '';
+    var staticClass = canB1DrillGroup(group) ? '' : ' is-static';
+    var label = group.label + ' ' + pctLabel(group.amount, model.salary);
+    if (!canB1DrillGroup(group)) {
+      return [
+        '<div class="b1-segment is-' + escapeHtml(group.group) + staticClass + tightClass + '" role="img" aria-label="' + escapeHtml(label) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+        renderB1InsidePct(group, model),
+        renderB1Leader(group, model, index, false, group.group),
+        '</div>'
+      ].join('');
+    }
     return [
       '<button class="b1-segment is-' + escapeHtml(group.group) + tightClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
       renderB1InsidePct(group, model),
-      renderB1Leader(group, model, index, false),
+      renderB1Leader(group, model, index, false, group.group),
       '</button>'
     ].join('');
   }
@@ -651,7 +661,7 @@
         return [
           '<button class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" type="button"' + drillAttr + ' title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
           renderB1InsidePct(item, model),
-          renderB1Leader(item, model, childIndex, true),
+          renderB1Leader(item, model, childIndex, true, group.group),
           '</button>'
         ].join('');
       }).join(''),
@@ -709,12 +719,64 @@
     return '<span class="b1-inside-pct">' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>';
   }
 
-  function renderB1Leader(item, model, index, nested) {
+  function canB1DrillGroup(group) {
+    return group && group.group !== 'available';
+  }
+
+  function b1LeaderPlacement(group, index, nested) {
     var side = index % 2 ? 'bottom' : 'top';
     var direction = index % 4 < 2 ? 'right' : 'left';
+    var offset = 38;
+    var diag = 58;
+    var shift = 42;
+    if (nested && group === 'fixed') {
+      side = 'top';
+      direction = 'right';
+    } else if (nested && group === 'saving') {
+      side = 'bottom';
+      direction = 'right';
+    } else if (nested && group === 'excess') {
+      side = 'top';
+      direction = 'left';
+    } else if (!nested && group === 'fixed') {
+      side = 'top';
+      direction = 'right';
+    } else if (!nested && group === 'saving') {
+      side = 'bottom';
+      direction = 'right';
+    } else if (!nested && group === 'available') {
+      side = 'top';
+      direction = 'left';
+    } else if (!nested && group === 'excess') {
+      side = 'bottom';
+      direction = 'left';
+    }
+    if (nested) {
+      offset = 34 + (Math.min(index, 4) * 22);
+      diag = Math.max(58, Math.round((offset - 6) / 0.616));
+      shift = diag + 54;
+    }
+    return {
+      side: side,
+      direction: direction,
+      cascade: nested ? Math.min(index, 4) : 0,
+      style: styleVars({
+        '--leader-offset': offset + 'px',
+        '--leader-arm': '36px',
+        '--leader-arm-neg': '-36px',
+        '--leader-diag': diag + 'px',
+        '--leader-before-x': '-' + (36 + diag - 1) + 'px',
+        '--leader-circle-x': '-' + (36 + diag + 11) + 'px',
+        '--leader-shift': shift + 'px'
+      })
+    };
+  }
+
+  function renderB1Leader(item, model, index, nested, ownerGroup) {
+    var placement = b1LeaderPlacement(ownerGroup || item.group, index, nested);
     var amountLabel = currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>';
     return [
-      '<span class="b1-leader is-' + side + ' is-' + direction + (nested ? ' is-nested' : '') + '">',
+      '<span class="b1-leader is-' + escapeHtml(placement.side) + ' is-' + escapeHtml(placement.direction) + (nested ? ' is-nested is-cascade-' + escapeHtml(String(placement.cascade)) : '') + '" style="' + placement.style + '">',
       '<i aria-hidden="true"></i>',
       '<strong>' + escapeHtml(item.label) + '</strong>',
       '<span>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>',
@@ -1084,6 +1146,11 @@
         return item.group;
       }).indexOf(validGroup);
     } else {
+      if (!canB1DrillGroup({ group: validGroup })) {
+        selectedRevealGroup = '';
+        selectedSavingNode = 'summary';
+        return;
+      }
       if (selectedRevealGroup === validGroup) {
         selectedRevealGroup = '';
         selectedSavingNode = 'summary';

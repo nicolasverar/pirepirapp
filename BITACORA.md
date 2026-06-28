@@ -1111,3 +1111,22 @@
 - Render smoke con DOM minimo en Node: OK, `fixedClosed=true`, `fixedOpen=true`, `savingDetail=true`, `savingCollapsed=true`, `outsideCollapsed=true`, `insidePct=true`, `leaderCircle=true`.
 - Render smoke escenario `EXCESO`: OK, `hasMutedRed=true`, `closedHasExcess=true`, `excessOpen=true`, `excessClosed=true`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 cascada superior e inferior
+
+### Objetivo
+- Ajustar la maqueta B1 al esquema visual de viga central: gastos fijos se desagregan hacia arriba, ahorros/metas hacia abajo, y `Disponible` queda como tramo estable sin apertura.
+
+### Cambios
+- Los callouts de hijos de `Gastos fijos` ahora se fuerzan hacia arriba y en cascada.
+- Los callouts de `Ahorros/metas`, incluyendo el segundo nivel de metas concretas, se fuerzan hacia abajo y en cascada.
+- Las diagonales de los callouts se alargan segun el nivel para que el punto, la diagonal y el tramo horizontal se mantengan conectados.
+- `Disponible` deja de renderizarse como boton en B1 y queda como porcion estatica con porcentaje interno.
+- Se actualizo el texto del laboratorio para explicar la cascada superior/inferior.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `fixed_initial_top_cascade`, `available_static`, `saving_summary_bottom_cascade`, `saving_detail_bottom_cascade`, `available_does_not_open`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

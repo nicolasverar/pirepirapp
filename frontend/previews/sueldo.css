@@ -1393,7 +1393,7 @@ button {
   position: relative;
   display: flex;
   min-height: 122px;
-  margin: 88px 0 82px;
+  margin: 132px 0 128px;
   overflow: visible;
   background: #071007;
   border: 2px solid var(--line);
@@ -1433,6 +1433,14 @@ button {
 
 .b1-segment:last-child {
   border-right: 0;
+}
+
+.b1-segment.is-static {
+  cursor: default;
+}
+
+.b1-segment.is-static .b1-leader {
+  opacity: 0.92;
 }
 
 .b1-segment:focus-visible,
@@ -1499,6 +1507,13 @@ button {
 }
 
 .b1-leader {
+  --leader-offset: 38px;
+  --leader-arm: 36px;
+  --leader-arm-neg: -36px;
+  --leader-diag: 58px;
+  --leader-shift: 42px;
+  --leader-before-x: -93px;
+  --leader-circle-x: -105px;
   position: absolute;
   left: 50%;
   z-index: 8;
@@ -1522,7 +1537,7 @@ button {
 }
 
 .b1-leader::before {
-  width: 58px;
+  width: var(--leader-diag);
   height: 2px;
 }
 
@@ -1539,12 +1554,12 @@ button {
 }
 
 .b1-leader::after {
-  width: 36px;
+  width: var(--leader-arm);
   height: 2px;
 }
 
 .b1-leader.is-top {
-  bottom: calc(100% + 38px);
+  bottom: calc(100% + var(--leader-offset));
 }
 
 .b1-leader.is-top::before {
@@ -1556,11 +1571,11 @@ button {
 }
 
 .b1-leader.is-top i {
-  top: calc(100% + 38px);
+  top: calc(100% + var(--leader-offset));
 }
 
 .b1-leader.is-bottom {
-  top: calc(100% + 38px);
+  top: calc(100% + var(--leader-offset));
 }
 
 .b1-leader.is-bottom::before {
@@ -1572,55 +1587,59 @@ button {
 }
 
 .b1-leader.is-bottom i {
-  bottom: calc(100% + 38px);
+  bottom: calc(100% + var(--leader-offset));
 }
 
 .b1-leader.is-right {
-  transform: translateX(42px);
+  transform: translateX(var(--leader-shift));
 }
 
 .b1-leader.is-right::after {
-  left: -36px;
+  left: var(--leader-arm-neg);
 }
 
 .b1-leader.is-right.is-top::before {
-  left: -93px;
+  left: var(--leader-before-x);
   transform: rotate(-38deg);
   transform-origin: 100% 50%;
 }
 
 .b1-leader.is-right.is-bottom::before {
-  left: -93px;
+  left: var(--leader-before-x);
   transform: rotate(38deg);
   transform-origin: 100% 50%;
 }
 
 .b1-leader.is-right i {
-  left: -105px;
+  left: var(--leader-circle-x);
 }
 
 .b1-leader.is-left {
-  transform: translateX(calc(-100% - 42px));
+  transform: translateX(calc(-100% - var(--leader-shift)));
 }
 
 .b1-leader.is-left::after {
-  right: -36px;
+  right: var(--leader-arm-neg);
 }
 
 .b1-leader.is-left.is-top::before {
-  right: -93px;
+  right: var(--leader-before-x);
   transform: rotate(38deg);
   transform-origin: 0 50%;
 }
 
 .b1-leader.is-left.is-bottom::before {
-  right: -93px;
+  right: var(--leader-before-x);
   transform: rotate(-38deg);
   transform-origin: 0 50%;
 }
 
 .b1-leader.is-left i {
-  right: -105px;
+  right: var(--leader-circle-x);
+}
+
+.b1-leader.is-nested {
+  z-index: 11;
 }
 
 .b1-leader strong,
@@ -1820,7 +1839,7 @@ button {
 
   .b1-bar {
     min-height: 116px;
-    margin: 96px 0 90px;
+    margin: 142px 0 136px;
   }
 
   .b1-leader {
@@ -1846,36 +1865,36 @@ button {
   }
 
   .b1-leader.is-right {
-    transform: translateX(34px);
+    transform: translateX(var(--leader-shift));
   }
 
   .b1-leader.is-left {
-    transform: translateX(calc(-100% - 34px));
+    transform: translateX(calc(-100% - var(--leader-shift)));
   }
 
   .b1-leader.is-right::after {
-    left: -30px;
+    left: var(--leader-arm-neg);
   }
 
   .b1-leader.is-left::after {
-    right: -30px;
+    right: var(--leader-arm-neg);
   }
 
   .b1-leader.is-right.is-top::before,
   .b1-leader.is-right.is-bottom::before {
-    left: -78px;
+    left: var(--leader-before-x);
   }
 
   .b1-leader.is-left.is-top::before,
   .b1-leader.is-left.is-bottom::before {
-    right: -78px;
+    right: var(--leader-before-x);
   }
 
   .b1-leader.is-right i {
-    left: -89px;
+    left: var(--leader-circle-x);
   }
 
   .b1-leader.is-left i {
-    right: -89px;
+    right: var(--leader-circle-x);
   }
 }

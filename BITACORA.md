@@ -1387,3 +1387,26 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `salaryB1Layout`, `b1-stage-min`, `salary-b1-available-mark`, `v3.25` y `finanzas-lcd-v133` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Sincronizacion de base de prueba v3.26
+
+### Objetivo
+- Agregar un boton temporal `SINCRONIZAR` para cargar en fase de prueba la base personal desde el repo, sin importar ningun movimiento, ingreso ni egreso.
+
+### Cambios
+- Se genero `frontend/data/pirepirapp-test-seed.json` desde `FinanzasPersonales-20260627T194850Z-3-001.zip`.
+- El seed incluye sueldo/configuracion, 5 gastos fijos, 1 ahorro futuro, 4 metas, 24 cosas que quiero y 25 fotos locales.
+- El seed deja `movimientos: []` y la app vuelve a forzar ese arreglo vacio al sincronizar.
+- Se agrego el boton `SINCRONIZAR` en Configuracion junto a `Actualizar app`.
+- `syncTestSeed()` descarga el seed, fuerza modo local, limpia cache de fotos y guarda el estado en IndexedDB/localStorage.
+- Se actualizo cache/version de `v3.25` a `v3.26` y `finanzas-lcd-v134`.
+- Nota operativa: este seed contiene datos personales y debe eliminarse del repo al cerrar la fase de prueba.
+
+### Verificacion
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- Validacion seed JSON: OK, 5 fijos, 1 ahorro, 4 metas, 24 wishlist, 25 fotos, 0 movimientos.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

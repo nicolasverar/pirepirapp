@@ -57,7 +57,7 @@
     var actionKeyLabel = window.FinanzasUtils.qs('#action-key .action-key-label');
     var keyZone = window.FinanzasUtils.qs('.key-zone');
     var enabled = current === 'resumen' || current === 'metas' || current === 'gastos' || current === 'configuracion';
-    var label = current === 'gastos' ? 'FILTRAR' : (current === 'configuracion' ? 'ACTUALIZAR' : 'AGREGAR');
+    var label = actionLabel(current);
     if (actionKey) {
       actionKey.hidden = !enabled;
       actionKey.disabled = !enabled;
@@ -70,6 +70,19 @@
     if (keyZone) {
       keyZone.classList.toggle('is-action-hidden', !enabled);
     }
+  }
+
+  function actionLabel(current) {
+    if (current === 'gastos') {
+      return 'FILTRAR MOVIMIENTOS';
+    }
+    if (current === 'metas') {
+      return 'AGREGAR OBJETIVO';
+    }
+    if (current === 'configuracion') {
+      return 'AGREGAR GASTO FIJO';
+    }
+    return 'AGREGAR MOVIMIENTO';
   }
 
   window.FinanzasRouter = {

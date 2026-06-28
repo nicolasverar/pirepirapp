@@ -256,24 +256,24 @@
   }
 
   function openActionMenuForView(view) {
+    if (view === 'configuracion') {
+      openFixedExpenseForm();
+      return;
+    }
     if (view !== 'resumen' && view !== 'metas' && view !== 'gastos') {
       closeModal();
       return;
     }
     if (view === 'gastos') {
-      openModal('FILTRAR', filterMenuContent(), bindMovementFilterMenu, 'action-menu-modal filter-action-modal');
+      openModal('FILTRAR MOVIMIENTOS', filterMenuContent(), bindMovementFilterMenu, 'action-menu-modal filter-action-modal');
       return;
     }
     if (view === 'metas') {
-      openModal('AGREGAR', actionMenuContent('METAS', '3 OPC.', [
-        { action: 'future', title: 'Ahorro futuro', detail: 'Mensual' },
-        { action: 'goal', title: 'Meta especifica', detail: 'Objetivo' },
-        { action: 'wish', title: 'Cosa que quiero', detail: 'Wishlist' }
-      ]), bindActionMenu, 'action-menu-modal');
+      openGoalForm();
       return;
     }
 
-    openModal('AGREGAR', actionMenuContent('RESUMEN', '2 OPC.', [
+    openModal('AGREGAR MOVIMIENTO', actionMenuContent('RESUMEN', '2 OPC.', [
       { action: 'expense', title: 'Gasto corriente', detail: 'Salida' },
       { action: 'income', title: 'Registrar ingreso', detail: 'Entrada' }
     ]), bindActionMenu, 'action-menu-modal');
@@ -693,6 +693,205 @@
       return utils.isFixedExpenseMovement(item);
     }
     return true;
+  }
+
+  function openFixedExpenseForm() {
+    var budget = fixedExpenseFormBudget();
+    var maxPercent = budget.salary ? roundFixedPercent((budget.maxAmount / budget.salary) * 100) : 0;
+    var html = [
+      '<form class="lcd-form fixed-expense-form" id="fixed-expense-form">',
+      '<p class="form-error" hidden></p>',
+      fixedExpenseBudgetPanel(budget),
+      field('Nombre del gasto', 'nombre', 'text', '', 'required maxlength="80" autocomplete="off" data-fixed-form-name'),
+      field('Monto mensual', 'monto', 'number', '', 'required min="1" step="1" inputmode="numeric" data-fixed-form-amount'),
+      '<label class="field fixed-percent-control"><span>Porcentaje del sueldo</span>',
+      '<span class="fixed-slider-shell">',
+      '<input data-fixed-form-percent name="porcentajeSueldo" type="range" min="0" max="' + utils.escapeHtml(maxPercent) + '" step="0.5" value="0">',
+      '<b data-fixed-form-percent-display>0%</b>',
+      '</span>',
+      '<small class="fixed-limit-message" data-fixed-form-limit></small>',
+      '</label>',
+      formActions('Guardar'),
+      '</form>'
+    ].join('');
+
+    openModal('GASTO FIJO', html, bindFixedExpenseForm, 'ticket-form-modal fixed-expense-form-modal');
+  }
+
+  function fixedExpenseBudgetPanel(budget) {
+    var warningClass = budget.salary ? '' : ' is-warning';
+    return [
+      '<div class="fixed-form-budget' + warningClass + '">',
+      '<span><small>Sueldo</small><strong>' + utils.escapeHtml(utils.formatMoney(budget.salary)) + '</strong></span>',
+      '<span><small>Ya fijo</small><strong>' + utils.escapeHtml(utils.formatMoney(budget.usedFixed)) + '</strong></span>',
+      '<span><small>Ahorros</small><strong>' + utils.escapeHtml(utils.formatMoney(budget.plannedSavings)) + '</strong></span>',
+      '<span><small>Disponible</small><strong>' + utils.escapeHtml(utils.formatMoney(budget.maxAmount)) + '</strong></span>',
+      '</div>'
+    ].join('');
+  }
+
+  function bindFixedExpenseForm(root) {
+    var form = utils.qs('#fixed-expense-form', root);
+    var amountInput = utils.qs('[data-fixed-form-amount]', root);
+    var percentInput = utils.qs('[data-fixed-form-percent]', root);
+    var display = utils.qs('[data-fixed-form-percent-display]', root);
+    var message = utils.qs('[data-fixed-form-limit]', root);
+
+    function currentBudget() {
+      var budget = fixedExpenseFormBudget();
+      var maxPercent = budget.salary ? roundFixedPercent((budget.maxAmount / budget.salary) * 100) : 0;
+      if (percentInput) {
+        percentInput.max = String(maxPercent);
+      }
+      return budget;
+    }
+
+    function setLimitMessage(text) {
+      if (message) {
+        message.textContent = text || '';
+        message.hidden = !text;
+      }
+    }
+
+    function syncPercentDisplay() {
+      if (display) {
+        display.textContent = formatFixedPercent(parseFixedPercent((percentInput || {}).value)) + '%';
+      }
+    }
+
+    function syncFromAmount() {
+      var budget = currentBudget();
+      var amount = utils.normalizeAmount((amountInput || {}).value);
+      if (budget.maxAmount >= 0 && amount > budget.maxAmount) {
+        amount = budget.maxAmount;
+        amountInput.value = amount ? String(amount) : '';
+        setLimitMessage('Limite disponible: ' + utils.formatMoney(budget.maxAmount));
+      } else {
+        setLimitMessage('');
+      }
+      if (percentInput) {
+        percentInput.value = formatFixedPercent(budget.salary ? (amount / budget.salary) * 100 : 0);
+      }
+      syncPercentDisplay();
+    }
+
+    function syncFromPercent() {
+      var budget = currentBudget();
+      var maxPercent = budget.salary ? roundFixedPercent((budget.maxAmount / budget.salary) * 100) : 0;
+      var percent = parseFixedPercent((percentInput || {}).value);
+      if (percent > maxPercent) {
+        percent = maxPercent;
+        setLimitMessage('Limite disponible: ' + utils.formatMoney(budget.maxAmount));
+      } else {
+        setLimitMessage('');
+      }
+      if (percentInput) {
+        percentInput.value = formatFixedPercent(percent);
+      }
+      if (amountInput) {
+        amountInput.value = budget.salary && percent ? String(Math.round((percent * budget.salary) / 100)) : '';
+      }
+      syncPercentDisplay();
+    }
+
+    if (amountInput) {
+      amountInput.addEventListener('input', syncFromAmount);
+    }
+    if (percentInput) {
+      percentInput.addEventListener('input', syncFromPercent);
+    }
+    currentBudget();
+    syncPercentDisplay();
+
+    bindForm(root, '#fixed-expense-form', function () {
+      var budget = fixedExpenseFormBudget();
+      var payload = utils.formDataToObject(form);
+      var name = String(payload.nombre || '').trim();
+      var amount = utils.normalizeAmount(payload.monto);
+      var percent = budget.salary ? roundFixedPercent((amount / budget.salary) * 100) : parseFixedPercent(payload.porcentajeSueldo);
+      if (!budget.salary) {
+        throw new Error('Carga el sueldo mensual antes de agregar fijos.');
+      }
+      if (!name) {
+        throw new Error('Escribi el nombre del gasto fijo.');
+      }
+      if (!amount) {
+        throw new Error('Carga el monto mensual.');
+      }
+      if (amount > budget.maxAmount) {
+        throw new Error('Ese gasto supera el disponible para fijos: ' + utils.formatMoney(budget.maxAmount) + '.');
+      }
+      return window.FinanzasApp.mutate('updateConfig', Object.assign({}, budget.config, {
+        sueldoMensual: budget.salary,
+        gastosFijos: budget.items.concat([{
+          categoria: name,
+          nombre: name,
+          monto: amount,
+          porcentajeSueldo: percent
+        }])
+      })).then(closeModal);
+    });
+  }
+
+  function fixedExpenseFormBudget() {
+    var data = window.FinanzasState.getState().data || {};
+    var config = data.config || {};
+    var salary = utils.normalizeAmount(config.sueldoMensual || 0);
+    var items = utils.normalizeFixedExpenses(config.gastosFijos || [], salary);
+    var usedFixed = sumFixedExpenses(items);
+    var plannedSavings = plannedSavingsForFixedExpenseForm(data);
+    return {
+      config: config,
+      salary: salary,
+      items: items,
+      usedFixed: usedFixed,
+      plannedSavings: plannedSavings,
+      maxAmount: Math.max(0, salary - usedFixed - plannedSavings)
+    };
+  }
+
+  function plannedSavingsForFixedExpenseForm(data) {
+    var source = data || {};
+    var summaryTotal = utils.normalizeAmount((source.resumen || {}).ahorrosPlanificados || 0);
+    if (summaryTotal) {
+      return summaryTotal;
+    }
+    var total = 0;
+    activeFinanceItems(source.ahorrosFuturo).forEach(function (item) {
+      total += utils.normalizeAmount(item.montoMensual);
+    });
+    activeFinanceItems(source.metas).forEach(function (item) {
+      total += utils.normalizeAmount(item.montoMensual);
+    });
+    return total;
+  }
+
+  function activeFinanceItems(items) {
+    return (Array.isArray(items) ? items : []).filter(function (item) {
+      return !item.estado || String(item.estado).toLowerCase() === 'activo';
+    });
+  }
+
+  function sumFixedExpenses(items) {
+    return (items || []).reduce(function (sum, item) {
+      return sum + utils.fixedExpenseAmount(item);
+    }, 0);
+  }
+
+  function parseFixedPercent(value) {
+    var number = Number(String(value === undefined || value === null || value === '' ? 0 : value).replace(',', '.'));
+    if (!isFinite(number)) {
+      return 0;
+    }
+    return Math.max(0, Math.min(100, Math.round(number * 100) / 100));
+  }
+
+  function roundFixedPercent(value) {
+    return parseFixedPercent(value);
+  }
+
+  function formatFixedPercent(value) {
+    return String(parseFixedPercent(value));
   }
 
   function openMovementForm(defaultType, existing, defaults) {
@@ -1409,6 +1608,7 @@
     actionMenu: actionMenu,
     syncActionMenuForView: syncActionMenuForView,
     openMovementForm: openMovementForm,
+    openFixedExpenseForm: openFixedExpenseForm,
     openFixedExpensePicker: openFixedExpensePicker,
     openFutureSavingForm: openFutureSavingForm,
     openGoalForm: openGoalForm,

@@ -1191,3 +1191,28 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `summary_renders_b1`, `b1_opens_fixed`, `b1_opens_saving`, `b1_has_available_static`, `b1_has_real_labels`, `partition_card_no_pie_stage`, `version_bumped`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Boton contextual y alta de gastos fijos v3.17
+
+### Objetivo
+- Reordenar la botonera inferior para que cada seccion tenga una accion contextual clara y mover el alta de gastos fijos de Configuracion a un formulario emergente.
+
+### Cambios
+- La botonera inferior ahora muestra `AGREGAR MOVIMIENTO`, `FILTRAR MOVIMIENTOS`, `AGREGAR OBJETIVO` o `AGREGAR GASTO FIJO` segun la seccion activa.
+- En Configuracion, el boton inferior abre el formulario emergente `GASTO FIJO`; ya no ejecuta la limpieza/actualizacion de cache.
+- El formulario de gasto fijo permite nombre, monto mensual y porcentaje del sueldo; monto y porcentaje se sincronizan y respetan el limite disponible considerando fijos existentes mas ahorros/metas planificados.
+- La lista de gastos fijos deja de ser un editor inline y pasa a mostrarse debajo de la tarjeta de sueldo como tarjetas con nombre, porcentaje y monto, mas accion de eliminar.
+- El boton interno que antes decia `Guardar montos` ahora dice `Actualizar app`; guarda el sueldo/configuracion y luego ejecuta la limpieza/recarga de cache de la app.
+- Se actualizo cache/version de `v3.16` a `v3.17` y `finanzas-lcd-v125`.
+
+### Verificacion
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\router.js`: OK.
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda de etiquetas/version en `frontend` y assets Android: OK, `v3.17`, `finanzas-lcd-v125`, tarjetas de gasto fijo y nuevas etiquetas contextuales presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

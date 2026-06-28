@@ -30,7 +30,7 @@
     actionKey.addEventListener('click', function () {
       var view = window.FinanzasState.getState().currentView;
       if (view === 'configuracion') {
-        updateApplicationCache();
+        window.FinanzasForms.openFixedExpenseForm();
         return;
       }
       if (view !== 'resumen' && view !== 'metas' && view !== 'gastos') {

@@ -309,8 +309,13 @@
   }
 
   .fixed-expense-fields,
+  .fixed-expense-card,
   .archive-item {
     grid-template-columns: 1fr;
+  }
+
+  .fixed-expense-card .tiny-key {
+    justify-self: stretch;
   }
 
   .archive-item .tiny-key {

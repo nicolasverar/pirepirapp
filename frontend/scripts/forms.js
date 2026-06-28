@@ -16,7 +16,6 @@
       '<section class="system-modal' + utils.escapeHtml(modalClass) + '" role="dialog" aria-modal="true" aria-label="' + utils.escapeHtml(title) + '">',
       '<div class="window-title">',
       '<span>' + utils.escapeHtml(title) + '</span>',
-      '<button class="window-close" type="button" data-close-modal>CERRAR</button>',
       '</div>',
       '<div class="modal-body">' + content + '</div>',
       '</section>'
@@ -42,6 +41,19 @@
     root.hidden = true;
     root.className = 'modal-root';
     root.innerHTML = '';
+  }
+
+  function isFixedExpenseFormOpen() {
+    var root = utils.qs('#modal-root');
+    return Boolean(root && !root.hidden && utils.qs('.fixed-expense-form-modal', root));
+  }
+
+  function toggleFixedExpenseForm() {
+    if (isFixedExpenseFormOpen()) {
+      closeModal();
+      return;
+    }
+    openFixedExpenseForm();
   }
 
   function positionActionMenu(root) {
@@ -1678,6 +1690,7 @@
     actionMenu: actionMenu,
     syncActionMenuForView: syncActionMenuForView,
     openMovementForm: openMovementForm,
+    toggleFixedExpenseForm: toggleFixedExpenseForm,
     openFixedExpenseForm: openFixedExpenseForm,
     openFixedExpensePicker: openFixedExpensePicker,
     openFutureSavingForm: openFutureSavingForm,

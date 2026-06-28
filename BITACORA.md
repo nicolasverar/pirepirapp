@@ -1303,3 +1303,25 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `Valor acumulado`, `data-future-accumulated-amount` y `future-accumulated-amount` sin resultados; `v3.21` y `finanzas-lcd-v129` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Toggle de formulario fijo y cierre simple v3.22
+
+### Objetivo
+- Hacer que el boton `AGREGAR GASTO FIJO` cierre el formulario si ya estaba abierto.
+- Eliminar el boton superior `CERRAR`, porque `Cancelar` ya cumple esa funcion junto a `Guardar`.
+
+### Cambios
+- Se agrego `toggleFixedExpenseForm()` para alternar apertura/cierre del formulario `GASTO FIJO`.
+- El boton contextual de Configuracion ahora usa ese toggle.
+- `openModal()` dejo de renderizar el boton superior `CERRAR`; se conserva `Cancelar` dentro de los formularios y el backdrop para cerrar.
+- Se actualizo cache/version de `v3.21` a `v3.22` y `finanzas-lcd-v130`.
+
+### Verificacion
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `CERRAR` sin resultados; `toggleFixedExpenseForm`, `v3.22` y `finanzas-lcd-v130` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

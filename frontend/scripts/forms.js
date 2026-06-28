@@ -1496,12 +1496,11 @@
       '</form>'
     ].join('');
     openModal('AHORRO FUTURO', html, function (root) {
-      bindFutureAccumulatedControl(root);
       bindForm(root, '#future-form', function (form) {
         var payload = utils.formDataToObject(form);
         var showAccumulated = Boolean(utils.qs('[name="mostrarAcumulado"]', form).checked);
         payload.montoMensual = utils.normalizeAmount(payload.montoMensual);
-        payload.montoAcumulado = utils.normalizeAmount(payload.montoAcumulado);
+        payload.montoAcumulado = utils.normalizeAmount((prefs || {}).montoAcumulado || item.montoAcumulado || 0);
         payload.mostrarAcumulado = showAccumulated;
         if (existing) {
           payload.id = existing.id;
@@ -1558,7 +1557,6 @@
 
   function futureAccumulatedControl(prefs) {
     var show = Boolean((prefs || {}).mostrarAcumulado);
-    var amount = utils.normalizeAmount((prefs || {}).montoAcumulado || 0);
     return [
       '<div class="future-accumulated-control" data-future-accumulated-control>',
       '<label class="future-accumulated-toggle">',
@@ -1566,25 +1564,8 @@
       '<span class="future-accumulated-toggle-copy"><strong>Monto acumulado</strong><small>Mostrar en tarjeta</small></span>',
       '<b class="future-accumulated-switch" aria-hidden="true"><span>NO</span><span>SI</span></b>',
       '</label>',
-      '<label class="field future-accumulated-amount" data-future-accumulated-amount' + (show ? '' : ' hidden') + '>',
-      '<span>Valor acumulado</span>',
-      '<input name="montoAcumulado" type="number" min="0" step="1" inputmode="numeric" value="' + utils.escapeHtml(amount || 0) + '">',
-      '</label>',
       '</div>'
     ].join('');
-  }
-
-  function bindFutureAccumulatedControl(root) {
-    var toggle = utils.qs('[data-future-accumulated-toggle]', root);
-    var amountField = utils.qs('[data-future-accumulated-amount]', root);
-    if (!toggle || !amountField) {
-      return;
-    }
-    function sync() {
-      amountField.hidden = !toggle.checked;
-    }
-    toggle.addEventListener('change', sync);
-    sync();
   }
 
   function saveFuturePrefs(id, payload) {

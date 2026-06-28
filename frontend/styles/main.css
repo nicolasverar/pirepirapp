@@ -2871,10 +2871,6 @@ dd {
   outline-offset: 2px;
 }
 
-.future-saving-modal .future-accumulated-amount {
-  margin-top: -2px;
-}
-
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

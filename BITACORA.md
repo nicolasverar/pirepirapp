@@ -1282,3 +1282,24 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `v3.20`, `finanzas-lcd-v128`, `js-edit-fixed-expense-card`, `settings-update-actions` y `fixed-expense-total-available` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Ahorro futuro sin valor acumulado v3.21
+
+### Objetivo
+- Simplificar el formulario de `Ahorro futuro` eliminando el campo separado `Valor acumulado` y dejando solo el control `Monto acumulado` con estado `NO/SI`.
+
+### Cambios
+- Se elimino el input visible `Valor acumulado` del formulario `AHORRO FUTURO`.
+- El control `Monto acumulado` queda como selector `NO/SI` para mostrar u ocultar el acumulado en la tarjeta.
+- Al guardar, se preserva internamente el acumulado existente; ocultarlo ya no borra el monto acumulado.
+- Se elimino CSS muerto asociado a `future-accumulated-amount`.
+- Se actualizo cache/version de `v3.20` a `v3.21` y `finanzas-lcd-v129`.
+
+### Verificacion
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `Valor acumulado`, `data-future-accumulated-amount` y `future-accumulated-amount` sin resultados; `v3.21` y `finanzas-lcd-v129` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

@@ -4,7 +4,7 @@
   var utils = window.FinanzasUtils;
   var FUTURE_PREFS_KEY = 'finanzasFutureSavingsPrefs';
   var MOTIVE_SIMILARITY_THRESHOLD = 0.8;
-  var salaryPartitionOpenGroups = { fixed: true, saving: true };
+  var salaryPartitionOpenGroups = {};
   var salaryPartitionSavingNode = 'summary';
 
   function render() {
@@ -1029,7 +1029,7 @@
       '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span></div>',
       salary ? '<div class="partition-summary partition-summary-top"><span>Sueldo distribuido</span><b>' + utils.escapeHtml(utils.formatMoney(salary)) + '</b></div>' : '',
       model.excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(model.excess)) + '</p>' : '',
-      salary ? renderSalaryPartitionB1(model) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
+      salary ? renderSalaryPartitionPie2D(model) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
       '</article>'
     ].join('');
@@ -1134,21 +1134,21 @@
         label: 'Gastos fijos',
         group: 'fixed',
         amount: model.fixedTotal,
-        color: '#87985d',
+        color: '#7f8f5b',
         children: model.fixedItems
       },
       {
         label: 'Ahorros/metas',
         group: 'saving',
         amount: model.savingsTotal,
-        color: '#b7c67f',
+        color: '#b7c982',
         children: model.futureItems.concat(model.goalItems)
       },
       {
         label: 'Disponible',
         group: 'available',
         amount: model.available,
-        color: '#68794a',
+        color: '#071007',
         children: []
       },
       {
@@ -1159,6 +1159,289 @@
         children: [{ label: 'Exceso', group: 'excess', amount: model.excess }]
       }
     ].filter(partitionNonZero);
+  }
+
+  function renderSalaryPartitionPie2D(model) {
+    var groups = salaryPartitionB1Groups(model);
+    return [
+      '<div class="salary-pie2d-stage" data-salary-partition-pie>',
+      '<div class="salary-pie2d-chart">',
+      renderSalaryPie2dSvg(groups, model),
+      '</div>',
+      renderSalaryPie2dBottom(model, groups),
+      '</div>'
+    ].join('');
+  }
+
+  function renderSalaryPie2dSvg(groups, model) {
+    var cx = 160;
+    var cy = 130;
+    var radius = 108;
+    var start = -90;
+    var callouts = [];
+    var pieces = groups.map(function (group) {
+      var sweep = (group.amount / model.scale) * 360;
+      var end = start + sweep;
+      var html = isSalaryB1GroupOpen(group.group) && canSalaryB1DrillGroup(group)
+        ? renderSalaryPie2dSubSlices(group, model, cx, cy, radius, start, end, callouts)
+        : renderSalaryPie2dSlice(group, model, cx, cy, radius, start, end, false, null, callouts);
+      start = end;
+      return html;
+    }).join('');
+    return [
+      '<svg class="salary-pie2d-svg" viewBox="-62 0 444 260" role="img" aria-label="Torta 2D interactiva de particion del sueldo">',
+      '<circle class="salary-pie2d-shadow" cx="160" cy="134" r="110"></circle>',
+      pieces,
+      '<circle class="salary-pie2d-rim" cx="160" cy="130" r="' + radius + '"></circle>',
+      renderSalaryPie2dCallouts(callouts),
+      '<circle class="salary-pie2d-center" cx="160" cy="130" r="34"></circle>',
+      '</svg>'
+    ].join('');
+  }
+
+  function renderSalaryPie2dSubSlices(group, model, cx, cy, radius, startAngle, endAngle, callouts) {
+    var cursor = startAngle;
+    return salaryB1ChildrenForGroup(group, model).map(function (item, index) {
+      var sweep = group.amount ? ((item.amount / group.amount) * (endAngle - startAngle)) : 0;
+      var end = cursor + sweep;
+      var child = Object.assign({}, item, {
+        color: salaryPie2dColor(item.group || group.group, index)
+      });
+      var html = renderSalaryPie2dSlice(child, model, cx, cy, radius, cursor, end, true, group.group, callouts);
+      cursor = end;
+      return html;
+    }).join('');
+  }
+
+  function renderSalaryPie2dSlice(item, model, cx, cy, radius, startAngle, endAngle, nested, ownerGroup, callouts) {
+    var sweep = endAngle - startAngle;
+    var path = salaryPie2dPath(cx, cy, radius, startAngle, endAngle);
+    var mid = startAngle + (sweep / 2);
+    var labelPoint = salaryPie2dPolar(cx, cy, nested ? radius * 0.68 : radius * 0.62, mid);
+    var tightClass = sweep < 22 ? ' is-tight' : '';
+    var labelHtml = renderSalaryPie2dInsidePct(item, model, labelPoint, sweep, nested);
+    var action = salaryPie2dAttrs(item, ownerGroup);
+    addSalaryPie2dCallout(callouts, item, model, cx, cy, radius, mid, sweep, nested);
+    return [
+      '<g class="salary-pie2d-part' + (nested ? ' is-nested' : ' is-macro') + tightClass + ' is-' + utils.escapeHtml(item.group) + '" ' + action + '>',
+      '<path class="salary-pie2d-slice" d="' + path + '" style="' + cssVars({ '--c': item.color || salaryPie2dColor(item.group, 0) }) + '"></path>',
+      labelHtml,
+      '</g>'
+    ].join('');
+  }
+
+  function renderSalaryPie2dInsidePct(item, model, point, sweep, nested) {
+    if (nested && sweep < 9) {
+      return '';
+    }
+    return '<text class="salary-pie2d-label" x="' + salaryPie2dNum(point.x) + '" y="' + salaryPie2dNum(point.y) + '">' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</text>';
+  }
+
+  function salaryPie2dAttrs(item, ownerGroup) {
+    if (item.drillNode === 'metas') {
+      return 'data-salary-partition-saving-node="metas"';
+    }
+    if (item.drillNode === 'collapse') {
+      return 'data-salary-partition-saving-node="summary"';
+    }
+    if (ownerGroup === 'fixed') {
+      return 'data-salary-partition-child-group="fixed"';
+    }
+    if (ownerGroup === 'saving') {
+      return 'data-salary-partition-child-group="saving"';
+    }
+    if (item.group === 'excess') {
+      return '';
+    }
+    return 'data-salary-partition-group="' + utils.escapeHtml(item.group) + '"';
+  }
+
+  function addSalaryPie2dCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested) {
+    var selectedMacro = !nested && isSalaryB1GroupOpen(item.group);
+    var shouldShow = (nested && sweep >= 8) || (selectedMacro && sweep >= 8);
+    var anchor;
+    if (!shouldShow || !callouts) {
+      return;
+    }
+    anchor = salaryPie2dPolar(cx, cy, radius + 2, midAngle);
+    callouts.push({
+      side: anchor.x >= cx ? 'right' : 'left',
+      y: Math.max(20, Math.min(240, anchor.y)),
+      anchor: anchor,
+      group: item.group,
+      label: salaryPie2dCalloutText(item, model, nested)
+    });
+  }
+
+  function salaryPie2dCalloutText(item, model, nested) {
+    var label = salaryPie2dShortLabel(item.label, item.group);
+    if (!nested && item.group === 'fixed') {
+      label = 'FIJOS';
+    } else if (!nested && item.group === 'saving') {
+      label = 'AHORROS';
+    } else if (!nested && item.group === 'available') {
+      label = 'DISP.';
+    }
+    return label + ' ' + salaryPartitionPctLabel(item.amount, model.salary);
+  }
+
+  function renderSalaryPie2dCallouts(callouts) {
+    var rows = normalizeSalaryPie2dCallouts(callouts);
+    if (!rows.length) {
+      return '';
+    }
+    return [
+      '<g class="salary-pie2d-callouts">',
+      rows.map(function (row) {
+        var elbowX = row.side === 'right' ? 274 : 46;
+        var labelX = row.side === 'right' ? elbowX + 6 : elbowX - 6;
+        var anchor = row.side === 'right' ? 'start' : 'end';
+        return [
+          '<polyline class="salary-pie2d-callout-line is-' + utils.escapeHtml(row.group) + '" points="' + salaryPie2dNum(row.anchor.x) + ',' + salaryPie2dNum(row.anchor.y) + ' ' + salaryPie2dNum(elbowX) + ',' + salaryPie2dNum(row.y) + ' ' + salaryPie2dNum(labelX) + ',' + salaryPie2dNum(row.y) + '"></polyline>',
+          '<text class="salary-pie2d-callout-text is-' + utils.escapeHtml(row.group) + '" x="' + salaryPie2dNum(labelX) + '" y="' + salaryPie2dNum(row.y) + '" text-anchor="' + anchor + '">' + utils.escapeHtml(row.label) + '</text>'
+        ].join('');
+      }).join(''),
+      '</g>'
+    ].join('');
+  }
+
+  function normalizeSalaryPie2dCallouts(callouts) {
+    var rows = [];
+    ['left', 'right'].forEach(function (side) {
+      var sideRows = (callouts || []).filter(function (row) {
+        return row.side === side;
+      }).sort(function (a, b) {
+        return a.y - b.y;
+      });
+      var minY = 20;
+      var maxY = 240;
+      var gap = 15;
+      sideRows.forEach(function (row, index) {
+        row.y = Math.max(minY + (index * gap), Math.min(maxY, row.y));
+        if (index && row.y < sideRows[index - 1].y + gap) {
+          row.y = sideRows[index - 1].y + gap;
+        }
+      });
+      for (var index = sideRows.length - 1; index >= 0; index -= 1) {
+        if (sideRows[index].y > maxY - ((sideRows.length - 1 - index) * gap)) {
+          sideRows[index].y = maxY - ((sideRows.length - 1 - index) * gap);
+        }
+      }
+      rows = rows.concat(sideRows);
+    });
+    return rows;
+  }
+
+  function renderSalaryPie2dBottom(model, groups) {
+    return [
+      '<div class="salary-pie2d-bottom">',
+      renderSalaryPie2dLegend(model, groups),
+      renderSalaryPie2dSelection(model),
+      '</div>'
+    ].join('');
+  }
+
+  function renderSalaryPie2dLegend(model, groups) {
+    return [
+      '<div class="salary-pie2d-legend">',
+      (groups || []).map(function (item) {
+        var action = item.group === 'excess' ? '' : ' data-salary-partition-group="' + utils.escapeHtml(item.group) + '"';
+        var openClass = isSalaryB1GroupOpen(item.group) ? ' is-open' : '';
+        var staticClass = action ? '' : ' is-static';
+        return [
+          '<button type="button" class="salary-pie2d-row is-' + utils.escapeHtml(item.group) + openClass + staticClass + '"' + action + '>',
+          '<i style="' + cssVars({ '--c': item.color || salaryPie2dColor(item.group, 0) }) + '"></i>',
+          '<span><b>' + utils.escapeHtml(salaryPie2dShortLabel(item.label, item.group)) + '</b></span>',
+          '<strong>' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</strong>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function renderSalaryPie2dSelection(model) {
+    var lines = [];
+    if (isSalaryB1GroupOpen('fixed')) {
+      lines.push(renderSalaryPie2dDetailLine('FIJOS', model.fixedTotal, model.fixedItems, model));
+    }
+    if (isSalaryB1GroupOpen('saving')) {
+      if (salaryPartitionSavingNode === 'metas') {
+        lines.push(renderSalaryPie2dDetailLine('AHORROS DETALLE', model.savingsTotal, model.futureItems.concat(model.goalItems), model));
+      } else {
+        lines.push(renderSalaryPie2dDetailLine('AHORROS', model.savingsTotal, salaryPie2dSavingSummaryItems(model), model));
+      }
+    }
+    if (isSalaryB1GroupOpen('available')) {
+      lines.push(renderSalaryPie2dDetailLine('DISPONIBLE', model.available, [{ label: 'Libre', group: 'available', amount: model.available }], model));
+    }
+    if (!lines.length) {
+      return '<div class="salary-pie2d-selection is-empty">TOCA FIJOS, AHORROS O DISPONIBLE</div>';
+    }
+    return '<div class="salary-pie2d-selection">' + lines.join('') + '</div>';
+  }
+
+  function renderSalaryPie2dDetailLine(title, amount, items, model) {
+    var parts = (items || []).filter(partitionNonZero).map(function (item) {
+      return '<span>' + utils.escapeHtml(salaryPie2dShortLabel(item.label, item.group || '')) + ' ' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</span>';
+    }).join('<b>+</b>');
+    return [
+      '<div class="salary-pie2d-detail-line">',
+      '<strong>' + utils.escapeHtml(title) + ' ' + utils.escapeHtml(salaryPartitionPctLabel(amount, model.salary)) + '</strong>',
+      parts ? '<em>' + parts + '</em>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function salaryPie2dSavingSummaryItems(model) {
+    return [
+      { label: 'Futuro', group: 'saving-future', amount: model.futureItems.reduce(partitionSum, 0) },
+      { label: 'Metas', group: 'saving-goals', amount: model.goalItems.reduce(partitionSum, 0) }
+    ].filter(partitionNonZero);
+  }
+
+  function salaryPie2dShortLabel(label, group) {
+    if (group === 'available') {
+      return 'DISP.';
+    }
+    if (group === 'saving-future') {
+      return 'FUTURO';
+    }
+    if (group === 'saving-goals') {
+      return 'METAS';
+    }
+    return String(label || '').toUpperCase();
+  }
+
+  function salaryPie2dColor(group, index) {
+    var family = group === 'saving-future' || group === 'saving-goals' || group === 'saving-goal' ? 'saving' : group;
+    var palettes = {
+      fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
+      saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
+      available: ['#071007'],
+      excess: ['#a95c5a']
+    };
+    var colors = palettes[family] || palettes.available;
+    return colors[index % colors.length];
+  }
+
+  function salaryPie2dPath(cx, cy, radius, startAngle, endAngle) {
+    var start = salaryPie2dPolar(cx, cy, radius, startAngle);
+    var end = salaryPie2dPolar(cx, cy, radius, endAngle);
+    var large = endAngle - startAngle > 180 ? 1 : 0;
+    return ['M', cx, cy, 'L', start.x, start.y, 'A', radius, radius, 0, large, 1, end.x, end.y, 'Z'].join(' ');
+  }
+
+  function salaryPie2dPolar(cx, cy, radius, angleDeg) {
+    var angle = angleDeg * Math.PI / 180;
+    return {
+      x: salaryPie2dNum(cx + (Math.cos(angle) * radius)),
+      y: salaryPie2dNum(cy + (Math.sin(angle) * radius))
+    };
+  }
+
+  function salaryPie2dNum(value) {
+    return Math.round(Number(value || 0) * 100) / 100;
   }
 
   function renderSalaryPartitionB1(model) {
@@ -1280,7 +1563,7 @@
   }
 
   function canSalaryB1DrillGroup(group) {
-    return group && group.group !== 'available';
+    return group && group.group !== 'available' && group.group !== 'excess';
   }
 
   function isSalaryB1GroupOpen(group) {
@@ -1288,6 +1571,9 @@
   }
 
   function setSalaryB1GroupOpen(group, open) {
+    if (group !== 'fixed' && group !== 'saving' && group !== 'available') {
+      return;
+    }
     if (open) {
       salaryPartitionOpenGroups[group] = true;
       return;
@@ -1296,6 +1582,32 @@
     if (group === 'saving') {
       salaryPartitionSavingNode = 'summary';
     }
+  }
+
+  function handleSalaryPartitionGroupTap(group) {
+    if (group === 'saving') {
+      if (isSalaryB1GroupOpen('saving')) {
+        setSalaryB1GroupOpen('saving', false);
+        return;
+      }
+      salaryPartitionSavingNode = 'summary';
+      setSalaryB1GroupOpen('saving', true);
+      return;
+    }
+    setSalaryB1GroupOpen(group, !isSalaryB1GroupOpen(group));
+  }
+
+  function handleSalaryPartitionSavingTap(node) {
+    if (node === 'metas' && isSalaryB1GroupOpen('saving') && salaryPartitionSavingNode === 'metas') {
+      salaryPartitionSavingNode = 'summary';
+      return;
+    }
+    if (node === 'summary' && isSalaryB1GroupOpen('saving') && salaryPartitionSavingNode === 'summary') {
+      setSalaryB1GroupOpen('saving', false);
+      return;
+    }
+    setSalaryB1GroupOpen('saving', true);
+    salaryPartitionSavingNode = node || 'summary';
   }
 
   function salaryB1LeaderPlacement(group, index, nested) {
@@ -1690,7 +2002,7 @@
   }
 
   function bindSalaryPartition(root) {
-    var panel = utils.qs('[data-salary-partition-b1]', root);
+    var panel = utils.qs('[data-salary-partition-pie]', root);
     if (!panel) {
       return;
     }
@@ -1700,12 +2012,7 @@
       var groupButton = event.target.closest ? event.target.closest('[data-salary-partition-group]') : null;
       var group;
       if (savingButton && panel.contains(savingButton)) {
-        if (savingButton.getAttribute('data-salary-partition-saving-node') === 'metas') {
-          setSalaryB1GroupOpen('saving', true);
-          salaryPartitionSavingNode = 'metas';
-        } else {
-          setSalaryB1GroupOpen('saving', false);
-        }
+        handleSalaryPartitionSavingTap(savingButton.getAttribute('data-salary-partition-saving-node') || 'summary');
         render();
         return;
       }
@@ -1716,13 +2023,7 @@
       }
       if (groupButton && panel.contains(groupButton)) {
         group = groupButton.getAttribute('data-salary-partition-group');
-        if (group === 'available') {
-          return;
-        }
-        setSalaryB1GroupOpen(group, !isSalaryB1GroupOpen(group));
-        if (group === 'saving' && isSalaryB1GroupOpen(group)) {
-          salaryPartitionSavingNode = 'summary';
-        }
+        handleSalaryPartitionGroupTap(group);
         render();
       }
     });

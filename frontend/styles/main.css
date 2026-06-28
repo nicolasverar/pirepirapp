@@ -5265,6 +5265,258 @@ body::-webkit-scrollbar,
   --leader-arm: 28px;
 }
 
+.summary-stack > .salary-partition-card.salary-partition-aaa .salary-pie2d-stage {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 2px 3px;
+  overflow: visible;
+  color: #071007;
+}
+
+.salary-pie2d-chart {
+  display: grid;
+  place-items: center;
+  min-height: 318px;
+  overflow: visible;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),
+    rgba(170, 181, 116, 0.62);
+  border: 2px solid #071007;
+  box-shadow:
+    inset 2px 2px 0 rgba(196, 208, 139, 0.16),
+    inset -4px -4px 0 rgba(7, 16, 7, 0.1);
+}
+
+.salary-pie2d-svg {
+  width: min(100%, 560px);
+  height: auto;
+  overflow: visible;
+  image-rendering: pixelated;
+}
+
+.salary-pie2d-part {
+  cursor: pointer;
+}
+
+.salary-pie2d-part:focus-visible {
+  outline: none;
+}
+
+.salary-pie2d-slice {
+  fill: var(--c);
+  stroke: #071007;
+  stroke-width: 2.3;
+  paint-order: stroke fill;
+  transition:
+    filter 150ms ease,
+    opacity 150ms ease;
+}
+
+.salary-pie2d-part:hover .salary-pie2d-slice {
+  filter: brightness(1.08) contrast(1.04);
+}
+
+.salary-pie2d-part.is-nested .salary-pie2d-slice {
+  stroke-width: 2.2;
+}
+
+.salary-pie2d-part.is-available .salary-pie2d-slice {
+  fill: #071007;
+}
+
+.salary-pie2d-part.is-excess .salary-pie2d-slice {
+  fill: var(--lcd-alert);
+}
+
+.salary-pie2d-shadow {
+  fill: rgba(7, 16, 7, 0.16);
+  pointer-events: none;
+}
+
+.salary-pie2d-rim,
+.salary-pie2d-center {
+  fill: none;
+  stroke: #071007;
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+.salary-pie2d-center {
+  fill: #c4d08b;
+}
+
+.salary-pie2d-label {
+  fill: #c4d08b;
+  paint-order: stroke fill;
+  stroke: #071007;
+  stroke-width: 3.2;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.salary-pie2d-part.is-tight .salary-pie2d-label {
+  font-size: 8px;
+}
+
+.salary-pie2d-callouts {
+  pointer-events: none;
+}
+
+.salary-pie2d-callout-line {
+  fill: none;
+  stroke: #071007;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.salary-pie2d-callout-text {
+  fill: #071007;
+  paint-order: stroke fill;
+  stroke: #c4d08b;
+  stroke-width: 3;
+  dominant-baseline: middle;
+  text-transform: uppercase;
+  font-size: 8.6px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.salary-pie2d-bottom {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.18);
+  border: 2px solid #071007;
+}
+
+.salary-pie2d-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+  gap: 5px;
+}
+
+.salary-pie2d-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 5px;
+  align-items: center;
+  min-width: 0;
+  padding: 5px;
+  color: #071007;
+  background: rgba(196, 208, 139, 0.24);
+  border: 2px solid rgba(7, 16, 7, 0.56);
+  text-align: left;
+  text-transform: uppercase;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.salary-pie2d-row.is-open {
+  box-shadow:
+    inset 0 0 0 2px #071007,
+    inset 0 0 0 4px rgba(196, 208, 139, 0.42);
+}
+
+.salary-pie2d-row.is-static {
+  cursor: default;
+}
+
+.salary-pie2d-row i {
+  width: 14px;
+  min-height: 18px;
+  background: var(--c);
+  border: 2px solid #071007;
+}
+
+.salary-pie2d-row span {
+  display: grid;
+  min-width: 0;
+}
+
+.salary-pie2d-row b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.55rem;
+}
+
+.salary-pie2d-row strong {
+  font-size: 0.55rem;
+  white-space: nowrap;
+}
+
+.salary-pie2d-row.is-available {
+  color: #c4d08b;
+  background: #071007;
+}
+
+.salary-pie2d-row.is-available i {
+  background: #071007;
+  border-color: rgba(196, 208, 139, 0.55);
+}
+
+.salary-pie2d-row.is-excess {
+  background: var(--lcd-alert);
+}
+
+.salary-pie2d-selection {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.salary-pie2d-selection.is-empty {
+  min-height: 28px;
+  place-items: center;
+  color: rgba(7, 16, 7, 0.68);
+  border: 2px dashed rgba(7, 16, 7, 0.38);
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.salary-pie2d-detail-line {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 6px;
+  color: #071007;
+  background: rgba(196, 208, 139, 0.22);
+  border: 2px solid rgba(7, 16, 7, 0.48);
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.salary-pie2d-detail-line strong {
+  font-size: 0.62rem;
+}
+
+.salary-pie2d-detail-line em {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.54rem;
+  font-style: normal;
+}
+
+.salary-pie2d-detail-line span {
+  padding: 1px 4px;
+  color: #c4d08b;
+  background: #071007;
+}
+
 /* Carcasa PDA negra y botonera fisica de goma. */
 .device-shell {
   background:

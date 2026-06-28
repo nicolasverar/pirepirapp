@@ -1061,7 +1061,7 @@
         code: 'A',
         title: 'Torta final',
         detail: 'un solo candidato; categorias colapsables y disponible seleccionable',
-        labels: 'none',
+        labels: 'all',
         callouts: 'open',
         texture: false,
         money: false,

@@ -75,6 +75,32 @@
     width: min(100%, 258px);
   }
 
+  .salary-pie2d-chart {
+    min-height: 286px;
+  }
+
+  .salary-pie2d-svg {
+    width: min(100%, 480px);
+  }
+
+  .salary-pie2d-label {
+    font-size: 8.6px;
+    stroke-width: 2.8;
+  }
+
+  .salary-pie2d-callout-text {
+    font-size: 7.8px;
+    stroke-width: 2.5;
+  }
+
+  .salary-pie2d-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .salary-pie2d-row strong {
+    grid-column: 2;
+  }
+
   .salary-b1-bar {
     min-height: 82px;
     margin: var(--b1-top-space, 112px) 0 var(--b1-bottom-space, 108px);

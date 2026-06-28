@@ -1021,6 +1021,31 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Torta 2D final implementada en Resumen v3.28
+
+### Objetivo
+- Llevar el candidato final de torta 2D desde `frontend/previews` a la app principal y dejar porcentajes macro visibles por defecto.
+
+### Cambios
+- `frontend/scripts/render.js` reemplaza la vista B1 rectangular por una torta 2D interactiva en `PARTICION SUELDO`.
+- Por defecto quedan visibles dentro de la torta los porcentajes de `FIJOS`, `AHORROS` y `DISP.`.
+- Al tocar `FIJOS` o `AHORROS`, el sector se desagrega dentro de la misma torta; tocar de nuevo lo colapsa.
+- Al tocar `METAS`, `AHORROS` baja al detalle de futuro + metas; tocar de nuevo vuelve al nivel agregado.
+- `DISP.` queda seleccionable y con el mismo grosor/stroke que las otras porciones, sin marca interna especial.
+- `frontend/styles/main.css` y `frontend/styles/responsive.css` agregan la estetica productiva `salary-pie2d-*`.
+- `frontend/previews` conserva el mismo candidato con porcentajes internos visibles.
+- Version y cache pasan de `v3.27`/`finanzas-lcd-v135` a `v3.28`/`finanzas-lcd-v136`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Callouts de torta A hacia afuera
 
 ### Objetivo

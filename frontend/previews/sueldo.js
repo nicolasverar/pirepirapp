@@ -3,6 +3,12 @@
 
   var currentScenario = 'normal';
   var currentMode = 'detail';
+  var selectedRevealGroup = 'fixed';
+  var inlineRevealGroup = 'fixed';
+  var lensRevealGroup = 'fixed';
+  var accordionRevealGroup = 'fixed';
+  var stepRevealIndex = 0;
+  var trayRevealGroup = 'fixed';
 
   var palette = {
     fixed: ['#87985d', '#768851', '#9aaa6b', '#68794a', '#aebd7a'],
@@ -357,6 +363,250 @@
     ].join(''));
   }
 
+  function familyGroups(model) {
+    return [
+      {
+        label: 'Gastos fijos',
+        group: 'fixed',
+        amount: model.fixedTotal,
+        color: palette.fixed[0],
+        pattern: 0,
+        children: model.fixed.map(function (item, index) {
+          return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index);
+        })
+      },
+      {
+        label: 'Ahorros/metas',
+        group: 'saving',
+        amount: model.savingsTotal,
+        color: palette.saving[0],
+        pattern: 1,
+        children: model.savings.map(function (item, index) {
+          return componentFromItem(item, 'saving', palette.saving[index % palette.saving.length], index + model.fixed.length);
+        })
+      },
+      {
+        label: 'Disponible',
+        group: 'available',
+        amount: model.available,
+        color: palette.available[0],
+        pattern: 4,
+        children: model.available > 0 ? [{ label: 'Libre', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 }] : []
+      },
+      {
+        label: 'Exceso',
+        group: 'excess',
+        amount: model.excess,
+        color: palette.excess[0],
+        pattern: 5,
+        children: model.excess > 0 ? [{ label: 'Sobreasignado', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : []
+      }
+    ].filter(nonZero);
+  }
+
+  function activeFamily(model, group) {
+    var groups = familyGroups(model);
+    var found = groups.filter(function (item) {
+      return item.group === group;
+    })[0];
+    return found || groups[0];
+  }
+
+  function familyOffset(model, groupNameValue) {
+    var groups = familyGroups(model);
+    var offset = 0;
+    groups.some(function (group) {
+      if (group.group === groupNameValue) {
+        return true;
+      }
+      offset += group.amount;
+      return false;
+    });
+    return pct(offset, model.scale);
+  }
+
+  function renderInteractiveMacroBar(model, activeGroup, scope, caption, value, extraClass) {
+    var groups = familyGroups(model);
+    var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
+    return [
+      '<div class="stack-wrap interactive-stack ' + escapeHtml(extraClass || '') + '" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
+      '<div class="stack-caption"><span>' + escapeHtml(caption) + '</span><b>' + escapeHtml(value || 'toque un tramo') + '</b></div>',
+      '<div class="stack-bar" role="group" aria-label="' + escapeHtml(caption) + '">',
+      '<span class="stack-salary-line" aria-hidden="true">100%</span>',
+      groups.map(function (group) {
+        var width = pct(group.amount, model.scale);
+        var activeClass = group.group === activeGroup ? ' is-active' : '';
+        var tightClass = width < 8 ? ' is-tiny' : width < 14 ? ' is-tight' : '';
+        return [
+          '<button class="stack-segment stack-action pat-' + escapeHtml(String(group.pattern || 0)) + ' is-' + escapeHtml(group.group) + activeClass + tightClass + '" type="button" data-reveal-scope="' + escapeHtml(scope) + '" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+          '<span>' + escapeHtml(group.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '<div class="stack-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderDetailWindow(model, groupNameValue, label) {
+    var family = activeFamily(model, groupNameValue);
+    var width = Math.max(1, pct(family.amount, model.scale));
+    var displayWidth = Math.max(width, 32);
+    var safeOffset = Math.min(familyOffset(model, family.group), Math.max(0, 100 - displayWidth));
+    var compactClass = currentMode === 'macro' ? ' is-compact-detail' : '';
+    return [
+      '<div class="detail-window' + compactClass + '" style="' + styleVars({ '--x': safeOffset + '%', '--w': displayWidth + '%', '--pin': (familyOffset(model, family.group) + (width / 2)) + '%', '--c': family.color }) + '">',
+      '<header><strong>' + escapeHtml(label || family.label) + '</strong><span>' + escapeHtml(money(family.amount)) + ' / ' + escapeHtml(pctLabel(family.amount, model.salary)) + '</span></header>',
+      '<div class="detail-window-rail">',
+      family.children.map(function (item) {
+        var childWidth = pct(item.amount, family.amount);
+        var tightClass = childWidth < 16 ? ' is-tight' : '';
+        return [
+          '<i class="detail-chip pat-' + escapeHtml(String(item.pattern || 0)) + ' is-' + escapeHtml(item.group) + tightClass + '" style="' + styleVars({ '--w': childWidth + '%', '--c': item.color }) + '">',
+          '<span>' + escapeHtml(item.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '</i>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      renderDetailRows(family, model),
+      '</div>'
+    ].join('');
+  }
+
+  function renderDetailRows(family, model) {
+    if (currentMode === 'macro') {
+      return '';
+    }
+    return [
+      '<div class="detail-rows">',
+      family.children.map(function (item) {
+        return [
+          '<span class="detail-row">',
+          '<i class="swatch pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--c': item.color }) + '"></i>',
+          '<b>' + escapeHtml(item.label) + '</b>',
+          '<em>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</em>',
+          '</span>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function renderAlignedReveal(model) {
+    var active = activeFamily(model, selectedRevealGroup);
+    return renderPanel('B1', 'Drill alineado', 'toque una familia y el detalle aparece justo debajo', [
+      '<div class="reveal-stage">',
+      renderInteractiveMacroBar(model, active.group, 'drill', 'Nivel macro fijo', 'detalle alineado'),
+      renderDetailWindow(model, active.group, active.label),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderInlineReveal(model) {
+    var active = activeFamily(model, inlineRevealGroup);
+    var groups = familyGroups(model);
+    var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
+    return renderPanel('B2', 'Expansion en sitio', 'el tramo seleccionado se abre por dentro sin crear otra tarjeta', [
+      '<div class="stack-wrap interactive-stack is-large" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
+      '<div class="stack-caption"><span>Macro con corte interno</span><b>' + escapeHtml(active.label) + '</b></div>',
+      '<div class="stack-bar inline-stack">',
+      '<span class="stack-salary-line" aria-hidden="true">100%</span>',
+      groups.map(function (group) {
+        var width = pct(group.amount, model.scale);
+        var activeClass = group.group === active.group ? ' is-active has-inline-detail' : '';
+        return [
+          '<button class="stack-segment stack-action pat-' + escapeHtml(String(group.pattern || 0)) + ' is-' + escapeHtml(group.group) + activeClass + '" type="button" data-reveal-scope="inline" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+          '<span>' + escapeHtml(group.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+          group.group === active.group ? renderInlineMini(group) : '',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '<div class="stack-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
+      '</div>',
+      renderDetailRows(active, model)
+    ].join(''));
+  }
+
+  function renderInlineMini(group) {
+    return [
+      '<i class="inline-mini" aria-hidden="true">',
+      group.children.map(function (item) {
+        return '<i class="mini-segment pat-' + escapeHtml(String(item.pattern || 0)) + '" style="' + styleVars({ '--w': pct(item.amount, group.amount) + '%', '--c': item.color }) + '"></i>';
+      }).join(''),
+      '</i>'
+    ].join('');
+  }
+
+  function renderLensReveal(model) {
+    var active = activeFamily(model, lensRevealGroup);
+    return renderPanel('B3', 'Lupa inferior', 'la barra no cambia; la lupa muestra la familia elegida', [
+      renderInteractiveMacroBar(model, active.group, 'lens', 'Barra macro estable', 'lupa: ' + active.label, 'is-medium'),
+      '<div class="lens-box">',
+      '<header><strong>' + escapeHtml(active.label) + '</strong><span>' + escapeHtml(pctLabel(active.amount, model.salary)) + '</span></header>',
+      renderStackBar(active.children, model, { className: 'is-compact is-detail-only', caption: 'Detalle medido contra sueldo', value: money(active.amount) }),
+      renderDetailRows(active, model),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderAccordionReveal(model) {
+    var active = activeFamily(model, accordionRevealGroup);
+    return renderPanel('B4', 'Acordeon tactil', 'cada familia abre su propia banda de componentes', [
+      '<div class="accordion-list">',
+      familyGroups(model).map(function (group) {
+        var openClass = group.group === active.group ? ' is-open' : '';
+        return [
+          '<section class="accordion-family' + openClass + '">',
+          '<button class="accordion-head" type="button" data-reveal-scope="accordion" data-reveal-group="' + escapeHtml(group.group) + '">',
+          '<span>' + escapeHtml(group.label) + '</span><b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+          '</button>',
+          group.group === active.group ? [
+            '<div class="accordion-body">',
+            renderStackBar(group.children, model, { className: 'is-compact is-detail-only', caption: 'Abierto', value: money(group.amount) }),
+            renderDetailRows(group, model),
+            '</div>'
+          ].join('') : '',
+          '</section>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderStepperReveal(model) {
+    var groups = familyGroups(model);
+    var index = ((stepRevealIndex % groups.length) + groups.length) % groups.length;
+    var active = groups[index];
+    return renderPanel('B5', 'Secuencia guiada', 'recorre familia por familia como inspeccion de sueldo', [
+      '<div class="stepper-bar">',
+      '<button type="button" data-cycle="-1" aria-label="Anterior">ANT</button>',
+      '<strong>' + escapeHtml(String(index + 1)) + '/' + escapeHtml(String(groups.length)) + ' ' + escapeHtml(active.label) + '</strong>',
+      '<button type="button" data-cycle="1" aria-label="Siguiente">SIG</button>',
+      '</div>',
+      renderInteractiveMacroBar(model, active.group, 'step', 'Punto actual de lectura', pctLabel(active.amount, model.salary), 'is-medium'),
+      renderDetailWindow(model, active.group, active.label)
+    ].join(''));
+  }
+
+  function renderTrayReveal(model) {
+    var active = activeFamily(model, trayRevealGroup);
+    return renderPanel('B6', 'Bandeja inspectora', 'toque un tramo y la bandeja inferior cambia sin mover la barra', [
+      '<div class="tray-stage">',
+      renderInteractiveMacroBar(model, active.group, 'tray', 'Barra siempre quieta', 'bandeja dinamica', 'is-medium'),
+      '<div class="tray-box">',
+      '<div class="tray-meter" style="' + styleVars({ '--w': pct(active.amount, model.scale) + '%', '--c': active.color }) + '"><i class="pat-' + escapeHtml(String(active.pattern || 0)) + '"></i></div>',
+      '<header><strong>' + escapeHtml(active.label) + '</strong><span>' + escapeHtml(money(active.amount)) + '</span></header>',
+      renderDetailRows(active, model),
+      '</div>',
+      '</div>'
+    ].join(''));
+  }
+
   function renderPieSolid(model) {
     var list = components(model);
     return renderPanel('A', 'Torta con callouts', 'sectores desagregados con indice y lista lateral', [
@@ -699,13 +949,52 @@
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderClassicStack(model),
-      renderDualStack(model),
-      renderFamilyRows(model),
-      renderLedgerStack(model),
-      renderCompactStack(model),
-      renderOverflowStack(model)
+      renderAlignedReveal(model),
+      renderInlineReveal(model),
+      renderLensReveal(model),
+      renderAccordionReveal(model),
+      renderStepperReveal(model),
+      renderTrayReveal(model)
     ].join('');
+  }
+
+  function setRevealGroup(scope, group, model) {
+    var validGroup = activeFamily(model, group).group;
+    if (scope === 'inline') {
+      inlineRevealGroup = validGroup;
+    } else if (scope === 'lens') {
+      lensRevealGroup = validGroup;
+    } else if (scope === 'accordion') {
+      accordionRevealGroup = validGroup;
+    } else if (scope === 'tray') {
+      trayRevealGroup = validGroup;
+    } else if (scope === 'step') {
+      stepRevealIndex = familyGroups(model).map(function (item) {
+        return item.group;
+      }).indexOf(validGroup);
+    } else {
+      selectedRevealGroup = validGroup;
+    }
+  }
+
+  function handlePreviewClick(event) {
+    var model = scenarioModel();
+    var cycleButton = event.target.closest('[data-cycle]');
+    var revealButton;
+    var groups;
+    if (cycleButton) {
+      groups = familyGroups(model);
+      stepRevealIndex += Number(cycleButton.getAttribute('data-cycle') || 0);
+      stepRevealIndex = ((stepRevealIndex % groups.length) + groups.length) % groups.length;
+      render();
+      return;
+    }
+    revealButton = event.target.closest('[data-reveal-group]');
+    if (!revealButton) {
+      return;
+    }
+    setRevealGroup(revealButton.getAttribute('data-reveal-scope'), revealButton.getAttribute('data-reveal-group'), model);
+    render();
   }
 
   function bindChoice(selector, attr, callback) {
@@ -727,5 +1016,6 @@
   bindChoice('[data-mode]', 'data-mode', function (value) {
     currentMode = value || 'detail';
   });
+  document.getElementById('preview-grid').addEventListener('click', handlePreviewClick);
   render();
 }());

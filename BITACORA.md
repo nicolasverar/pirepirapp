@@ -1006,3 +1006,27 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - Doble nivel dinamico para sueldo
+
+### Objetivo
+- Profundizar la opcion `B` de doble nivel con formas interactivas de revelar el desagregado.
+
+### Cambios
+- El laboratorio `frontend/previews/particion.html` ahora presenta `DOBLE NIVEL`.
+- Se reemplazo la grilla visible por seis pruebas interactivas:
+  - `B1` Drill alineado: tocar una familia revela sus componentes justo debajo.
+  - `B2` Expansion en sitio: el tramo seleccionado se abre internamente.
+  - `B3` Lupa inferior: la barra macro queda fija y cambia la lupa.
+  - `B4` Acordeon tactil: cada familia abre su banda de componentes.
+  - `B5` Secuencia guiada: recorre familias con controles anterior/siguiente.
+  - `B6` Bandeja inspectora: la bandeja inferior cambia sin mover la barra.
+- El selector `ABIERTO / COMPACTO` permite comparar etiquetas completas contra lectura reducida.
+- La app principal sigue intacta; solo cambia el laboratorio de preview.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, genera `Drill alineado` y `Bandeja inspectora`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

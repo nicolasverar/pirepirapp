@@ -843,6 +843,30 @@ button {
   border-right: 2px solid var(--line);
 }
 
+.stack-action {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  border-right: 2px solid var(--line);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.stack-action.is-active {
+  box-shadow:
+    inset 0 0 0 3px #071007,
+    inset 0 0 0 5px rgba(196, 208, 139, 0.42);
+  filter: saturate(1.05) contrast(1.03);
+}
+
+.stack-action:focus-visible,
+.accordion-head:focus-visible,
+.stepper-bar button:focus-visible {
+  outline: 2px solid var(--panel-hi);
+  outline-offset: 2px;
+}
+
 .stack-segment:last-child {
   border-right: 0;
 }
@@ -1073,60 +1097,350 @@ button {
   background-color: var(--alert);
 }
 
+.reveal-stage,
+.tray-stage,
+.lens-box,
+.accordion-list {
+  display: grid;
+  gap: 7px;
+}
+
+.detail-window {
+  position: relative;
+  left: var(--x);
+  display: grid;
+  width: var(--w);
+  gap: 5px;
+  min-width: 0;
+  padding: 6px;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.12) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.28);
+  border: 2px solid rgba(7, 16, 7, 0.7);
+  box-shadow: 2px 2px 0 rgba(7, 16, 7, 0.28);
+}
+
+.detail-window::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: clamp(10px, calc(var(--pin) - var(--x)), calc(100% - 10px));
+  width: 10px;
+  height: 10px;
+  background: var(--c);
+  border-top: 2px solid var(--line);
+  border-left: 2px solid var(--line);
+  transform: rotate(45deg);
+}
+
+.detail-window header,
+.lens-box header,
+.tray-box header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: baseline;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.detail-window header strong,
+.lens-box header strong,
+.tray-box header strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-window header span,
+.lens-box header span,
+.tray-box header span {
+  font-size: 0.52rem;
+  white-space: nowrap;
+}
+
+.detail-window-rail {
+  display: flex;
+  min-height: 42px;
+  overflow: hidden;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
+.detail-chip {
+  position: relative;
+  flex: 0 0 var(--w);
+  min-width: 3px;
+  overflow: hidden;
+  background-color: var(--c);
+  border-right: 1px solid rgba(7, 16, 7, 0.72);
+  font-style: normal;
+}
+
+.detail-chip span,
+.detail-chip b {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-weight: 900;
+}
+
+.detail-chip span {
+  bottom: 20px;
+  font-size: 0.48rem;
+}
+
+.detail-chip b {
+  bottom: 5px;
+  font-size: 0.52rem;
+}
+
+.detail-chip.is-tight span,
+.is-compact-detail .detail-chip span,
+.is-compact-detail .detail-chip b {
+  display: none;
+}
+
+.detail-rows {
+  display: grid;
+  gap: 4px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 5px;
+  align-items: center;
+  padding: 4px;
+  background: rgba(7, 16, 7, 0.1);
+  border: 1px solid rgba(7, 16, 7, 0.45);
+  text-transform: uppercase;
+  font-size: 0.5rem;
+  font-weight: 900;
+}
+
+.detail-row b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-row em {
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.inline-stack .stack-segment {
+  min-height: 112px;
+}
+
+.inline-mini {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: 25px;
+  overflow: hidden;
+  background: rgba(7, 16, 7, 0.24);
+  border-bottom: 2px solid var(--line);
+}
+
+.inline-mini .mini-segment {
+  height: 100%;
+  background-color: var(--c);
+}
+
+.has-inline-detail span {
+  bottom: 35px;
+}
+
+.has-inline-detail b {
+  bottom: 18px;
+}
+
+.lens-box,
+.tray-box {
+  padding: 7px;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.26);
+  border: 2px solid rgba(7, 16, 7, 0.62);
+}
+
+.accordion-family {
+  display: grid;
+  gap: 0;
+  background: rgba(196, 208, 139, 0.18);
+  border: 2px solid rgba(7, 16, 7, 0.58);
+}
+
+.accordion-family + .accordion-family {
+  margin-top: 5px;
+}
+
+.accordion-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 6px;
+  color: #071007;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 5px),
+    var(--panel);
+  border: 0;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.accordion-family.is-open .accordion-head {
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.18) 0 1px, transparent 1px 5px),
+    var(--panel-hi);
+}
+
+.accordion-head span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accordion-body {
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  border-top: 2px dashed rgba(7, 16, 7, 0.46);
+}
+
+.stepper-bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding: 5px;
+  background: rgba(7, 16, 7, 0.1);
+  border: 2px solid rgba(7, 16, 7, 0.58);
+}
+
+.stepper-bar button {
+  min-height: 30px;
+  padding: 4px 7px;
+  color: var(--panel-hi);
+  background: #071007;
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.stepper-bar strong {
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-size: 0.58rem;
+}
+
+.tray-box {
+  display: grid;
+  gap: 6px;
+}
+
+.tray-meter {
+  height: 18px;
+  overflow: hidden;
+  background: #071007;
+  border: 2px solid var(--line);
+}
+
+.tray-meter i {
+  display: block;
+  width: var(--w);
+  height: 100%;
+  min-width: 5px;
+  background-color: var(--c);
+}
+
 .stack-segment.pat-0,
+.detail-chip.pat-0,
 .swatch.pat-0,
 .rank-index.pat-0,
 .rank-meter i.pat-0,
 .group-row-fill.pat-0,
-.mini-segment.pat-0 {
+.mini-segment.pat-0,
+.tray-meter i.pat-0 {
   background-image: repeating-linear-gradient(-35deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 6px);
 }
 
 .stack-segment.pat-1,
+.detail-chip.pat-1,
 .swatch.pat-1,
 .rank-index.pat-1,
 .rank-meter i.pat-1,
 .group-row-fill.pat-1,
-.mini-segment.pat-1 {
+.mini-segment.pat-1,
+.tray-meter i.pat-1 {
   background-image: repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.3) 0 1px, transparent 1px 6px);
 }
 
 .stack-segment.pat-2,
+.detail-chip.pat-2,
 .swatch.pat-2,
 .rank-index.pat-2,
 .rank-meter i.pat-2,
 .group-row-fill.pat-2,
-.mini-segment.pat-2 {
+.mini-segment.pat-2,
+.tray-meter i.pat-2 {
   background-image: radial-gradient(circle, rgba(7, 16, 7, 0.36) 0 1px, transparent 1px);
   background-size: 7px 7px;
 }
 
 .stack-segment.pat-3,
+.detail-chip.pat-3,
 .swatch.pat-3,
 .rank-index.pat-3,
 .rank-meter i.pat-3,
 .group-row-fill.pat-3,
-.mini-segment.pat-3 {
+.mini-segment.pat-3,
+.tray-meter i.pat-3 {
   background-image:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.24) 0 1px, transparent 1px 7px),
     repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.24) 0 1px, transparent 1px 7px);
 }
 
 .stack-segment.pat-4,
+.detail-chip.pat-4,
 .swatch.pat-4,
 .rank-index.pat-4,
 .rank-meter i.pat-4,
 .group-row-fill.pat-4,
-.mini-segment.pat-4 {
+.mini-segment.pat-4,
+.tray-meter i.pat-4 {
   background-image: repeating-linear-gradient(0deg, rgba(7, 16, 7, 0.28) 0 1px, transparent 1px 6px);
 }
 
 .stack-segment.pat-5,
+.detail-chip.pat-5,
 .swatch.pat-5,
 .rank-index.pat-5,
 .rank-meter i.pat-5,
 .group-row-fill.pat-5,
-.mini-segment.pat-5 {
+.mini-segment.pat-5,
+.tray-meter i.pat-5 {
   background-image:
     linear-gradient(90deg, rgba(7, 16, 7, 0.32) 1px, transparent 1px),
     linear-gradient(0deg, rgba(7, 16, 7, 0.32) 1px, transparent 1px);
@@ -1180,5 +1494,18 @@ button {
 
   .compact-kpis {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail-window {
+    left: 0;
+    width: 100%;
+  }
+
+  .detail-window::before {
+    display: none;
+  }
+
+  .inline-stack .stack-segment {
+    min-height: 86px;
   }
 }

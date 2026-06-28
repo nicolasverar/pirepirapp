@@ -1022,6 +1022,27 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Torta A con lectura inferior
+
+### Objetivo
+- Corregir la direccion visual de las leyendas: callouts hacia afuera de la torta y lectura porcentual abajo, sin texto en el centro.
+
+### Cambios
+- Se elimino el texto dentro del hueco central de la torta.
+- Se quito el panel lateral y se reemplazo por una banda inferior.
+- La banda inferior muestra las categorias principales y una lectura de la seleccion activa.
+- Al abrir `Fijos`, se muestra `FIJOS xx% = componente xx% + ...`.
+- Al abrir `Ahorros`, se muestra `AHORROS xx% = FUTURO xx% + METAS xx%`; tocar `METAS` abre el detalle de metas.
+- Tocar `Fijos` o `Ahorros` ahora abre/cierra exactamente ese grupo.
+- Las callout lines se empujaron hacia los bordes exteriores del SVG.
+- El cambio queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Variantes A grandes con callouts
 
 ### Objetivo

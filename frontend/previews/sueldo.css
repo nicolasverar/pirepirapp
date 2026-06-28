@@ -517,8 +517,8 @@ button {
 }
 
 .pie-touch-layout.is-variant {
-  grid-template-columns: minmax(0, 1fr) minmax(210px, 250px);
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
 }
 
 .pie-touch-layout.is-clean {
@@ -690,7 +690,19 @@ button {
 
 .pie-touch-legend {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
+}
+
+.pie-touch-bottom {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.18);
+  border: 2px solid var(--line);
 }
 
 .pie-touch-row {
@@ -792,6 +804,64 @@ button {
   font-size: 0.52rem;
   font-weight: 900;
   cursor: pointer;
+}
+
+.pie-touch-reset {
+  justify-self: end;
+  min-height: 28px;
+  padding: 4px 8px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font: inherit;
+  font-size: 0.52rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pie-touch-selection {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 5px;
+  color: #071007;
+  background: rgba(196, 208, 139, 0.3);
+  border: 2px dashed rgba(7, 16, 7, 0.54);
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.pie-touch-selection.is-empty {
+  color: rgba(7, 16, 7, 0.65);
+  font-size: 0.56rem;
+}
+
+.pie-touch-detail-line {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pie-touch-detail-line strong {
+  font-size: 0.62rem;
+}
+
+.pie-touch-detail-line em {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.54rem;
+  font-style: normal;
+}
+
+.pie-touch-detail-line span {
+  padding: 1px 4px;
+  color: var(--panel-hi);
+  background: #071007;
 }
 
 .pie-touch-layout.is-a-max .pie-touch-stage {

@@ -10,7 +10,7 @@
   var accordionRevealGroup = 'fixed';
   var stepRevealIndex = 0;
   var trayRevealGroup = 'fixed';
-  var pieOpenGroups = { fixed: true };
+  var pieOpenGroups = {};
   var pieSavingNode = 'summary';
 
   var palette = {
@@ -1078,10 +1078,10 @@
       },
       'a-edge': {
         code: 'A2',
-        title: 'A con borde lector',
-        detail: 'mismos colores, callouts tambien para categorias macro',
+        title: 'A con lectura abajo',
+        detail: 'mismos colores, callouts solo al seleccionar',
         labels: 'none',
-        callouts: 'all',
+        callouts: 'open',
         texture: false,
         money: false,
         colors: {
@@ -1121,17 +1121,7 @@
     var cfg = pieVariantConfig(variant);
     var groups = pieGroups(model, variant);
     var cleanClass = currentMode === 'macro' ? ' is-clean' : '';
-    var readout = currentMode === 'macro' ? '' : [
-      '<aside class="pie-touch-readout">',
-      '<header><span>Categorias</span><b>' + escapeHtml(pieOpenLabel()) + '</b></header>',
-      renderPiePrincipalLegend(model, variant),
-      '<div class="pie-touch-actions">',
-      '<button type="button" data-pie-group="fixed">FIJOS</button>',
-      '<button type="button" data-pie-group="saving">AHORROS</button>',
-      '<button type="button" data-pie-reset="1">TOTAL</button>',
-      '</div>',
-      '</aside>'
-    ].join('');
+    var readout = currentMode === 'macro' ? '' : renderPieBottomReadout(model, variant);
     return renderPanel(cfg.code, cfg.title, cfg.detail, [
       '<div class="pie-touch-layout is-variant is-' + escapeHtml(variant) + cleanClass + '">',
       '<div class="pie-touch-stage">',
@@ -1140,6 +1130,16 @@
       readout,
       '</div>'
     ].join(''));
+  }
+
+  function renderPieBottomReadout(model, variant) {
+    return [
+      '<div class="pie-touch-bottom">',
+      renderPiePrincipalLegend(model, variant),
+      renderPieSelectionDetail(model, variant),
+      '<button class="pie-touch-reset" type="button" data-pie-reset="1">TOTAL</button>',
+      '</div>'
+    ].join('');
   }
 
   function pieGroups(model, variant) {
@@ -1226,21 +1226,8 @@
       '<circle class="pie-touch-rim" cx="160" cy="130" r="' + radius + '"></circle>',
       calloutHtml,
       '<circle class="pie-touch-center" cx="160" cy="130" r="34"></circle>',
-      '<text class="pie-touch-center-text" x="160" y="126">' + escapeHtml(pieCenterTitle(cfg)) + '</text>',
-      '<text class="pie-touch-center-text small" x="160" y="143">' + escapeHtml(pieCenterSub()) + '</text>',
       '</svg>'
     ].join('');
-  }
-
-  function pieCenterTitle(cfg) {
-    if (cfg.callouts === 'all') {
-      return '100%';
-    }
-    return 'SUELDO';
-  }
-
-  function pieCenterSub() {
-    return pieOpenLabel();
   }
 
   function renderPieSubSlices(group, model, cx, cy, radius, startAngle, endAngle, variant, callouts) {
@@ -1342,8 +1329,8 @@
     return [
       '<g class="pie-touch-callouts">',
       rows.map(function (row) {
-        var labelX = row.side === 'right' ? 306 : 14;
-        var elbowX = row.side === 'right' ? 244 : 76;
+        var labelX = row.side === 'right' ? 316 : 4;
+        var elbowX = row.side === 'right' ? 274 : 46;
         var textAnchor = row.side === 'right' ? 'end' : 'start';
         return [
           '<polyline class="pie-touch-callout-line is-' + escapeHtml(row.group) + '" points="' + edgeNum(row.anchor.x) + ',' + edgeNum(row.anchor.y) + ' ' + edgeNum(elbowX) + ',' + edgeNum(row.y) + ' ' + edgeNum(labelX) + ',' + edgeNum(row.y) + '"></polyline>',
@@ -1430,6 +1417,61 @@
     ].join('');
   }
 
+  function renderPieSelectionDetail(model, variant) {
+    var lines = [];
+    if (isPieGroupOpen('fixed')) {
+      lines.push(renderPieDetailLine('FIJOS', model.fixedTotal, model.fixed, model));
+    }
+    if (isPieGroupOpen('saving')) {
+      if (pieSavingNode === 'goals') {
+        lines.push(renderPieDetailLine('METAS', sum(model.savings.filter(function (item) {
+          return !/futuro/i.test(item.label);
+        })), model.savings.filter(function (item) {
+          return !/futuro/i.test(item.label);
+        }), model));
+      } else {
+        lines.push(renderPieDetailLine('AHORROS', model.savingsTotal, pieSavingSummaryDetailItems(model), model));
+      }
+    }
+    if (!lines.length) {
+      return '<div class="pie-touch-selection is-empty">TOCA FIJOS O AHORROS PARA DESAGREGAR</div>';
+    }
+    return '<div class="pie-touch-selection">' + lines.join('') + '</div>';
+  }
+
+  function renderPieDetailLine(title, amount, items, model) {
+    var parts = (items || []).filter(nonZero).map(function (item) {
+      return '<span>' + escapeHtml(pieShortLabel(item.label, item.group || '')) + ' ' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>';
+    }).join('<b>+</b>');
+    return [
+      '<div class="pie-touch-detail-line">',
+      '<strong>' + escapeHtml(title) + ' ' + escapeHtml(pctLabel(amount, model.salary)) + '</strong>',
+      parts ? '<em>' + parts + '</em>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function pieSavingSummaryDetailItems(model) {
+    var future = model.savings.filter(function (item) {
+      return /futuro/i.test(item.label);
+    });
+    var goals = model.savings.filter(function (item) {
+      return !/futuro/i.test(item.label);
+    });
+    return [
+      {
+        label: 'Futuro',
+        group: 'saving-future',
+        amount: sum(future)
+      },
+      {
+        label: 'Metas',
+        group: 'saving-goals',
+        amount: sum(goals)
+      }
+    ].filter(nonZero);
+  }
+
   function piePrincipalLegendItems(model, variant) {
     return [
       {
@@ -1486,13 +1528,15 @@
 
   function handlePieGroupTap(group) {
     if (group === 'saving') {
-      if (isPieGroupOpen('saving') && pieSavingNode === 'summary') {
-        pieSavingNode = 'goals';
+      if (isPieGroupOpen('saving')) {
+        setPieGroupOpen('saving', false);
+        return;
       }
+      pieSavingNode = 'summary';
       setPieGroupOpen('saving', true);
       return;
     }
-    setPieGroupOpen(group, true);
+    setPieGroupOpen(group, !isPieGroupOpen(group));
   }
 
   function pieOpenLabel() {

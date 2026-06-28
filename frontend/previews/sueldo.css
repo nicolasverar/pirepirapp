@@ -202,7 +202,7 @@ button {
 
 .preview-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
   gap: 10px;
 }
 
@@ -516,6 +516,10 @@ button {
   align-items: stretch;
 }
 
+.pie-touch-layout.is-variant {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .pie-touch-layout.is-clean {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -540,10 +544,18 @@ button {
     inset -5px -5px 0 rgba(7, 16, 7, 0.12);
 }
 
+.pie-touch-layout.is-variant .pie-touch-stage {
+  min-height: 305px;
+}
+
 .pie-touch-svg {
   width: min(100%, 380px);
   height: auto;
   overflow: visible;
+}
+
+.pie-touch-layout.is-variant .pie-touch-svg {
+  width: min(100%, 282px);
 }
 
 .pie-touch-part {
@@ -557,7 +569,7 @@ button {
 .pie-touch-slice {
   fill: var(--c);
   stroke: #071007;
-  stroke-width: 2.6;
+  stroke-width: 2.3;
   paint-order: stroke fill;
   transition:
     filter 150ms ease,
@@ -581,7 +593,7 @@ button {
 }
 
 .pie-touch-texture {
-  opacity: 0.7;
+  opacity: 0.34;
   pointer-events: none;
 }
 
@@ -604,8 +616,7 @@ button {
 }
 
 .pie-touch-center {
-  fill:
-    #c4d08b;
+  fill: #c4d08b;
 }
 
 .pie-touch-label,
@@ -613,11 +624,11 @@ button {
   fill: var(--panel-hi);
   paint-order: stroke fill;
   stroke: #071007;
-  stroke-width: 4;
+  stroke-width: 3.2;
   text-anchor: middle;
   dominant-baseline: middle;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   pointer-events: none;
 }
@@ -629,8 +640,8 @@ button {
 .pie-touch-center-text {
   fill: #071007;
   stroke: var(--panel-hi);
-  stroke-width: 3;
-  font-size: 10px;
+  stroke-width: 2.4;
+  font-size: 9px;
 }
 
 .pie-touch-center-text.small {
@@ -644,12 +655,12 @@ button {
 .pie-touch-readout {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
-  padding: 8px;
+  padding: 6px;
   background:
-    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.11) 0 1px, transparent 1px 4px),
-    linear-gradient(180deg, rgba(196, 208, 139, 0.72), rgba(113, 126, 75, 0.38));
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.2);
   border: 2px solid var(--line);
 }
 
@@ -659,14 +670,14 @@ button {
   gap: 8px;
   align-items: center;
   min-width: 0;
-  padding: 6px 7px;
+  padding: 5px 6px;
   color: var(--panel-hi);
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
     #071007;
   border: 2px solid var(--line);
   text-transform: uppercase;
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 900;
 }
 
@@ -684,12 +695,12 @@ button {
 .pie-touch-row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 7px;
+  gap: 6px;
   align-items: center;
   min-width: 0;
-  padding: 6px;
+  padding: 5px;
   color: #071007;
-  background: rgba(196, 208, 139, 0.34);
+  background: rgba(196, 208, 139, 0.24);
   border: 2px solid rgba(7, 16, 7, 0.56);
   text-align: left;
   text-transform: uppercase;
@@ -699,8 +710,8 @@ button {
 }
 
 .pie-touch-row i {
-  width: 18px;
-  min-height: 22px;
+  width: 15px;
+  min-height: 19px;
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
     var(--c);
@@ -715,7 +726,7 @@ button {
 .pie-touch-row b {
   min-width: 0;
   overflow-wrap: anywhere;
-  font-size: 0.6rem;
+  font-size: 0.56rem;
 }
 
 .pie-touch-row small {
@@ -724,7 +735,7 @@ button {
 }
 
 .pie-touch-row strong {
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   white-space: nowrap;
 }
 
@@ -753,12 +764,12 @@ button {
 .pie-touch-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
+  gap: 4px;
 }
 
 .pie-touch-actions button {
-  min-height: 34px;
-  padding: 5px;
+  min-height: 30px;
+  padding: 4px;
   color: var(--panel-hi);
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
@@ -766,9 +777,41 @@ button {
   border: 2px solid var(--line);
   text-transform: uppercase;
   font: inherit;
-  font-size: 0.56rem;
+  font-size: 0.52rem;
   font-weight: 900;
   cursor: pointer;
+}
+
+.pie-touch-layout.is-plain .pie-touch-stage {
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),
+    rgba(170, 181, 116, 0.62);
+}
+
+.pie-touch-layout.is-lcd .pie-touch-stage {
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.14) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(7, 16, 7, 0.08) 1px, transparent 1px) 0 0 / 16px 16px,
+    rgba(151, 164, 99, 0.68);
+}
+
+.pie-touch-layout.is-mono .pie-touch-stage {
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.1) 0 1px, transparent 1px 5px),
+    rgba(155, 166, 103, 0.58);
+}
+
+.pie-touch-layout.is-mono .pie-touch-slice {
+  stroke-width: 2.8;
+}
+
+.pie-touch-layout.is-mono .pie-touch-center {
+  fill: #071007;
+}
+
+.pie-touch-layout.is-mono .pie-touch-center-text {
+  fill: var(--panel-hi);
+  stroke: #071007;
 }
 
 .compact-legend {

@@ -161,10 +161,10 @@
 
   function groupName(group) {
     if (group === 'fixed') {
-      return 'Gasto fijo';
+      return 'Fijo';
     }
     if (group === 'saving') {
-      return 'Ahorro/meta';
+      return 'Ahorro';
     }
     if (group === 'saving-future') {
       return 'Futuro';
@@ -1051,14 +1051,78 @@
     });
   }
 
-  function renderInteractivePie2D(model) {
-    var groups = pieGroups(model);
-    var active = activePieGroup(model);
+  function renderPieVariantSet(model) {
+    return [
+      renderInteractivePie2D(model, 'plain'),
+      renderInteractivePie2D(model, 'lcd'),
+      renderInteractivePie2D(model, 'mono')
+    ].join('');
+  }
+
+  function pieVariantConfig(name) {
+    var variants = {
+      plain: {
+        code: 'A',
+        title: 'Plana',
+        detail: 'colores calmos, texto minimo',
+        labels: 'percent',
+        texture: false,
+        money: false,
+        colors: {
+          fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
+          saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
+          available: ['#111911'],
+          excess: ['#a95c5a']
+        }
+      },
+      lcd: {
+        code: 'B',
+        title: 'LCD sobria',
+        detail: 'misma paleta, contraste ordenado',
+        labels: 'large',
+        texture: true,
+        money: false,
+        colors: {
+          fixed: ['#6f8052', '#7f905e', '#5f7048', '#8c9c66'],
+          saving: ['#aebf78', '#bdca85', '#9fb26e', '#c9d48f'],
+          available: ['#071007'],
+          excess: ['#a65654']
+        }
+      },
+      mono: {
+        code: 'C',
+        title: 'Monocroma',
+        detail: 'sin texto dentro del circulo',
+        labels: 'none',
+        texture: false,
+        money: true,
+        colors: {
+          fixed: ['#81915e', '#92a36d', '#748557', '#a0ae76'],
+          saving: ['#aab978', '#bac883', '#98aa6c', '#c7d48f'],
+          available: ['#071007'],
+          excess: ['#9e5856']
+        }
+      }
+    };
+    return variants[name] || variants.plain;
+  }
+
+  function pieColor(group, index, variant) {
+    var cfg = pieVariantConfig(variant);
+    var family = group === 'saving-future' || group === 'saving-goals' || group === 'saving-goal' ? 'saving' : group;
+    var colors = cfg.colors[family] || cfg.colors.available;
+    return colors[index % colors.length];
+  }
+
+  function renderInteractivePie2D(model, variant) {
+    var cfg = pieVariantConfig(variant);
+    var groups = pieGroups(model, variant);
+    var active = activePieGroup(model, variant);
     var cleanClass = currentMode === 'macro' ? ' is-clean' : '';
     var readout = currentMode === 'macro' ? '' : [
       '<aside class="pie-touch-readout">',
-      '<header><span>ABIERTO</span><b>' + escapeHtml(active.label) + '</b></header>',
-      renderPieTouchLegend(active, model),
+      '<header><span>Vista</span><b>' + escapeHtml(active.label) + '</b></header>',
+      renderPieTouchLegend(active, model, variant),
       '<div class="pie-touch-actions">',
       '<button type="button" data-pie-group="fixed">FIJOS</button>',
       '<button type="button" data-pie-group="saving">AHORROS</button>',
@@ -1066,73 +1130,76 @@
       '</div>',
       '</aside>'
     ].join('');
-    return renderPanel('T2D', 'Torta 2D tactil', 'el sector tocado revela sus particiones dentro del mismo circulo', [
-      '<div class="pie-touch-layout' + cleanClass + '">',
+    return renderPanel(cfg.code, cfg.title, cfg.detail, [
+      '<div class="pie-touch-layout is-variant is-' + escapeHtml(variant) + cleanClass + '">',
       '<div class="pie-touch-stage">',
-      renderInteractivePieSvg(groups, model),
+      renderInteractivePieSvg(groups, model, variant),
       '</div>',
       readout,
       '</div>'
     ].join(''));
   }
 
-  function pieGroups(model) {
+  function pieGroups(model, variant) {
     return [
       {
         label: 'Gastos fijos',
         group: 'fixed',
         amount: model.fixedTotal,
-        color: palette.fixed[0],
+        color: pieColor('fixed', 0, variant),
         pattern: 0,
         children: model.fixed.map(function (item, index) {
-          return componentFromItem(item, 'fixed', palette.fixed[index % palette.fixed.length], index);
+          return componentFromItem(item, 'fixed', pieColor('fixed', index, variant), index);
         })
       },
       {
         label: 'Ahorros/metas',
         group: 'saving',
         amount: model.savingsTotal,
-        color: palette.saving[0],
+        color: pieColor('saving', 0, variant),
         pattern: 1,
-        children: pieSavingChildren(model)
+        children: pieSavingChildren(model, variant)
       },
       {
         label: 'Disponible',
         group: 'available',
         amount: model.available,
-        color: palette.available[0],
+        color: pieColor('available', 0, variant),
         pattern: 4,
-        children: model.available > 0 ? [{ label: 'Disponible', group: 'available', amount: model.available, color: palette.available[0], pattern: 4 }] : []
+        children: model.available > 0 ? [{ label: 'Disponible', group: 'available', amount: model.available, color: pieColor('available', 0, variant), pattern: 4 }] : []
       },
       {
         label: 'Exceso',
         group: 'excess',
         amount: model.excess,
-        color: palette.excess[0],
+        color: pieColor('excess', 0, variant),
         pattern: 5,
-        children: model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: palette.excess[0], pattern: 5 }] : []
+        children: model.excess > 0 ? [{ label: 'Exceso', group: 'excess', amount: model.excess, color: pieColor('excess', 0, variant), pattern: 5 }] : []
       }
     ].filter(nonZero);
   }
 
-  function pieSavingChildren(model) {
+  function pieSavingChildren(model, variant) {
     if (pieSavingNode === 'goals') {
-      return b1SavingDetail(model);
+      return b1SavingDetail(model).map(function (item, index) {
+        item.color = pieColor(item.group, index, variant);
+        return item;
+      });
     }
     return b1SavingSummary(model).map(function (item, index) {
       return {
         label: item.label,
         group: item.group,
         amount: item.amount,
-        color: item.color,
+        color: pieColor(item.group, index, variant),
         pattern: index + 1,
         drillNode: item.drillNode
       };
     }).filter(nonZero);
   }
 
-  function activePieGroup(model) {
-    var groups = pieGroups(model);
+  function activePieGroup(model, variant) {
+    var groups = pieGroups(model, variant);
     return groups.filter(function (group) {
       return group.group === pieOpenGroup;
     })[0] || {
@@ -1143,7 +1210,8 @@
     };
   }
 
-  function renderInteractivePieSvg(groups, model) {
+  function renderInteractivePieSvg(groups, model, variant) {
+    var cfg = pieVariantConfig(variant);
     var cx = 120;
     var cy = 120;
     var radius = 92;
@@ -1152,26 +1220,47 @@
       var sweep = (group.amount / model.scale) * 360;
       var end = start + sweep;
       var html = pieOpenGroup === group.group && group.children && group.children.length && group.group !== 'available' && group.group !== 'excess'
-        ? renderPieSubSlices(group, model, cx, cy, radius, start, end)
-        : renderPieTouchSlice(group, model, cx, cy, radius, start, end, false);
+        ? renderPieSubSlices(group, model, cx, cy, radius, start, end, variant)
+        : renderPieTouchSlice(group, model, cx, cy, radius, start, end, false, null, variant);
       start = end;
       return html;
     }).join('');
 
     return [
-      '<svg class="pie-touch-svg" viewBox="0 0 240 240" role="img" aria-label="Torta 2D interactiva de sueldo">',
+      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="0 0 240 240" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
       '<circle class="pie-touch-shadow" cx="120" cy="124" r="94"></circle>',
       pieces,
       '<circle class="pie-touch-rim" cx="120" cy="120" r="' + radius + '"></circle>',
       '<circle class="pie-touch-center" cx="120" cy="120" r="31"></circle>',
-      '<text class="pie-touch-center-text" x="120" y="116">' + escapeHtml(pieOpenGroup ? groupName(pieOpenGroup).replace('Gasto fijo', 'FIJOS').replace('Ahorro/meta', 'AHORROS').toUpperCase() : 'TOTAL') + '</text>',
-      '<text class="pie-touch-center-text small" x="120" y="132">' + escapeHtml(pieOpenGroup ? 'ABIERTO' : '100%') + '</text>',
+      '<text class="pie-touch-center-text" x="120" y="116">' + escapeHtml(pieCenterTitle(model, cfg)) + '</text>',
+      '<text class="pie-touch-center-text small" x="120" y="132">' + escapeHtml(pieCenterSub(model)) + '</text>',
       '</svg>'
     ].join('');
   }
 
-  function renderPieSubSlices(group, model, cx, cy, radius, startAngle, endAngle) {
+  function pieCenterTitle(model, cfg) {
+    var active = activePieGroup(model, 'plain');
+    if (!pieOpenGroup) {
+      return cfg.labels === 'none' ? '100%' : 'SUELDO';
+    }
+    return pctLabel(active.amount, model.salary);
+  }
+
+  function pieCenterSub(model) {
+    if (!pieOpenGroup) {
+      return 'TOTAL';
+    }
+    if (pieOpenGroup === 'fixed') {
+      return 'FIJOS';
+    }
+    if (pieOpenGroup === 'saving') {
+      return pieSavingNode === 'goals' ? 'METAS' : 'AHORROS';
+    }
+    return groupName(pieOpenGroup).toUpperCase();
+  }
+
+  function renderPieSubSlices(group, model, cx, cy, radius, startAngle, endAngle, variant) {
     var cursor = startAngle;
     return group.children.map(function (item, index) {
       var sweep = group.amount ? ((item.amount / group.amount) * (endAngle - startAngle)) : 0;
@@ -1184,26 +1273,41 @@
         pattern: item.pattern === undefined ? index : item.pattern,
         drillNode: item.drillNode
       };
-      var html = renderPieTouchSlice(child, model, cx, cy, radius, cursor, end, true, group.group);
+      var html = renderPieTouchSlice(child, model, cx, cy, radius, cursor, end, true, group.group, variant);
       cursor = end;
       return html;
     }).join('');
   }
 
-  function renderPieTouchSlice(item, model, cx, cy, radius, startAngle, endAngle, nested, ownerGroup) {
+  function renderPieTouchSlice(item, model, cx, cy, radius, startAngle, endAngle, nested, ownerGroup, variant) {
+    var cfg = pieVariantConfig(variant);
     var path = piePath(cx, cy, radius, startAngle, endAngle);
     var mid = startAngle + ((endAngle - startAngle) / 2);
     var labelPoint = polar(cx, cy, nested ? radius * 0.68 : radius * 0.62, mid);
     var label = pctLabel(item.amount, model.salary);
     var action = pieTouchAttrs(item, ownerGroup);
     var tightClass = Math.abs(endAngle - startAngle) < 22 ? ' is-tight' : '';
+    var labelHtml = pieTouchSliceLabel(label, labelPoint, endAngle - startAngle, nested, cfg);
     return [
       '<g class="pie-touch-part' + (nested ? ' is-nested' : ' is-macro') + tightClass + ' is-' + escapeHtml(item.group) + '" ' + action + '>',
       '<path class="pie-touch-slice" d="' + path + '" style="' + styleVars({ '--c': item.color }) + '"></path>',
-      '<path class="pie-touch-texture pat-' + escapeHtml(String(item.pattern || 0)) + '" d="' + path + '"></path>',
-      Math.abs(endAngle - startAngle) > 10 ? '<text class="pie-touch-label" x="' + labelPoint.x + '" y="' + labelPoint.y + '">' + escapeHtml(label) + '</text>' : '',
+      cfg.texture ? '<path class="pie-touch-texture pat-' + escapeHtml(String(item.pattern || 0)) + '" d="' + path + '"></path>' : '',
+      labelHtml,
       '</g>'
     ].join('');
+  }
+
+  function pieTouchSliceLabel(label, point, sweep, nested, cfg) {
+    if (cfg.labels === 'none') {
+      return '';
+    }
+    if (sweep < (nested ? 20 : 16)) {
+      return '';
+    }
+    if (cfg.labels === 'large' && nested && sweep < 28) {
+      return '';
+    }
+    return '<text class="pie-touch-label" x="' + point.x + '" y="' + point.y + '">' + escapeHtml(label) + '</text>';
   }
 
   function pieTouchAttrs(item, ownerGroup) {
@@ -1222,8 +1326,9 @@
     return 'data-pie-group="' + escapeHtml(item.group) + '"';
   }
 
-  function renderPieTouchLegend(active, model) {
-    var list = active.children && active.children.length ? active.children : pieGroups(model);
+  function renderPieTouchLegend(active, model, variant) {
+    var cfg = pieVariantConfig(variant);
+    var list = active.children && active.children.length ? active.children : pieGroups(model, variant);
     return [
       '<div class="pie-touch-legend">',
       list.map(function (item) {
@@ -1231,9 +1336,9 @@
         return [
           '<button type="button" class="pie-touch-row is-' + escapeHtml(item.group) + '"' + action + '>',
           '<i style="' + styleVars({ '--c': item.color || palette.available[0] }) + '"></i>',
-          '<span><b>' + escapeHtml(item.label) + '</b><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
+          '<span><b>' + escapeHtml(item.label) + '</b></span>',
           '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
-          '<em>' + escapeHtml(money(item.amount)) + '</em>',
+          cfg.money ? '<em>' + escapeHtml(money(item.amount)) + '</em>' : '',
           '</button>'
         ].join('');
       }).join(''),
@@ -1599,7 +1704,7 @@
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderInteractivePie2D(model)
+      renderPieVariantSet(model)
     ].join('');
   }
 

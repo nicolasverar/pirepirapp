@@ -958,10 +958,27 @@
 ### Verificacion
 - `node --check frontend\previews\sueldo.js`: OK.
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
+
+## 2026-06-28 - Variantes simples de torta 2D
+
+### Objetivo
+- Probar variantes mas limpias de la torta 2D porque el texto y los colores de la version anterior no convencian.
+
+### Cambios
+- El laboratorio ahora muestra tres alternativas comparables: `Plana`, `LCD sobria` y `Monocroma`.
+- Se redujo el texto dentro de la torta; la variante monocroma elimina los porcentajes internos y deja la lectura en la leyenda.
+- Se simplificaron las etiquetas de la leyenda y se bajo el peso visual del panel de lectura.
+- Se ajustaron las paletas para que sean mas sobrias, con menos contraste disonante y disponible en tono oscuro.
+- Las tres variantes conservan la interaccion: tocar fijos/ahorros/metas revela particiones internas dentro de la misma torta.
+- El simulacro queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
-- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
-- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
 
 ## 2026-06-27 - Explorar torta y mapa 100 con tramas
 

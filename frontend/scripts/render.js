@@ -4,6 +4,8 @@
   var utils = window.FinanzasUtils;
   var FUTURE_PREFS_KEY = 'finanzasFutureSavingsPrefs';
   var MOTIVE_SIMILARITY_THRESHOLD = 0.8;
+  var salaryPartitionOpenGroups = { fixed: true, saving: true };
+  var salaryPartitionSavingNode = 'summary';
 
   function render() {
     var state = window.FinanzasState.getState();
@@ -101,7 +103,7 @@
       renderProgressMeter(summary.porcentajeDisponible || 0, 'progress-large'),
       '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
       '</article>',
-      renderSalaryPartition(config, summary),
+      renderSalaryPartition(config, summary, state.data),
       '</section>'
     ].join('');
   }
@@ -1025,24 +1027,18 @@
     return 'Borrada';
   }
 
-  function renderSalaryPartition(config, summary) {
-    var salary = utils.normalizeAmount((config || {}).sueldoMensual || 0);
-    var partition = salaryPartitionFromSummary(summary, config);
-    var total = partition.reduce(function (sum, item) {
-      return sum + item.amount;
-    }, 0);
-    var excess = Math.max(0, utils.normalizeAmount((summary || {}).excesoParticion || 0));
-    var superfluous = utils.normalizeAmount((summary || {}).superfluosPlanificados || 0);
-    var superfluousPercent = salary ? Math.round((superfluous / salary) * 10000) / 100 : 0;
-    var titleBadge = excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(superfluousPercent) || '0') + '%';
+  function renderSalaryPartition(config, summary, data) {
+    var model = salaryPartitionB1Model(config, summary, data);
+    var salary = model.salary;
+    var availablePercent = salary ? partitionPercent(model.available, salary) : 0;
+    var titleBadge = model.excess > 0 ? 'EXCESO' : 'DISP. ' + (formatPercentInput(availablePercent) || '0') + '%';
 
     return [
-      '<article class="system-window salary-partition-card salary-partition-aaa' + (excess > 0 ? ' is-over-budget' : '') + '">',
+      '<article class="system-window salary-partition-card salary-partition-aaa' + (model.excess > 0 ? ' is-over-budget' : '') + '">',
       '<div class="window-title salary-partition-heading"><span>PARTICION SUELDO</span><span>' + utils.escapeHtml(titleBadge) + '</span></div>',
       salary ? '<div class="partition-summary partition-summary-top"><span>Sueldo distribuido</span><b>' + utils.escapeHtml(utils.formatMoney(salary)) + '</b></div>' : '',
-      excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(excess)) + '</p>' : '',
-      salary ? renderSalaryPartitionPie(partition, salary, total, excess) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
-      salary ? renderSalaryPartitionLegend(partition, salary, excess) : '',
+      model.excess > 0 ? '<p class="partition-warning">Exceso: ' + utils.escapeHtml(utils.formatMoney(model.excess)) + '</p>' : '',
+      salary ? renderSalaryPartitionB1(model) : '<p class="empty-state">Carga tu sueldo mensual para ver la particion.</p>',
       '<span class="summary-bottom-dot-shadow" aria-hidden="true"></span>',
       '</article>'
     ].join('');
@@ -1071,6 +1067,302 @@
     ].filter(function (item) {
       return item.amount > 0;
     });
+  }
+
+  function salaryPartitionB1Model(config, summary, data) {
+    var source = data || {};
+    var salary = utils.normalizeAmount((config || {}).sueldoMensual || (summary || {}).sueldoMensual || 0);
+    var fixedItems = utils.normalizeFixedExpenses((config || {}).gastosFijos || [], salary).map(function (item, index) {
+      return {
+        label: utils.fixedExpenseName(item) || 'Gasto fijo',
+        group: 'fixed',
+        amount: utils.fixedExpenseAmount(item),
+        index: index
+      };
+    }).filter(partitionNonZero);
+    var fixedTotal = fixedItems.reduce(partitionSum, 0);
+    var fallbackFixed = utils.normalizeAmount((summary || {}).gastosFijosConfigurados);
+    if (!fixedTotal && fallbackFixed > 0) {
+      fixedTotal = fallbackFixed;
+      fixedItems = [{ label: 'Gastos fijos', group: 'fixed', amount: fallbackFixed, index: 0 }];
+    }
+
+    var futureItems = partitionActiveItems((summary || {}).ahorrosFuturo || source.ahorrosFuturo).map(function (item, index) {
+      return {
+        label: item.titulo || item.nombre || 'Futuro',
+        group: 'saving-future',
+        amount: utils.normalizeAmount(item.montoMensual),
+        index: index
+      };
+    }).filter(partitionNonZero);
+    var goalItems = partitionActiveItems((summary || {}).metas || source.metas).map(function (item, index) {
+      return {
+        label: item.titulo || item.nombre || 'Meta',
+        group: 'saving-goal',
+        amount: utils.normalizeAmount(item.montoMensual),
+        index: index
+      };
+    }).filter(partitionNonZero);
+    var savingsTotal = futureItems.concat(goalItems).reduce(partitionSum, 0);
+    var fallbackSavings = utils.normalizeAmount((summary || {}).ahorrosPlanificados);
+    if (!savingsTotal && fallbackSavings > 0) {
+      savingsTotal = fallbackSavings;
+      futureItems = [{ label: 'Ahorros', group: 'saving-future', amount: fallbackSavings, index: 0 }];
+    }
+
+    return {
+      salary: salary,
+      fixedItems: fixedItems,
+      fixedTotal: fixedTotal,
+      futureItems: futureItems,
+      goalItems: goalItems,
+      savingsTotal: savingsTotal,
+      available: Math.max(0, salary - fixedTotal - savingsTotal),
+      excess: Math.max(0, fixedTotal + savingsTotal - salary),
+      scale: Math.max(salary, fixedTotal + savingsTotal, 1)
+    };
+  }
+
+  function partitionActiveItems(items) {
+    return (items || []).filter(function (item) {
+      return !item.estado || String(item.estado).toLowerCase() === 'activo';
+    });
+  }
+
+  function partitionNonZero(item) {
+    return utils.normalizeAmount((item || {}).amount) > 0;
+  }
+
+  function partitionSum(sum, item) {
+    return sum + utils.normalizeAmount((item || {}).amount);
+  }
+
+  function salaryPartitionB1Groups(model) {
+    return [
+      {
+        label: 'Gastos fijos',
+        group: 'fixed',
+        amount: model.fixedTotal,
+        color: '#87985d',
+        children: model.fixedItems
+      },
+      {
+        label: 'Ahorros/metas',
+        group: 'saving',
+        amount: model.savingsTotal,
+        color: '#b7c67f',
+        children: model.futureItems.concat(model.goalItems)
+      },
+      {
+        label: 'Disponible',
+        group: 'available',
+        amount: model.available,
+        color: '#68794a',
+        children: []
+      },
+      {
+        label: 'Exceso',
+        group: 'excess',
+        amount: model.excess,
+        color: '#b7615f',
+        children: [{ label: 'Exceso', group: 'excess', amount: model.excess }]
+      }
+    ].filter(partitionNonZero);
+  }
+
+  function renderSalaryPartitionB1(model) {
+    var groups = salaryPartitionB1Groups(model);
+    var salaryLine = Math.min(100, Math.max(0, partitionPercent(model.salary, model.scale)));
+    return [
+      '<div class="salary-b1-stage" data-salary-partition-b1>',
+      '<div class="salary-b1-bar-wrap" style="' + cssVars({ '--salary-line': salaryLine + '%' }) + '">',
+      '<div class="salary-b1-bar" role="group" aria-label="Particion del sueldo en barra interactiva">',
+      '<span class="salary-b1-salary-line" aria-hidden="true">100%</span>',
+      groups.map(function (group, index) {
+        return isSalaryB1GroupOpen(group.group) && canSalaryB1DrillGroup(group)
+          ? renderSalaryB1ExpandedSegment(group, model, index)
+          : renderSalaryB1MacroSegment(group, model, index);
+      }).join(''),
+      '</div>',
+      '<div class="salary-b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
+      '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function renderSalaryB1MacroSegment(group, model, index) {
+    var width = partitionPercent(group.amount, model.scale);
+    var tightClass = width < 10 ? ' is-tight' : '';
+    if (!canSalaryB1DrillGroup(group)) {
+      return [
+        '<div class="salary-b1-segment is-' + utils.escapeHtml(group.group) + ' is-static' + tightClass + '" role="img" aria-label="' + utils.escapeHtml(group.label + ' ' + salaryPartitionPctLabel(group.amount, model.salary)) + '" style="' + cssVars({ '--w': width + '%', '--c': group.color }) + '">',
+        renderSalaryB1InsidePct(group, model),
+        renderSalaryB1Leader(group, model, index, false, group.group),
+        '</div>'
+      ].join('');
+    }
+    return [
+      '<button class="salary-b1-segment is-' + utils.escapeHtml(group.group) + tightClass + '" type="button" data-salary-partition-group="' + utils.escapeHtml(group.group) + '" style="' + cssVars({ '--w': width + '%', '--c': group.color }) + '">',
+      renderSalaryB1InsidePct(group, model),
+      renderSalaryB1Leader(group, model, index, false, group.group),
+      '</button>'
+    ].join('');
+  }
+
+  function renderSalaryB1ExpandedSegment(group, model) {
+    var width = partitionPercent(group.amount, model.scale);
+    var children = salaryB1ChildrenForGroup(group, model);
+    return [
+      '<div class="salary-b1-segment is-expanded is-' + utils.escapeHtml(group.group) + '" role="group" aria-label="' + utils.escapeHtml(group.label + ' abierto ' + salaryPartitionPctLabel(group.amount, model.salary)) + '" style="' + cssVars({ '--w': width + '%', '--c': group.color }) + '">',
+      children.map(function (item, childIndex) {
+        var childWidth = partitionPercent(item.amount, group.amount);
+        var tightClass = childWidth < 14 ? ' is-tight' : '';
+        var tinyClass = childWidth < 8 ? ' is-tiny' : '';
+        var drillAttr = item.drillNode
+          ? ' data-salary-partition-saving-node="' + utils.escapeHtml(item.drillNode) + '"'
+          : ' data-salary-partition-child-group="' + utils.escapeHtml(group.group) + '"';
+        return [
+          '<button class="salary-b1-child is-' + utils.escapeHtml(item.group) + tightClass + tinyClass + '" type="button"' + drillAttr + ' title="' + utils.escapeHtml(item.label + ' - ' + salaryPartitionPctLabel(item.amount, model.salary)) + '" style="' + cssVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
+          renderSalaryB1InsidePct(item, model),
+          renderSalaryB1Leader(item, model, childIndex, true, group.group),
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function salaryB1ChildrenForGroup(group, model) {
+    var futureAmount;
+    var goalAmount;
+    if (group.group !== 'saving') {
+      return group.children;
+    }
+    if (salaryPartitionSavingNode === 'metas') {
+      return model.futureItems.concat(model.goalItems).map(function (item) {
+        var copy = Object.assign({}, item);
+        copy.drillNode = 'collapse';
+        return copy;
+      });
+    }
+    futureAmount = model.futureItems.reduce(partitionSum, 0);
+    goalAmount = model.goalItems.reduce(partitionSum, 0);
+    return [
+      { label: 'Ahorros', group: 'saving-future', amount: futureAmount, drillNode: 'collapse' },
+      { label: 'Metas', group: 'saving-goals', amount: goalAmount, drillNode: 'metas' }
+    ].filter(partitionNonZero);
+  }
+
+  function renderSalaryB1InsidePct(item, model) {
+    return '<span class="salary-b1-inside-pct">' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</span>';
+  }
+
+  function canSalaryB1DrillGroup(group) {
+    return group && group.group !== 'available';
+  }
+
+  function isSalaryB1GroupOpen(group) {
+    return !!salaryPartitionOpenGroups[group];
+  }
+
+  function setSalaryB1GroupOpen(group, open) {
+    if (open) {
+      salaryPartitionOpenGroups[group] = true;
+      return;
+    }
+    delete salaryPartitionOpenGroups[group];
+    if (group === 'saving') {
+      salaryPartitionSavingNode = 'summary';
+    }
+  }
+
+  function salaryB1LeaderPlacement(group, index, nested) {
+    var side = index % 2 ? 'bottom' : 'top';
+    var direction = index % 4 < 2 ? 'right' : 'left';
+    var run = 42;
+    var rise = 36;
+    var arm = 34;
+    var angle;
+    var diag;
+    if (nested && group === 'fixed') {
+      side = 'top';
+      direction = 'right';
+      rise = Math.max(38, 88 - (Math.min(index, 4) * 15));
+      run = 34 + (Math.min(index, 4) * 13);
+    } else if (nested && group === 'saving') {
+      side = 'bottom';
+      direction = 'right';
+      rise = Math.max(38, 88 - (Math.min(index, 4) * 15));
+      run = 34 + (Math.min(index, 4) * 13);
+    } else if (nested && group === 'excess') {
+      side = 'top';
+      direction = 'left';
+      rise = 48;
+    } else if (!nested && group === 'fixed') {
+      side = 'top';
+      direction = 'right';
+    } else if (!nested && group === 'saving') {
+      side = 'bottom';
+      direction = 'right';
+    } else if (!nested && group === 'available') {
+      side = 'bottom';
+      direction = 'right';
+      rise = 34;
+      run = 44;
+    } else if (!nested && group === 'excess') {
+      side = 'bottom';
+      direction = 'left';
+    }
+    diag = Math.round(Math.sqrt((run * run) + (rise * rise)));
+    angle = Math.round((Math.atan2(rise, run) * 1800) / Math.PI) / 10;
+    if (direction === 'right' && side === 'top') {
+      angle = -angle;
+    } else if (direction === 'left' && side === 'top') {
+      angle = 180 + angle;
+    } else if (direction === 'left' && side === 'bottom') {
+      angle = 180 - angle;
+    }
+    return {
+      side: side,
+      direction: direction,
+      cascade: nested ? Math.min(index, 4) : 0,
+      style: cssVars({
+        '--leader-y': (side === 'top' ? '-' : '') + rise + 'px',
+        '--leader-run': run + 'px',
+        '--leader-arm': arm + 'px',
+        '--leader-diag': diag + 'px',
+        '--leader-angle': angle + 'deg',
+        '--leader-left-arm-x': '-' + (run + arm) + 'px',
+        '--leader-label-x': (run + arm + 5) + 'px'
+      })
+    };
+  }
+
+  function renderSalaryB1Leader(item, model, index, nested, ownerGroup) {
+    var placement = salaryB1LeaderPlacement(ownerGroup || item.group, index, nested);
+    var labelText = item.label + ' ' + salaryPartitionPctLabel(item.amount, model.salary) + ' ' + utils.formatMoney(item.amount);
+    return [
+      '<span class="salary-b1-leader is-' + utils.escapeHtml(placement.side) + ' is-' + utils.escapeHtml(placement.direction) + (nested ? ' is-nested is-cascade-' + utils.escapeHtml(String(placement.cascade)) : '') + '" style="' + placement.style + '">',
+      '<span class="salary-b1-leader-text">' + utils.escapeHtml(labelText) + '</span>',
+      '</span>'
+    ].join('');
+  }
+
+  function partitionPercent(value, total) {
+    if (!total) {
+      return 0;
+    }
+    return Math.round((utils.normalizeAmount(value) / total) * 1000) / 10;
+  }
+
+  function salaryPartitionPctLabel(value, salary) {
+    return (formatPercentInput(partitionPercent(value, salary)) || '0') + '%';
+  }
+
+  function cssVars(vars) {
+    return Object.keys(vars).map(function (key) {
+      return key + ':' + vars[key];
+    }).join(';');
   }
 
   function plannedSavingsFromSummary(summary) {
@@ -1354,6 +1646,46 @@
     });
 
     bindSettings(root);
+    bindSalaryPartition(root);
+  }
+
+  function bindSalaryPartition(root) {
+    var panel = utils.qs('[data-salary-partition-b1]', root);
+    if (!panel) {
+      return;
+    }
+    panel.addEventListener('click', function (event) {
+      var savingButton = event.target.closest ? event.target.closest('[data-salary-partition-saving-node]') : null;
+      var childButton = event.target.closest ? event.target.closest('[data-salary-partition-child-group]') : null;
+      var groupButton = event.target.closest ? event.target.closest('[data-salary-partition-group]') : null;
+      var group;
+      if (savingButton && panel.contains(savingButton)) {
+        if (savingButton.getAttribute('data-salary-partition-saving-node') === 'metas') {
+          setSalaryB1GroupOpen('saving', true);
+          salaryPartitionSavingNode = 'metas';
+        } else {
+          setSalaryB1GroupOpen('saving', false);
+        }
+        render();
+        return;
+      }
+      if (childButton && panel.contains(childButton)) {
+        setSalaryB1GroupOpen(childButton.getAttribute('data-salary-partition-child-group'), false);
+        render();
+        return;
+      }
+      if (groupButton && panel.contains(groupButton)) {
+        group = groupButton.getAttribute('data-salary-partition-group');
+        if (group === 'available') {
+          return;
+        }
+        setSalaryB1GroupOpen(group, !isSalaryB1GroupOpen(group));
+        if (group === 'saving' && isSalaryB1GroupOpen(group)) {
+          salaryPartitionSavingNode = 'summary';
+        }
+        render();
+      }
+    });
   }
 
   function bindSettings(root) {

@@ -1169,3 +1169,25 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `callout_single_text`, `callout_no_inner_title_markup`, `available_bottom_right`, `leader_text_scale_uniform`, `saving_bottom_left_longest`, `saving_detail_bottom_left_longest`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 integrado en Resumen v3.16
+
+### Objetivo
+- Probar la vista B1 dentro de la app real para evaluar si el enfoque funciona en la tarjeta de `PARTICION SUELDO` o queda demasiado pequeno.
+
+### Cambios
+- La tarjeta `PARTICION SUELDO` del Resumen ahora renderiza la barra B1 integrada en lugar de la torta 3D.
+- La vista B1 se alimenta con datos reales: gastos fijos de Configuracion, ahorros futuro, metas, disponible y exceso.
+- `Gastos fijos` y `Ahorros/metas` quedan abiertos por defecto para probar la lectura en el espacio real de la app.
+- Se agrego interaccion local para abrir/cerrar familias y desagregar `Metas` sin modificar datos.
+- Se agregaron estilos `salary-b1-*` propios para no mezclar la app principal con el laboratorio de preview.
+- Se actualizo cache/version de `v3.15` a `v3.16` y `finanzas-lcd-v124`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `summary_renders_b1`, `b1_opens_fixed`, `b1_opens_saving`, `b1_has_available_static`, `b1_has_real_labels`, `partition_card_no_pie_stage`, `version_bumped`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

@@ -4674,6 +4674,241 @@ body::-webkit-scrollbar,
   font-size: 0.78rem;
 }
 
+.summary-stack > .salary-partition-card.salary-partition-aaa .salary-b1-stage {
+  display: grid;
+  min-height: 278px;
+  padding: 6px 4px 2px;
+  overflow: visible;
+  color: #071007;
+}
+
+.salary-b1-bar-wrap {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.salary-b1-bar {
+  position: relative;
+  display: flex;
+  min-height: 88px;
+  margin: 98px 0 96px;
+  overflow: visible;
+  background: #071007;
+  border: 2px solid #071007;
+}
+
+.salary-b1-salary-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--salary-line);
+  z-index: 5;
+  width: 2px;
+  color: #c4d08b;
+  background: #071007;
+  transform: translateX(-1px);
+  text-indent: 3px;
+  text-transform: uppercase;
+  font-size: 0.46rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.salary-b1-segment {
+  position: relative;
+  flex: 0 0 var(--w);
+  min-width: 0;
+  min-height: 100%;
+  padding: 0;
+  overflow: visible;
+  color: #071007;
+  background: var(--c);
+  border: 0;
+  border-right: 2px solid #071007;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.salary-b1-segment:last-child {
+  border-right: 0;
+}
+
+.salary-b1-segment.is-static {
+  cursor: default;
+}
+
+.salary-b1-segment:focus-visible,
+.salary-b1-child:focus-visible {
+  outline: 2px solid #d9e697;
+  outline-offset: -4px;
+}
+
+.salary-b1-segment.is-expanded {
+  display: flex;
+  align-items: stretch;
+  box-shadow:
+    inset 0 0 0 3px #071007,
+    inset 0 0 0 5px rgba(196, 208, 139, 0.38);
+}
+
+.salary-b1-child {
+  position: relative;
+  flex: 0 0 var(--w);
+  min-width: 0;
+  padding: 0;
+  overflow: visible;
+  background:
+    linear-gradient(180deg, rgba(7, 16, 7, var(--shade)), rgba(7, 16, 7, var(--shade))),
+    var(--c);
+  border-top: 0;
+  border-right: 2px solid rgba(7, 16, 7, 0.82);
+  border-bottom: 0;
+  border-left: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.salary-b1-child:last-child {
+  border-right: 0;
+}
+
+.salary-b1-inside-pct {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  max-width: calc(100% - 6px);
+  padding: 1px 4px;
+  overflow: hidden;
+  color: #c4d08b;
+  background: #071007;
+  border: 1px solid rgba(196, 208, 139, 0.5);
+  transform: translate(-50%, -50%);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-size: 0.6rem;
+  font-weight: 900;
+  line-height: 1.05;
+  pointer-events: none;
+}
+
+.salary-b1-child.is-tight .salary-b1-inside-pct,
+.salary-b1-child.is-tiny .salary-b1-inside-pct,
+.salary-b1-segment.is-tight .salary-b1-inside-pct {
+  padding: 1px 3px;
+  font-size: 0.5rem;
+}
+
+.salary-b1-leader {
+  --leader-y: -36px;
+  --leader-run: 42px;
+  --leader-arm: 34px;
+  --leader-diag: 55px;
+  --leader-angle: -42deg;
+  --leader-left-arm-x: -76px;
+  --leader-label-x: 81px;
+  position: absolute;
+  left: 50%;
+  z-index: 8;
+  width: 1px;
+  height: 1px;
+  color: #071007;
+  text-align: left;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.salary-b1-leader::before,
+.salary-b1-leader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: #071007;
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.salary-b1-leader::before {
+  width: var(--leader-diag);
+  transform: rotate(var(--leader-angle));
+  transform-origin: 0 50%;
+}
+
+.salary-b1-leader::after {
+  top: var(--leader-y);
+  width: var(--leader-arm);
+}
+
+.salary-b1-leader.is-top {
+  top: 0;
+}
+
+.salary-b1-leader.is-bottom {
+  bottom: 0;
+}
+
+.salary-b1-leader.is-right::after {
+  left: var(--leader-run);
+}
+
+.salary-b1-leader.is-left::after {
+  left: var(--leader-left-arm-x);
+}
+
+.salary-b1-leader.is-nested {
+  z-index: 11;
+}
+
+.salary-b1-leader-text {
+  position: absolute;
+  top: calc(var(--leader-y) - 6px);
+  z-index: 2;
+  display: block;
+  width: max-content;
+  max-width: 178px;
+  padding: 1px 4px;
+  overflow: hidden;
+  background: rgba(196, 208, 139, 0.92);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.44rem;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.salary-b1-leader.is-right .salary-b1-leader-text {
+  left: var(--leader-label-x);
+}
+
+.salary-b1-leader.is-left .salary-b1-leader-text {
+  right: var(--leader-label-x);
+}
+
+.salary-b1-child.is-tight .salary-b1-leader,
+.salary-b1-child.is-tiny .salary-b1-leader,
+.salary-b1-segment.is-tight .salary-b1-leader {
+  --leader-arm: 28px;
+}
+
+.salary-b1-axis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  text-transform: uppercase;
+  font-size: 0.48rem;
+  font-weight: 900;
+}
+
+.salary-b1-axis span:nth-child(3),
+.salary-b1-axis span:last-child {
+  text-align: right;
+}
+
 /* Carcasa PDA negra y botonera fisica de goma. */
 .device-shell {
   background:

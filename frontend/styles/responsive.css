@@ -75,6 +75,25 @@
     width: min(100%, 258px);
   }
 
+  .salary-b1-bar {
+    min-height: 82px;
+    margin: 92px 0 90px;
+  }
+
+  .salary-b1-leader {
+    --leader-arm: 28px;
+  }
+
+  .salary-b1-leader-text {
+    max-width: 138px;
+    font-size: 0.4rem;
+  }
+
+  .salary-b1-inside-pct {
+    padding: 1px 3px;
+    font-size: 0.52rem;
+  }
+
   .movement-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

@@ -556,7 +556,7 @@ button {
 }
 
 .pie-touch-layout.is-variant .pie-touch-svg {
-  width: min(100%, 930px);
+  width: min(100%, 960px);
 }
 
 .pie-touch-part {
@@ -586,7 +586,7 @@ button {
 }
 
 .pie-touch-part.is-available .pie-touch-slice {
-  fill: #071007;
+  fill: #24351f;
 }
 
 .pie-touch-part.is-excess .pie-touch-slice {
@@ -620,12 +620,16 @@ button {
   fill: #c4d08b;
 }
 
+.pie-touch-label-box {
+  fill: var(--panel-hi);
+  stroke: #071007;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
 .pie-touch-label,
 .pie-touch-center-text {
-  fill: var(--panel-hi);
-  paint-order: stroke fill;
-  stroke: #071007;
-  stroke-width: 3.2;
+  fill: #071007;
   text-anchor: middle;
   dominant-baseline: middle;
   text-transform: uppercase;
@@ -769,11 +773,11 @@ button {
 
 .pie-touch-row.is-available {
   color: var(--panel-hi);
-  background: #071007;
+  background: #24351f;
 }
 
 .pie-touch-row.is-available i {
-  background: #071007;
+  background: #24351f;
   border-color: rgba(196, 208, 139, 0.55);
 }
 

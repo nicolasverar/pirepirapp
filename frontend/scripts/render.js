@@ -1148,7 +1148,7 @@
         label: 'Disponible',
         group: 'available',
         amount: model.available,
-        color: '#071007',
+        color: '#24351f',
         children: []
       },
       {
@@ -1176,7 +1176,7 @@
   function renderSalaryPie2dSvg(groups, model) {
     var cx = 160;
     var cy = 130;
-    var radius = 108;
+    var radius = 112;
     var start = -90;
     var callouts = [];
     var pieces = groups.map(function (group) {
@@ -1190,7 +1190,7 @@
     }).join('');
     return [
       '<svg class="salary-pie2d-svg" viewBox="-62 0 444 260" role="img" aria-label="Torta 2D interactiva de particion del sueldo">',
-      '<circle class="salary-pie2d-shadow" cx="160" cy="134" r="110"></circle>',
+      '<circle class="salary-pie2d-shadow" cx="160" cy="134" r="114"></circle>',
       pieces,
       '<circle class="salary-pie2d-rim" cx="160" cy="130" r="' + radius + '"></circle>',
       renderSalaryPie2dCallouts(callouts),
@@ -1231,10 +1231,15 @@
   }
 
   function renderSalaryPie2dInsidePct(item, model, point, sweep, nested) {
+    var text = salaryPartitionPctLabel(item.amount, model.salary);
+    var width = Math.max(30, Math.min(58, (text.length * 6) + 12));
     if (nested && sweep < 9) {
       return '';
     }
-    return '<text class="salary-pie2d-label" x="' + salaryPie2dNum(point.x) + '" y="' + salaryPie2dNum(point.y) + '">' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</text>';
+    return [
+      '<rect class="salary-pie2d-label-box" x="' + salaryPie2dNum(point.x - (width / 2)) + '" y="' + salaryPie2dNum(point.y - 8) + '" width="' + salaryPie2dNum(width) + '" height="16"></rect>',
+      '<text class="salary-pie2d-label" x="' + salaryPie2dNum(point.x) + '" y="' + salaryPie2dNum(point.y) + '">' + utils.escapeHtml(text) + '</text>'
+    ].join('');
   }
 
   function salaryPie2dAttrs(item, ownerGroup) {
@@ -1258,7 +1263,8 @@
 
   function addSalaryPie2dCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested) {
     var selectedMacro = !nested && isSalaryB1GroupOpen(item.group);
-    var shouldShow = (nested && sweep >= 8) || (selectedMacro && sweep >= 8);
+    var persistentAvailable = !nested && item.group === 'available';
+    var shouldShow = (nested && sweep >= 8) || (selectedMacro && sweep >= 8) || (persistentAvailable && item.amount > 0);
     var anchor;
     if (!shouldShow || !callouts) {
       return;
@@ -1418,7 +1424,7 @@
     var palettes = {
       fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
       saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
-      available: ['#071007'],
+      available: ['#24351f'],
       excess: ['#a95c5a']
     };
     var colors = palettes[family] || palettes.available;

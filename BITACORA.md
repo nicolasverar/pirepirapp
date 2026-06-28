@@ -1046,6 +1046,28 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Ajuste fino de torta 2D v3.29
+
+### Objetivo
+- Mejorar la lectura de `DISP.` en la torta final sin cambiar el paradigma ya implementado.
+
+### Cambios
+- `DISP.` ahora mantiene callout externo siempre visible cuando existe disponible, aunque no este seleccionado.
+- La torta crece apenas: radio de 108 a 112 y ancho visual un poco mayor.
+- `Disponible` deja el negro puro y pasa a un verde muy oscuro `#24351f`, tanto en app principal como en preview.
+- Los porcentajes internos ahora tienen una mini pastilla/marco SVG para mejorar contraste y consistencia.
+- `frontend/previews` queda alineado con la app principal.
+- Version y cache pasan de `v3.28`/`finanzas-lcd-v136` a `v3.29`/`finanzas-lcd-v137`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Callouts de torta A hacia afuera
 
 ### Objetivo

@@ -1068,7 +1068,7 @@
         colors: {
           fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
           saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
-          available: ['#071007'],
+          available: ['#24351f'],
           excess: ['#a95c5a']
         }
       },
@@ -1083,7 +1083,7 @@
         colors: {
           fixed: ['#7f8f5b', '#8f9f68', '#718252', '#9aaa6f'],
           saving: ['#b7c982', '#c5d58d', '#a7bb74', '#d0dd98'],
-          available: ['#071007'],
+          available: ['#24351f'],
           excess: ['#a95c5a']
         }
       },
@@ -1098,7 +1098,7 @@
         colors: {
           fixed: ['#7f8f5b', '#8c9b65', '#718252', '#98a96f'],
           saving: ['#b7c982', '#c5d58d', '#a8bb75', '#d0dd98'],
-          available: ['#071007'],
+          available: ['#24351f'],
           excess: ['#a95c5a']
         }
       },
@@ -1113,7 +1113,7 @@
         colors: {
           fixed: ['#839361', '#93a36e', '#758658', '#a1af77'],
           saving: ['#b4c681', '#c2d18b', '#a4b975', '#cdd993'],
-          available: ['#071007'],
+          available: ['#24351f'],
           excess: ['#a95c5a']
         }
       }
@@ -1215,7 +1215,7 @@
     var cfg = pieVariantConfig(variant);
     var cx = 160;
     var cy = 130;
-    var radius = 108;
+    var radius = 112;
     var start = -90;
     var callouts = [];
     var pieces = groups.map(function (group) {
@@ -1232,7 +1232,7 @@
     return [
       '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-62 0 444 260" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
-      '<circle class="pie-touch-shadow" cx="160" cy="134" r="110"></circle>',
+      '<circle class="pie-touch-shadow" cx="160" cy="134" r="114"></circle>',
       pieces,
       '<circle class="pie-touch-rim" cx="160" cy="130" r="' + radius + '"></circle>',
       calloutHtml,
@@ -1281,7 +1281,8 @@
 
   function addPieCallout(callouts, item, model, cx, cy, radius, midAngle, sweep, nested, cfg) {
     var selectedMacro = !nested && isPieGroupOpen(item.group);
-    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && ((nested && sweep >= 8) || (selectedMacro && sweep >= 8)));
+    var persistentAvailable = !nested && item.group === 'available';
+    var shouldShow = (cfg.callouts === 'all' && sweep >= 14) || (cfg.callouts === 'open' && ((nested && sweep >= 8) || (selectedMacro && sweep >= 8) || (persistentAvailable && item.amount > 0)));
     var side;
     var anchor;
     if (!shouldShow || !callouts) {
@@ -1375,6 +1376,7 @@
   }
 
   function pieTouchSliceLabel(label, point, sweep, nested, cfg) {
+    var width = Math.max(30, Math.min(58, (String(label || '').length * 6) + 12));
     if (cfg.labels === 'none') {
       return '';
     }
@@ -1384,7 +1386,10 @@
     if (cfg.labels === 'large' && nested && sweep < 28) {
       return '';
     }
-    return '<text class="pie-touch-label" x="' + point.x + '" y="' + point.y + '">' + escapeHtml(label) + '</text>';
+    return [
+      '<rect class="pie-touch-label-box" x="' + edgeNum(point.x - (width / 2)) + '" y="' + edgeNum(point.y - 8) + '" width="' + edgeNum(width) + '" height="16"></rect>',
+      '<text class="pie-touch-label" x="' + point.x + '" y="' + point.y + '">' + escapeHtml(label) + '</text>'
+    ].join('');
   }
 
   function pieTouchAttrs(item, ownerGroup) {

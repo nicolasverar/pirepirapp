@@ -5289,7 +5289,7 @@ body::-webkit-scrollbar,
 }
 
 .salary-pie2d-svg {
-  width: min(100%, 560px);
+  width: min(100%, 580px);
   height: auto;
   overflow: visible;
   image-rendering: pixelated;
@@ -5322,7 +5322,7 @@ body::-webkit-scrollbar,
 }
 
 .salary-pie2d-part.is-available .salary-pie2d-slice {
-  fill: #071007;
+  fill: #24351f;
 }
 
 .salary-pie2d-part.is-excess .salary-pie2d-slice {
@@ -5346,11 +5346,15 @@ body::-webkit-scrollbar,
   fill: #c4d08b;
 }
 
-.salary-pie2d-label {
+.salary-pie2d-label-box {
   fill: #c4d08b;
-  paint-order: stroke fill;
   stroke: #071007;
-  stroke-width: 3.2;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.salary-pie2d-label {
+  fill: #071007;
   text-anchor: middle;
   dominant-baseline: middle;
   text-transform: uppercase;
@@ -5458,11 +5462,11 @@ body::-webkit-scrollbar,
 
 .salary-pie2d-row.is-available {
   color: #c4d08b;
-  background: #071007;
+  background: #24351f;
 }
 
 .salary-pie2d-row.is-available i {
-  background: #071007;
+  background: #24351f;
   border-color: rgba(196, 208, 139, 0.55);
 }
 

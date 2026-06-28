@@ -246,6 +246,27 @@ async function run() {
   assert.strictEqual(state.movimientos.length, 10, 'Persistencia local debe conservar movimientos');
   assert.ok(Object.keys(state.photos).length >= 2, 'Persistencia local debe conservar fotos');
 
+  const backup = await window.FinanzasLocalStore.exportBackup();
+  assert.strictEqual(backup.schema, 'pirepirapp-local-backup', 'Backup debe identificar su esquema');
+  assert.strictEqual(backup.state.movimientos.length, 10, 'Backup debe incluir movimientos');
+  assert.ok(Object.keys(backup.state.photos).length >= 2, 'Backup debe incluir fotos locales');
+
+  await window.FinanzasLocalStore.saveState({
+    config: { sueldoMensual: 1, mesActual: '2026-05' },
+    movimientos: [],
+    ahorrosFuturo: [],
+    metas: [],
+    wishlist: [],
+    photos: {}
+  });
+  const wiped = await window.FinanzasLocalStore.loadState();
+  assert.strictEqual(wiped.movimientos.length, 0, 'Prueba debe poder limpiar estado antes de importar');
+
+  await window.FinanzasLocalStore.importBackup(backup);
+  const imported = await window.FinanzasLocalStore.loadState();
+  assert.strictEqual(imported.movimientos.length, 10, 'Importar backup debe restaurar movimientos');
+  assert.ok(Object.keys(imported.photos).length >= 2, 'Importar backup debe restaurar fotos');
+
   let archive = await window.FinanzasApi.request('getArchive', {});
   assert.ok(archive.some((item) => item.id === wish.id && item.motivoArchivo === 'Cosa cumplida'), 'Wishlist comprada debe ir al archivo');
   assert.ok(archive.some((item) => item.id === secondWish.id && item.motivoArchivo === 'Cosa convertida'), 'Wishlist convertida debe ir al archivo');

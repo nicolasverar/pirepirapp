@@ -8,6 +8,8 @@
   var STATE_KEY = 'state';
   var FALLBACK_KEY = 'pirepirappLocalState';
   var FALLBACK_PRIORITY_KEY = 'pirepirappLocalStatePreferFallback';
+  var BACKUP_SCHEMA = 'pirepirapp-local-backup';
+  var BACKUP_SCHEMA_VERSION = 1;
   var ACTIVE = 'Activo';
   var INACTIVE = 'Inactivo';
   var COMPLETED = 'Cumplido';
@@ -207,6 +209,31 @@
           resolve(null);
         }
       });
+    });
+  }
+
+  function exportBackup() {
+    return loadState().then(function (state) {
+      return {
+        app: 'Pirepirapp',
+        schema: BACKUP_SCHEMA,
+        schemaVersion: BACKUP_SCHEMA_VERSION,
+        exportedAt: timestamp(),
+        state: clone(state)
+      };
+    });
+  }
+
+  function importBackup(payload) {
+    var source = payload && payload.state ? payload.state : payload;
+    if (!source || typeof source !== 'object') {
+      return Promise.reject(new Error('El backup no tiene datos validos.'));
+    }
+    if (payload && payload.schema && payload.schema !== BACKUP_SCHEMA) {
+      return Promise.reject(new Error('El archivo no parece ser un backup de Pirepirapp.'));
+    }
+    return saveState(ensureState(source)).then(function () {
+      return loadState();
     });
   }
 
@@ -1129,6 +1156,8 @@
   window.FinanzasLocalStore = {
     request: request,
     loadState: loadState,
-    saveState: saveState
+    saveState: saveState,
+    exportBackup: exportBackup,
+    importBackup: importBackup
   };
 }());

@@ -1047,6 +1047,34 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Backup local completo v3.33
+
+### Objetivo
+- Empezar el endurecimiento de Pirepirapp como APK local seria agregando exportacion/importacion manual de datos.
+
+### Cambios
+- `frontend/scripts/local-store.js` expone `exportBackup()` e `importBackup()` con esquema `pirepirapp-local-backup`.
+- `frontend/scripts/app.js` permite exportar un JSON completo e importar un JSON desde archivo, forzando modo local y recargando la app.
+- Configuracion suma una tarjeta `BACKUP LOCAL` con botones `Exportar backup` e `Importar backup`.
+- El backup incluye configuracion, movimientos, ahorros, metas, wishlist y fotos locales.
+- La pantalla de carga deja de mencionar Google Sheets y pasa a `Leyendo datos locales...`.
+- Los errores remotos legados dejan de mencionar Apps Script/Google Sheets en la interfaz.
+- `scripts/smoke-local-store.js` ahora valida exportar, limpiar estado e importar de vuelta.
+- `docs/APK_TRANSICION.md` y `docs/PRUEBAS.md` documentan el nuevo flujo.
+- Version y cache pasan de `v3.32`/`finanzas-lcd-v140` a `v3.33`/`finanzas-lcd-v141`.
+
+### Verificacion
+- `node --check frontend\scripts\local-store.js`: OK.
+- `node --check frontend\scripts\app.js`: OK.
+- `node --check frontend\scripts\api.js`: OK.
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `node --check scripts\smoke-local-store.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`; incluye exportar backup, limpiar estado e importar de vuelta con fotos.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Torta A final colapsable
 
 ### Objetivo

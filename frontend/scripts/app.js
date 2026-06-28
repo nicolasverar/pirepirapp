@@ -1374,6 +1374,116 @@
       });
   }
 
+  function exportLocalBackup() {
+    toast('Exportando backup');
+    if (!window.FinanzasLocalStore || !window.FinanzasLocalStore.exportBackup) {
+      return Promise.reject(new Error('El backup local no esta disponible.'));
+    }
+    if (window.FinanzasApi && window.FinanzasApi.useLocalMode) {
+      window.FinanzasApi.useLocalMode();
+    }
+    return window.FinanzasLocalStore.exportBackup()
+      .then(function (backup) {
+        downloadJsonBackup(backup);
+        toast('Backup exportado');
+        return backup;
+      })
+      .catch(function (error) {
+        toast(error.message || 'No se pudo exportar');
+        throw error;
+      });
+  }
+
+  function openLocalBackupImportPicker() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.hidden = true;
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      importLocalBackupFile(file).finally(function () {
+        if (input.parentNode) {
+          input.parentNode.removeChild(input);
+        }
+      });
+    });
+    document.body.appendChild(input);
+    input.click();
+  }
+
+  function importLocalBackupFile(file) {
+    if (!file) {
+      return Promise.resolve();
+    }
+    toast('Importando backup');
+    if (!window.FinanzasLocalStore || !window.FinanzasLocalStore.importBackup) {
+      return Promise.reject(new Error('La importacion local no esta disponible.'));
+    }
+    return readTextFile(file)
+      .then(function (text) {
+        try {
+          return JSON.parse(text);
+        } catch (error) {
+          throw new Error('El archivo no es JSON valido.');
+        }
+      })
+      .then(function (payload) {
+        if (window.FinanzasApi && window.FinanzasApi.useLocalMode) {
+          window.FinanzasApi.useLocalMode();
+        }
+        if (window.FinanzasLocalCache && window.FinanzasLocalCache.clearBootstrap) {
+          window.FinanzasLocalCache.clearBootstrap();
+        }
+        return clearUserPhotoCaches().then(function () {
+          return window.FinanzasLocalStore.importBackup(payload);
+        });
+      })
+      .then(function () {
+        toast('Backup importado');
+        window.setTimeout(reloadForFreshApp, 750);
+      })
+      .catch(function (error) {
+        toast(error.message || 'No se pudo importar');
+        throw error;
+      });
+  }
+
+  function downloadJsonBackup(backup) {
+    var blob = new Blob([JSON.stringify(backup, null, 2)], {
+      type: 'application/json;charset=utf-8'
+    });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = backupFileName(backup);
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
+
+  function backupFileName(backup) {
+    var raw = String((backup || {}).exportedAt || new Date().toISOString());
+    var stamp = raw.replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    return 'pirepirapp-backup-' + stamp + '.json';
+  }
+
+  function readTextFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        resolve(String(reader.result || ''));
+      };
+      reader.onerror = function () {
+        reject(new Error('No se pudo leer el archivo.'));
+      };
+      reader.readAsText(file);
+    });
+  }
+
   function testSeedUrl() {
     var url = new URL('./data/pirepirapp-test-seed.json', window.location.href);
     url.searchParams.set('v', version());
@@ -1461,6 +1571,9 @@
     toast: toast,
     updateApplicationCache: updateApplicationCache,
     syncTestSeed: syncTestSeed,
+    exportLocalBackup: exportLocalBackup,
+    openLocalBackupImportPicker: openLocalBackupImportPicker,
+    importLocalBackupFile: importLocalBackupFile,
     version: version,
     syncVersionLabels: syncVersionLabels
   };

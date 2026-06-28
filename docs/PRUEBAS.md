@@ -29,9 +29,9 @@
 - Crear meta con foto local.
 - Crear wishlist.
 - Convertir wishlist en meta.
-- Exportar backup JSON.
+- En Configuracion > `BACKUP LOCAL`, exportar backup JSON.
 - Borrar datos locales.
-- Importar backup JSON y verificar que los saldos coincidan.
+- En Configuracion > `BACKUP LOCAL`, importar backup JSON y verificar que los saldos coincidan.
 
 ## APK
 

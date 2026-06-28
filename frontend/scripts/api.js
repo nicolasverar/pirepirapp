@@ -101,7 +101,7 @@
     }
 
     if (!hasBackend()) {
-      return Promise.reject(new Error('Conecta la URL de Apps Script para sincronizar.'));
+      return Promise.reject(new Error('Activa modo local o configura un servicio remoto.'));
     }
 
     var requestPayload = {};
@@ -137,7 +137,7 @@
       .then(function (response) {
         clearTimeout(timeout);
         if (!response.ok) {
-          throw new Error('HTTP ' + response.status + ' al conectar con Apps Script.');
+          throw new Error('HTTP ' + response.status + ' al conectar con servicio remoto.');
         }
         return response.text();
       })
@@ -156,7 +156,7 @@
       .catch(function (error) {
         clearTimeout(timeout);
         if (error.name === 'AbortError') {
-          throw new Error('Google Sheets esta tardando demasiado. Proba de nuevo en unos segundos.');
+          throw new Error('El servicio remoto esta tardando demasiado. Proba de nuevo en unos segundos.');
         }
         throw error;
       });

@@ -23,7 +23,7 @@
     }
 
     if (state.loading && !state.data.resumen) {
-      screen.innerHTML = '<section class="system-window"><div class="window-title">CARGANDO</div><p class="lcd-muted">Leyendo Google Sheets...</p></section>';
+      screen.innerHTML = '<section class="system-window"><div class="window-title">CARGANDO</div><p class="lcd-muted">Leyendo datos locales...</p></section>';
       return;
     }
 
@@ -897,6 +897,7 @@
       '</form>',
       renderFixedExpensesList(config, summary),
       renderSettingsUpdateAction(),
+      renderLocalBackupAction(),
       renderArchiveSection(archive),
       '</section>'
     ].join('');
@@ -908,6 +909,19 @@
       '<button class="lcd-button primary" type="submit" form="settings-form">Actualizar app</button>',
       '<button class="lcd-button" type="button" data-sync-test-seed>Sincronizar</button>',
       '</div>'
+    ].join('');
+  }
+
+  function renderLocalBackupAction() {
+    return [
+      '<section class="system-window settings-card local-backup-card">',
+      '<div class="window-title"><span>BACKUP LOCAL</span><span>JSON</span></div>',
+      '<p>Guarda una copia completa del dispositivo o restaura una copia anterior.</p>',
+      '<div class="local-backup-actions">',
+      '<button class="lcd-button primary" type="button" data-export-local-backup>Exportar backup</button>',
+      '<button class="lcd-button" type="button" data-import-local-backup>Importar backup</button>',
+      '</div>',
+      '</section>'
     ].join('');
   }
 
@@ -2093,8 +2107,34 @@
     });
 
     bindSettingsSeedSync(root);
+    bindSettingsBackup(root);
     bindFixedExpenseList(root);
     bindArchive(root);
+  }
+
+  function bindSettingsBackup(root) {
+    var exportButton = utils.qs('[data-export-local-backup]', root);
+    var importButton = utils.qs('[data-import-local-backup]', root);
+    if (exportButton) {
+      exportButton.addEventListener('click', function () {
+        if (!window.FinanzasApp || !window.FinanzasApp.exportLocalBackup) {
+          return;
+        }
+        exportButton.disabled = true;
+        exportButton.textContent = 'Exportando';
+        window.FinanzasApp.exportLocalBackup().finally(function () {
+          exportButton.disabled = false;
+          exportButton.textContent = 'Exportar backup';
+        });
+      });
+    }
+    if (importButton) {
+      importButton.addEventListener('click', function () {
+        if (window.FinanzasApp && window.FinanzasApp.openLocalBackupImportPicker) {
+          window.FinanzasApp.openLocalBackupImportPicker();
+        }
+      });
+    }
   }
 
   function bindSettingsSeedSync(root) {

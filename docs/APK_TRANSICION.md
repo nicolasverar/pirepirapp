@@ -15,7 +15,14 @@
 - Cambiar el arranque para que no pida URL ni token.
 - Agregar exportacion e importacion JSON.
 
-Estado: los tres primeros puntos ya estan implementados en `frontend/scripts/local-store.js`. Queda agregar exportacion/importacion JSON como backup manual.
+Estado: fase completa en modo local web/APK. `frontend/scripts/local-store.js` guarda el estado y expone exportacion/importacion JSON; Configuracion muestra `BACKUP LOCAL` para exportar o restaurar una copia completa del dispositivo.
+
+## Fase 1.5 - App Local Seria
+
+- Mantener exportacion/importacion JSON como respaldo manual obligatorio antes de builds de prueba.
+- Probar que el backup incluye movimientos, configuracion, metas, wishlist, ahorros y fotos locales.
+- El siguiente endurecimiento recomendado es mover fotos/backups a almacenamiento nativo con plugins Capacitor (`Filesystem`/`Preferences`) o SQLite si el volumen crece.
+- Mientras no se instalen plugins nativos, la app ya funciona local pero persiste en almacenamiento WebView (`IndexedDB` + fallback `localStorage`).
 
 ## Fase 2 - Empaque Android
 

@@ -1484,7 +1484,7 @@ button {
   left: 50%;
   z-index: 4;
   max-width: calc(100% - 8px);
-  padding: 2px 5px;
+  padding: 2px 6px;
   overflow: hidden;
   color: var(--panel-hi);
   background: #071007;
@@ -1493,7 +1493,7 @@ button {
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 900;
   line-height: 1.05;
   pointer-events: none;
@@ -1503,24 +1503,22 @@ button {
 .b1-child.is-tiny .b1-inside-pct,
 .b1-segment.is-tight .b1-inside-pct {
   padding: 1px 3px;
-  font-size: 0.5rem;
+  font-size: 0.58rem;
 }
 
 .b1-leader {
-  --leader-offset: 38px;
-  --leader-arm: 36px;
-  --leader-arm-neg: -36px;
-  --leader-diag: 58px;
-  --leader-shift: 42px;
-  --leader-before-x: -93px;
-  --leader-circle-x: -105px;
+  --leader-y: -38px;
+  --leader-run: 42px;
+  --leader-arm: 38px;
+  --leader-diag: 57px;
+  --leader-angle: -42deg;
+  --leader-left-arm-x: -80px;
+  --leader-label-x: 86px;
   position: absolute;
   left: 50%;
   z-index: 8;
-  display: grid;
-  gap: 1px;
-  min-width: 96px;
-  max-width: 138px;
+  width: 1px;
+  height: 1px;
   color: #071007;
   text-align: left;
   text-transform: uppercase;
@@ -1531,6 +1529,8 @@ button {
 .b1-leader::after {
   content: "";
   position: absolute;
+  top: 0;
+  left: 0;
   background: #071007;
   opacity: 0.88;
   pointer-events: none;
@@ -1539,154 +1539,96 @@ button {
 .b1-leader::before {
   width: var(--leader-diag);
   height: 2px;
-}
-
-.b1-leader i {
-  position: absolute;
-  z-index: 2;
-  display: block;
-  width: 10px;
-  height: 10px;
-  background: rgba(196, 208, 139, 0.76);
-  border: 2px solid #071007;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(196, 208, 139, 0.62);
+  transform: rotate(var(--leader-angle));
+  transform-origin: 0 50%;
 }
 
 .b1-leader::after {
   width: var(--leader-arm);
   height: 2px;
+  top: var(--leader-y);
 }
 
 .b1-leader.is-top {
-  bottom: calc(100% + var(--leader-offset));
-}
-
-.b1-leader.is-top::before {
-  top: calc(100% + 8px);
-}
-
-.b1-leader.is-top::after {
-  top: calc(100% + 8px);
-}
-
-.b1-leader.is-top i {
-  top: calc(100% + var(--leader-offset));
+  top: 0;
 }
 
 .b1-leader.is-bottom {
-  top: calc(100% + var(--leader-offset));
-}
-
-.b1-leader.is-bottom::before {
-  bottom: calc(100% + 8px);
-}
-
-.b1-leader.is-bottom::after {
-  bottom: calc(100% + 8px);
-}
-
-.b1-leader.is-bottom i {
-  bottom: calc(100% + var(--leader-offset));
-}
-
-.b1-leader.is-right {
-  transform: translateX(var(--leader-shift));
+  bottom: 0;
 }
 
 .b1-leader.is-right::after {
-  left: var(--leader-arm-neg);
-}
-
-.b1-leader.is-right.is-top::before {
-  left: var(--leader-before-x);
-  transform: rotate(-38deg);
-  transform-origin: 100% 50%;
-}
-
-.b1-leader.is-right.is-bottom::before {
-  left: var(--leader-before-x);
-  transform: rotate(38deg);
-  transform-origin: 100% 50%;
-}
-
-.b1-leader.is-right i {
-  left: var(--leader-circle-x);
-}
-
-.b1-leader.is-left {
-  transform: translateX(calc(-100% - var(--leader-shift)));
+  left: var(--leader-run);
 }
 
 .b1-leader.is-left::after {
-  right: var(--leader-arm-neg);
-}
-
-.b1-leader.is-left.is-top::before {
-  right: var(--leader-before-x);
-  transform: rotate(38deg);
-  transform-origin: 0 50%;
-}
-
-.b1-leader.is-left.is-bottom::before {
-  right: var(--leader-before-x);
-  transform: rotate(-38deg);
-  transform-origin: 0 50%;
-}
-
-.b1-leader.is-left i {
-  right: var(--leader-circle-x);
+  left: var(--leader-left-arm-x);
 }
 
 .b1-leader.is-nested {
   z-index: 11;
 }
 
-.b1-leader strong,
-.b1-leader span,
-.b1-leader em {
-  display: block;
+.b1-leader-text {
+  position: absolute;
+  top: calc(var(--leader-y) - 8px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   width: max-content;
-  max-width: 100%;
-  padding: 1px 4px;
+  max-width: 240px;
+  padding: 2px 5px;
   overflow: hidden;
   background: rgba(196, 208, 139, 0.9);
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 900;
   line-height: 1.15;
-}
-
-.b1-leader strong {
   font-size: 0.56rem;
 }
 
-.b1-leader span {
-  font-size: 0.54rem;
+.b1-leader.is-right .b1-leader-text {
+  left: var(--leader-label-x);
+}
+
+.b1-leader.is-left .b1-leader-text {
+  right: var(--leader-label-x);
+}
+
+.b1-leader strong,
+.b1-leader span,
+.b1-leader em {
+  display: inline;
+  min-width: max-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: inherit;
+  font-weight: 900;
 }
 
 .b1-leader em {
   font-style: normal;
-  font-size: 0.46rem;
+  font-size: 0.5rem;
 }
 
 .b1-child.is-tight .b1-leader,
 .b1-child.is-tiny .b1-leader,
 .b1-segment.is-tight .b1-leader {
-  min-width: 78px;
-  max-width: 104px;
+  --leader-arm: 30px;
 }
 
 .b1-child.is-tight .b1-leader strong,
 .b1-child.is-tiny .b1-leader strong,
 .b1-segment.is-tight .b1-leader strong {
-  font-size: 0.5rem;
+  font-size: inherit;
 }
 
 .b1-child.is-tight .b1-leader span,
 .b1-child.is-tiny .b1-leader span,
 .b1-segment.is-tight .b1-leader span {
-  font-size: 0.48rem;
+  font-size: inherit;
 }
 
 .b1-axis {
@@ -1843,16 +1785,19 @@ button {
   }
 
   .b1-leader {
-    min-width: 72px;
-    max-width: 94px;
+    --leader-arm: 30px;
   }
 
-  .b1-leader strong {
+  .b1-leader-text {
+    max-width: 170px;
+    gap: 3px;
+    padding: 1px 4px;
     font-size: 0.48rem;
   }
 
+  .b1-leader strong,
   .b1-leader span {
-    font-size: 0.46rem;
+    font-size: inherit;
   }
 
   .b1-leader em {
@@ -1861,40 +1806,6 @@ button {
 
   .b1-inside-pct {
     padding: 1px 3px;
-    font-size: 0.5rem;
-  }
-
-  .b1-leader.is-right {
-    transform: translateX(var(--leader-shift));
-  }
-
-  .b1-leader.is-left {
-    transform: translateX(calc(-100% - var(--leader-shift)));
-  }
-
-  .b1-leader.is-right::after {
-    left: var(--leader-arm-neg);
-  }
-
-  .b1-leader.is-left::after {
-    right: var(--leader-arm-neg);
-  }
-
-  .b1-leader.is-right.is-top::before,
-  .b1-leader.is-right.is-bottom::before {
-    left: var(--leader-before-x);
-  }
-
-  .b1-leader.is-left.is-top::before,
-  .b1-leader.is-left.is-bottom::before {
-    right: var(--leader-before-x);
-  }
-
-  .b1-leader.is-right i {
-    left: var(--leader-circle-x);
-  }
-
-  .b1-leader.is-left i {
-    right: var(--leader-circle-x);
+    font-size: 0.58rem;
   }
 }

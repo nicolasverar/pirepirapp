@@ -3,7 +3,7 @@
 
   var currentScenario = 'normal';
   var currentMode = 'detail';
-  var selectedRevealGroup = 'fixed';
+  var b1OpenGroups = { fixed: true };
   var selectedSavingNode = 'summary';
   var inlineRevealGroup = 'fixed';
   var lensRevealGroup = 'fixed';
@@ -497,7 +497,7 @@
   }
 
   function renderAlignedReveal(model) {
-    var active = activeFamily(model, selectedRevealGroup);
+    var active = activeFamily(model, b1PrimaryOpenGroup(model));
     return renderPanel('B1', 'Drill alineado', 'toque una familia y el detalle aparece justo debajo', [
       '<div class="reveal-stage">',
       renderInteractiveMacroBar(model, active.group, 'drill', 'Nivel macro fijo', 'detalle alineado'),
@@ -610,7 +610,6 @@
 
   function renderB1InlineFocus(model) {
     var groups = familyGroups(model);
-    var active = selectedRevealGroup ? activeFamily(model, selectedRevealGroup) : null;
     var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
     return renderPanel('B1', 'Desagrega en el mismo tramo', 'leader lines; ahorros/metas abre un segundo nivel dentro del mismo rectangulo', [
       '<div class="b1-focus">',
@@ -618,7 +617,7 @@
       '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
       '<span class="b1-salary-line" aria-hidden="true">100%</span>',
       groups.map(function (group, index) {
-        return active && group.group === active.group && canB1DrillGroup(group) ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
+        return isB1GroupOpen(group.group) && canB1DrillGroup(group) ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
       }).join(''),
       '</div>',
       '<div class="b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
@@ -657,7 +656,7 @@
         var childWidth = pct(item.amount, group.amount);
         var tightClass = childWidth < 14 ? ' is-tight' : '';
         var tinyClass = childWidth < 8 ? ' is-tiny' : '';
-        var drillAttr = item.drillNode ? ' data-saving-node="' + escapeHtml(item.drillNode) + '"' : '';
+        var drillAttr = item.drillNode ? ' data-saving-node="' + escapeHtml(item.drillNode) + '"' : ' data-b1-child-group="' + escapeHtml(group.group) + '"';
         return [
           '<button class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" type="button"' + drillAttr + ' title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
           renderB1InsidePct(item, model),
@@ -723,21 +722,57 @@
     return group && group.group !== 'available';
   }
 
+  function isB1GroupOpen(group) {
+    return !!b1OpenGroups[group];
+  }
+
+  function setB1GroupOpen(group, open) {
+    if (open) {
+      b1OpenGroups[group] = true;
+      return;
+    }
+    delete b1OpenGroups[group];
+    if (group === 'saving') {
+      selectedSavingNode = 'summary';
+    }
+  }
+
+  function b1HasOpenGroups() {
+    return Object.keys(b1OpenGroups).some(function (group) {
+      return b1OpenGroups[group];
+    });
+  }
+
+  function b1PrimaryOpenGroup(model) {
+    var groups = familyGroups(model);
+    var found = groups.filter(function (group) {
+      return isB1GroupOpen(group.group);
+    })[0];
+    return found ? found.group : (groups[0] ? groups[0].group : 'fixed');
+  }
+
   function b1LeaderPlacement(group, index, nested) {
     var side = index % 2 ? 'bottom' : 'top';
     var direction = index % 4 < 2 ? 'right' : 'left';
-    var offset = 38;
-    var diag = 58;
-    var shift = 42;
+    var run = 42;
+    var rise = 38;
+    var arm = 38;
+    var angle;
+    var diag;
     if (nested && group === 'fixed') {
       side = 'top';
       direction = 'right';
+      rise = Math.max(42, 104 - (Math.min(index, 4) * 18));
+      run = 42 + (Math.min(index, 4) * 16);
     } else if (nested && group === 'saving') {
       side = 'bottom';
       direction = 'right';
+      rise = 42 + (Math.min(index, 4) * 18);
+      run = 42 + (Math.min(index, 4) * 16);
     } else if (nested && group === 'excess') {
       side = 'top';
       direction = 'left';
+      rise = 54;
     } else if (!nested && group === 'fixed') {
       side = 'top';
       direction = 'right';
@@ -751,23 +786,27 @@
       side = 'bottom';
       direction = 'left';
     }
-    if (nested) {
-      offset = 34 + (Math.min(index, 4) * 22);
-      diag = Math.max(58, Math.round((offset - 6) / 0.616));
-      shift = diag + 54;
+    diag = Math.round(Math.sqrt((run * run) + (rise * rise)));
+    angle = Math.round((Math.atan2(rise, run) * 1800) / Math.PI) / 10;
+    if (direction === 'right' && side === 'top') {
+      angle = -angle;
+    } else if (direction === 'left' && side === 'top') {
+      angle = 180 + angle;
+    } else if (direction === 'left' && side === 'bottom') {
+      angle = 180 - angle;
     }
     return {
       side: side,
       direction: direction,
       cascade: nested ? Math.min(index, 4) : 0,
       style: styleVars({
-        '--leader-offset': offset + 'px',
-        '--leader-arm': '36px',
-        '--leader-arm-neg': '-36px',
+        '--leader-y': (side === 'top' ? '-' : '') + rise + 'px',
+        '--leader-run': run + 'px',
+        '--leader-arm': arm + 'px',
         '--leader-diag': diag + 'px',
-        '--leader-before-x': '-' + (36 + diag - 1) + 'px',
-        '--leader-circle-x': '-' + (36 + diag + 11) + 'px',
-        '--leader-shift': shift + 'px'
+        '--leader-angle': angle + 'deg',
+        '--leader-left-arm-x': '-' + (run + arm) + 'px',
+        '--leader-label-x': (run + arm + 6) + 'px'
       })
     };
   }
@@ -777,10 +816,11 @@
     var amountLabel = currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>';
     return [
       '<span class="b1-leader is-' + escapeHtml(placement.side) + ' is-' + escapeHtml(placement.direction) + (nested ? ' is-nested is-cascade-' + escapeHtml(String(placement.cascade)) : '') + '" style="' + placement.style + '">',
-      '<i aria-hidden="true"></i>',
+      '<span class="b1-leader-text">',
       '<strong>' + escapeHtml(item.label) + '</strong>',
       '<span>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>',
       amountLabel,
+      '</span>',
       '</span>'
     ].join('');
   }
@@ -1147,16 +1187,13 @@
       }).indexOf(validGroup);
     } else {
       if (!canB1DrillGroup({ group: validGroup })) {
-        selectedRevealGroup = '';
-        selectedSavingNode = 'summary';
         return;
       }
-      if (selectedRevealGroup === validGroup) {
-        selectedRevealGroup = '';
-        selectedSavingNode = 'summary';
+      if (isB1GroupOpen(validGroup)) {
+        setB1GroupOpen(validGroup, false);
         return;
       }
-      selectedRevealGroup = validGroup;
+      setB1GroupOpen(validGroup, true);
       if (validGroup === 'saving') {
         selectedSavingNode = 'summary';
       }
@@ -1167,6 +1204,7 @@
     var model = scenarioModel();
     var cycleButton = event.target.closest('[data-cycle]');
     var savingButton = event.target.closest('[data-saving-node]');
+    var childButton = event.target.closest('[data-b1-child-group]');
     var revealButton;
     var groups;
     if (cycleButton) {
@@ -1178,12 +1216,16 @@
     }
     if (savingButton) {
       if (savingButton.getAttribute('data-saving-node') === 'collapse') {
-        selectedRevealGroup = '';
-        selectedSavingNode = 'summary';
+        setB1GroupOpen('saving', false);
       } else {
-        selectedRevealGroup = 'saving';
+        setB1GroupOpen('saving', true);
         selectedSavingNode = savingButton.getAttribute('data-saving-node') || 'summary';
       }
+      render();
+      return;
+    }
+    if (childButton) {
+      setB1GroupOpen(childButton.getAttribute('data-b1-child-group'), false);
       render();
       return;
     }
@@ -1194,8 +1236,8 @@
       return;
     }
 
-    if (selectedRevealGroup) {
-      selectedRevealGroup = '';
+    if (b1HasOpenGroups()) {
+      b1OpenGroups = {};
       selectedSavingNode = 'summary';
       render();
     }

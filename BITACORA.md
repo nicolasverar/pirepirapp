@@ -1130,3 +1130,24 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `fixed_initial_top_cascade`, `available_static`, `saving_summary_bottom_cascade`, `saving_detail_bottom_cascade`, `available_does_not_open`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 alineacion fina y multiapertura
+
+### Objetivo
+- Ajustar la cascada B1 luego de revision visual: eliminar el circulo, agrandar porcentajes internos, alinear lineas desde el centro real de cada tramo y permitir que varios grupos queden abiertos a la vez.
+
+### Cambios
+- Se elimino el circulo de origen de los callouts; la diagonal ahora nace directamente desde el centro del tramo o subtramo.
+- La etiqueta de callout se simplifico a una sola tira horizontal: nombre, porcentaje y monto en una linea.
+- La cascada superior de gastos fijos se invirtio para que el item mas a la izquierda quede mas alto.
+- El porcentaje interno del rectangulo se agrando para mejorar lectura.
+- B1 ahora guarda multiples grupos abiertos en paralelo; abrir `Ahorros/metas` ya no contrae `Gastos fijos`.
+- Tocar una subporcion de una familia abierta cierra solo esa familia, no todas las demas.
+- Tocar `Disponible` no abre ni cierra otros grupos.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `initial_fixed_open`, `leader_has_no_circle_tag`, `leader_uses_single_text_strip`, `fixed_leftmost_highest`, `pct_is_larger`, `fixed_stays_open_when_saving_opens`, `saving_detail_keeps_fixed_open`, `available_does_not_close_others`, `closing_fixed_keeps_saving_open`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

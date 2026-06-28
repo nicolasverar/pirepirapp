@@ -1162,8 +1162,9 @@
 
   function renderSalaryPartitionB1(model) {
     var groups = salaryPartitionB1Groups(model);
+    var layout = salaryB1Layout(groups, model);
     return [
-      '<div class="salary-b1-stage" data-salary-partition-b1>',
+      '<div class="salary-b1-stage" data-salary-partition-b1 style="' + layout.style + '">',
       '<div class="salary-b1-bar-wrap">',
       '<div class="salary-b1-bar" role="group" aria-label="Particion del sueldo en barra interactiva">',
       groups.map(function (group, index) {
@@ -1177,6 +1178,35 @@
     ].join('');
   }
 
+  function salaryB1Layout(groups, model) {
+    var topCount = 1;
+    var bottomCount = 1;
+    (groups || []).forEach(function (group) {
+      var count;
+      if (group.group === 'fixed') {
+        count = isSalaryB1GroupOpen(group.group) && canSalaryB1DrillGroup(group)
+          ? salaryB1ChildrenForGroup(group, model).length
+          : 1;
+        topCount = Math.max(topCount, count || 1);
+      }
+      if (group.group === 'saving') {
+        count = isSalaryB1GroupOpen(group.group) && canSalaryB1DrillGroup(group)
+          ? salaryB1ChildrenForGroup(group, model).length
+          : 1;
+        bottomCount = Math.max(bottomCount, count || 1);
+      }
+    });
+    var topSpace = Math.max(108, 58 + (topCount * 32));
+    var bottomSpace = Math.max(108, 58 + (bottomCount * 32));
+    return {
+      style: cssVars({
+        '--b1-top-space': topSpace + 'px',
+        '--b1-bottom-space': bottomSpace + 'px',
+        '--b1-stage-min': (110 + topSpace + bottomSpace) + 'px'
+      })
+    };
+  }
+
   function renderSalaryB1MacroSegment(group, model, index) {
     var width = partitionPercent(group.amount, model.scale);
     var tightClass = width < 10 ? ' is-tight' : '';
@@ -1184,7 +1214,7 @@
       return [
         '<div class="salary-b1-segment is-' + utils.escapeHtml(group.group) + ' is-static' + tightClass + '" role="img" aria-label="' + utils.escapeHtml(group.label + ' ' + salaryPartitionPctLabel(group.amount, model.salary)) + '" style="' + cssVars({ '--w': width + '%', '--c': group.color }) + '">',
         renderSalaryB1InsidePct(group, model),
-        renderSalaryB1Leader(group, model, index, false, group.group),
+        group.group === 'available' ? '' : renderSalaryB1Leader(group, model, index, false, group.group),
         '</div>'
       ].join('');
     }
@@ -1241,7 +1271,11 @@
   }
 
   function renderSalaryB1InsidePct(item, model) {
-    return '<span class="salary-b1-inside-pct">' + utils.escapeHtml(salaryPartitionPctLabel(item.amount, model.salary)) + '</span>';
+    var value = salaryPartitionPctLabel(item.amount, model.salary);
+    if ((item || {}).group === 'available') {
+      return '<span class="salary-b1-inside-pct salary-b1-available-mark">' + utils.escapeHtml('DISP. ' + value) + '</span>';
+    }
+    return '<span class="salary-b1-inside-pct">' + utils.escapeHtml(value) + '</span>';
   }
 
   function canSalaryB1DrillGroup(group) {
@@ -1275,13 +1309,13 @@
       side = 'top';
       direction = 'right';
       rise = 110 - (Math.min(index, 5) * 18);
-      run = 22 + (Math.min(index, 5) * 8);
+      run = Math.max(8, 58 - (Math.min(index, 5) * 14));
       arm = 122;
     } else if (nested && group === 'saving') {
       side = 'bottom';
       direction = 'right';
       rise = 110 - (Math.min(index, 5) * 18);
-      run = 22 + (Math.min(index, 5) * 8);
+      run = Math.max(8, 58 - (Math.min(index, 5) * 14));
       arm = 122;
     } else if (nested && group === 'excess') {
       side = 'top';

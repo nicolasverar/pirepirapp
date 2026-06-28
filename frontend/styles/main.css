@@ -5014,7 +5014,7 @@ body::-webkit-scrollbar,
 
 .summary-stack > .salary-partition-card.salary-partition-aaa .salary-b1-stage {
   display: grid;
-  min-height: 320px;
+  min-height: var(--b1-stage-min, 320px);
   padding: 8px 4px 2px;
   overflow: visible;
   color: #071007;
@@ -5030,7 +5030,7 @@ body::-webkit-scrollbar,
   position: relative;
   display: flex;
   min-height: 88px;
-  margin: 122px 0 118px;
+  margin: var(--b1-top-space, 122px) 0 var(--b1-bottom-space, 118px);
   overflow: visible;
   background: #071007;
   border: 2px solid #071007;
@@ -5123,6 +5123,19 @@ body::-webkit-scrollbar,
   font-size: 0.5rem;
 }
 
+.salary-b1-segment.is-available .salary-b1-available-mark {
+  max-width: calc(100% - 18px);
+  padding: 0;
+  color: #b7c67f;
+  background: transparent;
+  border: 0;
+  text-shadow:
+    1px 0 0 rgba(196, 208, 139, 0.18),
+    -1px 0 0 rgba(7, 16, 7, 0.32);
+  font-size: 0.86rem;
+  letter-spacing: 0;
+}
+
 .salary-b1-leader {
   --leader-y: -36px;
   --leader-run: 42px;
@@ -5190,8 +5203,8 @@ body::-webkit-scrollbar,
   top: calc(var(--leader-y) - 8px);
   z-index: 2;
   display: block;
-  width: max-content;
-  max-width: 228px;
+  width: 210px;
+  max-width: 210px;
   padding: 2px 6px;
   overflow: hidden;
   background: rgba(196, 208, 139, 0.92);
@@ -5200,6 +5213,11 @@ body::-webkit-scrollbar,
   font-size: 0.58rem;
   font-weight: 900;
   line-height: 1.1;
+}
+
+.salary-b1-leader.is-top.is-right .salary-b1-leader-text,
+.salary-b1-leader.is-bottom.is-right .salary-b1-leader-text {
+  text-align: left;
 }
 
 .salary-b1-leader.is-right .salary-b1-leader-text {

@@ -77,7 +77,7 @@
 
   .salary-b1-bar {
     min-height: 82px;
-    margin: 112px 0 108px;
+    margin: var(--b1-top-space, 112px) 0 var(--b1-bottom-space, 108px);
   }
 
   .salary-b1-leader {
@@ -85,6 +85,7 @@
   }
 
   .salary-b1-leader-text {
+    width: 178px;
     max-width: 178px;
     font-size: 0.52rem;
   }

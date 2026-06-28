@@ -1366,3 +1366,24 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `Remanente anterior`, `Cobro del mes`, `renderMoneyLineDetails` y `money-line-details` sin resultados; `v3.24` y `finanzas-lcd-v132` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Particion sueldo con cascada adaptable v3.25
+
+### Objetivo
+- Ajustar la vista `PARTICION SUELDO` para que la cascada de fijos arriba y ahorros/metas abajo tenga mayor presencia visual y la tarjeta crezca segun la cantidad de subdivisiones.
+
+### Cambios
+- Se agrego calculo de layout `salaryB1Layout()` para reservar espacio superior/inferior segun la cantidad de componentes visibles.
+- La altura minima de la tarjeta B1 ahora se define con variables CSS dinamicas `--b1-stage-min`, `--b1-top-space` y `--b1-bottom-space`.
+- `Disponible` deja de tener leader line y ahora se muestra como marca interna grande `DISP. xx%` dentro del tramo oscuro.
+- Las etiquetas de fijos y ahorros/metas se estabilizaron con ancho fijo y cascada mas ordenada.
+- Se actualizo cache/version de `v3.24` a `v3.25` y `finanzas-lcd-v133`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend` y assets Android: OK, `salaryB1Layout`, `b1-stage-min`, `salary-b1-available-mark`, `v3.25` y `finanzas-lcd-v133` presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

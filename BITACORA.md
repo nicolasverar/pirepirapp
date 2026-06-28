@@ -961,6 +961,7 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
 ## 2026-06-27 - Explorar torta y mapa 100 con tramas
 
@@ -1449,3 +1450,22 @@
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Simulacro de torta 2D tactil
+
+### Objetivo
+- Probar nuevamente el paradigma de torta, pero en 2D plano y tactil, con revelado de particiones internas dentro del mismo circulo.
+
+### Cambios
+- `frontend/previews/particion.html` pasa a identificar la tanda como `TORTA 2D` y actualiza el cache-busting de CSS/JS.
+- `frontend/previews/sueldo.js` incorpora `renderInteractivePie2D()`.
+- La torta muestra el nivel macro y permite tocar `Gastos fijos` para abrir sus componentes en el mismo sector.
+- Al tocar `Ahorros/metas`, primero se separa en `Futuro` y `Metas`; al tocar `Metas`, se revelan las metas concretas dentro del mismo sector.
+- Se agrego panel lateral de lectura con porcentajes y montos, manteniendo el circulo 2D como foco principal.
+- El modo `LIMPIO` oculta el panel lateral y centra la torta para evaluar solo el objeto visual.
+- El simulacro queda solo en `frontend/previews`; no modifica aun la tarjeta oficial de Resumen.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.

@@ -407,6 +407,7 @@ button {
 }
 
 .pie-texture.pat-0,
+.pie-touch-texture.pat-0,
 .legend-index.pat-0,
 .tile.pat-0,
 .pack-block.pat-0 {
@@ -415,6 +416,7 @@ button {
 }
 
 .pie-texture.pat-1,
+.pie-touch-texture.pat-1,
 .legend-index.pat-1,
 .tile.pat-1,
 .pack-block.pat-1 {
@@ -423,6 +425,7 @@ button {
 }
 
 .pie-texture.pat-2,
+.pie-touch-texture.pat-2,
 .legend-index.pat-2,
 .tile.pat-2,
 .pack-block.pat-2 {
@@ -432,6 +435,7 @@ button {
 }
 
 .pie-texture.pat-3,
+.pie-touch-texture.pat-3,
 .legend-index.pat-3,
 .tile.pat-3,
 .pack-block.pat-3 {
@@ -442,6 +446,7 @@ button {
 }
 
 .pie-texture.pat-4,
+.pie-touch-texture.pat-4,
 .legend-index.pat-4,
 .tile.pat-4,
 .pack-block.pat-4 {
@@ -450,6 +455,7 @@ button {
 }
 
 .pie-texture.pat-5,
+.pie-touch-texture.pat-5,
 .legend-index.pat-5,
 .tile.pat-5,
 .pack-block.pat-5 {
@@ -501,6 +507,268 @@ button {
   text-transform: uppercase;
   font-size: 0.54rem;
   font-weight: 900;
+}
+
+.pie-touch-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.05fr) minmax(260px, 0.95fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.pie-touch-layout.is-clean {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pie-touch-layout.is-clean .pie-touch-stage {
+  min-height: 430px;
+}
+
+.pie-touch-stage {
+  position: relative;
+  display: grid;
+  min-height: 390px;
+  place-items: center;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.13) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(7, 16, 7, 0.1) 1px, transparent 1px) 0 0 / 16px 16px,
+    rgba(154, 165, 104, 0.65);
+  border: 2px solid var(--line);
+  box-shadow:
+    inset 2px 2px 0 rgba(230, 238, 166, 0.18),
+    inset -5px -5px 0 rgba(7, 16, 7, 0.12);
+}
+
+.pie-touch-svg {
+  width: min(100%, 380px);
+  height: auto;
+  overflow: visible;
+}
+
+.pie-touch-part {
+  cursor: pointer;
+}
+
+.pie-touch-part:focus-visible {
+  outline: none;
+}
+
+.pie-touch-slice {
+  fill: var(--c);
+  stroke: #071007;
+  stroke-width: 2.6;
+  paint-order: stroke fill;
+  transition:
+    filter 150ms ease,
+    opacity 150ms ease;
+}
+
+.pie-touch-part:hover .pie-touch-slice {
+  filter: brightness(1.08) contrast(1.04);
+}
+
+.pie-touch-part.is-nested .pie-touch-slice {
+  stroke-width: 2.2;
+}
+
+.pie-touch-part.is-available .pie-touch-slice {
+  fill: #071007;
+}
+
+.pie-touch-part.is-excess .pie-touch-slice {
+  fill: var(--alert);
+}
+
+.pie-touch-texture {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pie-touch-part.is-available .pie-touch-texture {
+  fill: url("#pvert");
+  opacity: 0.82;
+}
+
+.pie-touch-shadow {
+  fill: rgba(7, 16, 7, 0.16);
+  pointer-events: none;
+}
+
+.pie-touch-rim,
+.pie-touch-center {
+  fill: none;
+  stroke: #071007;
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+.pie-touch-center {
+  fill:
+    #c4d08b;
+}
+
+.pie-touch-label,
+.pie-touch-center-text {
+  fill: var(--panel-hi);
+  paint-order: stroke fill;
+  stroke: #071007;
+  stroke-width: 4;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.pie-touch-part.is-available .pie-touch-label {
+  fill: var(--panel-hi);
+}
+
+.pie-touch-center-text {
+  fill: #071007;
+  stroke: var(--panel-hi);
+  stroke-width: 3;
+  font-size: 10px;
+}
+
+.pie-touch-center-text.small {
+  font-size: 8px;
+}
+
+.pie-touch-part.is-tight .pie-touch-label {
+  font-size: 8px;
+}
+
+.pie-touch-readout {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px;
+  background:
+    repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.11) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(196, 208, 139, 0.72), rgba(113, 126, 75, 0.38));
+  border: 2px solid var(--line);
+}
+
+.pie-touch-readout header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 7px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.pie-touch-readout header b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.pie-touch-legend {
+  display: grid;
+  gap: 5px;
+}
+
+.pie-touch-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+  padding: 6px;
+  color: #071007;
+  background: rgba(196, 208, 139, 0.34);
+  border: 2px solid rgba(7, 16, 7, 0.56);
+  text-align: left;
+  text-transform: uppercase;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pie-touch-row i {
+  width: 18px;
+  min-height: 22px;
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.2) 0 1px, transparent 1px 5px),
+    var(--c);
+  border: 2px solid var(--line);
+}
+
+.pie-touch-row span {
+  display: grid;
+  min-width: 0;
+}
+
+.pie-touch-row b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.6rem;
+}
+
+.pie-touch-row small {
+  color: rgba(7, 16, 7, 0.64);
+  font-size: 0.48rem;
+}
+
+.pie-touch-row strong {
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+
+.pie-touch-row em {
+  grid-column: 2 / -1;
+  font-size: 0.52rem;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.pie-touch-row.is-available {
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+}
+
+.pie-touch-row.is-available small {
+  color: rgba(196, 208, 139, 0.68);
+}
+
+.pie-touch-row.is-excess {
+  background: var(--alert);
+}
+
+.pie-touch-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.pie-touch-actions button {
+  min-height: 34px;
+  padding: 5px;
+  color: var(--panel-hi);
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.08) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid var(--line);
+  text-transform: uppercase;
+  font: inherit;
+  font-size: 0.56rem;
+  font-weight: 900;
+  cursor: pointer;
 }
 
 .compact-legend {
@@ -2053,5 +2321,21 @@ button {
   .b1-inside-pct {
     padding: 1px 3px;
     font-size: 0.58rem;
+  }
+
+  .pie-touch-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pie-touch-stage {
+    min-height: 315px;
+  }
+
+  .pie-touch-svg {
+    width: min(100%, 300px);
+  }
+
+  .pie-touch-actions {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

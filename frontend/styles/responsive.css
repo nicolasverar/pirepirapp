@@ -85,14 +85,15 @@
   }
 
   .salary-b1-leader-text {
-    width: 178px;
-    max-width: 178px;
-    font-size: 0.52rem;
+    width: min(var(--leader-label-width, 214px), calc(100vw - 66px));
+    max-width: min(var(--leader-label-width, 214px), calc(100vw - 66px));
+    font-size: 0.55rem;
   }
 
   .salary-b1-inside-pct {
-    padding: 1px 3px;
-    font-size: 0.52rem;
+    min-width: 31px;
+    padding: 2px 4px 1px;
+    font-size: 0.6rem;
   }
 
   .movement-filters {

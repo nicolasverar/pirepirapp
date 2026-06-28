@@ -1197,13 +1197,13 @@
         bottomCount = Math.max(bottomCount, count || 1);
       }
     });
-    var topSpace = Math.max(108, 58 + (topCount * 32));
-    var bottomSpace = Math.max(108, 58 + (bottomCount * 32));
+    var topSpace = Math.max(132, 72 + (topCount * 42));
+    var bottomSpace = Math.max(132, 72 + (bottomCount * 42));
     return {
       style: cssVars({
         '--b1-top-space': topSpace + 'px',
         '--b1-bottom-space': bottomSpace + 'px',
-        '--b1-stage-min': (110 + topSpace + bottomSpace) + 'px'
+        '--b1-stage-min': (128 + topSpace + bottomSpace) + 'px'
       })
     };
   }
@@ -1306,18 +1306,21 @@
     var arm = 96;
     var angle;
     var diag;
+    var labelWidth = 234;
     if (nested && group === 'fixed') {
       side = 'top';
       direction = 'right';
-      rise = 110 - (Math.min(index, 5) * 18);
-      run = Math.max(8, 58 - (Math.min(index, 5) * 14));
-      arm = 122;
+      rise = 132 - (Math.min(index, 5) * 22);
+      run = Math.max(10, 38 - (Math.min(index, 5) * 7));
+      arm = 58;
+      labelWidth = 250;
     } else if (nested && group === 'saving') {
       side = 'bottom';
-      direction = 'right';
-      rise = 110 - (Math.min(index, 5) * 18);
-      run = Math.max(8, 58 - (Math.min(index, 5) * 14));
-      arm = 122;
+      direction = 'left';
+      rise = 132 - (Math.min(index, 5) * 22);
+      run = Math.max(8, 24 - (Math.min(index, 5) * 4));
+      arm = 28;
+      labelWidth = 242;
     } else if (nested && group === 'excess') {
       side = 'top';
       direction = 'left';
@@ -1327,12 +1330,16 @@
       side = 'top';
       direction = 'right';
       rise = 86;
-      arm = 118;
+      run = 30;
+      arm = 62;
+      labelWidth = 242;
     } else if (!nested && group === 'saving') {
       side = 'bottom';
-      direction = 'right';
+      direction = 'left';
       rise = 86;
-      arm = 118;
+      run = 20;
+      arm = 40;
+      labelWidth = 238;
     } else if (!nested && group === 'available') {
       side = 'bottom';
       direction = 'left';
@@ -1365,7 +1372,8 @@
         '--leader-diag': diag + 'px',
         '--leader-angle': angle + 'deg',
         '--leader-left-arm-x': '-' + (run + arm) + 'px',
-        '--leader-label-x': (run + arm + 5) + 'px'
+        '--leader-label-x': (run + arm + 5) + 'px',
+        '--leader-label-width': labelWidth + 'px'
       })
     };
   }

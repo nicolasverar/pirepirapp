@@ -1410,3 +1410,24 @@
 - Validacion seed JSON: OK, 5 fijos, 1 ahorro, 4 metas, 24 wishlist, 25 fotos, 0 movimientos.
 - `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Ajuste de lectura en particion sueldo v3.27
+
+### Objetivo
+- Corregir la vista `PARTICION SUELDO` para que las cajas de texto no se corten, los porcentajes internos se lean mejor y `DISP.` use textura oscura coherente con el marco del titulo.
+
+### Cambios
+- Se amplio el espacio vertical reservado para cascadas superiores e inferiores segun cantidad de subdivisiones.
+- Las etiquetas de fijos y ahorros/metas ahora usan ancho dinamico y ya no aplican ellipsis forzado.
+- Los leader lines de fijos salen hacia la derecha y los de ahorros/metas hacia la izquierda para reducir choques con el borde de pantalla.
+- Los porcentajes internos tienen una pastilla mas grande, con fondo oscuro tramado y mejor contraste.
+- El tramo `Disponible` usa textura oscura rayada similar al encabezado `PARTICION SUELDO`.
+- Se actualizo cache/version de `v3.26` a `v3.27` y `finanzas-lcd-v135`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- Validacion seed JSON: OK, 0 movimientos.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

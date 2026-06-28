@@ -1068,3 +1068,23 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, `hasChild=true`, `hasSubbar=false`, `hasExpandedHead=false`, `activeInsideSameSegment=true`, `hasPct=true`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - B1 leader lines y ahorro jerarquico
+
+### Objetivo
+- Refinar la opcion B1 para que no use numeros ni leyendas inferiores.
+- Al tocar `Ahorros/metas`, revelar primero `Ahorros` y `Metas`; al tocar `Metas`, revelar otra vez dentro del mismo rectangulo las metas concretas junto con `Futuro`.
+
+### Cambios
+- B1 ahora usa leader lines: lineas verticales que salen de cada porcion y giran horizontalmente hacia la etiqueta.
+- Las etiquetas muestran nombre, porcentaje permanente y monto en modo `LEYENDA`; el modo `LIMPIO` oculta el monto.
+- Se elimino el render de `b1-readout`, `b1-legend` y `b1-macro-legend`.
+- Se agrego estado de segundo nivel para `Ahorros/metas`: `summary` y `metas`.
+- Se actualizo el texto del laboratorio para describir el desglose jerarquico.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, `baseHasLeader=true`, `savingHasAhorros=true`, `savingHasMetas=true`, `savingHasDrill=true`, `metasHasIMPA=true`, `metasHasViaje=true`, `metasHasFuture=true`, `hasBottomLegend=false`.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

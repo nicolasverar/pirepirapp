@@ -4,6 +4,7 @@
   var currentScenario = 'normal';
   var currentMode = 'detail';
   var selectedRevealGroup = 'fixed';
+  var selectedSavingNode = 'summary';
   var inlineRevealGroup = 'fixed';
   var lensRevealGroup = 'fixed';
   var accordionRevealGroup = 'fixed';
@@ -611,7 +612,7 @@
     var groups = familyGroups(model);
     var active = activeFamily(model, selectedRevealGroup);
     var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
-    return renderPanel('B1', 'Desagrega en el mismo tramo', 'el tramo tocado se reemplaza por sus componentes dentro del mismo rectangulo', [
+    return renderPanel('B1', 'Desagrega en el mismo tramo', 'leader lines; ahorros/metas abre un segundo nivel dentro del mismo rectangulo', [
       '<div class="b1-focus">',
       '<div class="b1-bar-wrap" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
       '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
@@ -622,12 +623,6 @@
       '</div>',
       '<div class="b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
       '</div>',
-      '<div class="b1-readout">',
-      '<strong>' + escapeHtml(active.label) + '</strong>',
-      '<span>' + escapeHtml(pctLabel(active.amount, model.salary)) + ' del sueldo</span>',
-      '</div>',
-      renderB1Legend(active, model),
-      renderB1MacroLegend(groups, model),
       '</div>'
     ].join(''));
   }
@@ -637,64 +632,86 @@
     var tightClass = width < 10 ? ' is-tight' : '';
     return [
       '<button class="b1-segment is-' + escapeHtml(group.group) + tightClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
-      '<i>' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i>',
-      '<span>' + escapeHtml(group.label) + '</span>',
-      '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+      renderB1Leader(group, model, index, false),
       '</button>'
     ].join('');
   }
 
   function renderB1ExpandedSegment(group, model, index) {
     var width = pct(group.amount, model.scale);
+    var children = b1ChildrenForGroup(group, model);
     return [
-      '<button class="b1-segment is-expanded is-' + escapeHtml(group.group) + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" aria-label="' + escapeHtml(group.label + ' abierto ' + pctLabel(group.amount, model.salary)) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
-      group.children.map(function (item, childIndex) {
+      '<div class="b1-segment is-expanded is-' + escapeHtml(group.group) + '" role="group" aria-label="' + escapeHtml(group.label + ' abierto ' + pctLabel(group.amount, model.salary)) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+      children.map(function (item, childIndex) {
         var childWidth = pct(item.amount, group.amount);
         var tightClass = childWidth < 14 ? ' is-tight' : '';
         var tinyClass = childWidth < 8 ? ' is-tiny' : '';
+        var drillAttr = item.drillNode ? ' data-saving-node="' + escapeHtml(item.drillNode) + '"' : '';
         return [
-          '<em class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
-          '<i>' + escapeHtml(String(childIndex + 1)) + '</i>',
-          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
-          '</em>'
-        ].join('');
-      }).join(''),
-      '</button>'
-    ].join('');
-  }
-
-  function renderB1Legend(group, model) {
-    return [
-      '<div class="b1-legend">',
-      '<header><strong>Detalle abierto</strong><span>' + escapeHtml(group.label) + '</span></header>',
-      group.children.map(function (item, index) {
-        return [
-          '<div class="b1-legend-row">',
-          '<i style="' + styleVars({ '--c': group.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
-          '<span><b>' + escapeHtml(item.label) + '</b><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
-          '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
-          currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>',
-          '</div>'
-        ].join('');
-      }).join(''),
-      '</div>'
-    ].join('');
-  }
-
-  function renderB1MacroLegend(groups, model) {
-    return [
-      '<div class="b1-macro-legend">',
-      groups.map(function (group, index) {
-        var activeClass = group.group === selectedRevealGroup ? ' is-active' : '';
-        return [
-          '<button class="b1-macro-key' + activeClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '">',
-          '<i style="' + styleVars({ '--c': group.color }) + '">' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i>',
-          '<span>' + escapeHtml(group.label) + '</span>',
-          '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+          '<button class="b1-child is-' + escapeHtml(item.group) + tightClass + tinyClass + '" type="button"' + drillAttr + ' title="' + escapeHtml(item.label + ' - ' + pctLabel(item.amount, model.salary)) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': group.color, '--shade': ((childIndex % 3) * 0.07).toFixed(2) }) + '">',
+          renderB1Leader(item, model, childIndex, true),
           '</button>'
         ].join('');
       }).join(''),
       '</div>'
+    ].join('');
+  }
+
+  function b1ChildrenForGroup(group, model) {
+    if (group.group !== 'saving') {
+      return group.children;
+    }
+    return selectedSavingNode === 'metas' ? b1SavingDetail(model) : b1SavingSummary(model);
+  }
+
+  function b1SavingSummary(model) {
+    var future = model.savings.filter(function (item) {
+      return /futuro/i.test(item.label);
+    });
+    var goals = model.savings.filter(function (item) {
+      return !/futuro/i.test(item.label);
+    });
+    return [
+      {
+        label: 'Ahorros',
+        group: 'saving-future',
+        amount: sum(future),
+        color: palette.saving[0],
+        drillNode: 'summary'
+      },
+      {
+        label: 'Metas',
+        group: 'saving-goals',
+        amount: sum(goals),
+        color: palette.saving[2],
+        drillNode: 'metas'
+      }
+    ].filter(nonZero);
+  }
+
+  function b1SavingDetail(model) {
+    return model.savings.map(function (item, index) {
+      var group = /futuro/i.test(item.label) ? 'saving-future' : 'saving-goal';
+      return {
+        label: item.label,
+        group: group,
+        amount: Number(item.amount || 0),
+        color: palette.saving[index % palette.saving.length],
+        pattern: index % 6
+      };
+    }).filter(nonZero);
+  }
+
+  function renderB1Leader(item, model, index, nested) {
+    var side = index % 2 ? 'bottom' : 'top';
+    var direction = index % 4 < 2 ? 'right' : 'left';
+    var amountLabel = currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>';
+    return [
+      '<span class="b1-leader is-' + side + ' is-' + direction + (nested ? ' is-nested' : '') + '">',
+      '<strong>' + escapeHtml(item.label) + '</strong>',
+      '<span>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</span>',
+      amountLabel,
+      '</span>'
     ].join('');
   }
 
@@ -1060,18 +1077,28 @@
       }).indexOf(validGroup);
     } else {
       selectedRevealGroup = validGroup;
+      if (validGroup === 'saving') {
+        selectedSavingNode = 'summary';
+      }
     }
   }
 
   function handlePreviewClick(event) {
     var model = scenarioModel();
     var cycleButton = event.target.closest('[data-cycle]');
+    var savingButton = event.target.closest('[data-saving-node]');
     var revealButton;
     var groups;
     if (cycleButton) {
       groups = familyGroups(model);
       stepRevealIndex += Number(cycleButton.getAttribute('data-cycle') || 0);
       stepRevealIndex = ((stepRevealIndex % groups.length) + groups.length) % groups.length;
+      render();
+      return;
+    }
+    if (savingButton) {
+      selectedRevealGroup = 'saving';
+      selectedSavingNode = savingButton.getAttribute('data-saving-node') || 'summary';
       render();
       return;
     }

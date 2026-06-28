@@ -5368,7 +5368,8 @@ body::-webkit-scrollbar,
 }
 
 .key-zone .action-key {
-  min-height: 48px;
+  min-height: 58px;
+  padding: 7px 10px;
   color: rgba(236, 239, 239, 0.92);
   font-weight: 900;
 }
@@ -5387,9 +5388,11 @@ body::-webkit-scrollbar,
   background: transparent;
   text-align: center;
   white-space: normal;
-  overflow-wrap: anywhere;
-  line-height: 1.05;
-  font-size: 0.58rem;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-height: 1.02;
+  font-size: 0.8rem;
+  font-weight: 900;
   text-shadow: 1px 1px 0 #000;
 }
 
@@ -5630,6 +5633,15 @@ body::-webkit-scrollbar,
 
 .action-menu-modal .modal-body {
   gap: 0;
+}
+
+.action-menu-modal.ticket-form-modal .modal-body,
+.action-menu-modal.ticket-form-modal .lcd-form {
+  gap: 7px;
+}
+
+.anchored-form-modal {
+  width: min(390px, calc(100vw - 24px));
 }
 
 .add-action-menu,

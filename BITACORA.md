@@ -1238,3 +1238,24 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Busqueda en `frontend` y assets Android: OK, `v3.18`, `finanzas-lcd-v126`, `future-accumulated-toggle`, `Monto acumulado` y `Valor acumulado` presentes.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-28 - Acciones contextuales ancladas v3.19
+
+### Objetivo
+- Corregir el comportamiento del boton contextual: el alta de gasto fijo debe abrirse encima del boton, el selector de Metas debe volver a ofrecer las tres opciones, y las etiquetas largas del boton deben leerse mejor.
+
+### Cambios
+- `AGREGAR OBJETIVO` vuelve a abrir el selector con `El futuro`, `Meta especifica` y `Cosa que quiero`.
+- El formulario `GASTO FIJO` ahora usa el anclaje del menu inferior y se despliega sobre el boton `AGREGAR GASTO FIJO`.
+- Se aumento la altura y tamano tipografico del boton contextual para mejorar lectura de `AGREGAR MOVIMIENTO`, `FILTRAR MOVIMIENTOS`, `AGREGAR OBJETIVO` y `AGREGAR GASTO FIJO`.
+- Se agrego una clase de formulario anclado para conservar el aspecto de formulario sin ocupar toda la pantalla.
+- Se actualizo cache/version de `v3.18` a `v3.19` y `finanzas-lcd-v127`.
+
+### Verificacion
+- `node --check frontend\scripts\forms.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Busqueda en `frontend`: OK, selector `AGREGAR OBJETIVO`, formulario fijo anclado, fuente de boton y version/cache presentes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

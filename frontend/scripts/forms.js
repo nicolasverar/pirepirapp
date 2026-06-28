@@ -270,7 +270,11 @@
       return;
     }
     if (view === 'metas') {
-      openGoalForm();
+      openModal('AGREGAR OBJETIVO', actionMenuContent('METAS', '3 OPC.', [
+        { action: 'future', title: 'El futuro', detail: 'Ahorro largo' },
+        { action: 'goal', title: 'Meta especifica', detail: 'Objetivo' },
+        { action: 'wish', title: 'Cosa que quiero', detail: 'Wishlist' }
+      ]), bindActionMenu, 'action-menu-modal');
       return;
     }
 
@@ -716,7 +720,7 @@
       '</form>'
     ].join('');
 
-    openModal('GASTO FIJO', html, bindFixedExpenseForm, 'ticket-form-modal fixed-expense-form-modal');
+    openModal('GASTO FIJO', html, bindFixedExpenseForm, 'ticket-form-modal action-menu-modal anchored-form-modal fixed-expense-form-modal');
   }
 
   function fixedExpenseBudgetPanel(budget) {

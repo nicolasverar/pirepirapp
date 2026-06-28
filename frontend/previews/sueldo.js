@@ -607,6 +607,98 @@
     ].join(''));
   }
 
+  function renderB1InlineFocus(model) {
+    var groups = familyGroups(model);
+    var active = activeFamily(model, selectedRevealGroup);
+    var salaryLine = Math.min(100, Math.max(0, pct(model.salary, model.scale)));
+    return renderPanel('B1', 'Desagrega en el mismo tramo', 'toque una familia: se abre ahi mismo, sin texturas distintas', [
+      '<div class="b1-focus">',
+      '<div class="b1-bar-wrap" style="' + styleVars({ '--salary-line': salaryLine + '%' }) + '">',
+      '<div class="b1-bar" role="group" aria-label="Barra de sueldo con desagregado en sitio">',
+      '<span class="b1-salary-line" aria-hidden="true">100%</span>',
+      groups.map(function (group, index) {
+        return group.group === active.group ? renderB1ExpandedSegment(group, model, index) : renderB1MacroSegment(group, model, index);
+      }).join(''),
+      '</div>',
+      '<div class="b1-axis"><span>0</span><span>50%</span><span>100% sueldo</span>' + (model.excess ? '<span>exceso</span>' : '') + '</div>',
+      '</div>',
+      '<div class="b1-readout">',
+      '<strong>' + escapeHtml(active.label) + '</strong>',
+      '<span>' + escapeHtml(pctLabel(active.amount, model.salary)) + ' del sueldo</span>',
+      '</div>',
+      renderB1Legend(active, model),
+      renderB1MacroLegend(groups, model),
+      '</div>'
+    ].join(''));
+  }
+
+  function renderB1MacroSegment(group, model, index) {
+    var width = pct(group.amount, model.scale);
+    var tightClass = width < 10 ? ' is-tight' : '';
+    return [
+      '<button class="b1-segment is-' + escapeHtml(group.group) + tightClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+      '<i>' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i>',
+      '<span>' + escapeHtml(group.label) + '</span>',
+      '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+      '</button>'
+    ].join('');
+  }
+
+  function renderB1ExpandedSegment(group, model, index) {
+    var width = pct(group.amount, model.scale);
+    return [
+      '<button class="b1-segment is-expanded is-' + escapeHtml(group.group) + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '" style="' + styleVars({ '--w': width + '%', '--c': group.color }) + '">',
+      '<span class="b1-expanded-head"><i>' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i><span>' + escapeHtml(group.label) + '</span><b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b></span>',
+      '<span class="b1-subbar">',
+      group.children.map(function (item, childIndex) {
+        var childWidth = pct(item.amount, group.amount);
+        return [
+          '<em class="b1-child is-' + escapeHtml(item.group) + '" style="' + styleVars({ '--w': childWidth + '%', '--c': item.color }) + '">',
+          '<i>' + escapeHtml(String(childIndex + 1)) + '</i>',
+          '<b>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</b>',
+          '</em>'
+        ].join('');
+      }).join(''),
+      '</span>',
+      '</button>'
+    ].join('');
+  }
+
+  function renderB1Legend(group, model) {
+    return [
+      '<div class="b1-legend">',
+      '<header><strong>Detalle abierto</strong><span>' + escapeHtml(group.label) + '</span></header>',
+      group.children.map(function (item, index) {
+        return [
+          '<div class="b1-legend-row">',
+          '<i style="' + styleVars({ '--c': item.color }) + '">' + escapeHtml(String(index + 1)) + '</i>',
+          '<span><b>' + escapeHtml(item.label) + '</b><small>' + escapeHtml(groupName(item.group)) + '</small></span>',
+          '<strong>' + escapeHtml(pctLabel(item.amount, model.salary)) + '</strong>',
+          currentMode === 'macro' ? '' : '<em>' + escapeHtml(money(item.amount)) + '</em>',
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
+  function renderB1MacroLegend(groups, model) {
+    return [
+      '<div class="b1-macro-legend">',
+      groups.map(function (group, index) {
+        var activeClass = group.group === selectedRevealGroup ? ' is-active' : '';
+        return [
+          '<button class="b1-macro-key' + activeClass + '" type="button" data-reveal-scope="drill" data-reveal-group="' + escapeHtml(group.group) + '">',
+          '<i style="' + styleVars({ '--c': group.color }) + '">' + escapeHtml(String(index + 1).padStart(2, '0')) + '</i>',
+          '<span>' + escapeHtml(group.label) + '</span>',
+          '<b>' + escapeHtml(pctLabel(group.amount, model.salary)) + '</b>',
+          '</button>'
+        ].join('');
+      }).join(''),
+      '</div>'
+    ].join('');
+  }
+
   function renderPieSolid(model) {
     var list = components(model);
     return renderPanel('A', 'Torta con callouts', 'sectores desagregados con indice y lista lateral', [
@@ -949,12 +1041,7 @@
     var model = scenarioModel();
     document.getElementById('salary-summary').innerHTML = renderSummary(model);
     document.getElementById('preview-grid').innerHTML = [
-      renderAlignedReveal(model),
-      renderInlineReveal(model),
-      renderLensReveal(model),
-      renderAccordionReveal(model),
-      renderStepperReveal(model),
-      renderTrayReveal(model)
+      renderB1InlineFocus(model)
     ].join('');
   }
 

@@ -1030,3 +1030,23 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - Render smoke con DOM minimo en Node: OK, genera `Drill alineado` y `Bandeja inspectora`.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
+## 2026-06-27 - B1 desagregado en sitio
+
+### Objetivo
+- Refinar la opcion preferida `B1` para que el desagregado aparezca dentro del mismo tramo tocado.
+
+### Cambios
+- El laboratorio ahora queda enfocado en una sola tarjeta `B1 EN SITIO`.
+- Al tocar `Gastos fijos`, `Ahorros/metas`, `Disponible` o `Exceso`, ese tramo se parte internamente en sus componentes.
+- Se quitaron las tramas diferentes de la vista visible B1.
+- La distincion visual pasa a numeros, leyenda y porcentajes siempre visibles.
+- El modo `LEYENDA / LIMPIO` mantiene porcentajes; `LIMPIO` oculta montos para comparar una lectura mas despejada.
+- La app principal sigue intacta; solo cambia el laboratorio de preview.
+
+### Verificacion
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- Render smoke con DOM minimo en Node: OK, genera `Desagrega en el mismo tramo`, no renderiza `Drill alineado`, mantiene `b1-subbar` y porcentajes.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.

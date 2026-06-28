@@ -1068,6 +1068,28 @@
 - `git diff --check`: OK; solo avisos CRLF normales de Windows.
 - `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
 
+## 2026-06-28 - Torta 2D XL v3.30
+
+### Objetivo
+- Agrandar de forma visible la torta final de `PARTICION SUELDO`.
+
+### Cambios
+- `frontend/scripts/render.js` aumenta el radio de la torta principal de 112 a 126.
+- El viewBox de la torta pasa de `-62 0 444 260` a `-42 0 404 264`, reduciendo aire lateral muerto para que el circulo ocupe mas superficie real.
+- `frontend/styles/main.css` aumenta el ancho maximo y la altura minima del escenario de torta.
+- `frontend/styles/responsive.css` aumenta la escala tambien en pantallas chicas.
+- `frontend/previews` replica la misma escala XL.
+- Version y cache pasan de `v3.29`/`finanzas-lcd-v137` a `v3.30`/`finanzas-lcd-v138`.
+
+### Verificacion
+- `node --check frontend\scripts\render.js`: OK.
+- `node --check frontend\scripts\config.js`: OK.
+- `node --check frontend\service-worker.js`: OK.
+- `node --check frontend\previews\sueldo.js`: OK.
+- `npm.cmd run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm.cmd run cap:copy`: OK, assets web copiados a `android/app/src/main/assets/public`.
+
 ## 2026-06-28 - Callouts de torta A hacia afuera
 
 ### Objetivo

@@ -76,11 +76,11 @@
   }
 
   .salary-pie2d-chart {
-    min-height: 296px;
+    min-height: 328px;
   }
 
   .salary-pie2d-svg {
-    width: min(100%, 500px);
+    width: min(100%, 580px);
   }
 
   .salary-pie2d-label {

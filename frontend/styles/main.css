@@ -5277,7 +5277,7 @@ body::-webkit-scrollbar,
 .salary-pie2d-chart {
   display: grid;
   place-items: center;
-  min-height: 318px;
+  min-height: 356px;
   overflow: visible;
   background:
     repeating-linear-gradient(180deg, rgba(7, 16, 7, 0.08) 0 1px, transparent 1px 5px),
@@ -5289,7 +5289,7 @@ body::-webkit-scrollbar,
 }
 
 .salary-pie2d-svg {
-  width: min(100%, 580px);
+  width: min(100%, 660px);
   height: auto;
   overflow: visible;
   image-rendering: pixelated;

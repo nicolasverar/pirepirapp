@@ -1215,7 +1215,7 @@
     var cfg = pieVariantConfig(variant);
     var cx = 160;
     var cy = 130;
-    var radius = 112;
+    var radius = 126;
     var start = -90;
     var callouts = [];
     var pieces = groups.map(function (group) {
@@ -1230,9 +1230,9 @@
     var calloutHtml = renderPieCallouts(callouts, cfg);
 
     return [
-      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-62 0 444 260" role="img" aria-label="Torta 2D interactiva de sueldo">',
+      '<svg class="pie-touch-svg is-' + escapeHtml(variant) + '" viewBox="-42 0 404 264" role="img" aria-label="Torta 2D interactiva de sueldo">',
       patternDefs(),
-      '<circle class="pie-touch-shadow" cx="160" cy="134" r="114"></circle>',
+      '<circle class="pie-touch-shadow" cx="160" cy="134" r="128"></circle>',
       pieces,
       '<circle class="pie-touch-rim" cx="160" cy="130" r="' + radius + '"></circle>',
       calloutHtml,

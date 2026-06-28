@@ -546,7 +546,7 @@ button {
 }
 
 .pie-touch-layout.is-variant .pie-touch-stage {
-  min-height: 540px;
+  min-height: 590px;
 }
 
 .pie-touch-svg {
@@ -556,7 +556,7 @@ button {
 }
 
 .pie-touch-layout.is-variant .pie-touch-svg {
-  width: min(100%, 960px);
+  width: min(100%, 1120px);
 }
 
 .pie-touch-part {

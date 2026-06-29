@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - B3 compactacion y plazos en ahorros
+
+### Objetivo
+- Eliminar espacio vertical sobrante en `PROTO B3`.
+- Quitar elementos redundantes: frase final `Ya podes usar la app`, pasos inferiores y guiones horizontales de completacion.
+- Ajustar `AHORROS` para indicar `Anadir ahorro segun se trate de:` y permitir cargar plazos de tiempo.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260629-i`.
+- `frontend/previews/onboarding.js` elimina `renderProgress()` y deja de renderizar la fila inferior de pasos/guiones.
+- Se elimina el copy final duplicado `Ya podes usar la app`; el cierre queda como `LISTO` con resumen.
+- `AHORROS` cambia su bajada a `Anadir ahorro segun se trate de:`.
+- Se agregan plazos editables en ahorro de futuro, metas y cosas que quiero.
+- `frontend/previews/onboarding.css` reduce `--onboarding-copy-height` a `118px`, elimina estilos de progreso inferior y compacta formularios, riel, resumen, inputs y selectores.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion estatica Node de cache-busting `20260629-i`, eliminacion de progreso inferior, copy duplicado y altura compacta: OK, `onboarding compact static ok`.
+- Validacion runtime Node con DOM simulado para `AHORROS`, toggles, campos de plazo y resumen final sin redundancias: OK, `onboarding compact runtime ok`.
+- `git diff --check`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+
+### Pendientes
+- Publicar y verificar URL publica con cache-busting despues del commit.
+- Revisar visualmente si el nuevo alto `118px` elimina el aire vertical sin cortar titulos LCD.
+
 ## 2026-06-29 - B3 altura consistente del tutorial
 
 ### Objetivo

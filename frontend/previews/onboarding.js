@@ -17,8 +17,8 @@
     { code: 'HOLA', title: 'BIENVENIDO/A', caption: '', type: 'welcome', status: 'bienvenida' },
     { code: 'SUELDO', title: 'SUELDO', caption: 'Cuanto soles cobrar?', type: 'salary', status: 'sueldo mensual' },
     { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido.', type: 'fixed', status: 'gastos fijos' },
-    { code: 'AHORRO', title: 'AHORROS', caption: 'Elegi que queres anadir ahora.', type: 'savings', status: 'ahorros' },
-    { code: 'LISTO', title: 'LISTO', caption: 'Ya podes usar la app.', type: 'summary', status: 'listo' }
+    { code: 'AHORRO', title: 'AHORROS', caption: 'Anadir ahorro segun se trate de:', type: 'savings', status: 'ahorros' },
+    { code: 'LISTO', title: 'LISTO', caption: '', type: 'summary', status: 'listo' }
   ];
 
   var defaults = {
@@ -34,11 +34,12 @@
     futureTitle: 'Futuro',
     futureMonthly: '',
     futureAccumulated: '',
+    futureTerm: '',
     goals: [
-      { id: 'goal-1', title: '', monthly: '', target: '' }
+      { id: 'goal-1', title: '', monthly: '', target: '', term: '' }
     ],
     wishlist: [
-      { id: 'wish-1', title: '', cost: '' }
+      { id: 'wish-1', title: '', cost: '', term: '' }
     ]
   };
 
@@ -95,7 +96,6 @@
       renderTopline(step),
       renderCopyShell(step),
       renderWork(step),
-      index > 0 ? renderProgress() : '',
       '</section>'
     ].join('');
     updateChrome(step);
@@ -224,9 +224,9 @@
     return [
       '<form class="onboard-form" data-onboard-form="savings">',
       '<div class="savings-choice-grid">',
-      renderSavingsChoice('future', 'Futuro', 'Ahorro largo o fondo de seguridad.'),
-      renderSavingsChoice('goals', 'Meta', 'Objetivo con monto y aporte mensual.'),
-      renderSavingsChoice('wishlist', 'Cosa que quiero', 'Deseo sin compromiso mensual fijo.'),
+      renderSavingsChoice('future', 'Futuro', 'Fondo o reserva con aporte mensual.'),
+      renderSavingsChoice('goals', 'Meta', 'Objetivo con monto, aporte y plazo.'),
+      renderSavingsChoice('wishlist', 'Cosa que quiero', 'Compra deseada con costo y plazo.'),
       '</div>',
       draft.savingsPlan.future ? renderFutureFields() : '',
       draft.savingsPlan.goals ? renderGoalFields(summary) : '',
@@ -250,9 +250,10 @@
     return [
       '<div class="onboard-subform">',
       '<div class="onboard-subtitle">Futuro</div>',
-      '<div class="onboard-row is-double">',
+      '<div class="onboard-row is-triple">',
       renderControl('Nombre', 'text', draft.futureTitle, 'data-bind="futureTitle" maxlength="32" autocomplete="off" placeholder="Futuro"'),
       renderControl('Mensual', 'number', draft.futureMonthly, 'data-bind="futureMonthly" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
+      renderControl('Plazo', 'text', draft.futureTerm, 'data-bind="futureTerm" maxlength="24" autocomplete="off" placeholder="Ej. 12 meses"'),
       '</div>',
       '<div class="onboard-row is-single">',
       renderControl('Ya acumulado', 'number', draft.futureAccumulated, 'data-bind="futureAccumulated" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
@@ -272,8 +273,9 @@
           renderControl('Mensual', 'number', item.monthly, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="monthly" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
           renderRemoveButton('goals', item.id),
           '</div>',
-          '<div class="onboard-row is-single">',
+          '<div class="onboard-row is-double">',
           renderControl('Objetivo', 'number', item.target, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="target" min="1" step="1" inputmode="numeric" placeholder="Gs."'),
+          renderControl('Plazo', 'text', item.term, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="term" maxlength="24" autocomplete="off" placeholder="Ej. 6 meses"'),
           '</div>'
         ].join('');
       }).join(''),
@@ -288,7 +290,12 @@
       '<div class="onboard-subform">',
       '<div class="onboard-subtitle">Cosas que quiero</div>',
       draft.wishlist.map(function (item) {
-        return renderMoneyRow('wishlist', item.id, item.title, item.cost, 'Cosa', 'Costo');
+        return [
+          renderMoneyRow('wishlist', item.id, item.title, item.cost, 'Cosa', 'Costo'),
+          '<div class="onboard-row is-single">',
+          renderControl('Plazo', 'text', item.term, 'data-list="wishlist" data-id="' + escapeHtml(item.id) + '" data-field="term" maxlength="24" autocomplete="off" placeholder="Ej. 3 meses"'),
+          '</div>'
+        ].join('');
       }).join(''),
       '<button class="onboard-add-key" type="button" data-add="wishlist">Agregar cosa</button>',
       renderTotalLine('Cosas total', calculateSummary().wishlistTotal, 'wishlist'),
@@ -299,7 +306,6 @@
   function renderSummaryPanel(summary) {
     return [
       '<section class="summary-panel" aria-label="Resumen inicial">',
-      '<div class="summary-title"><span>Ya podes usar la app</span><b>Entrar</b></div>',
       renderSummaryGrid(summary),
       renderPartitionRail(summary),
       '</section>'
@@ -347,20 +353,6 @@
       '<i style="--w:' + fixedWidth + '%;--c:#627545"></i>',
       '<i style="--w:' + savingsWidth + '%;--c:#7d8d55"></i>',
       '<i style="--w:' + availableWidth + '%;--c:#24351f"></i>',
-      '</div>'
-    ].join('');
-  }
-
-  function renderProgress() {
-    return [
-      '<div class="onboarding-progress" aria-label="Progreso">',
-      '<div class="progress-slots" aria-hidden="true">',
-      steps.map(function (_, slotIndex) {
-        var state = slotIndex < index ? ' is-done' : (slotIndex === index ? ' is-active' : '');
-        return '<span class="progress-slot' + state + '"></span>';
-      }).join(''),
-      '</div>',
-      '<div class="progress-caption"><span>PASO ' + (index + 1) + '/' + steps.length + '</span><span>' + escapeHtml(steps[index].title) + '</span></div>',
       '</div>'
     ].join('');
   }
@@ -561,9 +553,9 @@
     var hasSalary = salary > 0;
     var hasFixed = fixedTotal > 0 || hasListData(draft.fixed, ['title', 'amount']);
     var hasSavings = savingsTotal > 0
-      || (draft.savingsPlan.future && (hasText(draft.futureTitle) || hasText(draft.futureMonthly) || hasText(draft.futureAccumulated)))
-      || (draft.savingsPlan.goals && hasListData(draft.goals, ['title', 'monthly', 'target']));
-    var hasWishlist = draft.savingsPlan.wishlist && (wishlistTotal > 0 || hasListData(draft.wishlist, ['title', 'cost']));
+      || (draft.savingsPlan.future && (hasText(draft.futureTitle) || hasText(draft.futureMonthly) || hasText(draft.futureAccumulated) || hasText(draft.futureTerm)))
+      || (draft.savingsPlan.goals && hasListData(draft.goals, ['title', 'monthly', 'target', 'term']));
+    var hasWishlist = draft.savingsPlan.wishlist && (wishlistTotal > 0 || hasListData(draft.wishlist, ['title', 'cost', 'term']));
     return {
       salary: salary,
       fixedTotal: fixedTotal,
@@ -626,9 +618,9 @@
     if (list === 'fixed') {
       draft.fixed.push({ id: 'fixed-' + uid, title: '', amount: '' });
     } else if (list === 'goals') {
-      draft.goals.push({ id: 'goal-' + uid, title: '', monthly: '', target: '' });
+      draft.goals.push({ id: 'goal-' + uid, title: '', monthly: '', target: '', term: '' });
     } else if (list === 'wishlist') {
-      draft.wishlist.push({ id: 'wish-' + uid, title: '', cost: '' });
+      draft.wishlist.push({ id: 'wish-' + uid, title: '', cost: '', term: '' });
     }
     render();
   }

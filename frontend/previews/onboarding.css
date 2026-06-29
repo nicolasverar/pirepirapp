@@ -6,7 +6,7 @@ body {
 }
 
 .onboarding-stage {
-  --onboarding-copy-height: 150px;
+  --onboarding-copy-height: 118px;
 }
 
 .onboarding-preview-shell {
@@ -21,15 +21,15 @@ body {
 .onboarding-stage {
   position: relative;
   display: grid;
-  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr) auto;
-  gap: 7px;
+  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr);
+  gap: 5px;
   min-height: 100%;
-  padding: 9px 10px 10px;
+  padding: 8px 10px;
   color: #071007;
 }
 
 .onboarding-stage.is-step-welcome {
-  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr) auto;
+  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr);
   align-content: start;
 }
 
@@ -112,7 +112,7 @@ body {
 
 .pixel-terminal {
   display: grid;
-  gap: 5px;
+  gap: 3px;
   min-width: 0;
 }
 
@@ -124,11 +124,11 @@ body {
 }
 
 .pixel-terminal-main {
-  height: 126px;
+  height: 94px;
 }
 
 .is-step-welcome .pixel-terminal-main {
-  height: 138px;
+  height: 108px;
 }
 
 .pixel-terminal svg {
@@ -150,8 +150,8 @@ body {
   text-align: center;
   text-transform: uppercase;
   color: #071007;
-  font-size: 0.68rem;
-  line-height: 1.15;
+  font-size: 0.64rem;
+  line-height: 1.08;
   font-weight: 900;
 }
 
@@ -169,20 +169,20 @@ body {
 
 .is-terminal .onboarding-work {
   display: grid;
-  gap: 10px;
+  gap: 6px;
   align-content: start;
 }
 
 .is-console .onboarding-work {
   display: grid;
   grid-template-columns: 74px minmax(0, 1fr);
-  gap: 9px;
+  gap: 7px;
   align-content: start;
 }
 
 .onboard-form {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -267,16 +267,16 @@ body {
 
 .onboard-field-grid {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .onboard-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(86px, 0.76fr) auto;
-  gap: 6px;
+  gap: 5px;
   align-items: end;
   min-width: 0;
-  padding: 5px 0 7px;
+  padding: 3px 0 5px;
   border-bottom: 2px solid rgba(7, 16, 7, 0.76);
 }
 
@@ -288,9 +288,13 @@ body {
   grid-template-columns: minmax(0, 1fr) minmax(86px, 0.76fr);
 }
 
+.onboard-row.is-triple {
+  grid-template-columns: minmax(0, 1fr) minmax(72px, 0.72fr) minmax(76px, 0.72fr);
+}
+
 .onboard-control {
   display: grid;
-  gap: 3px;
+  gap: 2px;
   min-width: 0;
 }
 
@@ -306,8 +310,8 @@ body {
 .onboard-control input {
   width: 100%;
   min-width: 0;
-  min-height: 34px;
-  padding: 5px 6px;
+  min-height: 30px;
+  padding: 4px 5px;
   color: #c4d08b;
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.07) 0 1px, transparent 1px 4px),
@@ -345,7 +349,7 @@ body {
 
 .onboard-mini-key,
 .onboard-add-key {
-  min-height: 34px;
+  min-height: 30px;
   color: #c4d08b;
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
@@ -357,7 +361,7 @@ body {
 }
 
 .onboard-mini-key {
-  width: 34px;
+  width: 30px;
   padding: 0;
 }
 
@@ -377,8 +381,8 @@ body {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
   align-items: center;
-  min-height: 36px;
-  padding: 6px 0 0;
+  min-height: 30px;
+  padding: 3px 0 0;
   text-transform: uppercase;
   font-size: 0.62rem;
   font-weight: 900;
@@ -390,7 +394,7 @@ body {
 
 .savings-choice-grid {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .savings-choice {
@@ -398,8 +402,8 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  min-height: 48px;
-  padding: 7px 8px;
+  min-height: 42px;
+  padding: 5px 7px;
   color: #071007;
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.055) 0 1px, transparent 1px 4px),
@@ -442,9 +446,9 @@ body {
 }
 
 .savings-choice small {
-  margin-top: 2px;
+  margin-top: 1px;
   font-size: 0.5rem;
-  line-height: 1.25;
+  line-height: 1.15;
 }
 
 .savings-choice.is-active {
@@ -461,8 +465,8 @@ body {
 
 .onboard-subform {
   display: grid;
-  gap: 7px;
-  padding-top: 3px;
+  gap: 5px;
+  padding-top: 1px;
   animation: onboarding-appear 0.22s steps(3, end) both;
 }
 
@@ -477,8 +481,8 @@ body {
 .live-summary,
 .summary-panel {
   display: grid;
-  gap: 7px;
-  padding-top: 2px;
+  gap: 5px;
+  padding-top: 0;
 }
 
 .summary-grid {
@@ -492,8 +496,8 @@ body {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
   align-items: center;
-  min-height: 32px;
-  padding: 5px 0;
+  min-height: 28px;
+  padding: 4px 0;
   color: #071007;
   background: transparent;
   border: 0;
@@ -520,13 +524,13 @@ body {
 
 .partition-rail {
   display: flex;
-  min-height: 30px;
+  min-height: 24px;
   border: 2px solid #071007;
   overflow: hidden;
 }
 
 .partition-rail.is-empty {
-  min-height: 20px;
+  min-height: 16px;
   opacity: 0.55;
 }
 
@@ -541,15 +545,15 @@ body {
 
 .console-rail {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   align-content: start;
 }
 
 .console-step {
   display: grid;
   gap: 2px;
-  min-height: 40px;
-  padding: 5px 4px;
+  min-height: 34px;
+  padding: 4px 3px;
   color: #071007;
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.045) 0 1px, transparent 1px 4px),
@@ -577,41 +581,8 @@ body {
 
 .console-work-area {
   display: grid;
-  gap: 9px;
-  min-width: 0;
-}
-
-.onboarding-progress {
-  align-self: end;
-  display: grid;
   gap: 6px;
-  padding-top: 4px;
-}
-
-.progress-slots {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 5px;
-}
-
-.progress-slot {
-  height: 8px;
-  background: rgba(7, 16, 7, 0.18);
-  border: 1px solid rgba(7, 16, 7, 0.58);
-}
-
-.progress-slot.is-active,
-.progress-slot.is-done {
-  background: #071007;
-}
-
-.progress-caption {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  text-transform: uppercase;
-  font-size: 0.56rem;
-  font-weight: 900;
+  min-width: 0;
 }
 
 .onboarding-preview-keys .bottom-nav {
@@ -653,7 +624,7 @@ body {
 
 @media (max-width: 380px) {
   .onboarding-stage {
-    --onboarding-copy-height: 136px;
+    --onboarding-copy-height: 108px;
   }
 
   .onboarding-stage {
@@ -661,11 +632,11 @@ body {
   }
 
   .pixel-terminal-main {
-    height: 112px;
+    height: 84px;
   }
 
   .is-step-welcome .pixel-terminal-main {
-    height: 124px;
+    height: 98px;
   }
 
   .is-console .onboarding-work {
@@ -674,7 +645,8 @@ body {
   }
 
   .onboard-row,
-  .onboard-row.is-double {
+  .onboard-row.is-double,
+  .onboard-row.is-triple {
     grid-template-columns: minmax(0, 1fr);
   }
 

@@ -21,6 +21,14 @@
 - `node --check frontend\previews\onboarding.js`: OK.
 - Validacion estatica Node de variantes, cache-busting, 6 pasos, campos, acciones agregar/quitar, texto escrito y ausencia de `system-window`: OK, `ONBOARDING_EDITABLE_STATIC_OK`.
 - Busqueda en prototipos de `system-window`, `translateY`, animaciones viejas y textos largos anteriores: sin resultados.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+- `git commit -m "Rehacer onboarding editable"`: OK, commit `1fa5ad4`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-terminal.html?v=1fa5ad4-2`: OK, `200`, contiene `PROTO A2`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=1fa5ad4-2`: OK, `200`, contiene `PROTO B2`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=1fa5ad4-2`: OK, `200`, contiene campos editables y acciones agregar/quitar.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=1fa5ad4-2`: OK, `200`, contiene estilos A2/B2.
 
 ### Pendientes
 - Recorrer A2/B2 visualmente con el usuario y elegir la direccion antes de integrar persistencia real en la app.

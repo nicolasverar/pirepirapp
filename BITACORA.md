@@ -1,5 +1,33 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - B3 escritura lenta y flechas pixel
+
+### Objetivo
+- Refinar `PROTO B3` segun feedback visual sobre el cierre, el tamano de texto y las flechas de bienvenida.
+- Eliminar la frase final `Empieza el bailongo`.
+- Hacer la escritura LCD mas grande y mas lenta.
+- Rehacer las tres flechas como pixel art centrado con movimiento vertical visible.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260629-g`.
+- `frontend/previews/onboarding.js` elimina el bloque final `Empieza el bailongo`.
+- La escritura LCD pasa de `118ms` a `176ms` por paso de tipeo.
+- El display principal usa pixeles mas grandes y `viewBox` mas chico para que el texto escrito ocupe mas pantalla.
+- Las flechas de bienvenida ahora se renderizan con una matriz 5x7 de celdas reales, no con pseudo-elementos gruesos.
+- `frontend/previews/onboarding.css` centra las flechas, aumenta el area del display y anima las flechas entre `translateY(-8px)` y `translateY(10px)`.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion runtime Node con DOM simulado para bienvenida y resumen final: OK, `onboarding runtime g ok`.
+- Validacion estatica Node de cache-busting `20260629-g`, frase eliminada, delay `176ms`, display grande y flechas pixel: OK, `onboarding static g ok`.
+- `git diff --check`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+
+### Pendientes
+- Publicar y verificar URL publica con cache-busting despues del commit.
+- Revisar visualmente en navegador si el tamano del titulo y el rebote de flechas ya quedan en el punto esperado.
+
 ## 2026-06-29 - B3 botones fisicos y titulo grande
 
 ### Objetivo

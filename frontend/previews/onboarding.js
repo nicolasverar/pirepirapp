@@ -165,11 +165,32 @@
     return [
       '<section class="welcome-panel" aria-label="Comenzar configuracion">',
       '<div class="welcome-arrows" aria-hidden="true">',
-      '<span class="pixel-arrow"></span>',
-      '<span class="pixel-arrow"></span>',
-      '<span class="pixel-arrow"></span>',
+      renderPixelArrow(),
+      renderPixelArrow(),
+      renderPixelArrow(),
       '</div>',
       '</section>'
+    ].join('');
+  }
+
+  function renderPixelArrow() {
+    var pixels = [
+      '00100',
+      '00100',
+      '00100',
+      '00100',
+      '11111',
+      '01110',
+      '00100'
+    ];
+    return [
+      '<span class="pixel-arrow">',
+      pixels.map(function (row) {
+        return row.split('').map(function (cell) {
+          return '<i class="' + (cell === '1' ? 'is-on' : 'is-off') + '"></i>';
+        }).join('');
+      }).join(''),
+      '</span>'
     ].join('');
   }
 
@@ -281,7 +302,6 @@
       '<div class="summary-title"><span>Ya podes usar la app</span><b>Entrar</b></div>',
       renderSummaryGrid(summary),
       renderPartitionRail(summary),
-      '<div class="onboard-dance-line">Empieza el bailongo</div>',
       '</section>'
     ].join('');
   }
@@ -396,7 +416,7 @@
       mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', true, step.type === 'welcome' ? 12 : 8);
       mainCurrent += 1;
       if (mainCurrent <= mainValue.length) {
-        typingTimer = setTimeout(tickMain, 118);
+        typingTimer = setTimeout(tickMain, 176);
       }
     }
 
@@ -406,13 +426,13 @@
 
   function pixelText(text, kind, center, maxCharsOverride) {
     var value = normalizePixelText(text);
-    var cell = kind === 'main' ? 3.7 : 2.15;
-    var gap = kind === 'main' ? 0.95 : 0.62;
-    var charGap = kind === 'main' ? 2.4 : 1.55;
+    var cell = kind === 'main' ? 4.05 : 2.15;
+    var gap = kind === 'main' ? 0.62 : 0.62;
+    var charGap = kind === 'main' ? 1.2 : 1.55;
     var maxChars = maxCharsOverride || (kind === 'main' ? 8 : 24);
     var maxLines = kind === 'main' ? 2 : 1;
-    var viewWidth = 320;
-    var viewHeight = kind === 'main' ? 84 : 30;
+    var viewWidth = kind === 'main' ? 300 : 320;
+    var viewHeight = kind === 'main' ? 98 : 30;
     var lineHeight = 7 * (cell + gap) - gap + (kind === 'main' ? 7 : 4);
     var active = [];
     var ghost = [];

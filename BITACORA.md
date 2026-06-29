@@ -23,9 +23,13 @@
 - Validacion estatica Node de cache-busting `20260629-g`, frase eliminada, delay `176ms`, display grande y flechas pixel: OK, `onboarding static g ok`.
 - `git diff --check`: OK.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git commit -m "Pulir texto y flechas B3"`: OK, commit `1caf919`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=1caf919`: OK, contiene `PROTO B3` y cache-busting `onboarding.js?v=20260629-g` / `onboarding.css?v=20260629-g`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=1caf919`: OK, no contiene `Empieza el bailongo`, usa delay `176ms` y renderiza `renderPixelArrow()`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=1caf919`: OK, contiene display de `142px`, grilla `repeat(5, 4px)` y movimiento `translateY(-8px)` / `translateY(10px)`.
 
 ### Pendientes
-- Publicar y verificar URL publica con cache-busting despues del commit.
 - Revisar visualmente en navegador si el tamano del titulo y el rebote de flechas ya quedan en el punto esperado.
 
 ## 2026-06-29 - B3 botones fisicos y titulo grande

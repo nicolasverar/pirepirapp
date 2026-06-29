@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - B3 altura consistente del tutorial
+
+### Objetivo
+- Mantener una altura consistente del bloque tutorial en todas las diapositivas.
+- Subir la grilla/formulario para aprovechar mejor el espacio inferior.
+- Conservar el texto LCD grande sin volver a agrandar el bloque completo.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260629-h`.
+- `frontend/previews/onboarding.css` introduce `--onboarding-copy-height: 150px` como altura comun del tutorial.
+- La grilla principal de cada diapositiva ahora reserva la misma fila para el tutorial: `auto var(--onboarding-copy-height) minmax(0, 1fr) auto`.
+- La bienvenida deja de centrarse con una estructura especial; conserva el espacio de la linea superior invisible para que el bloque empiece a la misma altura que las demas diapositivas.
+- Se reducen gaps y altura de contenedores inferiores para que formulario, riel y resumen arranquen mas arriba.
+- En mobile se usa `--onboarding-copy-height: 136px` y se mantiene el ajuste proporcional del display LCD.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion estatica Node de cache-busting `20260629-h`, altura fija del tutorial y ausencia de alturas viejas: OK, `onboarding layout h static ok`.
+- Validacion runtime Node con DOM simulado para bienvenida, sueldo, gastos fijos y ahorros: OK, `onboarding layout h runtime ok`.
+- `git diff --check`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+
+### Pendientes
+- Publicar y verificar URL publica con cache-busting despues del commit.
+- Revisar visualmente en navegador si el formulario quedo suficientemente alto en cada diapositiva.
+
 ## 2026-06-29 - B3 escritura lenta y flechas pixel
 
 ### Objetivo

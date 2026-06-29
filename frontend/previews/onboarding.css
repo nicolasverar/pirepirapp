@@ -5,6 +5,10 @@ body {
     linear-gradient(135deg, #070a07 0, #171d16 45%, #0e130d 100%);
 }
 
+.onboarding-stage {
+  --onboarding-copy-height: 150px;
+}
+
 .onboarding-preview-shell {
   max-width: 440px;
 }
@@ -17,16 +21,16 @@ body {
 .onboarding-stage {
   position: relative;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
-  gap: 9px;
+  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr) auto;
+  gap: 7px;
   min-height: 100%;
-  padding: 10px;
+  padding: 9px 10px 10px;
   color: #071007;
 }
 
 .onboarding-stage.is-step-welcome {
-  grid-template-rows: minmax(0, 1fr) auto;
-  align-content: center;
+  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr) auto;
+  align-content: start;
 }
 
 .onboarding-stage::before {
@@ -46,7 +50,8 @@ body {
 }
 
 .is-step-welcome .onboarding-topline {
-  display: none;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .onboarding-topline {
@@ -93,13 +98,15 @@ body {
 
 .onboarding-copy {
   display: grid;
-  gap: 7px;
-  min-height: 178px;
+  gap: 5px;
+  height: var(--onboarding-copy-height);
+  min-height: 0;
   align-content: center;
 }
 
 .is-step-welcome .onboarding-copy {
-  min-height: 190px;
+  height: var(--onboarding-copy-height);
+  min-height: 0;
   align-content: center;
 }
 
@@ -117,11 +124,11 @@ body {
 }
 
 .pixel-terminal-main {
-  height: 142px;
+  height: 126px;
 }
 
 .is-step-welcome .pixel-terminal-main {
-  height: 142px;
+  height: 138px;
 }
 
 .pixel-terminal svg {
@@ -143,8 +150,8 @@ body {
   text-align: center;
   text-transform: uppercase;
   color: #071007;
-  font-size: 0.72rem;
-  line-height: 1.25;
+  font-size: 0.68rem;
+  line-height: 1.15;
   font-weight: 900;
 }
 
@@ -156,8 +163,8 @@ body {
 .is-step-welcome .onboarding-work {
   display: grid;
   justify-items: center;
-  align-content: center;
-  min-height: 96px;
+  align-content: start;
+  min-height: 74px;
 }
 
 .is-terminal .onboarding-work {
@@ -182,9 +189,9 @@ body {
 .welcome-panel {
   display: grid;
   justify-items: center;
-  align-content: center;
+  align-content: start;
   width: 100%;
-  min-height: 94px;
+  min-height: 72px;
   padding-top: 0;
   text-transform: uppercase;
   font-weight: 900;
@@ -646,15 +653,19 @@ body {
 
 @media (max-width: 380px) {
   .onboarding-stage {
+    --onboarding-copy-height: 136px;
+  }
+
+  .onboarding-stage {
     padding: 8px;
   }
 
-  .onboarding-copy {
-    min-height: 158px;
+  .pixel-terminal-main {
+    height: 112px;
   }
 
-  .pixel-terminal-main {
-    height: 122px;
+  .is-step-welcome .pixel-terminal-main {
+    height: 124px;
   }
 
   .is-console .onboarding-work {

@@ -22,9 +22,14 @@
 - Validacion estatica Node de cache-busting, `renderProgress`, campos, acciones, viewBox fijo y ausencia de `system-window`/`translateY`: OK, `ONBOARDING_EDITABLE_STATIC_OK`.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
+- `git commit -m "Corregir pantalla vacia onboarding"`: OK, commit `e861f4f`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-terminal.html?v=e861f4f-1`: OK, `200`, carga `onboarding.js?v=20260629-c`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=e861f4f-1`: OK, `200`, carga `onboarding.js?v=20260629-c`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=e861f4f-1`: OK, `200`, contiene `function renderProgress()` y formularios.
 
 ### Pendientes
-- Publicar y verificar que GitHub Pages sirva A2/B2 con `20260629-c`.
+- Recorrer A2/B2 en navegador ya actualizado para confirmar la direccion visual antes de integrar persistencia real.
 
 ## 2026-06-29 - Onboarding editable A2/B2
 

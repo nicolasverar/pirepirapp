@@ -17,6 +17,8 @@
 
 Estado: fase completa en modo local web/APK. `frontend/scripts/local-store.js` guarda el estado y expone exportacion/importacion JSON; Configuracion muestra `BACKUP LOCAL` para exportar o restaurar una copia completa del dispositivo.
 
+El repo no debe incluir seeds personales ni backups reales. Para pasar datos entre instalaciones, exportar un backup desde la app y guardarlo fuera del control de versiones.
+
 ## Fase 1.5 - App Local Seria
 
 - Mantener exportacion/importacion JSON como respaldo manual obligatorio antes de builds de prueba.
@@ -38,7 +40,10 @@ Comandos desde la raiz del repo:
 npm install
 npm run cap:sync
 npm run cap:open
+npm run cap:build:debug
 ```
+
+`npm run cap:build:debug` usa `scripts/build-android-debug.ps1`, fuerza JDK/JBR 21 cuando Android Studio esta instalado y usa un Gradle home temporal para evitar fallos de cache dentro de OneDrive. Para modo carpeta estricta, ejecutar el script con `-UseRepoGradleHome`; para cache persistente fuera del repo, usar `-UseLocalGradleHome` o definir `PIREPIRAPP_GRADLE_HOME`.
 
 ## Modo Carpeta Estricta
 
@@ -51,6 +56,8 @@ Los archivos del proyecto quedan dentro de esta carpeta del repo. Para reducir e
 Android Studio igualmente puede usar su SDK/JDK y caches propios del sistema. Si la maquina de prueba requiere aislamiento total, configurar el SDK de Android Studio dentro de una subcarpeta local del repo antes de sincronizar Gradle.
 
 Si `cap sync` falla dentro de OneDrive por permisos `EPERM`, abrir igualmente `android/` en Android Studio y dejar que Android Studio regenere/compile. En una carpeta local fuera de OneDrive suele ser mas estable.
+
+Si Gradle falla desde consola porque `java -version` apunta a Java 8, usar Android Studio o ejecutar `npm run cap:build:debug`; el script busca el JBR 21 en `C:\Program Files\Android\Android Studio\jbr`.
 
 ## Fase 3 - Pruebas En Celular
 

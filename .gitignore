@@ -3,10 +3,12 @@ Thumbs.db
 node_modules/
 .tool-cache/
 .gradle-user/
+android/.idea/
 .env
 .env.*
 backend/.clasp.json
 frontend/scripts/config.local.js
+frontend/data/
 *.log
 frontend-server.*.log
 *.apk

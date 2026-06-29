@@ -32,6 +32,7 @@
 - En Configuracion > `BACKUP LOCAL`, exportar backup JSON.
 - Borrar datos locales.
 - En Configuracion > `BACKUP LOCAL`, importar backup JSON y verificar que los saldos coincidan.
+- Confirmar que no existe boton temporal `SINCRONIZAR` ni seed personal dentro de la app.
 
 ## APK
 
@@ -40,3 +41,4 @@
 - Instalar APK manualmente.
 - Confirmar que persiste datos despues de cerrar y abrir.
 - Confirmar que funciona sin internet.
+- Ejecutar `npm run cap:build:debug` desde la raiz del repo para validar build debug con JBR 21.

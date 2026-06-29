@@ -907,7 +907,6 @@
     return [
       '<div class="settings-update-actions">',
       '<button class="lcd-button primary" type="submit" form="settings-form">Actualizar app</button>',
-      '<button class="lcd-button" type="button" data-sync-test-seed>Sincronizar</button>',
       '</div>'
     ].join('');
   }
@@ -2106,7 +2105,6 @@
         });
     });
 
-    bindSettingsSeedSync(root);
     bindSettingsBackup(root);
     bindFixedExpenseList(root);
     bindArchive(root);
@@ -2135,24 +2133,6 @@
         }
       });
     }
-  }
-
-  function bindSettingsSeedSync(root) {
-    var button = utils.qs('[data-sync-test-seed]', root);
-    if (!button) {
-      return;
-    }
-    button.addEventListener('click', function () {
-      if (!window.FinanzasApp || !window.FinanzasApp.syncTestSeed) {
-        return;
-      }
-      button.disabled = true;
-      button.textContent = 'Sincronizando';
-      window.FinanzasApp.syncTestSeed().catch(function () {
-        button.disabled = false;
-        button.textContent = 'Sincronizar';
-      });
-    });
   }
 
   function bindFixedExpenseList(root) {

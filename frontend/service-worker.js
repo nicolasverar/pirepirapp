@@ -1,25 +1,23 @@
-const CACHE_NAME = 'finanzas-lcd-v141';
+const CACHE_NAME = 'finanzas-lcd-v142';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './reset.html',
   './manifest.json',
-  './data/pirepirapp-test-seed.json?v=3.33',
-  './styles/lcd-theme.css?v=3.33',
-  './styles/main.css?v=3.33',
-  './styles/responsive.css?v=3.33',
-  './scripts/config.js?v=3.33',
-  './scripts/utils.js?v=3.33',
-  './scripts/state.js?v=3.33',
-  './scripts/local-store.js?v=3.33',
-  './scripts/api.js?v=3.33',
-  './scripts/local-cache.js?v=3.33',
-  './scripts/router.js?v=3.33',
-  './scripts/lcd-image.js?v=3.33',
-  './scripts/forms.js?v=3.33',
-  './scripts/render.js?v=3.33',
-  './scripts/app.js?v=3.33',
-  './assets/torta.pmg.png?v=3.33',
+  './styles/lcd-theme.css?v=3.34',
+  './styles/main.css?v=3.34',
+  './styles/responsive.css?v=3.34',
+  './scripts/config.js?v=3.34',
+  './scripts/utils.js?v=3.34',
+  './scripts/state.js?v=3.34',
+  './scripts/local-store.js?v=3.34',
+  './scripts/api.js?v=3.34',
+  './scripts/local-cache.js?v=3.34',
+  './scripts/router.js?v=3.34',
+  './scripts/lcd-image.js?v=3.34',
+  './scripts/forms.js?v=3.34',
+  './scripts/render.js?v=3.34',
+  './scripts/app.js?v=3.34',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/nav/resumen.png',
@@ -30,7 +28,9 @@ const STATIC_ASSETS = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) => Promise.all(
+      STATIC_ASSETS.map((asset) => cache.add(asset).catch(() => null))
+    ))
   );
   self.skipWaiting();
 });
@@ -59,8 +59,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => (
       cached || fetch(event.request).then((response) => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        if (response && response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
         return response;
       })
     ))
@@ -70,8 +72,10 @@ self.addEventListener('fetch', (event) => {
 function networkFirst(request) {
   return fetch(request)
     .then((response) => {
-      const clone = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+      if (response && response.ok) {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+      }
       return response;
     })
     .catch(() => caches.match(request));

@@ -8,6 +8,7 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 - El backend de Apps Script queda solo como legado temporal en `backend/`.
 - No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
 - La app arranca por defecto en modo local con IndexedDB mediante `frontend/scripts/local-store.js`; Apps Script queda solo como legado opcional.
+- El respaldo operativo es `BACKUP LOCAL` desde Configuracion: exporta/importa un JSON completo del dispositivo, fuera del repo.
 - El modelo financiero local trata el sueldo como una particion disjunta: gastos fijos, ahorros y disponible.
 - El sueldo se registra desde el formulario de ingreso usando motivo `Sueldo`; esto suma el remanente anterior y activa recordatorios post-cobro hasta cargar fijos, futuro y metas.
 
@@ -28,16 +29,17 @@ El repo no debe guardar:
 - Fotos cargadas por el usuario.
 - Links privados de Drive, Sheets o Apps Script.
 - Backups exportados.
+- Seeds de prueba con datos reales.
 - APK/AAB generados.
 
 Para limpiar una instalacion ya usada en navegador o PWA, abrir `frontend/reset.html` desde el mismo origen donde se instalo la app. Para limpiar Android por completo, tambien se puede borrar almacenamiento desde Ajustes > Apps > Pirepirapp > Almacenamiento.
 
 ## Proximo Camino
 
-1. Agregar exportar/importar backup JSON.
-2. Probar persistencia local en APK: config, gastos, metas, wishlist y fotos.
-3. Pulir releases Android firmadas.
-4. Definir si el backend legacy en `backend/` se elimina.
+1. Probar persistencia local en APK: config, gastos, metas, wishlist, fotos y restauracion desde backup.
+2. Pulir releases Android firmadas.
+3. Definir si el backend legacy en `backend/` se elimina.
+4. Evaluar almacenamiento nativo para fotos/backups si el volumen crece.
 
 ## Pruebas Locales
 

@@ -1338,42 +1338,6 @@
     ]).then(reloadForFreshApp).catch(reloadForFreshApp);
   }
 
-  function syncTestSeed() {
-    toast('Sincronizando base');
-    if (!window.FinanzasLocalStore || !window.FinanzasLocalStore.saveState) {
-      return Promise.reject(new Error('El almacenamiento local no esta disponible.'));
-    }
-    if (window.FinanzasApi && window.FinanzasApi.useLocalMode) {
-      window.FinanzasApi.useLocalMode();
-    }
-    return fetch(testSeedUrl(), { cache: 'no-store' })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error('No se encontro la base de prueba.');
-        }
-        return response.json();
-      })
-      .then(function (payload) {
-        return normalizeTestSeed(payload);
-      })
-      .then(function (state) {
-        if (window.FinanzasLocalCache && window.FinanzasLocalCache.clearBootstrap) {
-          window.FinanzasLocalCache.clearBootstrap();
-        }
-        return clearUserPhotoCaches().then(function () {
-          return window.FinanzasLocalStore.saveState(state);
-        });
-      })
-      .then(function () {
-        toast('Base sincronizada');
-        window.setTimeout(reloadForFreshApp, 750);
-      })
-      .catch(function (error) {
-        toast(error.message || 'No se pudo sincronizar');
-        throw error;
-      });
-  }
-
   function exportLocalBackup() {
     toast('Exportando backup');
     if (!window.FinanzasLocalStore || !window.FinanzasLocalStore.exportBackup) {
@@ -1484,29 +1448,6 @@
     });
   }
 
-  function testSeedUrl() {
-    var url = new URL('./data/pirepirapp-test-seed.json', window.location.href);
-    url.searchParams.set('v', version());
-    url.searchParams.set('t', String(Date.now()));
-    return url.toString();
-  }
-
-  function normalizeTestSeed(payload) {
-    var source = payload && payload.state ? payload.state : payload;
-    if (!source || typeof source !== 'object') {
-      throw new Error('La base de prueba no tiene formato valido.');
-    }
-    return {
-      config: source.config || {},
-      movimientos: [],
-      ahorrosFuturo: Array.isArray(source.ahorrosFuturo) ? source.ahorrosFuturo : [],
-      metas: Array.isArray(source.metas) ? source.metas : [],
-      wishlist: Array.isArray(source.wishlist) ? source.wishlist : [],
-      photos: source.photos && typeof source.photos === 'object' ? source.photos : {},
-      resumen: null
-    };
-  }
-
   function clearUserPhotoCaches() {
     if (!window.caches || !caches.keys) {
       return Promise.resolve();
@@ -1570,7 +1511,6 @@
     convertWishlistInstant: convertWishlistInstant,
     toast: toast,
     updateApplicationCache: updateApplicationCache,
-    syncTestSeed: syncTestSeed,
     exportLocalBackup: exportLocalBackup,
     openLocalBackupImportPicker: openLocalBackupImportPicker,
     importLocalBackupFile: importLocalBackupFile,

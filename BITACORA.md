@@ -1,5 +1,37 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Endurecimiento local/APK v3.34
+
+### Objetivo
+- Preparar una version mas solida, privada y fluida para PWA/APK.
+- Cerrar el flujo temporal de seed personal y reducir peso de precache/runtime.
+- Hacer el build Android debug reproducible desde consola aunque el `PATH` apunte a Java 8.
+
+### Cambios
+- Se elimino `frontend/data/pirepirapp-test-seed.json` del arbol actual y se agrego `frontend/data/` a `.gitignore`.
+- Se retiro el boton temporal `Sincronizar` de Configuracion y se eliminaron `syncTestSeed()`, `testSeedUrl()` y `normalizeTestSeed()`.
+- El service worker subio a `finanzas-lcd-v142`, la app visible subio a `v3.34` y el precache ya no incluye el seed ni assets muertos.
+- El service worker ahora instala cache de forma tolerante a assets faltantes y solo guarda respuestas `ok`.
+- Se eliminaron assets PNG sin referencias activas: `frontend/assets/torta.pmg.png` y `frontend/assets/aves-flight-sprite.png`.
+- Se ignora `android/.idea/` para evitar ruido local de Android Studio.
+- Se agrego `scripts/build-android-debug.ps1` y `npm run cap:build:debug` ahora usa JBR/JDK 21 y Gradle home temporal por defecto.
+- Android desactivo `allowBackup`/`fullBackupContent` y `usesCleartextTraffic` para proteger datos locales.
+- Se actualizo `README.md`, `docs/APK_TRANSICION.md`, `docs/PRUEBAS.md` y `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md`.
+
+### Verificacion
+- `node --check` para scripts frontend activos, service worker y smoke test: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- Validacion `frontend/manifest.json` con `ConvertFrom-Json`: OK.
+- Busqueda activa de `syncTestSeed`, `data-sync-test-seed`, `pirepirapp-test-seed`, `assets/torta`, `aves-flight`, `v3.33` y `finanzas-lcd-v141`: sin resultados activos fuera de bitacora historica.
+- `git diff --check`: OK; solo avisos CRLF normales de Windows.
+- `npm run cap:copy`: OK; assets web copiados a `android/app/src/main/assets/public`.
+- Verificacion de Android generado: sin seed ni assets eliminados; `v3.34` y `finanzas-lcd-v142` presentes.
+- `npm run cap:build:debug`: OK; APK debug en `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+### Pendientes
+- Si el seed personal ya fue empujado al remoto, evaluar limpieza de historial Git con aprobacion explicita y rotacion/eliminacion de cualquier dato expuesto.
+- Probar el APK debug en emulador o telefono fisico y validar persistencia/importacion de backup con datos reales fuera del repo.
+
 ## 2026-06-26 - Wipe de datos del proyecto y preparacion APK
 
 ### Objetivo

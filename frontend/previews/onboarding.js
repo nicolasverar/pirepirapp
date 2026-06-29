@@ -298,6 +298,20 @@
     ].join('');
   }
 
+  function renderProgress() {
+    return [
+      '<div class="onboarding-progress" aria-label="Progreso">',
+      '<div class="progress-slots" aria-hidden="true">',
+      steps.map(function (_, slotIndex) {
+        var state = slotIndex < index ? ' is-done' : (slotIndex === index ? ' is-active' : '');
+        return '<span class="progress-slot' + state + '"></span>';
+      }).join(''),
+      '</div>',
+      '<div class="progress-caption"><span>PASO ' + (index + 1) + '/' + steps.length + '</span><span>' + escapeHtml(steps[index].title) + '</span></div>',
+      '</div>'
+    ].join('');
+  }
+
   function renderConsoleRail() {
     return [
       '<aside class="console-rail" aria-label="Pasos">',

@@ -1,5 +1,31 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Fix pantalla vacia onboarding A2/B2
+
+### Objetivo
+- Corregir el bug reportado: los prototipos A2/B2 mostraban solo el fondo verde LCD sin contenido.
+- Evitar que una validacion solo sintactica vuelva a pasar un prototipo que falla antes de renderizar.
+
+### Diagnostico
+- La URL publica respondia `200`, pero `frontend/previews/onboarding.js` llamaba `renderProgress()` dentro de `render()` y esa funcion no existia.
+- Ese `ReferenceError` ocurria antes de asignar `root.innerHTML`, dejando la pantalla LCD vacia.
+
+### Cambios
+- Se agrego `renderProgress()` en `frontend/previews/onboarding.js`.
+- Se actualizo el cache-busting de `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` a `onboarding.js?v=20260629-c` y `onboarding.css?v=20260629-c`.
+- Se amplio la validacion local con una ejecucion runtime en DOM simulado que exige que ambos prototipos rendericen formulario y progreso.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el reporte del bug.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion runtime Node con DOM simulado para variantes `terminal` y `console`: OK, `ONBOARDING_RUNTIME_RENDER_OK`.
+- Validacion estatica Node de cache-busting, `renderProgress`, campos, acciones, viewBox fijo y ausencia de `system-window`/`translateY`: OK, `ONBOARDING_EDITABLE_STATIC_OK`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+
+### Pendientes
+- Publicar y verificar que GitHub Pages sirva A2/B2 con `20260629-c`.
+
 ## 2026-06-29 - Onboarding editable A2/B2
 
 ### Objetivo

@@ -27,6 +27,13 @@
 - `npm run cap:copy`: OK; assets web copiados a `android/app/src/main/assets/public`.
 - Verificacion de Android generado: sin seed ni assets eliminados; `v3.34` y `finanzas-lcd-v142` presentes.
 - `npm run cap:build:debug`: OK; APK debug en `android/app/build/outputs/apk/debug/app-debug.apk`.
+- `git commit -m "Endurecer app local y build Android"`: OK, commit `71f8ae6`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/?v=3.34-71f8ae6`: OK, sirve `v3.34`.
+- URL publica `scripts/config.js`: OK, contiene `APP_VERSION: 'v3.34'`.
+- URL publica `service-worker.js`: OK, contiene `finanzas-lcd-v142` y no contiene `pirepirapp-test-seed`.
+- URLs publicas de seed y assets eliminados: OK, responden 404.
+- `git status --branch --short`: OK, `main...origin/main` sin cambios locales tras el push.
 
 ### Pendientes
 - Si el seed personal ya fue empujado al remoto, evaluar limpieza de historial Git con aprobacion explicita y rotacion/eliminacion de cualquier dato expuesto.

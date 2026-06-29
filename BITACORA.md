@@ -24,9 +24,13 @@
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
 - Captura Playwright: no ejecutada porque `playwright` y `@playwright/test` no estan instalados en el entorno local.
+- `git commit -m "Ajustar bienvenida y titulos B3"`: OK, commit `561be7c`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=561be7c`: OK, contiene `PROTO B3`, `COMENZAR` y cache-busting `onboarding.js?v=20260629-f` / `onboarding.css?v=20260629-f`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=561be7c`: OK, contiene flechas pixel art, copy actualizado y no contiene `onboard-start-key`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=561be7c`: OK, contiene titulo superior grande, foco oscuro y animacion de flechas.
 
 ### Pendientes
-- Publicar y verificar URL publica con cache-busting despues del commit.
 - Recorrer `PROTO B3` en navegador para decidir el proximo ajuste fino de espaciado.
 
 ## 2026-06-29 - Refinamiento visual B3 onboarding

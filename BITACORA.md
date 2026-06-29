@@ -1,5 +1,36 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Onboarding cuestionario A3/B3
+
+### Objetivo
+- Tomar `PROTO B2` como direccion visual preferida y refinar dos HTML de prueba A3/B3.
+- Agregar pantalla inicial escrita: `BIENVENIDO/A A PIREPIRAPP` con boton `COMENZAR`.
+- Reordenar el recorrido como cuestionario coherente sin datos precargados.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` pasa a `PROTO A3` y usa `onboarding.js?v=20260629-d` / `onboarding.css?v=20260629-d`.
+- `frontend/previews/onboarding-console.html` pasa a `PROTO B3` y usa `onboarding.js?v=20260629-d` / `onboarding.css?v=20260629-d`.
+- `frontend/previews/onboarding.js` cambia el flujo a: bienvenida, sueldo, gastos fijos, ahorros y resumen.
+- Se elimina `Dia cobro` y toda precarga de montos de ejemplo.
+- La pantalla `SUELDO` pregunta `Cual es tu ingreso mensual de ser fijo?`.
+- La pantalla `GASTOS FIJOS` pregunta `Defini gastos con nombre y apellido.`.
+- La pantalla `AHORROS` permite seleccionar y desplegar `Futuro`, `Meta` o `Cosa que quiero`, con explicacion breve de cada opcion.
+- El resumen en vivo ya no muestra disponible si no hay sueldo cargado; muestra `Sin datos cargados` o `Sueldo pendiente` segun corresponda.
+- El resumen final dice `Ya podes usar la app` y muestra `Empieza el bailongo`.
+- `frontend/previews/onboarding.css` elimina el gris de cajones inactivos del riel B, convierte el resumen en lineas LCD y agrega estilos de cuestionario/seleccion desplegable.
+- La escritura LCD se hizo mas lenta.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion runtime Node con DOM simulado, recorriendo bienvenida, sueldo, gastos fijos y ahorros en variantes `terminal` y `console`: OK, `ONBOARDING_A3_RUNTIME_OK`.
+- Validacion estatica Node de A3/B3, cache-busting `20260629-d`, bienvenida, preguntas, ahorros desplegables, ausencia de precargas, `system-window` y `translateY`: OK, `ONBOARDING_A3_STATIC_OK`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+
+### Pendientes
+- Publicar y verificar A3/B3 en GitHub Pages.
+
 ## 2026-06-29 - Fix pantalla vacia onboarding A2/B2
 
 ### Objetivo

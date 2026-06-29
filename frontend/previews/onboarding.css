@@ -150,6 +150,40 @@ body {
   min-width: 0;
 }
 
+.welcome-panel {
+  display: grid;
+  gap: 7px;
+  align-content: start;
+  justify-items: start;
+  min-height: 128px;
+  padding-top: 4px;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.welcome-panel span {
+  font-size: 0.68rem;
+}
+
+.welcome-panel small {
+  max-width: 28ch;
+  font-size: 0.56rem;
+  line-height: 1.35;
+}
+
+.onboard-start-key {
+  min-height: 42px;
+  padding: 5px 14px;
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
 .onboard-form-title,
 .summary-title {
   display: flex;
@@ -165,6 +199,20 @@ body {
   color: #c4d08b;
   background: #071007;
   padding: 2px 5px;
+}
+
+.question-line,
+.onboard-empty-note,
+.summary-empty {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.summary-empty {
+  padding: 7px 0;
 }
 
 .onboard-field-grid {
@@ -278,6 +326,63 @@ body {
   font-size: 0.74rem;
 }
 
+.savings-choice-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.savings-choice {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-height: 44px;
+  padding: 5px 0;
+  border-bottom: 2px solid #071007;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.savings-choice input {
+  width: 20px;
+  height: 20px;
+  accent-color: #071007;
+}
+
+.savings-choice b,
+.savings-choice small {
+  display: block;
+}
+
+.savings-choice b {
+  font-size: 0.64rem;
+}
+
+.savings-choice small {
+  margin-top: 2px;
+  font-size: 0.5rem;
+  line-height: 1.25;
+}
+
+.savings-choice.is-active {
+  color: #071007;
+}
+
+.onboard-subform {
+  display: grid;
+  gap: 7px;
+  padding-top: 3px;
+  animation: onboarding-appear 0.22s steps(3, end) both;
+}
+
+.onboard-subtitle {
+  padding: 2px 0;
+  border-bottom: 2px solid #071007;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
 .live-summary,
 .summary-panel {
   display: grid;
@@ -287,23 +392,25 @@ body {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: 0;
+  border-top: 2px solid #071007;
 }
 
 .summary-cell {
-  min-height: 46px;
-  padding: 6px;
-  color: #c4d08b;
-  background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
-    #071007;
-  border: 2px solid #071007;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 0;
+  color: #071007;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #071007;
 }
 
 .summary-cell span,
 .summary-cell b {
-  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -316,9 +423,20 @@ body {
 }
 
 .summary-cell b {
-  margin-top: 4px;
-  color: #c4d08b;
+  color: #071007;
   font-size: 0.68rem;
+}
+
+.onboard-dance-line {
+  color: #c4d08b;
+  background:
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
+    #071007;
+  border: 2px solid #071007;
+  padding: 6px 8px;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  font-weight: 900;
 }
 
 .partition-rail {
@@ -326,6 +444,11 @@ body {
   min-height: 30px;
   border: 2px solid #071007;
   overflow: hidden;
+}
+
+.partition-rail.is-empty {
+  min-height: 20px;
+  opacity: 0.55;
 }
 
 .partition-rail i {
@@ -349,7 +472,8 @@ body {
   min-height: 40px;
   padding: 5px 4px;
   color: #071007;
-  border: 2px solid rgba(7, 16, 7, 0.72);
+  background: transparent;
+  border: 2px solid #071007;
   text-transform: uppercase;
   font-size: 0.5rem;
   font-weight: 900;
@@ -360,7 +484,7 @@ body {
 }
 
 .console-step.is-done {
-  background: rgba(7, 16, 7, 0.14);
+  background: rgba(196, 208, 139, 0.2);
 }
 
 .console-step.is-active {
@@ -385,7 +509,7 @@ body {
 
 .progress-slots {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 5px;
 }
 

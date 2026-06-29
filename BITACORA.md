@@ -22,9 +22,13 @@
 - Validacion runtime Node con DOM simulado para `AHORROS`, toggles, campos de plazo y resumen final sin redundancias: OK, `onboarding compact runtime ok`.
 - `git diff --check`: OK.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git commit -m "Compactar onboarding B3 y ahorros"`: OK, commit `c5e0943`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=c5e0943`: OK, contiene `PROTO B3` y cache-busting `onboarding.js?v=20260629-i` / `onboarding.css?v=20260629-i`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=c5e0943`: OK, no contiene `renderProgress`, `progress-slot` ni `Ya podes usar la app`; contiene copy nuevo de ahorros y campos `term`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=c5e0943`: OK, contiene `--onboarding-copy-height: 118px`, controles compactos y no contiene estilos de progreso inferior.
 
 ### Pendientes
-- Publicar y verificar URL publica con cache-busting despues del commit.
 - Revisar visualmente si el nuevo alto `118px` elimina el aire vertical sin cortar titulos LCD.
 
 ## 2026-06-29 - B3 altura consistente del tutorial

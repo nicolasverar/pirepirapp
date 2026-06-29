@@ -22,9 +22,12 @@
 - Validacion runtime Node con DOM simulado para bienvenida, sueldo, gastos fijos y ahorros: OK, `onboarding layout h runtime ok`.
 - `git diff --check`: OK.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git commit -m "Unificar altura del onboarding B3"`: OK, commit `c1ceab7`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=c1ceab7`: OK, contiene `PROTO B3` y cache-busting `onboarding.js?v=20260629-h` / `onboarding.css?v=20260629-h`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=c1ceab7`: OK, contiene altura comun `--onboarding-copy-height: 150px`, filas compartidas y no contiene las alturas viejas `178px` / `190px`.
 
 ### Pendientes
-- Publicar y verificar URL publica con cache-busting despues del commit.
 - Revisar visualmente en navegador si el formulario quedo suficientemente alto en cada diapositiva.
 
 ## 2026-06-29 - B3 escritura lenta y flechas pixel

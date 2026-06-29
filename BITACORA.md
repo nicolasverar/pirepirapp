@@ -20,9 +20,19 @@
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
 - Busqueda en los prototipos de `system-window`, `data-sync-test-seed`, `pirepirapp-test-seed`, `assets/torta` y `aves-flight`: sin resultados.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-terminal.html?v=9957b5f`: OK, `200`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=9957b5f`: OK, `200`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=9957b5f`: OK, `200`, contiene pasos, controles y texto 35 segmentos.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=9957b5f`: OK, `200`, contiene estilos del laboratorio.
+- `git commit -m "Agregar prototipos de onboarding inicial"`: OK, commit `9957b5f`.
+- `git push origin main`: OK.
+- `git status --branch --short`: OK, `main...origin/main` sin cambios locales tras el push.
 
 ### Limitacion
 - No se pudo obtener screenshot automatizado: Chrome headless queda bloqueado por errores GPU/`about:blank` en esta maquina. Los HTML son estaticos y pueden abrirse directamente en navegador.
+
+### Pendientes
+- Recorrer ambos prototipos en navegador con el usuario y elegir direccion visual/interactiva antes de integrar el onboarding real en la app.
 
 ## 2026-06-29 - Endurecimiento local/APK v3.34
 

@@ -1,5 +1,33 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Refinamiento visual B3 onboarding
+
+### Objetivo
+- Concentrar la iteracion en `PROTO B3` como base.
+- Simplificar la primera pantalla a `BIENVENIDO/A` centrado y `COMENZAR`.
+- Mejorar copy y visual de sueldo, gastos fijos y ahorros.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260629-e`.
+- `frontend/previews/onboarding.js` elimina `A PIREPIRAPP` de la bienvenida y centra el texto LCD en ese paso.
+- La bienvenida ya no muestra la linea superior interna del tour; los botones inferiores de la app siguen visibles desde el inicio.
+- La escritura LCD se hizo mas lenta.
+- La pestana `SUELDO` mantiene `Ingreso mensual` y pregunta `Cuanto soles cobrar?`; se elimino `Ingreso fijo`.
+- La pestana `GASTOS FIJOS` deja el titulo limpio y cambia el copy a `Defini gastos mensuales con nombre y apellido.`.
+- La pestana `AHORROS` reemplaza `FUTURO METAS COSAS` por `ELEGI QUE QUERES ANADIR` y mantiene la pregunta `Elegi que queres anadir ahora.`.
+- `frontend/previews/onboarding.css` mejora el centrado de bienvenida, el contraste de campos de entrada y los selectores de ahorros.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion runtime Node de bienvenida, sueldo, gastos fijos y ahorros para variantes `terminal` y `console`: OK, `ONBOARDING_B3_REFINEMENT_RUNTIME_OK`.
+- Validacion estatica Node de B3, cache-busting `20260629-e`, botones visibles, copy actualizado, estilos de bienvenida/selectores y ausencia de textos viejos: OK, `ONBOARDING_B3_REFINEMENT_STATIC_OK`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+
+### Pendientes
+- Publicar y verificar `PROTO B3` con cache-busting `20260629-e` en GitHub Pages.
+
 ## 2026-06-29 - Onboarding cuestionario A3/B3
 
 ### Objetivo

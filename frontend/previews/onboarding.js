@@ -14,10 +14,10 @@
   var uid = 20;
 
   var steps = [
-    { code: 'HOLA', title: 'BIENVENIDO/A', hint: 'A PIREPIRAPP', type: 'welcome', status: 'bienvenida' },
+    { code: 'HOLA', title: 'BIENVENIDO/A', hint: '', type: 'welcome', status: 'bienvenida' },
     { code: 'SUELDO', title: 'SUELDO', hint: 'INGRESO MENSUAL', type: 'salary', status: 'sueldo mensual' },
-    { code: 'GASTOS', title: 'GASTOS FIJOS', hint: 'NOMBRE Y MONTO', type: 'fixed', status: 'gastos fijos' },
-    { code: 'AHORRO', title: 'AHORROS', hint: 'FUTURO METAS COSAS', type: 'savings', status: 'ahorros' },
+    { code: 'GASTOS', title: 'GASTOS FIJOS', hint: 'GASTOS MENSUALES', type: 'fixed', status: 'gastos fijos' },
+    { code: 'AHORRO', title: 'AHORROS', hint: 'ELEGI QUE QUERES ANADIR', type: 'savings', status: 'ahorros' },
     { code: 'LISTO', title: 'LISTO', hint: 'YA PODES USAR LA APP', type: 'summary', status: 'listo' }
   ];
 
@@ -91,7 +91,7 @@
   function render() {
     var step = steps[index];
     root.innerHTML = [
-      '<section class="onboarding-stage is-' + escapeHtml(variant) + '">',
+      '<section class="onboarding-stage is-' + escapeHtml(variant) + ' is-step-' + escapeHtml(step.type) + '">',
       renderTopline(step),
       renderCopyShell(step),
       renderWork(step),
@@ -165,8 +165,6 @@
     return [
       '<section class="welcome-panel" aria-label="Comenzar configuracion">',
       '<button class="onboard-start-key" type="button" data-start-tour>COMENZAR</button>',
-      '<span>Config inicial local</span>',
-      '<small>Podés saltar y cargar todo después.</small>',
       '</section>'
     ].join('');
   }
@@ -174,8 +172,8 @@
   function renderSalaryForm() {
     return [
       '<form class="onboard-form" data-onboard-form="salary">',
-      renderFormTitle('Sueldo', 'Ingreso fijo'),
-      renderQuestion('Cual es tu ingreso mensual de ser fijo?'),
+      renderFormTitle('Sueldo', 'Ingreso mensual'),
+      renderQuestion('Cuanto soles cobrar?'),
       '<div class="onboard-field-grid">',
       '<div class="onboard-row is-single">',
       renderControl('Ingreso mensual fijo', 'number', draft.salary, 'data-bind="salary" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
@@ -188,8 +186,8 @@
   function renderFixedForm(summary) {
     return [
       '<form class="onboard-form" data-onboard-form="fixed">',
-      renderFormTitle('Gastos fijos', 'Nombre y monto'),
-      renderQuestion('Defini gastos con nombre y apellido.'),
+      renderFormTitle('Gastos fijos', ''),
+      renderQuestion('Defini gastos mensuales con nombre y apellido.'),
       '<div class="onboard-field-grid">',
       draft.fixed.map(function (item) {
         return renderMoneyRow('fixed', item.id, item.title, item.amount, 'Nombre del gasto', 'Monto mensual');
@@ -204,8 +202,8 @@
   function renderSavingsForm(summary) {
     return [
       '<form class="onboard-form" data-onboard-form="savings">',
-      renderFormTitle('Ahorros', 'Opcionales'),
-      renderQuestion('Elegí que querés añadir ahora.'),
+      renderFormTitle('Ahorros', ''),
+      renderQuestion('Elegi que queres anadir ahora.'),
       '<div class="savings-choice-grid">',
       renderSavingsChoice('future', 'Futuro', 'Ahorro largo o fondo de seguridad.'),
       renderSavingsChoice('goals', 'Meta', 'Objetivo con monto y aporte mensual.'),
@@ -361,7 +359,7 @@
   }
 
   function renderFormTitle(label, value) {
-    return '<div class="onboard-form-title"><span>' + escapeHtml(label) + '</span><b>' + escapeHtml(value) + '</b></div>';
+    return '<div class="onboard-form-title"><span>' + escapeHtml(label) + '</span>' + (value ? '<b>' + escapeHtml(value) + '</b>' : '') + '</div>';
   }
 
   function renderQuestion(text) {
@@ -408,10 +406,10 @@
       if (!mainEl || !subEl) {
         return;
       }
-      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main');
+      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', step.type === 'welcome');
       mainCurrent += 1;
       if (mainCurrent <= mainValue.length) {
-        typingTimer = setTimeout(tickMain, 82);
+        typingTimer = setTimeout(tickMain, 118);
         return;
       }
       tickSub();
@@ -421,19 +419,19 @@
       if (!subEl) {
         return;
       }
-      subEl.innerHTML = pixelText(subValue.slice(0, subCurrent), 'sub');
+      subEl.innerHTML = pixelText(subValue.slice(0, subCurrent), 'sub', step.type === 'welcome');
       subCurrent += 1;
       if (subCurrent <= subValue.length) {
-        typingTimer = setTimeout(tickSub, 56);
+        typingTimer = setTimeout(tickSub, 78);
       }
     }
 
-    mainEl.innerHTML = pixelText('', 'main');
-    subEl.innerHTML = pixelText('', 'sub');
+    mainEl.innerHTML = pixelText('', 'main', step.type === 'welcome');
+    subEl.innerHTML = pixelText('', 'sub', step.type === 'welcome');
     tickMain();
   }
 
-  function pixelText(text, kind) {
+  function pixelText(text, kind, center) {
     var value = normalizePixelText(text);
     var cell = kind === 'main' ? 3.1 : 2.15;
     var gap = kind === 'main' ? 0.85 : 0.62;
@@ -446,7 +444,8 @@
     var active = [];
     var ghost = [];
     wrapText(value, maxChars).slice(0, maxLines).forEach(function (line, lineIndex) {
-      drawPixelLine(line, 0, lineIndex * lineHeight, cell, gap, charGap, active, ghost);
+      var offsetX = center ? Math.max(0, (viewWidth - pixelLineWidth(line, cell, gap, charGap)) / 2) : 0;
+      drawPixelLine(line, offsetX, lineIndex * lineHeight, cell, gap, charGap, active, ghost);
     });
     return [
       '<svg viewBox="0 0 ' + viewWidth + ' ' + viewHeight + '" preserveAspectRatio="xMinYMin meet" role="img" aria-label="' + escapeHtml(value) + '">',
@@ -472,6 +471,14 @@
       }
       x += glyph[0].length * (cell + gap) + charGap;
     }
+  }
+
+  function pixelLineWidth(text, cell, gap, charGap) {
+    var width = 0;
+    for (var i = 0; i < text.length; i += 1) {
+      width += (GLYPHS[text.charAt(i)] || GLYPHS[' '])[0].length * (cell + gap) + charGap;
+    }
+    return Math.max(1, width - charGap);
   }
 
   function wrapText(text, maxChars) {

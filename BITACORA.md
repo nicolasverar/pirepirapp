@@ -1,5 +1,30 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Onboarding editable A2/B2
+
+### Objetivo
+- Corregir los prototipos de onboarding inicial porque la primera version era demasiado explicativa y no permitia completar campos.
+- Hacer que el texto LCD se escriba quieto, sin rebote ni cambios de escala.
+- Permitir configurar en el prototipo: sueldo, gastos fijos, futuro, metas y cosas que quiero, con opcion de skip.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` pasa a `PROTO A2` y carga `onboarding.js?v=20260629-b`.
+- `frontend/previews/onboarding-console.html` pasa a `PROTO B2` y carga `onboarding.js?v=20260629-b`.
+- `frontend/previews/onboarding.js` ahora mantiene un borrador editable en memoria durante el tour.
+- Se reemplazaron textos largos por titulos directos: `SUELDO`, `FIJOS`, `FUTURO`, `METAS`, `COSAS`, `LISTO`.
+- Se agregaron campos editables para sueldo mensual, dia de cobro, mes inicial, fijos, futuro, metas y wishlist.
+- Se agregaron acciones para agregar/quitar fijos, metas y cosas que quiero.
+- `frontend/previews/onboarding.css` elimina desplazamientos verticales, mantiene la matriz LCD con viewBox fijo y usa aparicion sin movimiento.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de correccion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion estatica Node de variantes, cache-busting, 6 pasos, campos, acciones agregar/quitar, texto escrito y ausencia de `system-window`: OK, `ONBOARDING_EDITABLE_STATIC_OK`.
+- Busqueda en prototipos de `system-window`, `translateY`, animaciones viejas y textos largos anteriores: sin resultados.
+
+### Pendientes
+- Recorrer A2/B2 visualmente con el usuario y elegir la direccion antes de integrar persistencia real en la app.
+
 ## 2026-06-29 - Prototipos onboarding inicial
 
 ### Objetivo

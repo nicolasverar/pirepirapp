@@ -11,82 +11,38 @@
   var statusLine = document.querySelector('.status-terminal span');
   var index = 0;
   var typingTimer = 0;
+  var uid = 20;
 
   var steps = [
-    {
-      code: 'BOOT',
-      title: 'HOLA',
-      text: 'VAMOS A DEJAR TU PIREPIRAPP LISTA',
-      sub: 'PODEMOS SALTAR TODO Y ENTRAR VACIO',
-      rows: [
-        ['Modo', 'Local'],
-        ['Datos', 'Solo en este dispositivo'],
-        ['Backup', 'JSON manual']
-      ],
-      status: 'primer arranque'
-    },
-    {
-      code: 'SUELDO',
-      title: 'SUELDO',
-      text: 'PRIMERO CARGAMOS TU SUELDO MENSUAL',
-      sub: 'ESTE MONTO ORDENA FIJOS AHORROS Y DISPONIBLE',
-      rows: [
-        ['Sueldo mensual', 'Gs. 3.500.000'],
-        ['Mes inicial', 'Julio 2026'],
-        ['Cobro', 'Desde ingreso sueldo']
-      ],
-      status: 'sueldo mensual'
-    },
-    {
-      code: 'FIJOS',
-      title: 'FIJOS',
-      text: 'DESPUES VAN LOS GASTOS FIJOS',
-      sub: 'SON COMPROMISOS QUE SE REPITEN CADA MES',
-      rows: [
-        ['Alquiler', 'Gs. 1.050.000'],
-        ['Internet', 'Gs. 165.000'],
-        ['Luz y agua', 'Gs. 230.000']
-      ],
-      status: 'gastos fijos'
-    },
-    {
-      code: 'METAS',
-      title: 'METAS',
-      text: 'AHORA DEFINIMOS AHORROS Y METAS',
-      sub: 'FUTURO METAS Y COSAS QUE QUIERO QUEDAN SEPARADAS',
-      rows: [
-        ['Futuro', 'Gs. 350.000'],
-        ['Meta notebook', 'Gs. 300.000'],
-        ['Cosa que quiero', 'Auriculares']
-      ],
-      status: 'metas iniciales'
-    },
-    {
-      code: 'PART',
-      title: 'PARTICION',
-      text: 'LA APP ARMA LA PARTICION DEL SUELDO',
-      sub: 'FIJOS AHORROS Y DISPONIBLE QUEDAN VISIBLES',
-      rows: [
-        ['Gastos fijos', '41%'],
-        ['Ahorros metas', '19%'],
-        ['Disponible', '40%']
-      ],
-      status: 'particion sueldo',
-      partition: true
-    },
-    {
-      code: 'LISTO',
-      title: 'LISTO',
-      text: 'TERMINAMOS EL ARRANQUE INICIAL',
-      sub: 'ENTRAS AL RESUMEN Y PODES AJUSTAR TODO DESPUES',
-      rows: [
-        ['Resumen', 'Preparado'],
-        ['Backup local', 'Pendiente'],
-        ['Estado', 'Listo para entrar']
-      ],
-      status: 'listo'
-    }
+    { code: 'INICIO', title: 'SUELDO', hint: 'MONTO MENSUAL', type: 'salary', status: 'sueldo mensual' },
+    { code: 'FIJOS', title: 'FIJOS', hint: 'GASTOS DEL MES', type: 'fixed', status: 'gastos fijos' },
+    { code: 'FUTURO', title: 'FUTURO', hint: 'AHORRO LARGO', type: 'future', status: 'ahorro futuro' },
+    { code: 'METAS', title: 'METAS', hint: 'OBJETIVOS', type: 'goals', status: 'metas' },
+    { code: 'COSAS', title: 'COSAS', hint: 'QUIERO COMPRAR', type: 'wishlist', status: 'cosas que quiero' },
+    { code: 'LISTO', title: 'LISTO', hint: 'RESUMEN', type: 'summary', status: 'listo' }
   ];
+
+  var defaults = {
+    salary: '3500000',
+    payDay: '1',
+    startMonth: 'Julio 2026',
+    fixed: [
+      { id: 'fixed-1', title: 'Alquiler', amount: '1050000' },
+      { id: 'fixed-2', title: 'Internet', amount: '165000' },
+      { id: 'fixed-3', title: 'Luz y agua', amount: '230000' }
+    ],
+    futureTitle: 'Futuro',
+    futureMonthly: '350000',
+    futureAccumulated: '0',
+    goals: [
+      { id: 'goal-1', title: 'Notebook', monthly: '300000', target: '6000000' }
+    ],
+    wishlist: [
+      { id: 'wish-1', title: 'Auriculares', cost: '450000' }
+    ]
+  };
+
+  var draft = clone(defaults);
 
   var GLYPHS = {
     ' ': ['00000', '00000', '00000', '00000', '00000', '00000', '00000'],
@@ -137,20 +93,14 @@
     root.innerHTML = [
       '<section class="onboarding-stage is-' + escapeHtml(variant) + '">',
       renderTopline(step),
-      '<section class="onboarding-copy">',
-      '<div class="pixel-terminal">',
-      pixelText(step.title, 'main', 0),
-      pixelText('', 'sub', 1),
-      '</div>',
-      '</section>',
-      '<section class="onboarding-body">',
-      variant === 'console' ? renderConsole(step) : renderTerminal(step),
-      '</section>',
+      renderCopyShell(step),
+      renderWork(step),
       renderProgress(),
       '</section>'
     ].join('');
     updateChrome(step);
     typeStep(step);
+    refreshDynamic();
   }
 
   function renderTopline(step) {
@@ -158,132 +108,293 @@
       '<div class="onboarding-topline">',
       '<span class="onboarding-chip">' + escapeHtml(step.code) + '</span>',
       '<span class="onboarding-line" aria-hidden="true"></span>',
-      '<button class="onboarding-skip-inline" type="button" data-tour-action="skip">SALTAR</button>',
+      '<button class="onboarding-skip-inline" type="button" data-tour-action="skip">SKIP</button>',
       '</div>'
     ].join('');
   }
 
-  function renderTerminal(step) {
-    var rows = step.rows.map(function (row) {
-      return '<div class="terminal-row"><span>' + escapeHtml(row[0]) + '</span><b>' + escapeHtml(row[1]) + '</b></div>';
-    });
-    if (step.partition) {
-      rows.push(renderPartitionRail());
-    }
-    if (index === steps.length - 1) {
-      rows.push('<div class="terminal-total"><span>Proximo paso</span><b>Entrar al resumen</b></div>');
-    }
-    return '<div class="emerge-zone terminal-panel">' + rows.join('') + '</div>';
+  function renderCopyShell(step) {
+    return [
+      '<section class="onboarding-copy" aria-label="' + escapeHtml(step.title) + '">',
+      '<div class="pixel-terminal">',
+      '<div class="pixel-terminal-main" data-pixel-main></div>',
+      '<div class="pixel-terminal-sub" data-pixel-sub></div>',
+      '</div>',
+      '</section>'
+    ].join('');
   }
 
-  function renderConsole(step) {
-    var lines = steps.slice(0, index + 1).map(function (item, itemIndex) {
-      var live = itemIndex === index ? ' is-live' : '';
-      var value = item.rows[0] ? item.rows[0][1] : 'OK';
-      return '<div class="console-row' + live + '"><span>' + escapeHtml(item.code + ' ' + item.title) + '</span><b>' + escapeHtml(value) + '</b></div>';
-    });
-    var summary = '';
-    if (index >= 4) {
-      summary = [
-        '<div class="summary-strip">',
-        '<span>FIJOS<b>41%</b></span>',
-        '<span>AHORRO<b>19%</b></span>',
-        '<span>LIBRE<b>40%</b></span>',
-        '</div>'
+  function renderWork(step) {
+    var summary = calculateSummary();
+    if (variant === 'console') {
+      return [
+        '<section class="onboarding-work" aria-label="Configuracion inicial">',
+        renderConsoleRail(),
+        '<div class="console-work-area">',
+        renderStepForm(step, summary),
+        index < steps.length - 1 ? renderLiveSummary(summary) : '',
+        '</div>',
+        '</section>'
       ].join('');
     }
     return [
-      '<div class="emerge-zone console-layout">',
-      '<div class="console-rail">',
-      steps.map(function (_, dotIndex) {
-        var state = dotIndex < index ? ' is-done' : (dotIndex === index ? ' is-active' : '');
-        return '<span class="console-dot' + state + '">' + String(dotIndex + 1).padStart(2, '0') + '</span>';
+      '<section class="onboarding-work" aria-label="Configuracion inicial">',
+      renderStepForm(step, summary),
+      index < steps.length - 1 ? renderLiveSummary(summary) : '',
+      '</section>'
+    ].join('');
+  }
+
+  function renderStepForm(step, summary) {
+    if (step.type === 'salary') {
+      return renderSalaryForm();
+    }
+    if (step.type === 'fixed') {
+      return renderFixedForm(summary);
+    }
+    if (step.type === 'future') {
+      return renderFutureForm(summary);
+    }
+    if (step.type === 'goals') {
+      return renderGoalsForm(summary);
+    }
+    if (step.type === 'wishlist') {
+      return renderWishlistForm();
+    }
+    return renderSummaryPanel(summary);
+  }
+
+  function renderSalaryForm() {
+    return [
+      '<form class="onboard-form" data-onboard-form="salary">',
+      renderFormTitle('Primer inicio', 'Sueldo'),
+      '<div class="onboard-field-grid">',
+      '<div class="onboard-row is-single">',
+      renderControl('Sueldo mensual', 'number', draft.salary, 'data-bind="salary" min="0" step="1" inputmode="numeric"'),
+      '</div>',
+      '<div class="onboard-row is-double">',
+      renderControl('Dia cobro', 'number', draft.payDay, 'data-bind="payDay" min="1" max="31" step="1" inputmode="numeric"'),
+      renderControl('Mes inicial', 'text', draft.startMonth, 'data-bind="startMonth" maxlength="24" autocomplete="off"'),
+      '</div>',
+      '</div>',
+      '</form>'
+    ].join('');
+  }
+
+  function renderFixedForm(summary) {
+    return [
+      '<form class="onboard-form" data-onboard-form="fixed">',
+      renderFormTitle('Gastos fijos', 'Fijos'),
+      '<div class="onboard-field-grid">',
+      draft.fixed.map(function (item) {
+        return renderMoneyRow('fixed', item.id, item.title, item.amount, 'Gasto fijo', 'Monto');
       }).join(''),
       '</div>',
-      '<div class="console-stack">',
-      lines.join(''),
-      summary,
+      '<button class="onboard-add-key" type="button" data-add="fixed">Agregar fijo</button>',
+      renderTotalLine('Total fijos', summary.fixedTotal, 'fixed'),
+      '</form>'
+    ].join('');
+  }
+
+  function renderFutureForm(summary) {
+    return [
+      '<form class="onboard-form" data-onboard-form="future">',
+      renderFormTitle('Ahorro largo', 'Futuro'),
+      '<div class="onboard-field-grid">',
+      '<div class="onboard-row is-double">',
+      renderControl('Nombre', 'text', draft.futureTitle, 'data-bind="futureTitle" maxlength="32" autocomplete="off"'),
+      renderControl('Mensual', 'number', draft.futureMonthly, 'data-bind="futureMonthly" min="0" step="1" inputmode="numeric"'),
       '</div>',
+      '<div class="onboard-row is-single">',
+      renderControl('Ya acumulado', 'number', draft.futureAccumulated, 'data-bind="futureAccumulated" min="0" step="1" inputmode="numeric"'),
+      '</div>',
+      '</div>',
+      renderTotalLine('Futuro mensual', summary.futureTotal, 'future'),
+      '</form>'
+    ].join('');
+  }
+
+  function renderGoalsForm(summary) {
+    return [
+      '<form class="onboard-form" data-onboard-form="goals">',
+      renderFormTitle('Objetivos', 'Metas'),
+      '<div class="onboard-field-grid">',
+      draft.goals.map(function (item) {
+        return [
+          '<div class="onboard-row">',
+          renderControl('Meta', 'text', item.title, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="title" maxlength="32" autocomplete="off"'),
+          renderControl('Mensual', 'number', item.monthly, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="monthly" min="0" step="1" inputmode="numeric"'),
+          renderRemoveButton('goals', item.id),
+          '</div>',
+          '<div class="onboard-row is-single">',
+          renderControl('Objetivo', 'number', item.target, 'data-list="goals" data-id="' + escapeHtml(item.id) + '" data-field="target" min="1" step="1" inputmode="numeric"'),
+          '</div>'
+        ].join('');
+      }).join(''),
+      '</div>',
+      '<button class="onboard-add-key" type="button" data-add="goals">Agregar meta</button>',
+      renderTotalLine('Metas mensual', summary.goalTotal, 'goals'),
+      '</form>'
+    ].join('');
+  }
+
+  function renderWishlistForm() {
+    return [
+      '<form class="onboard-form" data-onboard-form="wishlist">',
+      renderFormTitle('Compras deseadas', 'Cosas'),
+      '<div class="onboard-field-grid">',
+      draft.wishlist.map(function (item) {
+        return renderMoneyRow('wishlist', item.id, item.title, item.cost, 'Cosa', 'Costo');
+      }).join(''),
+      '</div>',
+      '<button class="onboard-add-key" type="button" data-add="wishlist">Agregar cosa</button>',
+      renderTotalLine('Cosas total', calculateSummary().wishlistTotal, 'wishlist'),
+      '</form>'
+    ].join('');
+  }
+
+  function renderSummaryPanel(summary) {
+    return [
+      '<section class="summary-panel" aria-label="Resumen inicial">',
+      '<div class="summary-title"><span>Config inicial</span><b>Entrar</b></div>',
+      renderSummaryGrid(summary),
+      renderPartitionRail(summary),
+      '</section>'
+    ].join('');
+  }
+
+  function renderLiveSummary(summary) {
+    return [
+      '<section class="live-summary" aria-label="Resumen en vivo">',
+      '<div class="summary-title"><span>Resumen</span><b data-total="available">' + escapeHtml(formatMoney(summary.available)) + '</b></div>',
+      renderSummaryGrid(summary),
+      renderPartitionRail(summary),
+      '</section>'
+    ].join('');
+  }
+
+  function renderSummaryGrid(summary) {
+    return [
+      '<div class="summary-grid" data-summary-grid>',
+      '<div class="summary-cell"><span>Sueldo</span><b>' + escapeHtml(formatMoney(summary.salary)) + '</b></div>',
+      '<div class="summary-cell"><span>Fijos</span><b>' + escapeHtml(formatMoney(summary.fixedTotal)) + '</b></div>',
+      '<div class="summary-cell"><span>Ahorro</span><b>' + escapeHtml(formatMoney(summary.savingsTotal)) + '</b></div>',
+      '<div class="summary-cell"><span>Libre</span><b>' + escapeHtml(formatMoney(summary.available)) + '</b></div>',
       '</div>'
     ].join('');
   }
 
-  function renderPartitionRail() {
+  function renderPartitionRail(summary) {
+    var salary = summary.salary || Math.max(1, summary.fixedTotal + summary.savingsTotal + Math.max(0, summary.available));
+    var fixedWidth = share(summary.fixedTotal, salary);
+    var savingsWidth = share(summary.savingsTotal, salary);
+    var availableWidth = Math.max(0, 100 - fixedWidth - savingsWidth);
     return [
-      '<div class="terminal-pill-grid">',
-      '<div class="terminal-pill"><span>Fijos</span><b>41%</b></div>',
-      '<div class="terminal-pill"><span>Ahorros</span><b>19%</b></div>',
-      '<div class="terminal-pill"><span>Libre</span><b>40%</b></div>',
-      '</div>',
-      '<div class="partition-rail" aria-label="Particion del sueldo">',
-      '<i style="--w:41%;--c:#627545"></i>',
-      '<i style="--w:19%;--c:#7d8d55"></i>',
-      '<i style="--w:40%;--c:#24351f"></i>',
+      '<div class="partition-rail" data-partition-rail aria-label="Particion del sueldo">',
+      '<i style="--w:' + fixedWidth + '%;--c:#627545"></i>',
+      '<i style="--w:' + savingsWidth + '%;--c:#7d8d55"></i>',
+      '<i style="--w:' + availableWidth + '%;--c:#24351f"></i>',
       '</div>'
     ].join('');
   }
 
-  function renderProgress() {
+  function renderConsoleRail() {
     return [
-      '<div class="onboarding-progress">',
-      '<div class="progress-slots">',
-      steps.map(function (_, slotIndex) {
-        var state = slotIndex < index ? ' is-done' : (slotIndex === index ? ' is-active' : '');
-        return '<span class="progress-slot' + state + '"></span>';
+      '<aside class="console-rail" aria-label="Pasos">',
+      steps.map(function (step, stepIndex) {
+        var state = stepIndex < index ? ' is-done' : (stepIndex === index ? ' is-active' : '');
+        return '<button class="console-step' + state + '" type="button" data-step="' + stepIndex + '"><span>0' + (stepIndex + 1) + '</span><b>' + escapeHtml(step.title) + '</b></button>';
       }).join(''),
-      '</div>',
-      '<div class="progress-caption"><span>PASO ' + (index + 1) + '/' + steps.length + '</span><span>' + escapeHtml(steps[index].code) + '</span></div>',
+      '</aside>'
+    ].join('');
+  }
+
+  function renderFormTitle(label, value) {
+    return '<div class="onboard-form-title"><span>' + escapeHtml(label) + '</span><b>' + escapeHtml(value) + '</b></div>';
+  }
+
+  function renderMoneyRow(list, id, title, amount, titleLabel, amountLabel) {
+    return [
+      '<div class="onboard-row">',
+      renderControl(titleLabel, 'text', title, 'data-list="' + escapeHtml(list) + '" data-id="' + escapeHtml(id) + '" data-field="title" maxlength="32" autocomplete="off"'),
+      renderControl(amountLabel, 'number', amount, 'data-list="' + escapeHtml(list) + '" data-id="' + escapeHtml(id) + '" data-field="' + (list === 'wishlist' ? 'cost' : 'amount') + '" min="0" step="1" inputmode="numeric"'),
+      renderRemoveButton(list, id),
       '</div>'
     ].join('');
+  }
+
+  function renderControl(label, type, value, attrs) {
+    return [
+      '<label class="onboard-control">',
+      '<span>' + escapeHtml(label) + '</span>',
+      '<input type="' + escapeHtml(type) + '" value="' + escapeHtml(value) + '" ' + attrs + '>',
+      '</label>'
+    ].join('');
+  }
+
+  function renderRemoveButton(list, id) {
+    return '<button class="onboard-mini-key" type="button" data-remove="' + escapeHtml(list) + '" data-id="' + escapeHtml(id) + '" aria-label="Quitar">X</button>';
+  }
+
+  function renderTotalLine(label, amount, key) {
+    return '<div class="onboard-total"><span>' + escapeHtml(label) + '</span><b data-total="' + escapeHtml(key) + '">' + escapeHtml(formatMoney(amount)) + '</b></div>';
   }
 
   function typeStep(step) {
-    var title = step.text;
-    var sub = step.sub;
-    var current = 0;
+    var mainEl = root.querySelector('[data-pixel-main]');
+    var subEl = root.querySelector('[data-pixel-sub]');
+    var mainValue = step.title;
+    var subValue = step.hint;
+    var mainCurrent = 0;
     var subCurrent = 0;
     clearTimeout(typingTimer);
 
     function tickMain() {
-      root.querySelector('.pixel-terminal-main').outerHTML = pixelText(title.slice(0, current), 'main', 0);
-      current += 1;
-      if (current <= title.length) {
-        typingTimer = setTimeout(tickMain, 25);
+      if (!mainEl || !subEl) {
+        return;
+      }
+      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main');
+      mainCurrent += 1;
+      if (mainCurrent <= mainValue.length) {
+        typingTimer = setTimeout(tickMain, 36);
         return;
       }
       tickSub();
     }
 
     function tickSub() {
-      root.querySelector('.pixel-terminal-sub').outerHTML = pixelText(sub.slice(0, subCurrent), 'sub', 1);
+      if (!subEl) {
+        return;
+      }
+      subEl.innerHTML = pixelText(subValue.slice(0, subCurrent), 'sub');
       subCurrent += 1;
-      if (subCurrent <= sub.length) {
-        typingTimer = setTimeout(tickSub, 18);
+      if (subCurrent <= subValue.length) {
+        typingTimer = setTimeout(tickSub, 28);
       }
     }
 
+    mainEl.innerHTML = pixelText('', 'main');
+    subEl.innerHTML = pixelText('', 'sub');
     tickMain();
   }
 
   function pixelText(text, kind) {
     var value = normalizePixelText(text);
-    var cell = kind === 'main' ? 3.1 : 2.2;
-    var gap = kind === 'main' ? 0.8 : 0.65;
-    var charGap = kind === 'main' ? 2.1 : 1.6;
-    var maxChars = kind === 'main' ? 18 : 27;
-    var lines = wrapText(value, maxChars).slice(0, kind === 'main' ? 3 : 2);
-    var lineHeight = 7 * (cell + gap) - gap + (kind === 'main' ? 7 : 5);
-    var width = Math.max.apply(null, lines.map(function (line) {
-      return pixelLineWidth(line, cell, gap, charGap);
-    }).concat([1]));
-    var height = Math.max(lineHeight, lines.length * lineHeight);
+    var cell = kind === 'main' ? 3.1 : 2.15;
+    var gap = kind === 'main' ? 0.85 : 0.62;
+    var charGap = kind === 'main' ? 2.2 : 1.55;
+    var maxChars = kind === 'main' ? 16 : 24;
+    var maxLines = kind === 'main' ? 2 : 1;
+    var viewWidth = 320;
+    var viewHeight = kind === 'main' ? 76 : 30;
+    var lineHeight = 7 * (cell + gap) - gap + (kind === 'main' ? 7 : 4);
     var active = [];
     var ghost = [];
-    lines.forEach(function (line, lineIndex) {
+    wrapText(value, maxChars).slice(0, maxLines).forEach(function (line, lineIndex) {
       drawPixelLine(line, 0, lineIndex * lineHeight, cell, gap, charGap, active, ghost);
     });
     return [
-      '<svg class="pixel-terminal-' + escapeHtml(kind) + '" viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="xMinYMid meet" role="img" aria-label="' + escapeHtml(value) + '">',
+      '<svg viewBox="0 0 ' + viewWidth + ' ' + viewHeight + '" preserveAspectRatio="xMinYMin meet" role="img" aria-label="' + escapeHtml(value) + '">',
       '<g class="pixel-terminal-ghost">' + ghost.join('') + '</g>',
       '<g class="pixel-terminal-active">' + active.join('') + '</g>',
       '</svg>'
@@ -306,14 +417,6 @@
       }
       x += glyph[0].length * (cell + gap) + charGap;
     }
-  }
-
-  function pixelLineWidth(text, cell, gap, charGap) {
-    var width = 0;
-    for (var i = 0; i < text.length; i += 1) {
-      width += (GLYPHS[text.charAt(i)] || GLYPHS[' '])[0].length * (cell + gap) + charGap;
-    }
-    return Math.max(1, width - charGap);
   }
 
   function wrapText(text, maxChars) {
@@ -343,6 +446,128 @@
       .replace(/[^A-Z0-9 .,\-\/]/g, ' ');
   }
 
+  function handleInput(input) {
+    var direct = input.getAttribute('data-bind');
+    var list = input.getAttribute('data-list');
+    var id = input.getAttribute('data-id');
+    var field = input.getAttribute('data-field');
+    if (direct) {
+      draft[direct] = input.value;
+    } else if (list && id && field) {
+      var item = findItem(list, id);
+      if (item) {
+        item[field] = input.value;
+      }
+    }
+    refreshDynamic();
+  }
+
+  function refreshDynamic() {
+    var summary = calculateSummary();
+    replaceAll('[data-summary-grid]', renderSummaryGrid(summary));
+    replaceAll('[data-partition-rail]', renderPartitionRail(summary));
+    setText('[data-total="fixed"]', formatMoney(summary.fixedTotal));
+    setText('[data-total="future"]', formatMoney(summary.futureTotal));
+    setText('[data-total="goals"]', formatMoney(summary.goalTotal));
+    setText('[data-total="wishlist"]', formatMoney(summary.wishlistTotal));
+    setText('[data-total="available"]', formatMoney(summary.available));
+  }
+
+  function replaceAll(selector, html) {
+    root.querySelectorAll(selector).forEach(function (node) {
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = html;
+      node.replaceWith(wrapper.firstElementChild);
+    });
+  }
+
+  function setText(selector, text) {
+    root.querySelectorAll(selector).forEach(function (node) {
+      node.textContent = text;
+    });
+  }
+
+  function calculateSummary() {
+    var salary = toNumber(draft.salary);
+    var fixedTotal = sum(draft.fixed, 'amount');
+    var futureTotal = toNumber(draft.futureMonthly);
+    var goalTotal = sum(draft.goals, 'monthly');
+    var wishlistTotal = sum(draft.wishlist, 'cost');
+    var savingsTotal = futureTotal + goalTotal;
+    return {
+      salary: salary,
+      fixedTotal: fixedTotal,
+      futureTotal: futureTotal,
+      goalTotal: goalTotal,
+      wishlistTotal: wishlistTotal,
+      savingsTotal: savingsTotal,
+      available: salary - fixedTotal - savingsTotal
+    };
+  }
+
+  function sum(items, key) {
+    return (items || []).reduce(function (total, item) {
+      return total + toNumber(item && item[key]);
+    }, 0);
+  }
+
+  function toNumber(value) {
+    var number = Number(String(value || '').replace(/[^\d.-]/g, ''));
+    return Number.isFinite(number) ? Math.max(0, number) : 0;
+  }
+
+  function share(amount, salary) {
+    if (!salary) {
+      return 0;
+    }
+    return Math.max(0, Math.min(100, Math.round((amount / salary) * 100)));
+  }
+
+  function formatMoney(value) {
+    var number = Number(String(value || '').replace(/[^\d.-]/g, ''));
+    var amount = Number.isFinite(number) ? Math.round(number) : 0;
+    var sign = amount < 0 ? '-' : '';
+    return sign + 'Gs. ' + String(Math.abs(amount)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function addItem(list) {
+    uid += 1;
+    if (list === 'fixed') {
+      draft.fixed.push({ id: 'fixed-' + uid, title: 'Nuevo fijo', amount: '0' });
+    } else if (list === 'goals') {
+      draft.goals.push({ id: 'goal-' + uid, title: 'Nueva meta', monthly: '0', target: '1000000' });
+    } else if (list === 'wishlist') {
+      draft.wishlist.push({ id: 'wish-' + uid, title: 'Nueva cosa', cost: '0' });
+    }
+    render();
+  }
+
+  function removeItem(list, id) {
+    var items = draft[list] || [];
+    if (items.length <= 1) {
+      items.forEach(function (item) {
+        if (item.id === id) {
+          Object.keys(item).forEach(function (key) {
+            if (key !== 'id') {
+              item[key] = key === 'title' ? '' : '0';
+            }
+          });
+        }
+      });
+    } else {
+      draft[list] = items.filter(function (item) {
+        return item.id !== id;
+      });
+    }
+    render();
+  }
+
+  function findItem(list, id) {
+    return (draft[list] || []).filter(function (item) {
+      return item.id === id;
+    })[0] || null;
+  }
+
   function setStep(nextIndex) {
     index = Math.max(0, Math.min(steps.length - 1, nextIndex));
     render();
@@ -352,16 +577,25 @@
     setStep(steps.length - 1);
   }
 
+  function restart() {
+    draft = clone(defaults);
+    setStep(0);
+  }
+
   function updateChrome(step) {
     if (statusLine) {
       statusLine.textContent = step.status;
     }
     if (nextButton) {
-      nextButton.querySelector('.action-key-label').textContent = index === steps.length - 1 ? 'ENTRAR' : 'SIGUIENTE';
+      nextButton.querySelector('.action-key-label').textContent = index === steps.length - 1 ? 'ENTRAR' : 'GUARDAR';
     }
     document.querySelectorAll('[data-tour-action="prev"]').forEach(function (button) {
       button.disabled = index === 0;
     });
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
   function escapeHtml(value) {
@@ -380,19 +614,30 @@
     return String(Math.round(Number(value || 0) * 100) / 100);
   }
 
-  document.addEventListener('click', function (event) {
-    var actionButton = event.target.closest ? event.target.closest('[data-tour-action]') : null;
-    if (actionButton) {
-      var action = actionButton.getAttribute('data-tour-action');
-      if (action === 'prev') {
-        setStep(index - 1);
-      } else if (action === 'skip' || action === 'finish') {
-        skip();
-      } else if (action === 'restart') {
-        setStep(0);
-      }
-      return;
+  root.addEventListener('input', function (event) {
+    var input = event.target.closest ? event.target.closest('input') : null;
+    if (input) {
+      handleInput(input);
     }
+  });
+
+  root.addEventListener('click', function (event) {
+    var stepButton = event.target.closest ? event.target.closest('[data-step]') : null;
+    var addButton = event.target.closest ? event.target.closest('[data-add]') : null;
+    var removeButton = event.target.closest ? event.target.closest('[data-remove]') : null;
+    var actionButton = event.target.closest ? event.target.closest('[data-tour-action]') : null;
+    if (stepButton) {
+      setStep(Number(stepButton.getAttribute('data-step')));
+    } else if (addButton) {
+      addItem(addButton.getAttribute('data-add'));
+    } else if (removeButton) {
+      removeItem(removeButton.getAttribute('data-remove'), removeButton.getAttribute('data-id'));
+    } else if (actionButton) {
+      handleAction(actionButton.getAttribute('data-tour-action'));
+    }
+  });
+
+  document.addEventListener('click', function (event) {
     if (event.target.closest && event.target.closest('#onboarding-next')) {
       if (index >= steps.length - 1) {
         skip();
@@ -401,6 +646,29 @@
       }
     }
   });
+
+  document.addEventListener('click', function (event) {
+    var actionButton = event.target.closest ? event.target.closest('[data-tour-action]') : null;
+    if (actionButton && !root.contains(actionButton)) {
+      handleAction(actionButton.getAttribute('data-tour-action'));
+    }
+  });
+
+  document.addEventListener('submit', function (event) {
+    if (event.target.closest && event.target.closest('.onboard-form')) {
+      event.preventDefault();
+    }
+  });
+
+  function handleAction(action) {
+    if (action === 'prev') {
+      setStep(index - 1);
+    } else if (action === 'skip' || action === 'finish') {
+      skip();
+    } else if (action === 'restart') {
+      restart();
+    }
+  }
 
   render();
 }());

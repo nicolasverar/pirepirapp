@@ -27,9 +27,15 @@
 - Validacion estatica Node de A3/B3, cache-busting `20260629-d`, bienvenida, preguntas, ahorros desplegables, ausencia de precargas, `system-window` y `translateY`: OK, `ONBOARDING_A3_STATIC_OK`.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
+- `git commit -m "Refinar onboarding cuestionario A3 B3"`: OK, commit `82866ff`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-terminal.html?v=82866ff-2`: OK, `200`, contiene `PROTO A3` y `onboarding.js?v=20260629-d`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=82866ff-2`: OK, `200`, contiene `PROTO B3` y `onboarding.js?v=20260629-d`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=82866ff-2`: OK, `200`, contiene bienvenida, pregunta de sueldo y cierre `Empieza el bailongo`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=82866ff-2`: OK, `200`, contiene estilos de opciones desplegables y riel B.
 
 ### Pendientes
-- Publicar y verificar A3/B3 en GitHub Pages.
+- Recorrer especialmente `PROTO B3` en navegador y decidir si queda como base para integrar en la app real.
 
 ## 2026-06-29 - Fix pantalla vacia onboarding A2/B2
 

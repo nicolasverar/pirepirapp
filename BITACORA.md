@@ -24,9 +24,14 @@
 - Validacion estatica Node de B3, cache-busting `20260629-e`, botones visibles, copy actualizado, estilos de bienvenida/selectores y ausencia de textos viejos: OK, `ONBOARDING_B3_REFINEMENT_STATIC_OK`.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
 - `git diff --check`: OK.
+- `git commit -m "Pulir bienvenida y formularios B3"`: OK, commit `e0cd701`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=e0cd701-1`: OK, `200`, contiene `PROTO B3` y `onboarding.js?v=20260629-e`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=e0cd701-1`: OK, `200`, contiene bienvenida sin subtitulo, copy de sueldo y gastos fijos.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=e0cd701-1`: OK, `200`, contiene centrado de bienvenida y selectores de ahorros.
 
 ### Pendientes
-- Publicar y verificar `PROTO B3` con cache-busting `20260629-e` en GitHub Pages.
+- Recorrer `PROTO B3` en navegador y ajustar microcopy/espaciado segun feedback visual.
 
 ## 2026-06-29 - Onboarding cuestionario A3/B3
 

@@ -93,13 +93,13 @@ body {
 
 .onboarding-copy {
   display: grid;
-  gap: 5px;
-  min-height: 112px;
-  align-content: start;
+  gap: 7px;
+  min-height: 158px;
+  align-content: center;
 }
 
 .is-step-welcome .onboarding-copy {
-  min-height: 140px;
+  min-height: 172px;
   align-content: center;
 }
 
@@ -109,8 +109,7 @@ body {
   min-width: 0;
 }
 
-.pixel-terminal-main,
-.pixel-terminal-sub {
+.pixel-terminal-main {
   display: block;
   width: 100%;
   overflow: hidden;
@@ -118,20 +117,11 @@ body {
 }
 
 .pixel-terminal-main {
-  height: 74px;
+  height: 118px;
 }
 
 .is-step-welcome .pixel-terminal-main {
-  height: 92px;
-}
-
-.pixel-terminal-sub {
-  height: 30px;
-  opacity: 0.9;
-}
-
-.is-step-welcome .pixel-terminal-sub {
-  display: none;
+  height: 118px;
 }
 
 .pixel-terminal svg {
@@ -146,6 +136,16 @@ body {
 
 .pixel-terminal-ghost {
   fill: rgba(7, 16, 7, 0.11);
+}
+
+.step-caption {
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  color: #071007;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  font-weight: 900;
 }
 
 .onboarding-work {
@@ -182,26 +182,65 @@ body {
 .welcome-panel {
   display: grid;
   justify-items: center;
-  min-height: 52px;
+  align-content: start;
+  min-height: 82px;
   padding-top: 0;
   text-transform: uppercase;
   font-weight: 900;
 }
 
-.onboard-start-key {
-  min-height: 42px;
-  padding: 5px 14px;
-  color: #c4d08b;
-  background:
-    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
-    #071007;
-  border: 2px solid #071007;
-  text-transform: uppercase;
-  font-size: 0.74rem;
-  font-weight: 900;
+.welcome-arrows {
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  gap: 9px;
+  opacity: 0;
+  animation: welcome-arrows-show 0.01s steps(1, end) 1.58s forwards;
 }
 
-.onboard-form-title,
+.pixel-arrow {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 36px;
+  animation: welcome-arrow-bob 0.86s steps(2, end) 1.58s infinite;
+}
+
+.pixel-arrow:nth-child(2) {
+  animation-delay: 1.68s;
+}
+
+.pixel-arrow:nth-child(3) {
+  animation-delay: 1.78s;
+}
+
+.pixel-arrow::before,
+.pixel-arrow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background: #071007;
+  transform: translateX(-50%);
+}
+
+.pixel-arrow::before {
+  top: 0;
+  width: 8px;
+  height: 20px;
+  box-shadow:
+    0 4px 0 #071007,
+    0 8px 0 #071007;
+}
+
+.pixel-arrow::after {
+  bottom: 0;
+  width: 20px;
+  height: 8px;
+  box-shadow:
+    -6px -6px 0 -2px #071007,
+    6px -6px 0 -2px #071007,
+    0 6px 0 -2px #071007;
+}
+
 .summary-title {
   display: flex;
   justify-content: space-between;
@@ -211,14 +250,12 @@ body {
   font-weight: 900;
 }
 
-.onboard-form-title b,
 .summary-title b {
   color: #c4d08b;
   background: #071007;
   padding: 2px 5px;
 }
 
-.question-line,
 .onboard-empty-note,
 .summary-empty {
   margin: 0;
@@ -299,12 +336,15 @@ body {
 }
 
 .onboard-control input:focus {
-  outline: 2px solid rgba(7, 16, 7, 0.26);
+  outline: 2px solid rgba(196, 208, 139, 0.52);
   outline-offset: 1px;
-  color: #071007;
+  color: #c4d08b;
   background:
-    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.05) 0 1px, transparent 1px 4px),
-    #d5df9c;
+    repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.09) 0 1px, transparent 1px 4px),
+    #071007;
+  box-shadow:
+    inset 2px 2px 0 rgba(196, 208, 139, 0.18),
+    0 0 0 2px rgba(7, 16, 7, 0.18);
 }
 
 .onboard-mini-key,
@@ -610,17 +650,29 @@ body {
   }
 }
 
+@keyframes welcome-arrows-show {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes welcome-arrow-bob {
+  50% {
+    transform: translateY(6px);
+  }
+}
+
 @media (max-width: 380px) {
   .onboarding-stage {
     padding: 8px;
   }
 
   .onboarding-copy {
-    min-height: 100px;
+    min-height: 138px;
   }
 
   .pixel-terminal-main {
-    height: 65px;
+    height: 102px;
   }
 
   .is-console .onboarding-work {

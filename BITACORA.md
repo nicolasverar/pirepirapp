@@ -1,5 +1,34 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - B3 botones fisicos y titulo grande
+
+### Objetivo
+- Ajustar `PROTO B3` segun feedback visual: sin boton redundante dentro de la pantalla de bienvenida.
+- Usar el boton fisico `COMENZAR` como accion principal y guiarlo con tres flechas pixel art.
+- Dar mas peso visual al titulo de cada paso por encima de la grilla/formulario.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260629-f`.
+- El boton fisico principal inicia como `COMENZAR` para evitar flash de `SIGUIENTE`.
+- `frontend/previews/onboarding.js` elimina el boton interno `COMENZAR`, renderiza tres flechas pixel art y deja solo titulos grandes con caption normal debajo.
+- `SUELDO` queda como titulo grande; debajo muestra `Cuanto soles cobrar?` y el formulario ya no renderiza la tarjeta negra `Ingreso mensual`.
+- `GASTOS FIJOS` y `AHORROS` siguen la misma logica: titulo grande arriba, explicacion normal debajo y formulario directo.
+- `frontend/previews/onboarding.css` agranda el rectangulo superior, agrega animacion de flechas y mantiene los inputs oscuros al hacer foco.
+- Se removieron restos de estilos/renderers viejos: `pixel-terminal-sub`, `onboard-start-key`, `renderQuestion` y `renderFormTitle`.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion runtime Node con DOM simulado para bienvenida, sueldo, gastos fijos y ahorros: OK, `onboarding runtime ok`.
+- Validacion estatica Node de B3/A3, cache-busting `20260629-f`, botones fisicos, copy actualizado, flechas y ausencia de restos viejos: OK, `onboarding static ok`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+- Captura Playwright: no ejecutada porque `playwright` y `@playwright/test` no estan instalados en el entorno local.
+
+### Pendientes
+- Publicar y verificar URL publica con cache-busting despues del commit.
+- Recorrer `PROTO B3` en navegador para decidir el proximo ajuste fino de espaciado.
+
 ## 2026-06-29 - Refinamiento visual B3 onboarding
 
 ### Objetivo

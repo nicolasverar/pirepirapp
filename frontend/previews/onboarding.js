@@ -14,11 +14,11 @@
   var uid = 20;
 
   var steps = [
-    { code: 'HOLA', title: 'BIENVENIDO/A', hint: '', type: 'welcome', status: 'bienvenida' },
-    { code: 'SUELDO', title: 'SUELDO', hint: 'INGRESO MENSUAL', type: 'salary', status: 'sueldo mensual' },
-    { code: 'GASTOS', title: 'GASTOS FIJOS', hint: 'GASTOS MENSUALES', type: 'fixed', status: 'gastos fijos' },
-    { code: 'AHORRO', title: 'AHORROS', hint: 'ELEGI QUE QUERES ANADIR', type: 'savings', status: 'ahorros' },
-    { code: 'LISTO', title: 'LISTO', hint: 'YA PODES USAR LA APP', type: 'summary', status: 'listo' }
+    { code: 'HOLA', title: 'BIENVENIDO/A', caption: '', type: 'welcome', status: 'bienvenida' },
+    { code: 'SUELDO', title: 'SUELDO', caption: 'Cuanto soles cobrar?', type: 'salary', status: 'sueldo mensual' },
+    { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido.', type: 'fixed', status: 'gastos fijos' },
+    { code: 'AHORRO', title: 'AHORROS', caption: 'Elegi que queres anadir ahora.', type: 'savings', status: 'ahorros' },
+    { code: 'LISTO', title: 'LISTO', caption: 'Ya podes usar la app.', type: 'summary', status: 'listo' }
   ];
 
   var defaults = {
@@ -118,8 +118,8 @@
       '<section class="onboarding-copy" aria-label="' + escapeHtml(step.title) + '">',
       '<div class="pixel-terminal">',
       '<div class="pixel-terminal-main" data-pixel-main></div>',
-      '<div class="pixel-terminal-sub" data-pixel-sub></div>',
       '</div>',
+      step.caption ? '<p class="step-caption">' + escapeHtml(step.caption) + '</p>' : '',
       '</section>'
     ].join('');
   }
@@ -164,7 +164,11 @@
   function renderWelcomeForm() {
     return [
       '<section class="welcome-panel" aria-label="Comenzar configuracion">',
-      '<button class="onboard-start-key" type="button" data-start-tour>COMENZAR</button>',
+      '<div class="welcome-arrows" aria-hidden="true">',
+      '<span class="pixel-arrow"></span>',
+      '<span class="pixel-arrow"></span>',
+      '<span class="pixel-arrow"></span>',
+      '</div>',
       '</section>'
     ].join('');
   }
@@ -172,11 +176,9 @@
   function renderSalaryForm() {
     return [
       '<form class="onboard-form" data-onboard-form="salary">',
-      renderFormTitle('Sueldo', 'Ingreso mensual'),
-      renderQuestion('Cuanto soles cobrar?'),
       '<div class="onboard-field-grid">',
       '<div class="onboard-row is-single">',
-      renderControl('Ingreso mensual fijo', 'number', draft.salary, 'data-bind="salary" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
+      renderControl('Ingreso mensual', 'number', draft.salary, 'data-bind="salary" min="0" step="1" inputmode="numeric" placeholder="Gs."'),
       '</div>',
       '</div>',
       '</form>'
@@ -186,11 +188,9 @@
   function renderFixedForm(summary) {
     return [
       '<form class="onboard-form" data-onboard-form="fixed">',
-      renderFormTitle('Gastos fijos', ''),
-      renderQuestion('Defini gastos mensuales con nombre y apellido.'),
       '<div class="onboard-field-grid">',
       draft.fixed.map(function (item) {
-        return renderMoneyRow('fixed', item.id, item.title, item.amount, 'Nombre del gasto', 'Monto mensual');
+        return renderMoneyRow('fixed', item.id, item.title, item.amount, 'Nombre completo del gasto', 'Monto mensual');
       }).join(''),
       '</div>',
       '<button class="onboard-add-key" type="button" data-add="fixed">Agregar fijo</button>',
@@ -202,8 +202,6 @@
   function renderSavingsForm(summary) {
     return [
       '<form class="onboard-form" data-onboard-form="savings">',
-      renderFormTitle('Ahorros', ''),
-      renderQuestion('Elegi que queres anadir ahora.'),
       '<div class="savings-choice-grid">',
       renderSavingsChoice('future', 'Futuro', 'Ahorro largo o fondo de seguridad.'),
       renderSavingsChoice('goals', 'Meta', 'Objetivo con monto y aporte mensual.'),
@@ -358,14 +356,6 @@
     ].join('');
   }
 
-  function renderFormTitle(label, value) {
-    return '<div class="onboard-form-title"><span>' + escapeHtml(label) + '</span>' + (value ? '<b>' + escapeHtml(value) + '</b>' : '') + '</div>';
-  }
-
-  function renderQuestion(text) {
-    return '<p class="question-line">' + escapeHtml(text) + '</p>';
-  }
-
   function renderMoneyRow(list, id, title, amount, titleLabel, amountLabel) {
     return [
       '<div class="onboard-row">',
@@ -395,51 +385,34 @@
 
   function typeStep(step) {
     var mainEl = root.querySelector('[data-pixel-main]');
-    var subEl = root.querySelector('[data-pixel-sub]');
     var mainValue = step.title;
-    var subValue = step.hint;
     var mainCurrent = 0;
-    var subCurrent = 0;
     clearTimeout(typingTimer);
 
     function tickMain() {
-      if (!mainEl || !subEl) {
+      if (!mainEl) {
         return;
       }
-      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', step.type === 'welcome');
+      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', true, step.type === 'welcome' ? 12 : 8);
       mainCurrent += 1;
       if (mainCurrent <= mainValue.length) {
         typingTimer = setTimeout(tickMain, 118);
-        return;
-      }
-      tickSub();
-    }
-
-    function tickSub() {
-      if (!subEl) {
-        return;
-      }
-      subEl.innerHTML = pixelText(subValue.slice(0, subCurrent), 'sub', step.type === 'welcome');
-      subCurrent += 1;
-      if (subCurrent <= subValue.length) {
-        typingTimer = setTimeout(tickSub, 78);
       }
     }
 
-    mainEl.innerHTML = pixelText('', 'main', step.type === 'welcome');
-    subEl.innerHTML = pixelText('', 'sub', step.type === 'welcome');
+    mainEl.innerHTML = pixelText('', 'main', true, step.type === 'welcome' ? 12 : 8);
     tickMain();
   }
 
-  function pixelText(text, kind, center) {
+  function pixelText(text, kind, center, maxCharsOverride) {
     var value = normalizePixelText(text);
-    var cell = kind === 'main' ? 3.1 : 2.15;
-    var gap = kind === 'main' ? 0.85 : 0.62;
-    var charGap = kind === 'main' ? 2.2 : 1.55;
-    var maxChars = kind === 'main' ? 16 : 24;
+    var cell = kind === 'main' ? 3.7 : 2.15;
+    var gap = kind === 'main' ? 0.95 : 0.62;
+    var charGap = kind === 'main' ? 2.4 : 1.55;
+    var maxChars = maxCharsOverride || (kind === 'main' ? 8 : 24);
     var maxLines = kind === 'main' ? 2 : 1;
     var viewWidth = 320;
-    var viewHeight = kind === 'main' ? 76 : 30;
+    var viewHeight = kind === 'main' ? 84 : 30;
     var lineHeight = 7 * (cell + gap) - gap + (kind === 'main' ? 7 : 4);
     var active = [];
     var ghost = [];
@@ -687,9 +660,6 @@
     if (nextButton) {
       nextButton.querySelector('.action-key-label').textContent = index === 0 ? 'COMENZAR' : (index === steps.length - 1 ? 'ENTRAR' : 'GUARDAR');
     }
-    document.querySelectorAll('[data-tour-action="prev"]').forEach(function (button) {
-      button.disabled = index === 0;
-    });
   }
 
   function clone(value) {
@@ -723,7 +693,6 @@
     var stepButton = event.target.closest ? event.target.closest('[data-step]') : null;
     var addButton = event.target.closest ? event.target.closest('[data-add]') : null;
     var removeButton = event.target.closest ? event.target.closest('[data-remove]') : null;
-    var startButton = event.target.closest ? event.target.closest('[data-start-tour]') : null;
     var actionButton = event.target.closest ? event.target.closest('[data-tour-action]') : null;
     if (stepButton) {
       setStep(Number(stepButton.getAttribute('data-step')));
@@ -731,8 +700,6 @@
       addItem(addButton.getAttribute('data-add'));
     } else if (removeButton) {
       removeItem(removeButton.getAttribute('data-remove'), removeButton.getAttribute('data-id'));
-    } else if (startButton) {
-      setStep(1);
     } else if (actionButton) {
       handleAction(actionButton.getAttribute('data-tour-action'));
     }

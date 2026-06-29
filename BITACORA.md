@@ -1,5 +1,29 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-29 - Prototipos onboarding inicial
+
+### Objetivo
+- Crear dos HTML de prueba para recorrer el primer arranque de la app antes de implementarlo en produccion.
+- Simular el tour completo de inicio a fin: bienvenida, sueldo mensual, gastos fijos, metas/ahorros, particion y cierre.
+- Mantener estetica Pirepirapp: misma carcasa, mismo fondo LCD, sin tarjetas `system-window`, texto tipo terminal con matriz 5x7/35 segmentos y bloques emergentes.
+
+### Cambios
+- Se agrego `frontend/previews/onboarding-terminal.html` como prototipo A, con flujo terminal guiado y bloques de datos emergentes.
+- Se agrego `frontend/previews/onboarding-console.html` como prototipo B, con flujo de consola/checklist y riel de pasos.
+- Se agrego `frontend/previews/onboarding.css` con estilos propios del laboratorio, reutilizando clases reales de la app (`device-shell`, `status-bar`, `lcd-screen`, `key-zone`).
+- Se agrego `frontend/previews/onboarding.js` con 6 pasos, controles `SIGUIENTE`, `ATRAS`, `SALTAR`, `REINICIAR` y `ENTRAR`, render de texto 35 segmentos y simulacion de particion.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion estatica Node de referencias HTML, ausencia de `system-window`, cantidad de pasos y controles: OK, `ONBOARDING_PREVIEW_STATIC_OK`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK.
+- Busqueda en los prototipos de `system-window`, `data-sync-test-seed`, `pirepirapp-test-seed`, `assets/torta` y `aves-flight`: sin resultados.
+
+### Limitacion
+- No se pudo obtener screenshot automatizado: Chrome headless queda bloqueado por errores GPU/`about:blank` en esta maquina. Los HTML son estaticos y pueden abrirse directamente en navegador.
+
 ## 2026-06-29 - Endurecimiento local/APK v3.34
 
 ### Objetivo

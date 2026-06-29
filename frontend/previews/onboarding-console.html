@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#070808">
+    <title>Pirepirapp - onboarding consola</title>
+    <link rel="stylesheet" href="../styles/lcd-theme.css?v=3.34">
+    <link rel="stylesheet" href="../styles/main.css?v=3.34">
+    <link rel="stylesheet" href="../styles/responsive.css?v=3.34">
+    <link rel="stylesheet" href="./onboarding.css?v=20260629-a">
+  </head>
+  <body>
+    <div class="device-shell onboarding-preview-shell">
+      <header class="status-bar" aria-label="Pirepirapp">
+        <div class="brand-mark" aria-label="Pirepirapp">
+          <strong>PIREPIRAPP</strong>
+          <span class="brand-version">PROTO B</span>
+        </div>
+        <div class="status-terminal" aria-live="polite" aria-label="Estado del prototipo">
+          <span>consola inicial</span>
+        </div>
+      </header>
+
+      <main class="lcd-screen onboarding-preview-screen" id="onboarding-root" data-variant="console" tabindex="-1"></main>
+
+      <section class="key-zone onboarding-preview-keys" aria-label="Controles del tour">
+        <button class="action-key" id="onboarding-next" type="button">
+          <span class="action-key-label">SIGUIENTE</span>
+        </button>
+
+        <nav class="bottom-nav" aria-label="Acciones del prototipo">
+          <button class="nav-key" data-tour-action="prev" type="button">
+            <span>ATRAS</span>
+          </button>
+          <button class="nav-key" data-tour-action="skip" type="button">
+            <span>SALTAR</span>
+          </button>
+          <button class="nav-key" data-tour-action="restart" type="button">
+            <span>REINICIAR</span>
+          </button>
+          <button class="nav-key" data-tour-action="finish" type="button">
+            <span>ENTRAR</span>
+          </button>
+        </nav>
+      </section>
+    </div>
+
+    <script src="./onboarding.js?v=20260629-a"></script>
+  </body>
+</html>

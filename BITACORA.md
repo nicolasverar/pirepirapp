@@ -30,9 +30,15 @@
 - `git diff --check`: OK; solo advertencias CRLF normales en Windows.
 
 ### Despliegue
-- Commit: pendiente al cierre del hito.
-- Push: pendiente al cierre del hito.
-- URL publica a verificar: `https://nicolasverar.github.io/pirepirapp/`.
+- `git commit -m "Ajustar onboarding y formato de montos"`: OK, commit `6bfb8ea`.
+- `git push origin main`: OK, `5476d88..6bfb8ea`.
+- GitHub Actions Pages: OK, run `https://github.com/nicolasverar/pirepirapp/actions/runs/28465666453`, `completed/success`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/?v=6bfb8ea`: OK, sirve cache-busting `onboarding.js?v=4.0.1`.
+- URL publica `scripts/config.js?v=6bfb8ea`: OK, mantiene `APP_VERSION: 'v4.0'`.
+- URL publica `service-worker.js?v=6bfb8ea`: OK, contiene `finanzas-lcd-v401`.
+- URL publica `scripts/onboarding.js?v=6bfb8ea`: OK, contiene `INGRESAR SUELDO`, `AHORA TODO LISTO` y ya no contiene `Cuanto soles cobrar`.
+- URL publica `styles/onboarding.css?v=6bfb8ea`: OK, contiene el marco suavizado del recorrido (`border-radius: 3px`).
+- URL publica `scripts/utils.js?v=6bfb8ea`: OK, contiene `formatAmountText`.
 
 ### Pendientes
 - Recorrer visualmente el onboarding en dispositivo/PWA para ajustar posiciones finas de flechas si el boton fisico cambia por viewport.

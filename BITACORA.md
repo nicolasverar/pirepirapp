@@ -22,9 +22,13 @@
 - Validacion runtime Node con DOM simulado para bienvenida, AHORROS y campos de plazo: OK, `onboarding center compact runtime ok`.
 - `git diff --check`: OK.
 - `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git commit -m "Centrar y compactar onboarding B3"`: OK, commit `573bc22`.
+- `git push origin main`: OK.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-console.html?v=573bc22-2`: OK, contiene `PROTO B3` y cache-busting `onboarding.js?v=20260630-a` / `onboarding.css?v=20260630-a`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.js?v=573bc22-2`: OK, no contiene la bajada de `AHORROS`; contiene `preserveAspectRatio="xMidYMid meet"` y centrado vertical con `baseY`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding.css?v=573bc22-2`: OK, contiene `--onboarding-copy-height: 94px`, filas compactas y `display: none` para la linea superior de bienvenida.
 
 ### Pendientes
-- Publicar y verificar URL publica con cache-busting despues del commit.
 - Recorrer visualmente B3 para confirmar que el titulo centrado no quede demasiado chico.
 
 ## 2026-06-29 - B3 compactacion y plazos en ahorros

@@ -125,7 +125,7 @@
   text-align: center;
   text-transform: uppercase;
   color: #071007;
-  font-size: 0.6rem;
+  font-size: 0.66rem;
   line-height: 1;
   font-weight: 900;
 }
@@ -138,8 +138,8 @@
 .is-step-welcome .onboarding-work {
   display: grid;
   justify-items: center;
-  align-content: start;
-  min-height: 54px;
+  align-content: end;
+  min-height: 96px;
 }
 
 .is-console .onboarding-work {
@@ -162,10 +162,10 @@
 .welcome-panel {
   display: grid;
   justify-items: center;
-  align-content: start;
+  align-content: end;
   width: 100%;
-  min-height: 52px;
-  padding-top: 0;
+  min-height: 96px;
+  padding-top: 20px;
   text-transform: uppercase;
   font-weight: 900;
 }
@@ -187,7 +187,7 @@
   gap: 2px;
   width: 28px;
   height: 40px;
-  transform: translateY(-8px);
+  transform: translateY(10px);
   animation: welcome-arrow-bob 0.72s steps(2, end) 2.65s infinite;
   will-change: transform;
 }
@@ -304,7 +304,8 @@
   color: rgba(196, 208, 139, 0.48);
 }
 
-.onboard-control input[type="number"] {
+.onboard-control input[type="number"],
+.onboard-control input[data-money-input] {
   text-align: right;
 }
 
@@ -355,7 +356,11 @@
   gap: 8px;
   align-items: center;
   min-height: 30px;
-  padding: 3px 0 0;
+  padding: 5px 7px;
+  border: 2px solid rgba(7, 16, 7, 0.74);
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.045) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.16);
   text-transform: uppercase;
   font-size: 0.62rem;
   font-weight: 900;
@@ -439,7 +444,11 @@
 .onboard-subform {
   display: grid;
   gap: 5px;
-  padding-top: 1px;
+  padding: 6px 7px;
+  border: 2px solid rgba(7, 16, 7, 0.68);
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.04) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.12);
   animation: onboarding-appear 0.22s steps(3, end) both;
 }
 
@@ -456,6 +465,14 @@
   display: grid;
   gap: 5px;
   padding-top: 0;
+}
+
+.summary-panel {
+  padding: 6px 7px;
+  border: 2px solid rgba(7, 16, 7, 0.68);
+  background:
+    repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.04) 0 1px, transparent 1px 4px),
+    rgba(196, 208, 139, 0.1);
 }
 
 .summary-grid {
@@ -531,7 +548,8 @@
   background:
     repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.045) 0 1px, transparent 1px 4px),
     rgba(196, 208, 139, 0.12);
-  border: 2px solid #071007;
+  border: 1px solid rgba(7, 16, 7, 0.56);
+  border-radius: 3px;
   text-transform: uppercase;
   font-size: 0.5rem;
   font-weight: 900;
@@ -550,6 +568,7 @@
   background:
     repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
     #071007;
+  border-color: rgba(7, 16, 7, 0.82);
 }
 
 .console-work-area {
@@ -595,11 +614,11 @@
 @keyframes welcome-arrow-bob {
   0%,
   100% {
-    transform: translateY(-8px);
+    transform: translateY(10px);
   }
 
   50% {
-    transform: translateY(10px);
+    transform: translateY(28px);
   }
 }
 

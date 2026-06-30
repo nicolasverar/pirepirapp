@@ -25,6 +25,10 @@
       item.addEventListener('click', closeModal);
     });
 
+    if (utils.bindAmountInputs) {
+      utils.bindAmountInputs(root);
+    }
+
     if (afterOpen) {
       afterOpen(root);
     }
@@ -179,7 +183,11 @@
         motiveInput.value = 'Sueldo';
       }
       if (amountInput) {
-        amountInput.value = salary;
+        if (utils.setAmountInputValue) {
+          utils.setAmountInputValue(amountInput, salary);
+        } else {
+          amountInput.value = salary;
+        }
       }
       if (dateInput) {
         dateInput.value = utils.toInputDate();
@@ -789,7 +797,11 @@
       var amount = utils.normalizeAmount((amountInput || {}).value);
       if (budget.maxAmount >= 0 && amount > budget.maxAmount) {
         amount = budget.maxAmount;
-        amountInput.value = amount ? String(amount) : '';
+        if (utils.setAmountInputValue) {
+          utils.setAmountInputValue(amountInput, amount ? String(amount) : '');
+        } else {
+          amountInput.value = amount ? String(amount) : '';
+        }
         setLimitMessage('Limite disponible: ' + utils.formatMoney(budget.maxAmount));
       } else {
         setLimitMessage('');
@@ -814,7 +826,11 @@
         percentInput.value = formatFixedPercent(percent);
       }
       if (amountInput) {
-        amountInput.value = budget.salary && percent ? String(Math.round((percent * budget.salary) / 100)) : '';
+        if (utils.setAmountInputValue) {
+          utils.setAmountInputValue(amountInput, budget.salary && percent ? String(Math.round((percent * budget.salary) / 100)) : '');
+        } else {
+          amountInput.value = budget.salary && percent ? String(Math.round((percent * budget.salary) / 100)) : '';
+        }
       }
       syncPercentDisplay();
     }
@@ -1093,7 +1109,11 @@
         }
         motiveInput.value = item.titulo || motiveInput.value || 'Cosa que quiero';
         if (amount > 0 && amountInput) {
-          amountInput.value = amount;
+          if (utils.setAmountInputValue) {
+            utils.setAmountInputValue(amountInput, amount);
+          } else {
+            amountInput.value = amount;
+          }
         }
         toggle.classList.add('is-active');
         panel.hidden = true;
@@ -1399,12 +1419,20 @@
         motiveInput.value = selectedRelatedLabel(relatedSelect) || utils.fixedExpenseName(item) || 'Gasto fijo';
       }
       if (!item) {
-        amountInput.value = '';
+        if (utils.setAmountInputValue) {
+          utils.setAmountInputValue(amountInput, '');
+        } else {
+          amountInput.value = '';
+        }
         return;
       }
     }
     if (amount > 0) {
-      amountInput.value = amount;
+      if (utils.setAmountInputValue) {
+        utils.setAmountInputValue(amountInput, amount);
+      } else {
+        amountInput.value = amount;
+      }
     }
   }
 

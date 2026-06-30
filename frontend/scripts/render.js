@@ -42,6 +42,9 @@
     }
 
     bindRenderedActions(screen);
+    if (utils.bindAmountInputs) {
+      utils.bindAmountInputs(screen);
+    }
     hydrateSummaryPixelText(screen);
     window.FinanzasImages.hydrate(screen);
   }

@@ -1,5 +1,42 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - Ajustes finos onboarding y montos v4.0.1
+
+### Objetivo
+- Ajustar el tutorial integrado segun la revision visual del usuario.
+- Formatear montos con puntos de miles en toda la app, no solo en onboarding.
+- Mantener la version visible `v4.0` y forzar cache-busting interno con `4.0.1`.
+
+### Cambios
+- `frontend/scripts/onboarding.js` cambia `SUELDO` por `INGRESAR SUELDO`, elimina el caption `Cuanto soles cobrar?`, deja `GASTOS FIJOS` en una sola linea con `maxChars: 12` y cambia el cierre a `AHORA TODO LISTO` con `YA PODES EMPEZAR ;-)`.
+- `frontend/styles/onboarding.css` baja las flechas de bienvenida, agranda levemente el caption de gastos fijos, agrega marcos a totales/secciones de ahorros/resumen y suaviza el marco de la columna de recorrido.
+- `frontend/scripts/utils.js` agrega helpers de formato de monto (`formatAmountText`, `bindAmountInputs`, `setAmountInputValue`) para separar miles con puntos mientras `normalizeAmount` conserva el guardado numerico.
+- `frontend/scripts/forms.js` y `frontend/scripts/render.js` aplican el formateo global a formularios, autocompletados de monto y configuracion.
+- `frontend/styles/main.css` y `frontend/styles/onboarding.css` alinean a la derecha los inputs monetarios formateados.
+- `frontend/index.html` sube cache-busting de assets a `4.0.1`.
+- `frontend/service-worker.js` sube cache a `finanzas-lcd-v401` y precachea assets `?v=4.0.1`.
+- `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` registra los prompts de esta iteracion.
+
+### Verificacion
+- `node --check frontend/scripts/utils.js`: OK.
+- `node --check frontend/scripts/forms.js`: OK.
+- `node --check frontend/scripts/onboarding.js`: OK.
+- `node --check frontend/scripts/render.js`: OK.
+- `Get-ChildItem frontend/scripts -Filter *.js | ForEach-Object { node --check $_.FullName }`: OK.
+- `node --check frontend/service-worker.js`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- Validacion Node de formato monetario: OK, `AMOUNT_FORMAT_OK`.
+- Validacion estatica Node de copy/cache del onboarding: OK, `ONBOARDING_COPY_CACHE_OK`.
+- `git diff --check`: OK; solo advertencias CRLF normales en Windows.
+
+### Despliegue
+- Commit: pendiente al cierre del hito.
+- Push: pendiente al cierre del hito.
+- URL publica a verificar: `https://nicolasverar.github.io/pirepirapp/`.
+
+### Pendientes
+- Recorrer visualmente el onboarding en dispositivo/PWA para ajustar posiciones finas de flechas si el boton fisico cambia por viewport.
+
 ## 2026-06-30 - Integracion onboarding y release v4.0
 
 ### Objetivo

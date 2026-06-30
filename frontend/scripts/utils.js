@@ -54,6 +54,49 @@
     return 'Gs. ' + sign + digits;
   }
 
+  function formatAmountText(value) {
+    var text = String(value === undefined || value === null ? '' : value).trim();
+    var sign = text.charAt(0) === '-' ? '-' : '';
+    var digits = text.replace(/\./g, '').replace(/[^\d]/g, '');
+    if (!digits) {
+      return '';
+    }
+    return sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function formatAmountInput(input) {
+    if (!input) {
+      return;
+    }
+    input.value = formatAmountText(input.value);
+  }
+
+  function setAmountInputValue(input, value) {
+    if (!input) {
+      return;
+    }
+    input.value = value === undefined || value === null || value === '' ? '' : String(value);
+    formatAmountInput(input);
+  }
+
+  function bindAmountInputs(root) {
+    qsa('input[data-money-input], input[type="number"][inputmode="numeric"]', root).forEach(function (input) {
+      if (input.getAttribute('data-money-bound') === 'true') {
+        return;
+      }
+      input.setAttribute('data-money-bound', 'true');
+      input.setAttribute('data-money-input', 'true');
+      input.setAttribute('inputmode', 'numeric');
+      if (input.type === 'number') {
+        input.type = 'text';
+      }
+      formatAmountInput(input);
+      input.addEventListener('input', function () {
+        formatAmountInput(input);
+      });
+    });
+  }
+
   function formatPercent(value) {
     var number = Number(value || 0);
     return number.toLocaleString('es-PY', { maximumFractionDigits: 1 }) + '%';
@@ -226,6 +269,10 @@
     escapeHtml: escapeHtml,
     normalizeAmount: normalizeAmount,
     formatMoney: formatMoney,
+    formatAmountText: formatAmountText,
+    formatAmountInput: formatAmountInput,
+    setAmountInputValue: setAmountInputValue,
+    bindAmountInputs: bindAmountInputs,
     formatPercent: formatPercent,
     formatMovementDateTime: formatMovementDateTime,
     friendlyDate: friendlyDate,

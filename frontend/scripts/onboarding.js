@@ -15,10 +15,10 @@
 
   var steps = [
     { code: 'HOLA', title: 'BIENVENIDO/A', caption: '', type: 'welcome', status: 'bienvenida' },
-    { code: 'SUELDO', title: 'SUELDO', caption: 'Cuanto soles cobrar?', type: 'salary', status: 'sueldo mensual' },
-    { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido.', type: 'fixed', status: 'gastos fijos' },
+    { code: 'SUELDO', title: 'INGRESAR SUELDO', caption: '', type: 'salary', status: 'sueldo mensual' },
+    { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido', type: 'fixed', status: 'gastos fijos', maxChars: 12 },
     { code: 'AHORRO', title: 'AHORROS', caption: '', type: 'savings', status: 'ahorros' },
-    { code: 'LISTO', title: 'LISTO', caption: '', type: 'summary', status: 'listo' }
+    { code: 'LISTO', title: 'AHORA TODO LISTO', caption: 'YA PODES EMPEZAR ;-)', type: 'summary', status: 'listo' }
   ];
 
   var defaults = {
@@ -186,6 +186,9 @@
       renderWork(step),
       '</section>'
     ].join('');
+    if (utils.bindAmountInputs) {
+      utils.bindAmountInputs(root);
+    }
     updateChrome(step);
     typeStep(step);
     refreshDynamic();
@@ -517,7 +520,7 @@
       if (!mainEl || !active || saving) {
         return;
       }
-      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', true, step.type === 'welcome' ? 12 : 8);
+      mainEl.innerHTML = pixelText(mainValue.slice(0, mainCurrent), 'main', true, step.maxChars || (step.type === 'welcome' ? 12 : 8));
       mainCurrent += 1;
       if (mainCurrent <= mainValue.length) {
         typingTimer = setTimeout(tickMain, 176);
@@ -525,7 +528,7 @@
     }
 
     if (mainEl) {
-      mainEl.innerHTML = pixelText('', 'main', true, step.type === 'welcome' ? 12 : 8);
+      mainEl.innerHTML = pixelText('', 'main', true, step.maxChars || (step.type === 'welcome' ? 12 : 8));
       tickMain();
     }
   }
@@ -622,6 +625,7 @@
     var id;
     var field;
     var item;
+    var value;
     if (!active || !input) {
       return;
     }
@@ -629,12 +633,13 @@
     list = input.getAttribute('data-list');
     id = input.getAttribute('data-id');
     field = input.getAttribute('data-field');
+    value = amountInputValue(input);
     if (direct) {
-      draft[direct] = input.value;
+      draft[direct] = value;
     } else if (list && id && field) {
       item = findItem(list, id);
       if (item) {
-        item[field] = input.value;
+        item[field] = value;
       }
     }
     refreshDynamic();
@@ -651,6 +656,13 @@
       draft.savingsPlan[key] = Boolean(toggle.checked);
       render();
     }
+  }
+
+  function amountInputValue(input) {
+    if (!input || input.getAttribute('data-money-input') !== 'true') {
+      return input ? input.value : '';
+    }
+    return String(input.value || '').trim() ? String(utils.normalizeAmount(input.value)) : '';
   }
 
   function handleRootClick(event) {

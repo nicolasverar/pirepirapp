@@ -2925,6 +2925,10 @@ textarea {
   box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+input[data-money-input] {
+  text-align: right;
+}
+
 textarea {
   resize: vertical;
 }

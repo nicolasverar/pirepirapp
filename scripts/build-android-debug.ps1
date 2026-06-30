@@ -56,8 +56,9 @@ function Invoke-GradleBuild {
   New-Item -ItemType Directory -Force -Path $GradleHome | Out-Null
   Push-Location $androidDir
   try {
-    & .\gradlew.bat --gradle-user-home $GradleHome --no-daemon :app:assembleDebug
-    return $LASTEXITCODE
+    & .\gradlew.bat --gradle-user-home $GradleHome --no-daemon :app:assembleDebug 2>&1 | ForEach-Object { Write-Host $_ }
+    $code = $LASTEXITCODE
+    return $code
   } finally {
     Pop-Location
   }

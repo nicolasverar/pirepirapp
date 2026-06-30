@@ -69,3 +69,11 @@ npm run cap:build:debug
 ```
 
 Salida esperada: `android/app/build/outputs/apk/debug/app-debug.apk`. Android Studio usa su JBR 21; si se invoca `gradlew` directo desde consola, definir `JAVA_HOME` a JDK/JBR 21. Para un release instalable fuera de debug hace falta una keystore externa no versionada.
+
+Para generar un release local instalable, firmado fuera del repo:
+
+```powershell
+npm run cap:build:release-local
+```
+
+Salida esperada: `android/app/build/outputs/apk/release/app-release-local-signed.apk`. El archivo `app-release-unsigned.apk` es solo un intermedio sin firma y Android no lo instala. La keystore local se crea en `%LOCALAPPDATA%\Pirepirapp\android-signing\`, fuera del repositorio. Android puede seguir avisando por instalacion externa/Play Protect, pero el APK firmado ya no debe figurar como invalido.

@@ -1,5 +1,38 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - Release local firmado Android
+
+### Objetivo
+- Explicar y corregir la diferencia entre APK debug firmado y `app-release-unsigned.apk` invalido para instalacion.
+- Generar un release local instalable sin versionar claves ni contrasenas.
+
+### Cambios
+- `scripts/build-android-release-local.ps1` agrega build release local: prepara assets Android, compila `assembleRelease`, crea/reutiliza una keystore local fuera del repo en `%LOCALAPPDATA%\Pirepirapp\android-signing\`, ejecuta `zipalign`, firma con `apksigner`, verifica la firma y genera `app-release-local-signed.apk`.
+- `scripts/build-android-debug.ps1` corrige la captura del codigo de salida de Gradle para no confundir logs con exit code.
+- `package.json` agrega `npm run cap:build:release-local` y usa Gradle home local para builds debug/release con fallback temporal dentro de los scripts.
+- `README.md` aclara que `app-release-unsigned.apk` es invalido para instalar porque no esta firmado y documenta el nuevo APK release local instalable.
+- `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` registra el prompt de esta iteracion.
+
+### Verificacion
+- Parseo PowerShell de `scripts/build-android-release-local.ps1` y `scripts/build-android-debug.ps1`: OK.
+- Parseo JSON de `package.json`: OK.
+- `npm run cap:build:release-local`: OK, genera `ANDROID_RELEASE_LOCAL_SIGNED`.
+- `app-release-local-signed.apk`: OK, generado en `android/app/build/outputs/apk/release/`, `2.415.629` bytes.
+- `apksigner verify --verbose app-release-local-signed.apk`: OK, firmado con APK Signature Scheme v2 y v3, 1 firmante.
+- `aapt dump badging app-release-local-signed.apk`: OK, `applicationId=com.pirepirapp.local`, `versionCode=40002`, `versionName=4.0`, `minSdk=24`, `targetSdk=36`, label `Pirepirapp`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `powershell -File scripts/build-android-debug.ps1 -UseLocalGradleHome`: OK, `BUILD SUCCESSFUL`.
+- Busqueda de secretos versionables: OK; solo aparecen nombres de variables/rutas en el script, la keystore y contrasenas quedan fuera del repo.
+- `git diff --check`: OK; solo advertencias CRLF normales en Windows.
+
+### Despliegue
+- APK release local firmado e instalable generado localmente: `android/app/build/outputs/apk/release/app-release-local-signed.apk`.
+- El APK `android/app/build/outputs/apk/release/app-release-unsigned.apk` queda como intermedio no instalable porque no tiene firma.
+- Commit/push pendientes al momento de editar esta entrada.
+
+### Pendientes
+- Android puede seguir mostrando aviso por instalacion externa/Play Protect porque no viene de Play Store; eso es distinto de estar firmado. Para publicar formalmente hace falta una keystore definitiva de distribucion, guardada fuera del repo.
+
 ## 2026-06-30 - Preparacion APK Android v4.0.2
 
 ### Objetivo

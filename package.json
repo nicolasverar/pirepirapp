@@ -12,7 +12,8 @@
     "cap:sync": "cap sync android",
     "cap:copy": "cap copy android",
     "cap:open": "cap open android",
-    "cap:build:debug": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-android-debug.ps1"
+    "cap:build:debug": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-android-debug.ps1 -UseLocalGradleHome",
+    "cap:build:release-local": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-android-release-local.ps1 -UseLocalGradleHome"
   },
   "repository": {
     "type": "git",

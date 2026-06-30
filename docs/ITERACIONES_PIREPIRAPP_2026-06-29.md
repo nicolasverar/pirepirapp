@@ -23,3 +23,4 @@ Ultima edicion: 2026-06-30
 17. El usuario pidio continuar el trabajo en curso: "continua lo que hacias".
 18. El usuario pidio que las nuevas opciones de layout del tutorial se materialicen en un HTML: "hace las opciones con un html".
 19. El usuario pidio preparar la app como APK eficiente y listo para compilar en Android Studio: "olvidate de eso y conn todod lo qeu ya hciimos converti eso en un apk altamente eficiente y listo para que compile en adrodi studio y genere un apk instalable".
+20. El usuario consulto por que solo instalaba el APK debug y por que `app-release-unsigned.apk` salia invalido: "porporque solo me isntala el debug encima con salos de seguridad alertas qeu ignore nomas en im android pero el app release unsigned m sale no valido".

@@ -51,3 +51,21 @@ npm run test:smoke
 ```
 
 El smoke test simula modo local, cobro mensual, remanente continuo, panel post-cobro, gastos fijos, movimientos, ahorros, metas, wishlist, fotos y persistencia.
+
+## APK Android
+
+Antes de compilar en Android Studio, preparar los assets nativos:
+
+```powershell
+npm run android:prepare
+```
+
+Esto copia solo la app productiva desde `frontend/` hacia `android/app/src/main/assets/public/`, excluyendo laboratorios `previews/`, `data/` y archivos auxiliares que no deben entrar al APK. Luego abrir la carpeta `android/` en Android Studio y ejecutar `Build > Build APK(s)`.
+
+Para generar un APK debug instalable desde consola:
+
+```powershell
+npm run cap:build:debug
+```
+
+Salida esperada: `android/app/build/outputs/apk/debug/app-debug.apk`. Android Studio usa su JBR 21; si se invoca `gradlew` directo desde consola, definir `JAVA_HOME` a JDK/JBR 21. Para un release instalable fuera de debug hace falta una keystore externa no versionada.

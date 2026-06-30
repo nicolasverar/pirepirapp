@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $androidDir = Join-Path $repoRoot 'android'
+$prepareScript = Join-Path $repoRoot 'scripts\prepare-android-assets.ps1'
 $defaultGradleHome = Join-Path $repoRoot '.gradle-user'
 $localGradleHome = Join-Path $env:LOCALAPPDATA 'pirepirapp-gradle'
 
@@ -65,6 +66,11 @@ function Invoke-GradleBuild {
 $javaHome = Resolve-JavaHome
 $env:JAVA_HOME = $javaHome
 $env:Path = (Join-Path $javaHome 'bin') + ';' + $env:Path
+
+& $prepareScript
+if ($LASTEXITCODE -ne 0) {
+  exit $LASTEXITCODE
+}
 
 $configuredGradleHome = ''
 $usingTempGradleHome = $false

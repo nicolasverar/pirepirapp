@@ -7,8 +7,8 @@ android {
         applicationId "com.pirepirapp.local"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 40002
+        versionName "4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -17,8 +17,12 @@ android {
         }
     }
     buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+        }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,17 +52,16 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
-tasks.register('copyCapacitorWeb', Exec) {
-    workingDir rootProject.projectDir.parentFile
-    def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
-    if (isWindows) {
-        commandLine 'cmd', '/c', 'npm', 'run', 'cap:copy'
-    } else {
-        commandLine 'npm', 'run', 'cap:copy'
+tasks.register('ensureCapacitorWebAssets') {
+    def indexFile = file('src/main/assets/public/index.html')
+    doLast {
+        if (!indexFile.exists()) {
+            throw new GradleException('Android web assets missing. Run `npm run android:prepare` before building in Android Studio.')
+        }
     }
 }
 
-preBuild.dependsOn(copyCapacitorWeb)
+preBuild.dependsOn(ensureCapacitorWebAssets)
 
 try {
     def servicesJSON = file('google-services.json')

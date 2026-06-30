@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test:smoke": "node scripts/smoke-local-store.js",
+    "android:prepare": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-android-assets.ps1",
     "cap:sync": "cap sync android",
     "cap:copy": "cap copy android",
     "cap:open": "cap open android",

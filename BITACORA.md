@@ -1,5 +1,45 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - Preparacion APK Android v4.0.2
+
+### Objetivo
+- Convertir el estado actual de Pirepirapp en un proyecto Android listo para abrir en Android Studio y generar un APK instalable.
+- Optimizar el paquete nativo para que incluya solo la app productiva y no los laboratorios HTML.
+- Mantener la app local/offline y reducir trabajo innecesario en runtime Android.
+
+### Cambios
+- `scripts/prepare-android-assets.ps1` agrega una preparacion nativa controlada: borra y regenera `android/app/src/main/assets/public/`, copia solo la app productiva desde `frontend/`, excluye `previews/`, `data/`, `reset.html`, `.nojekyll`, `config.example.js` e imagenes auxiliares no usadas en APK.
+- `scripts/build-android-debug.ps1` ejecuta la preparacion de assets antes de Gradle y mantiene resolucion automatica de JDK/JBR 21.
+- `android/app/build.gradle` sube Android a `versionCode 40002` / `versionName 4.0`, agrega sufijo `4.0-debug`, activa `minifyEnabled` y `shrinkResources` en release, elimina el `preBuild` que dependia de `npm run cap:copy` y lo reemplaza por una verificacion simple de assets.
+- `android/app/src/main/AndroidManifest.xml` fija orientacion portrait para alinear APK con la app movil.
+- `frontend/scripts/app.js` evita registrar service worker dentro de Capacitor nativo para no duplicar cache ni trabajo en WebView.
+- `package.json` agrega `npm run android:prepare`.
+- `README.md` documenta preparacion Android, build debug instalable, salida del APK y requisito JDK/JBR 21 para Gradle directo.
+- `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` registra el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend/scripts/app.js`: OK.
+- Parseo JSON de `package.json` y `capacitor.config.json`: OK.
+- Parseo PowerShell de `scripts/prepare-android-assets.ps1` y `scripts/build-android-debug.ps1`: OK.
+- `npm run android:prepare`: OK, `ANDROID_ASSETS_PREPARED files=25 bytes=1153846`.
+- Validacion estatica de assets Android: OK, sin `previews`, sin `data`, sin `scripts/config.example.js`, con `onboarding.js?v=4.0.2`, `TODO LISTO` e `isNativeRuntime`.
+- `Get-ChildItem frontend/scripts -Filter *.js | ForEach-Object { node --check $_.FullName }`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `npm run cap:build:debug`: OK, genera `android/app/build/outputs/apk/debug/app-debug.apk` de `5.527.697` bytes.
+- `gradlew :app:assembleRelease` directo fallo inicialmente porque tomo Java 8 del sistema; reejecutado con `JAVA_HOME=C:\Program Files\Android\Android Studio\jbr`: OK.
+- `app-release-unsigned.apk`: OK, generado en `android/app/build/outputs/apk/release/`, `2.373.758` bytes, optimizado con R8/shrinkResources pero sin firma release.
+- `apksigner verify --verbose app-debug.apk`: OK, firmado con APK Signature Scheme v2, 1 firmante.
+- `aapt dump badging app-debug.apk`: OK, `applicationId=com.pirepirapp.local`, `versionCode=40002`, `versionName=4.0-debug`, `minSdk=24`, `targetSdk=36`, label `Pirepirapp`.
+- `git diff --check`: OK; solo advertencias CRLF normales en Windows.
+
+### Despliegue
+- APK debug instalable generado localmente: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- Release optimizado sin firma generado localmente: `android/app/build/outputs/apk/release/app-release-unsigned.apk`.
+- Commit/push pendientes al momento de editar esta entrada.
+
+### Pendientes
+- Para distribuir una release instalable fuera de debug, crear una keystore externa no versionada y configurar signing en Android Studio o variables locales.
+
 ## 2026-06-30 - Opciones HTML de layout onboarding v4.0.2
 
 ### Objetivo

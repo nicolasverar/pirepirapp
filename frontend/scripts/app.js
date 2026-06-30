@@ -1501,7 +1501,7 @@
   }
 
   function registerServiceWorker() {
-    if (!('serviceWorker' in navigator)) {
+    if (isNativeRuntime() || !('serviceWorker' in navigator)) {
       return;
     }
     window.addEventListener('load', function () {
@@ -1509,6 +1509,17 @@
         setStatus('PWA sin SW');
       });
     });
+  }
+
+  function isNativeRuntime() {
+    var capacitor = window.Capacitor;
+    if (!capacitor) {
+      return false;
+    }
+    if (typeof capacitor.isNativePlatform === 'function') {
+      return capacitor.isNativePlatform();
+    }
+    return typeof capacitor.getPlatform === 'function' && capacitor.getPlatform() !== 'web';
   }
 
   window.FinanzasApp = {

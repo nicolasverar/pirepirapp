@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#070808">
+    <title>Pirepirapp - opciones onboarding</title>
+    <link rel="stylesheet" href="../styles/lcd-theme.css?v=4.0.2">
+    <link rel="stylesheet" href="../styles/main.css?v=4.0.2">
+    <link rel="stylesheet" href="../styles/responsive.css?v=4.0.2">
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: #c4d08b;
+        background:
+          radial-gradient(circle at 50% 0, rgba(151, 162, 96, 0.08), transparent 34%),
+          linear-gradient(135deg, #070a07 0, #171d16 45%, #0e130d 100%);
+      }
+
+      .prototype-page {
+        display: grid;
+        gap: 14px;
+        width: min(100%, 980px);
+        margin: 0 auto;
+        padding: 12px;
+      }
+
+      .prototype-controls {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .prototype-key {
+        min-height: 34px;
+        color: rgba(236, 239, 239, 0.92);
+        background: linear-gradient(180deg, #303335 0, #1d2022 48%, #0b0c0d 100%);
+        border: 2px solid rgba(190, 194, 194, 0.22);
+        border-radius: 8px;
+        box-shadow:
+          inset 2px 2px 0 rgba(255, 255, 255, 0.08),
+          inset -4px -4px 0 rgba(0, 0, 0, 0.58);
+        text-transform: uppercase;
+        font-size: 0.64rem;
+        font-weight: 900;
+      }
+
+      .prototype-key.is-active {
+        border-color: rgba(236, 239, 239, 0.62);
+        background: linear-gradient(180deg, #3a3d40 0, #202325 50%, #0c0d0e 100%);
+      }
+
+      .prototype-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        align-items: start;
+      }
+
+      .prototype-shell {
+        width: min(100%, 440px);
+        justify-self: center;
+      }
+
+      .prototype-screen {
+        padding: 0;
+        overflow-y: auto;
+      }
+
+      .brand-version {
+        min-width: 68px;
+      }
+
+      .layout-stage {
+        --copy-height: 94px;
+        position: relative;
+        display: grid;
+        min-height: 100%;
+        gap: 5px;
+        padding: 7px 10px;
+        color: #071007;
+      }
+
+      .layout-stage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 18% 0, rgba(217, 229, 153, 0.2), transparent 24%),
+          radial-gradient(circle at 1px 1px, rgba(13, 21, 12, 0.2) 0 1px, transparent 1.35px) 0 0 / 5px 5px;
+        opacity: 0.74;
+      }
+
+      .layout-stage > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .layout-stage-a {
+        grid-template-rows: var(--copy-height) auto minmax(0, 1fr);
+      }
+
+      .layout-stage-b {
+        grid-template-rows: var(--copy-height) minmax(54px, 1fr) auto;
+      }
+
+      .copy-zone {
+        display: grid;
+        align-content: center;
+        gap: 3px;
+        min-height: var(--copy-height);
+      }
+
+      .pixel-title {
+        display: grid;
+        place-items: center;
+        min-height: 72px;
+      }
+
+      .pixel-word {
+        text-align: center;
+        text-transform: uppercase;
+        font-size: clamp(1.5rem, 7vw, 2.35rem);
+        line-height: 0.92;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .caption {
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 0.66rem;
+        line-height: 1;
+        font-weight: 900;
+      }
+
+      .layout-progress {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .layout-progress button {
+        min-height: 26px;
+        padding: 3px 2px;
+        color: #071007;
+        background: rgba(196, 208, 139, 0.14);
+        border: 1px solid rgba(7, 16, 7, 0.56);
+        border-radius: 3px;
+        text-transform: uppercase;
+        font-size: 0.48rem;
+        font-weight: 900;
+      }
+
+      .layout-progress button.is-active {
+        color: #c4d08b;
+        background:
+          repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
+          #071007;
+      }
+
+      .layout-body {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .layout-stage-b .layout-body {
+        align-self: end;
+        padding: 6px 7px;
+        border: 2px solid rgba(7, 16, 7, 0.68);
+        background:
+          repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.04) 0 1px, transparent 1px 4px),
+          rgba(196, 208, 139, 0.12);
+      }
+
+      .layout-stage-b .middle-space {
+        display: grid;
+        align-content: end;
+        min-height: 56px;
+      }
+
+      .layout-stage-b .middle-space::after {
+        content: "";
+        display: block;
+        height: 18px;
+        border-bottom: 2px dotted rgba(7, 16, 7, 0.38);
+      }
+
+      .layout-form {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(94px, 0.68fr);
+        gap: 6px;
+        align-items: end;
+        padding-bottom: 5px;
+        border-bottom: 2px solid rgba(7, 16, 7, 0.68);
+      }
+
+      .field-row.is-single {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .layout-field {
+        display: grid;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .layout-field span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-transform: uppercase;
+        font-size: 0.55rem;
+        font-weight: 900;
+      }
+
+      .layout-field input {
+        width: 100%;
+        min-width: 0;
+        min-height: 30px;
+        padding: 4px 5px;
+        color: #c4d08b;
+        background:
+          repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.07) 0 1px, transparent 1px 4px),
+          #071007;
+        border: 2px solid #071007;
+        border-radius: 0;
+        text-transform: uppercase;
+        font: inherit;
+        font-size: 0.72rem;
+        font-weight: 900;
+      }
+
+      .layout-field input.is-money {
+        text-align: right;
+      }
+
+      .layout-total,
+      .layout-panel {
+        display: grid;
+        gap: 5px;
+        padding: 6px 7px;
+        border: 2px solid rgba(7, 16, 7, 0.68);
+        background:
+          repeating-linear-gradient(90deg, rgba(7, 16, 7, 0.04) 0 1px, transparent 1px 4px),
+          rgba(196, 208, 139, 0.1);
+        text-transform: uppercase;
+        font-size: 0.62rem;
+        font-weight: 900;
+      }
+
+      .layout-total {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+      }
+
+      .choice-grid {
+        display: grid;
+        gap: 5px;
+      }
+
+      .choice-grid.is-wide {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .choice {
+        min-height: 42px;
+        padding: 5px 7px;
+        color: #071007;
+        background: rgba(196, 208, 139, 0.18);
+        border: 2px solid #071007;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+
+      .choice.is-active {
+        color: #c4d08b;
+        background:
+          repeating-linear-gradient(90deg, rgba(196, 208, 139, 0.075) 0 1px, transparent 1px 4px),
+          #071007;
+      }
+
+      .summary-lines {
+        display: grid;
+        gap: 0;
+        border-top: 2px solid #071007;
+      }
+
+      .summary-line {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        min-height: 28px;
+        align-items: center;
+        border-bottom: 2px solid #071007;
+      }
+
+      .key-zone .bottom-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .key-zone .nav-key > span {
+        display: grid;
+        place-items: center;
+        font-size: 0.52rem;
+        line-height: 1;
+        text-align: center;
+      }
+
+      @media (max-width: 860px) {
+        .prototype-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 380px) {
+        .prototype-controls {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .field-row,
+        .choice-grid.is-wide {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="prototype-page">
+      <nav class="prototype-controls" aria-label="Pasos del tutorial">
+        <button class="prototype-key is-active" type="button" data-step="0">Inicio</button>
+        <button class="prototype-key" type="button" data-step="1">Sueldo</button>
+        <button class="prototype-key" type="button" data-step="2">Fijos</button>
+        <button class="prototype-key" type="button" data-step="3">Ahorros</button>
+        <button class="prototype-key" type="button" data-step="4">Listo</button>
+      </nav>
+
+      <section class="prototype-grid" aria-label="Opciones de layout">
+        <div class="device-shell prototype-shell">
+          <header class="status-bar" aria-label="Pirepirapp">
+            <div class="brand-mark" aria-label="Pirepirapp">
+              <strong>PIREPIRAPP</strong>
+              <span class="brand-version">OPCION A</span>
+            </div>
+            <div class="status-terminal" aria-live="polite"><span>formulario ancho</span></div>
+          </header>
+          <main class="lcd-screen prototype-screen" data-preview="a" tabindex="-1"></main>
+          <section class="key-zone" aria-label="Acciones principales">
+            <button class="action-key" type="button"><span class="action-key-label">GUARDAR</span></button>
+            <nav class="bottom-nav" aria-label="Acciones del prototipo">
+              <button class="nav-key" type="button"><span>ATRAS</span></button>
+              <button class="nav-key" type="button"><span>SKIP</span></button>
+              <button class="nav-key" type="button"><span>REINICIAR</span></button>
+              <button class="nav-key is-active" type="button"><span>ENTRAR</span></button>
+            </nav>
+          </section>
+        </div>
+
+        <div class="device-shell prototype-shell">
+          <header class="status-bar" aria-label="Pirepirapp">
+            <div class="brand-mark" aria-label="Pirepirapp">
+              <strong>PIREPIRAPP</strong>
+              <span class="brand-version">OPCION B</span>
+            </div>
+            <div class="status-terminal" aria-live="polite"><span>formulario abajo</span></div>
+          </header>
+          <main class="lcd-screen prototype-screen" data-preview="b" tabindex="-1"></main>
+          <section class="key-zone" aria-label="Acciones principales">
+            <button class="action-key" type="button"><span class="action-key-label">GUARDAR</span></button>
+            <nav class="bottom-nav" aria-label="Acciones del prototipo">
+              <button class="nav-key" type="button"><span>ATRAS</span></button>
+              <button class="nav-key" type="button"><span>SKIP</span></button>
+              <button class="nav-key" type="button"><span>REINICIAR</span></button>
+              <button class="nav-key is-active" type="button"><span>ENTRAR</span></button>
+            </nav>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var steps = [
+          { code: 'HOLA', title: 'BIENVENIDO/A', caption: '', type: 'welcome' },
+          { code: 'SUELDO', title: 'INGRESAR SUELDO', caption: '', type: 'salary' },
+          { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido', type: 'fixed' },
+          { code: 'AHORRO', title: 'AHORROS', caption: '', type: 'savings' },
+          { code: 'LISTO', title: 'TODO LISTO', caption: '', type: 'summary' }
+        ];
+        var current = 1;
+
+        function money(value) {
+          return String(value || '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function render() {
+          document.querySelectorAll('[data-preview]').forEach(function (root) {
+            var variant = root.getAttribute('data-preview');
+            var step = steps[current];
+            root.innerHTML = [
+              '<section class="layout-stage layout-stage-' + variant + ' is-' + step.type + '">',
+              renderCopy(step),
+              variant === 'a' ? renderProgress() : '<div class="middle-space" aria-hidden="true"></div>',
+              '<section class="layout-body">',
+              variant === 'b' ? renderProgress() : '',
+              renderWork(step, variant),
+              '</section>',
+              '</section>'
+            ].join('');
+          });
+          document.querySelectorAll('[data-step]').forEach(function (button) {
+            button.classList.toggle('is-active', Number(button.getAttribute('data-step')) === current);
+          });
+        }
+
+        function renderCopy(step) {
+          return [
+            '<section class="copy-zone">',
+            '<div class="pixel-title"><strong class="pixel-word">' + step.title + '</strong></div>',
+            step.caption ? '<p class="caption">' + step.caption + '</p>' : '',
+            '</section>'
+          ].join('');
+        }
+
+        function renderProgress() {
+          return [
+            '<nav class="layout-progress" aria-label="Recorrido">',
+            steps.map(function (step, index) {
+              return '<button class="' + (index === current ? 'is-active' : '') + '" type="button" data-step="' + index + '">0' + (index + 1) + '</button>';
+            }).join(''),
+            '</nav>'
+          ].join('');
+        }
+
+        function renderWork(step, variant) {
+          if (step.type === 'welcome') {
+            return '<section class="layout-panel">COMENZAR DESDE LOS BOTONES FISICOS</section>';
+          }
+          if (step.type === 'salary') {
+            return [
+              '<form class="layout-form">',
+              '<div class="field-row is-single">',
+              field('Ingreso mensual', money('4200000'), true),
+              '</div>',
+              '<div class="layout-total"><span>Libre inicial</span><b>Gs. 4.200.000</b></div>',
+              '</form>'
+            ].join('');
+          }
+          if (step.type === 'fixed') {
+            return [
+              '<form class="layout-form">',
+              '<div class="field-row">',
+              field('Nombre completo del gasto', 'Alquiler', false),
+              field('Monto mensual', money('1500000'), true),
+              '</div>',
+              '<div class="field-row">',
+              field('Nombre completo del gasto', 'Internet', false),
+              field('Monto mensual', money('180000'), true),
+              '</div>',
+              '<div class="layout-total"><span>Total fijos</span><b>Gs. 1.680.000</b></div>',
+              '</form>'
+            ].join('');
+          }
+          if (step.type === 'savings') {
+            return [
+              '<form class="layout-form">',
+              '<div class="choice-grid' + (variant === 'a' ? ' is-wide' : '') + '">',
+              '<button class="choice is-active" type="button">Futuro</button>',
+              '<button class="choice" type="button">Meta</button>',
+              '<button class="choice" type="button">Cosa</button>',
+              '</div>',
+              '<div class="layout-panel">',
+              '<div class="field-row">',
+              field('Nombre', 'Fondo', false),
+              field('Mensual', money('350000'), true),
+              '</div>',
+              '<div class="field-row">',
+              field('Plazo', '12 meses', false),
+              field('Acumulado', money('500000'), true),
+              '</div>',
+              '</div>',
+              '<div class="layout-total"><span>Ahorro mensual</span><b>Gs. 350.000</b></div>',
+              '</form>'
+            ].join('');
+          }
+          return [
+            '<section class="layout-panel">',
+            '<div class="summary-lines">',
+            line('Sueldo', 'Gs. 4.200.000'),
+            line('Gastos fijos', 'Gs. 1.680.000'),
+            line('Ahorros', 'Gs. 350.000'),
+            line('Libre', 'Gs. 2.170.000'),
+            '</div>',
+            '</section>'
+          ].join('');
+        }
+
+        function field(label, value, moneyField) {
+          return [
+            '<label class="layout-field">',
+            '<span>' + label + '</span>',
+            '<input class="' + (moneyField ? 'is-money' : '') + '" value="' + value + '">',
+            '</label>'
+          ].join('');
+        }
+
+        function line(label, value) {
+          return '<div class="summary-line"><span>' + label + '</span><b>' + value + '</b></div>';
+        }
+
+        document.addEventListener('click', function (event) {
+          var button = event.target.closest('[data-step]');
+          if (!button) {
+            return;
+          }
+          current = Number(button.getAttribute('data-step'));
+          render();
+        });
+
+        render();
+      }());
+    </script>
+  </body>
+</html>

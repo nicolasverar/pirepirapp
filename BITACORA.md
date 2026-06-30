@@ -1,5 +1,35 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - Opciones HTML de layout onboarding v4.0.2
+
+### Objetivo
+- Crear un HTML de prueba con dos opciones de distribucion para el tutorial inicial, enfocado en posicion de formularios.
+- Quitar del cierre real el texto extendido y dejar solo `TODO LISTO`.
+- Forzar cache-busting interno con `4.0.2` manteniendo la version visible `v4.0`.
+
+### Cambios
+- `frontend/previews/onboarding-layout-options.html` agrega dos prototipos lado a lado:
+  - Opcion A: formulario ancho bajo el titulo LCD y recorrido horizontal compacto.
+  - Opcion B: formulario anclado abajo, sin grilla vertical lateral, con el recorrido integrado al area inferior.
+- `frontend/scripts/onboarding.js` cambia el ultimo paso real a `TODO LISTO` sin caption.
+- `frontend/index.html` sube las referencias de assets a `4.0.2`.
+- `frontend/service-worker.js` sube el cache productivo a `finanzas-lcd-v402` y precachea assets `?v=4.0.2`.
+- `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` registra el prompt de esta iteracion.
+
+### Verificacion
+- `node --check frontend/scripts/onboarding.js`: OK.
+- `node --check frontend/service-worker.js`: OK.
+- `Get-ChildItem frontend/scripts -Filter *.js | ForEach-Object { node --check $_.FullName }`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- `git diff --check`: OK; solo advertencias CRLF normales en Windows.
+- Validacion estatica Node de onboarding/layout/cache: OK, `ONBOARDING_LAYOUT_OPTIONS_OK`.
+
+### Despliegue
+- Pendiente.
+
+### Pendientes
+- Elegir con el usuario si conviene avanzar con Opcion A u Opcion B antes de integrar una nueva distribucion al onboarding real.
+
 ## 2026-06-30 - Ajustes finos onboarding y montos v4.0.1
 
 ### Objetivo

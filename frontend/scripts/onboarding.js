@@ -18,7 +18,7 @@
     { code: 'SUELDO', title: 'INGRESAR SUELDO', caption: '', type: 'salary', status: 'sueldo mensual' },
     { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido', type: 'fixed', status: 'gastos fijos', maxChars: 12 },
     { code: 'AHORRO', title: 'AHORROS', caption: '', type: 'savings', status: 'ahorros' },
-    { code: 'LISTO', title: 'AHORA TODO LISTO', caption: 'YA PODES EMPEZAR ;-)', type: 'summary', status: 'listo' }
+    { code: 'LISTO', title: 'TODO LISTO', caption: '', type: 'summary', status: 'listo' }
   ];
 
   var defaults = {

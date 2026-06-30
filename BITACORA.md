@@ -25,7 +25,14 @@
 - Validacion estatica Node de onboarding/layout/cache: OK, `ONBOARDING_LAYOUT_OPTIONS_OK`.
 
 ### Despliegue
-- Pendiente.
+- `git commit -m "Crear opciones HTML de onboarding"`: OK, commit `f5a879a`.
+- `git push origin main`: OK, `4774aac..f5a879a`.
+- GitHub Actions Pages: OK, run `https://github.com/nicolasverar/pirepirapp/actions/runs/28467606987`, `completed/success`.
+- Primer chequeo publico con ruta `/frontend/...`: 404 esperado para esa ruta; Pages publica `frontend/` como raiz.
+- URL publica `https://nicolasverar.github.io/pirepirapp/previews/onboarding-layout-options.html?v=f5a879a`: OK, contiene `OPCION A`, `OPCION B` y `TODO LISTO`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/?v=f5a879a`: OK, sirve cache-busting `onboarding.js?v=4.0.2`.
+- URL publica `service-worker.js?v=f5a879a`: OK, contiene `finanzas-lcd-v402`.
+- URL publica `scripts/onboarding.js?v=f5a879a`: OK, contiene `TODO LISTO` y ya no contiene `AHORA TODO LISTO` ni `YA PODES EMPEZAR`.
 
 ### Pendientes
 - Elegir con el usuario si conviene avanzar con Opcion A u Opcion B antes de integrar una nueva distribucion al onboarding real.

@@ -32,9 +32,14 @@
 - `git clean -ndX`: solo listo dependencias/caches/salidas ignoradas (`node_modules`, `.tool-cache`, Gradle, Android build, `frontend/data`); no se borraron porque son generados locales utiles o potencialmente necesarios para builds.
 
 ### Despliegue
-- Commit: pendiente al cerrar el hito.
-- Push: pendiente al cerrar el hito.
-- URL publica a verificar: `https://nicolasverar.github.io/pirepirapp/`.
+- `git commit -m "Integrar onboarding inicial v4.0"`: OK, commit `07c0608`.
+- `git push origin main`: OK, `613a02d..07c0608`.
+- GitHub Actions Pages: OK, run `https://github.com/nicolasverar/pirepirapp/actions/runs/28454259647`, `completed/success`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/?v=07c0608c`: OK, sirve `v4.0`, `onboarding.js?v=4.0` y `onboarding.css?v=4.0`.
+- URL publica `scripts/config.js?v=07c0608c`: OK, contiene `APP_VERSION: 'v4.0'`.
+- URL publica `service-worker.js?v=07c0608c`: OK, contiene `finanzas-lcd-v400` y precache de `onboarding.js?v=4.0`.
+- URL publica `scripts/onboarding.js?v=07c0608c`: OK, contiene `pirepirappOnboarding:v4.0`.
+- URL publica `styles/onboarding.css?v=07c0608c`: OK, contiene `.onboarding-stage`.
 
 ### Pendientes
 - Recorrido visual manual en navegador/PWA para ajustar microespaciado real del onboarding si aparece algun detalle de pantalla.

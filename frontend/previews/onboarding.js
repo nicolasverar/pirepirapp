@@ -17,7 +17,7 @@
     { code: 'HOLA', title: 'BIENVENIDO/A', caption: '', type: 'welcome', status: 'bienvenida' },
     { code: 'SUELDO', title: 'SUELDO', caption: 'Cuanto soles cobrar?', type: 'salary', status: 'sueldo mensual' },
     { code: 'GASTOS', title: 'GASTOS FIJOS', caption: 'Defini gastos mensuales con nombre y apellido.', type: 'fixed', status: 'gastos fijos' },
-    { code: 'AHORRO', title: 'AHORROS', caption: 'Anadir ahorro segun se trate de:', type: 'savings', status: 'ahorros' },
+    { code: 'AHORRO', title: 'AHORROS', caption: '', type: 'savings', status: 'ahorros' },
     { code: 'LISTO', title: 'LISTO', caption: '', type: 'summary', status: 'listo' }
   ];
 
@@ -424,16 +424,20 @@
     var maxChars = maxCharsOverride || (kind === 'main' ? 8 : 24);
     var maxLines = kind === 'main' ? 2 : 1;
     var viewWidth = kind === 'main' ? 300 : 320;
-    var viewHeight = kind === 'main' ? 98 : 30;
+    var viewHeight = kind === 'main' ? 82 : 30;
     var lineHeight = 7 * (cell + gap) - gap + (kind === 'main' ? 7 : 4);
+    var lineBoxHeight = 7 * (cell + gap) - gap;
     var active = [];
     var ghost = [];
-    wrapText(value, maxChars).slice(0, maxLines).forEach(function (line, lineIndex) {
+    var lines = wrapText(value, maxChars).slice(0, maxLines);
+    var textHeight = lines.length * lineBoxHeight + Math.max(0, lines.length - 1) * (lineHeight - lineBoxHeight);
+    var baseY = center ? Math.max(0, (viewHeight - textHeight) / 2) : 0;
+    lines.forEach(function (line, lineIndex) {
       var offsetX = center ? Math.max(0, (viewWidth - pixelLineWidth(line, cell, gap, charGap)) / 2) : 0;
-      drawPixelLine(line, offsetX, lineIndex * lineHeight, cell, gap, charGap, active, ghost);
+      drawPixelLine(line, offsetX, baseY + lineIndex * lineHeight, cell, gap, charGap, active, ghost);
     });
     return [
-      '<svg viewBox="0 0 ' + viewWidth + ' ' + viewHeight + '" preserveAspectRatio="xMinYMin meet" role="img" aria-label="' + escapeHtml(value) + '">',
+      '<svg viewBox="0 0 ' + viewWidth + ' ' + viewHeight + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + escapeHtml(value) + '">',
       '<g class="pixel-terminal-ghost">' + ghost.join('') + '</g>',
       '<g class="pixel-terminal-active">' + active.join('') + '</g>',
       '</svg>'

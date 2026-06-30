@@ -1,5 +1,32 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - B3 centrado y compactacion final
+
+### Objetivo
+- Centrar correctamente el texto LCD que se escribe.
+- Eliminar la bajada de `AHORROS` para que no reserve espacio vertical.
+- Compactar el bloque tutorial y quitar reservas flexibles que generaban espacio muerto.
+
+### Cambios
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` suben cache-busting a `20260630-a`.
+- `frontend/previews/onboarding.js` deja vacio el caption de `AHORROS`.
+- El SVG del texto LCD cambia a `preserveAspectRatio="xMidYMid meet"`.
+- El generador `pixelText()` calcula `baseY` para centrar verticalmente las lineas escritas dentro del `viewBox`.
+- `frontend/previews/onboarding.css` reduce `--onboarding-copy-height` a `94px`, elimina la fila flexible del stage y compacta el display principal.
+- La bienvenida deja de reservar la linea superior invisible: ahora se oculta con `display: none`.
+- Se actualizo `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` con el prompt de esta iteracion y fecha de ultima edicion.
+
+### Verificacion
+- `node --check frontend\previews\onboarding.js`: OK.
+- Validacion estatica Node de cache-busting `20260630-a`, AHORROS sin caption, centrado `xMidYMid`, `baseY` y altura compacta: OK, `onboarding center compact static ok`.
+- Validacion runtime Node con DOM simulado para bienvenida, AHORROS y campos de plazo: OK, `onboarding center compact runtime ok`.
+- `git diff --check`: OK.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+
+### Pendientes
+- Publicar y verificar URL publica con cache-busting despues del commit.
+- Recorrer visualmente B3 para confirmar que el titulo centrado no quede demasiado chico.
+
 ## 2026-06-29 - B3 compactacion y plazos en ahorros
 
 ### Objetivo

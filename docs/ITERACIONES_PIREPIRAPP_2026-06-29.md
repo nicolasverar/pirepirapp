@@ -1,6 +1,6 @@
 # Iteraciones Pirepirapp
 
-Ultima edicion: 2026-06-29
+Ultima edicion: 2026-06-30
 
 ## Secuencia de prompts
 
@@ -17,3 +17,4 @@ Ultima edicion: 2026-06-29
 11. El usuario pidio eliminar el cierre `Empieza el bailongo`, agrandar aun mas la letra escrita, hacer mas lenta la escritura general y rehacer las flechas porque se veian gruesas, descentradas, poco pixel art y sin movimiento vertical: "elimina empieza el bailongo hace aun mas grande la letra que se escribe y que sea mas lento al escribtura en general, las flechas son un fracaso se ven gordas y no estan centradas, no aprecen pixel art y no se mueven de arriba para abajo".
 12. El usuario pidio mantener consistencia de altura en todas las diapositivas y subir la grilla para aprovechar mejor el espacio debajo del tutorial: "en todasas las diapositivas mantene consisstencia de altura preferiblemente quel usio  ja ddeesbajo dl  tutorial, eso implica subiir mas la grilla parra aprovechar el  espaacio".
 13. El usuario pidio eliminar el espacio vertical sobrante, quitar el texto final `Ya podes usar la app`, pasos inferiores y guiones horizontales de completacion por redundantes, y ajustar `AHORROS` con copy nuevo y plazos de tiempo: "sigue habiendo mucho espacio sobrante vertical soluciona eso ajusta todo y a segurate que no haya ese espacio, ya podes usar la app los pasos abajo y los guiones horizontales de compeltacion elimina,  sale dos veces es redundante,  en ahorros pone anadir ahorro segun se trate de:  y con posibilidad de poner plazos de tiempot tambien".
+14. El usuario pidio centrar correctamente el texto que se escribe, eliminar en `AHORROS` la bajada `Anadir ahorro...`, centrar esa pantalla correctamente y ocuparse del espacio muerto para que no exista: "centra el texto que se escribe correctamente, en ahorros elimina nomas ese que dice anadir ahorro blabla y tambine centra correctamente y ocupate del espacio muerto asegurate que no exista espacio muerto".

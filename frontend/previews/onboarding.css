@@ -6,7 +6,7 @@ body {
 }
 
 .onboarding-stage {
-  --onboarding-copy-height: 118px;
+  --onboarding-copy-height: 94px;
 }
 
 .onboarding-preview-shell {
@@ -21,15 +21,16 @@ body {
 .onboarding-stage {
   position: relative;
   display: grid;
-  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr);
-  gap: 5px;
+  grid-template-rows: auto var(--onboarding-copy-height) auto;
+  gap: 4px;
   min-height: 100%;
-  padding: 8px 10px;
+  align-content: start;
+  padding: 7px 10px;
   color: #071007;
 }
 
 .onboarding-stage.is-step-welcome {
-  grid-template-rows: auto var(--onboarding-copy-height) minmax(0, 1fr);
+  grid-template-rows: var(--onboarding-copy-height) auto;
   align-content: start;
 }
 
@@ -50,8 +51,7 @@ body {
 }
 
 .is-step-welcome .onboarding-topline {
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
 }
 
 .onboarding-topline {
@@ -98,21 +98,25 @@ body {
 
 .onboarding-copy {
   display: grid;
-  gap: 5px;
+  gap: 3px;
   height: var(--onboarding-copy-height);
   min-height: 0;
   align-content: center;
+  justify-items: center;
 }
 
 .is-step-welcome .onboarding-copy {
   height: var(--onboarding-copy-height);
   min-height: 0;
   align-content: center;
+  justify-items: center;
 }
 
 .pixel-terminal {
   display: grid;
+  justify-items: center;
   gap: 3px;
+  width: 100%;
   min-width: 0;
 }
 
@@ -124,11 +128,11 @@ body {
 }
 
 .pixel-terminal-main {
-  height: 94px;
+  height: 72px;
 }
 
 .is-step-welcome .pixel-terminal-main {
-  height: 108px;
+  height: 86px;
 }
 
 .pixel-terminal svg {
@@ -150,8 +154,8 @@ body {
   text-align: center;
   text-transform: uppercase;
   color: #071007;
-  font-size: 0.64rem;
-  line-height: 1.08;
+  font-size: 0.6rem;
+  line-height: 1;
   font-weight: 900;
 }
 
@@ -164,7 +168,7 @@ body {
   display: grid;
   justify-items: center;
   align-content: start;
-  min-height: 74px;
+  min-height: 54px;
 }
 
 .is-terminal .onboarding-work {
@@ -191,7 +195,7 @@ body {
   justify-items: center;
   align-content: start;
   width: 100%;
-  min-height: 72px;
+  min-height: 52px;
   padding-top: 0;
   text-transform: uppercase;
   font-weight: 900;
@@ -624,7 +628,7 @@ body {
 
 @media (max-width: 380px) {
   .onboarding-stage {
-    --onboarding-copy-height: 108px;
+    --onboarding-copy-height: 88px;
   }
 
   .onboarding-stage {
@@ -632,11 +636,11 @@ body {
   }
 
   .pixel-terminal-main {
-    height: 84px;
+    height: 66px;
   }
 
   .is-step-welcome .pixel-terminal-main {
-    height: 98px;
+    height: 78px;
   }
 
   .is-console .onboarding-work {

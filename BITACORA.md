@@ -35,7 +35,11 @@
 ### Despliegue
 - APK debug instalable generado localmente: `android/app/build/outputs/apk/debug/app-debug.apk`.
 - Release optimizado sin firma generado localmente: `android/app/build/outputs/apk/release/app-release-unsigned.apk`.
-- Commit/push pendientes al momento de editar esta entrada.
+- `git commit -m "Preparar APK Android v4"`: OK, commit `17090f7`.
+- `git push origin main`: OK, `55fc6a4..17090f7`.
+- GitHub Actions Pages: OK, run `https://github.com/nicolasverar/pirepirapp/actions/runs/28469895683`, `completed/success`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/scripts/app.js?v=17090f7`: OK, contiene `isNativeRuntime`.
+- URL publica `https://nicolasverar.github.io/pirepirapp/?v=17090f7`: OK, mantiene version visible `v4.0` y referencias `app.js?v=4.0.2`.
 
 ### Pendientes
 - Para distribuir una release instalable fuera de debug, crear una keystore externa no versionada y configurar signing en Android Studio o variables locales.

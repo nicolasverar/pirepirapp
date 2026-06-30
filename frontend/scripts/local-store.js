@@ -8,6 +8,7 @@
   var STATE_KEY = 'state';
   var FALLBACK_KEY = 'pirepirappLocalState';
   var FALLBACK_PRIORITY_KEY = 'pirepirappLocalStatePreferFallback';
+  var SAVE_META_KEY = 'pirepirappLocalSaveMeta';
   var BACKUP_SCHEMA = 'pirepirapp-local-backup';
   var BACKUP_SCHEMA_VERSION = 1;
   var ACTIVE = 'Activo';
@@ -183,9 +184,10 @@
 
   function saveState(state) {
     var clean = ensureState(state);
-    saveFallbackState(clean);
+    var fallbackSaved = saveFallbackState(clean);
     return openDb().then(function (db) {
       if (!db) {
+        writeSaveMeta(fallbackSaved ? 'fallback' : 'unavailable', fallbackSaved ? 'ok' : 'error', 'indexeddb unavailable');
         return null;
       }
       return new Promise(function (resolve) {
@@ -194,18 +196,22 @@
           tx.objectStore(STORE_NAME).put(clean, STATE_KEY);
           tx.oncomplete = function () {
             clearFallbackPriority();
+            writeSaveMeta('indexeddb', 'ok', fallbackSaved ? '' : 'fallback unavailable');
             resolve(null);
           };
           tx.onerror = function () {
             markFallbackPriority();
+            writeSaveMeta(fallbackSaved ? 'fallback' : 'unavailable', fallbackSaved ? 'ok' : 'error', indexedDbError(tx));
             resolve(null);
           };
           tx.onabort = function () {
             markFallbackPriority();
+            writeSaveMeta(fallbackSaved ? 'fallback' : 'unavailable', fallbackSaved ? 'ok' : 'error', indexedDbError(tx));
             resolve(null);
           };
         } catch (error) {
           markFallbackPriority();
+          writeSaveMeta(fallbackSaved ? 'fallback' : 'unavailable', fallbackSaved ? 'ok' : 'error', error && error.message);
           resolve(null);
         }
       });
@@ -248,8 +254,10 @@
   function saveFallbackState(state) {
     try {
       localStorage.setItem(FALLBACK_KEY, JSON.stringify(state));
+      return true;
     } catch (error) {
       // Storage quota can be reached if many photos are saved in fallback mode.
+      return false;
     }
   }
 
@@ -277,6 +285,32 @@
     }
   }
 
+  function writeSaveMeta(channel, status, detail) {
+    try {
+      localStorage.setItem(SAVE_META_KEY, JSON.stringify({
+        channel: channel,
+        status: status,
+        detail: detail || '',
+        savedAt: timestamp(),
+        version: (window.FINANZAS_CONFIG && window.FINANZAS_CONFIG.APP_VERSION) || ''
+      }));
+    } catch (error) {
+      // Metadata is diagnostic only; the state write already ran.
+    }
+  }
+
+  function readSaveMeta() {
+    try {
+      return JSON.parse(localStorage.getItem(SAVE_META_KEY) || 'null');
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function indexedDbError(tx) {
+    return (tx && tx.error && tx.error.message) || 'indexeddb write failed';
+  }
+
   function ensureState(source) {
     var base = source && typeof source === 'object' ? clone(source) : {};
     base.config = normalizeConfig(base.config || {});
@@ -302,7 +336,9 @@
       ultimoMesCobrado: String(config.ultimoMesCobrado || '').slice(0, 7),
       categorias: normalizeCategories(config.categorias || config.categories),
       gastosFijos: normalizeFixedExpenses(config.gastosFijos || config.fixedExpenses, salary),
-      zonaHoraria: String(config.zonaHoraria || 'America/Asuncion')
+      zonaHoraria: String(config.zonaHoraria || 'America/Asuncion'),
+      onboardingVersion: String(config.onboardingVersion || ''),
+      onboardingUpdatedAt: String(config.onboardingUpdatedAt || '')
     };
   }
 
@@ -495,6 +531,7 @@
       id: existing ? existing.id : nextId('aho'),
       titulo: String(payload.titulo || (existing || {}).titulo || '').trim(),
       descripcion: String(payload.descripcion || (existing || {}).descripcion || ''),
+      plazo: String(payload.plazo || (existing || {}).plazo || '').trim(),
       montoMensual: utils.normalizeAmount(payload.montoMensual !== undefined ? payload.montoMensual : (existing || {}).montoMensual),
       montoAcumulado: utils.normalizeAmount(payload.montoAcumulado !== undefined ? payload.montoAcumulado : (existing || {}).montoAcumulado),
       estado: payload.estado || (existing || {}).estado || ACTIVE,
@@ -513,6 +550,7 @@
       id: existing ? existing.id : nextId('met'),
       titulo: String(payload.titulo || (existing || {}).titulo || '').trim(),
       descripcion: String(payload.descripcion || (existing || {}).descripcion || ''),
+      plazo: String(payload.plazo || (existing || {}).plazo || '').trim(),
       montoMensual: utils.normalizeAmount(payload.montoMensual !== undefined ? payload.montoMensual : (existing || {}).montoMensual),
       montoObjetivo: target,
       montoAcumulado: accumulated,
@@ -538,7 +576,8 @@
     var item = Object.assign({}, existing || {}, {
       id: existing ? existing.id : nextId('wis'),
       titulo: String(payload.titulo || (existing || {}).titulo || '').trim(),
-      descripcion: '',
+      descripcion: String(payload.descripcion !== undefined ? payload.descripcion : ((existing || {}).descripcion || '')),
+      plazo: String(payload.plazo || (existing || {}).plazo || '').trim(),
       costoAproximado: utils.normalizeAmount(payload.costoAproximado !== undefined ? payload.costoAproximado : (existing || {}).costoAproximado),
       imageDriveId: image.imageDriveId,
       imageRef: image.imageRef,
@@ -565,7 +604,8 @@
     }
     var goal = upsertGoal(state, {
       titulo: item.titulo,
-      descripcion: payload.descripcion || '',
+      descripcion: payload.descripcion || item.descripcion || '',
+      plazo: payload.plazo || item.plazo || '',
       montoMensual: utils.normalizeAmount(payload.montoMensual || payload.monthlyAmount),
       montoObjetivo: item.costoAproximado,
       montoAcumulado: 0,
@@ -1157,6 +1197,7 @@
     request: request,
     loadState: loadState,
     saveState: saveState,
+    readSaveMeta: readSaveMeta,
     exportBackup: exportBackup,
     importBackup: importBackup
   };

@@ -52,6 +52,8 @@ async function run() {
   await window.FinanzasApi.request('updateConfig', {
     sueldoMensual: 5000000,
     mesActual: '2026-05',
+    onboardingVersion: 'v4.0',
+    onboardingUpdatedAt: '2026-06-30T00:00:00.000Z',
     categorias: ['Alimentacion', 'Transporte', 'Disponible', 'Wishlist', 'Otros'],
     gastosFijos: [
       { nombre: 'Alquiler', monto: 1000000 },
@@ -80,6 +82,7 @@ async function run() {
   const saving = await window.FinanzasApi.request('createFutureSaving', {
     titulo: 'Fondo emergencia',
     descripcion: 'Reserva',
+    plazo: '12 meses',
     montoMensual: 250000,
     montoAcumulado: 100000
   });
@@ -87,6 +90,7 @@ async function run() {
   const goal = await window.FinanzasApi.request('createGoal', {
     titulo: 'Notebook',
     descripcion: 'Trabajo',
+    plazo: '6 meses',
     montoMensual: 400000,
     montoObjetivo: 3000000,
     imageBase64: 'data:image/png;base64,goal'
@@ -95,6 +99,7 @@ async function run() {
   const wish = await window.FinanzasApi.request('createWishlistItem', {
     titulo: 'Auriculares',
     costoAproximado: 350000,
+    plazo: '3 meses',
     imageBase64: 'data:image/png;base64,wish'
   });
 
@@ -208,6 +213,8 @@ async function run() {
   assert.strictEqual(converted.wishlistItem.estado, 'Convertido', 'Wishlist convertida debe cambiar estado');
 
   bootstrap = await window.FinanzasApi.request('bootstrap', {});
+  assert.strictEqual(bootstrap.config.onboardingVersion, 'v4.0', 'Config debe conservar version de onboarding');
+  assert.strictEqual(bootstrap.config.onboardingUpdatedAt, '2026-06-30T00:00:00.000Z', 'Config debe conservar fecha de onboarding');
   const summary = bootstrap.resumen;
 
   assert.strictEqual(summary.mes, '2026-05');
@@ -234,17 +241,23 @@ async function run() {
 
   const refreshedSaving = bootstrap.ahorrosFuturo.find((item) => item.id === saving.id);
   assert.strictEqual(refreshedSaving.montoAcumulado, 350000, 'Aporte debe acumular ahorro');
+  assert.strictEqual(refreshedSaving.plazo, '12 meses', 'Ahorro futuro debe conservar plazo inicial');
 
   const refreshedGoal = bootstrap.metas.find((item) => item.id === goal.id);
   assert.strictEqual(refreshedGoal.montoAcumulado, 400000, 'Aporte debe acumular meta');
+  assert.strictEqual(refreshedGoal.plazo, '6 meses', 'Meta debe conservar plazo inicial');
   assert.ok(refreshedGoal.porcentaje > 13 && refreshedGoal.porcentaje < 14, 'Meta debe recalcular porcentaje');
 
   assert.ok(!bootstrap.wishlist.some((item) => item.id === wish.id), 'Wishlist comprada no debe quedar activa');
   assert.ok(!bootstrap.wishlist.some((item) => item.id === secondWish.id), 'Wishlist convertida no debe quedar activa');
 
   const state = await window.FinanzasLocalStore.loadState();
+  const archivedWish = state.wishlist.find((item) => item.id === wish.id);
+  assert.strictEqual(archivedWish.plazo, '3 meses', 'Wishlist debe conservar plazo inicial aunque se archive');
   assert.strictEqual(state.movimientos.length, 10, 'Persistencia local debe conservar movimientos');
   assert.ok(Object.keys(state.photos).length >= 2, 'Persistencia local debe conservar fotos');
+  assert.strictEqual(window.FinanzasLocalStore.readSaveMeta().channel, 'fallback', 'Sin IndexedDB debe registrar fallback como canal de guardado');
+  assert.strictEqual(window.FinanzasLocalStore.readSaveMeta().status, 'ok', 'Fallback local debe quedar marcado como OK');
 
   const backup = await window.FinanzasLocalStore.exportBackup();
   assert.strictEqual(backup.schema, 'pirepirapp-local-backup', 'Backup debe identificar su esquema');

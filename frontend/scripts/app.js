@@ -16,13 +16,20 @@
     window.FinanzasState.subscribe(window.FinanzasRender.render);
     syncVersionLabels();
     bindGlobalActions();
+    if (window.FinanzasOnboarding) {
+      window.FinanzasOnboarding.bind();
+    }
     registerServiceWorker();
     loadMovementGuards();
     var hadCache = loadCachedBootstrap();
     if (!hadCache) {
       window.FinanzasRender.render();
     }
-    refresh({ background: hadCache });
+    refresh({ background: hadCache }).then(function () {
+      if (window.FinanzasOnboarding) {
+        window.FinanzasOnboarding.maybeStart();
+      }
+    });
   }
 
   function bindGlobalActions() {

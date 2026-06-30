@@ -4,6 +4,7 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 
 ## Estado Actual
 
+- Version productiva visible: `v4.0`.
 - El frontend productivo vive en `frontend/`.
 - El backend de Apps Script queda solo como legado temporal en `backend/`.
 - No debe haber token, URL de Web App, ID de Apps Script, ID de Sheet, fotos personales ni registros financieros en el repo.
@@ -11,6 +12,8 @@ App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para i
 - El respaldo operativo es `BACKUP LOCAL` desde Configuracion: exporta/importa un JSON completo del dispositivo, fuera del repo.
 - El modelo financiero local trata el sueldo como una particion disjunta: gastos fijos, ahorros y disponible.
 - El sueldo se registra desde el formulario de ingreso usando motivo `Sueldo`; esto suma el remanente anterior y activa recordatorios post-cobro hasta cargar fijos, futuro y metas.
+- En una instalacion nueva se muestra un onboarding inicial saltable para cargar sueldo, gastos fijos y primeros ahorros/metas/cosas; lo cargado se guarda por el mismo store local.
+- El guardado local deja metadata diagnostica de ultima escritura (`IndexedDB` o fallback) sin registrar datos financieros extra.
 
 ## Modelo Financiero
 

@@ -1,6 +1,6 @@
 {
   "name": "pirepirapp",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "App personal de finanzas con estetica LCD verde. Este repo quedo limpiado para iniciar la transicion desde PWA sincronizada con Google Apps Script/Drive hacia una app local instalable como APK.",
   "private": true,
   "directories": {

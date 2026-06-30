@@ -1,5 +1,44 @@
 # Bitacora - Pirepirapp
 
+## 2026-06-30 - Integracion onboarding y release v4.0
+
+### Objetivo
+- Incorporar a la app real el tour inicial trabajado en B3.
+- Subir la version visible y cache-busting a `v4.0`.
+- Endurecer el guardado local y ampliar la corrida de integridad.
+- Revisar basura/local ignored sin borrar dependencias o salidas necesarias para builds.
+
+### Cambios
+- `frontend/scripts/onboarding.js` agrega un onboarding real de primer inicio, saltable, con pasos de bienvenida, sueldo, gastos fijos, ahorros y resumen.
+- `frontend/styles/onboarding.css` incorpora el layout LCD/pixel del tour dentro de la app, reutilizando la estetica y botones fisicos.
+- `frontend/scripts/app.js` inicializa el onboarding tras el bootstrap local.
+- `frontend/scripts/render.js` pausa el render principal mientras el onboarding esta activo para evitar parpadeos o reemplazos de pantalla.
+- `frontend/scripts/local-store.js` conserva `onboardingVersion`, `onboardingUpdatedAt` y `plazo` en ahorros/metas/wishlist, arrastra plazo al convertir wishlist a meta y registra metadata diagnostica de ultima escritura local.
+- `frontend/index.html`, `frontend/scripts/config.js`, `frontend/service-worker.js`, `package.json` y `package-lock.json` pasan a `v4.0`; el service worker productivo sube a `finanzas-lcd-v400` e incluye `onboarding.css/js`.
+- `frontend/previews/onboarding-terminal.html` y `frontend/previews/onboarding-console.html` actualizan referencias base a `v4.0`.
+- `scripts/smoke-local-store.js` valida version/plazos de onboarding y metadata de guardado local.
+- `README.md` documenta `v4.0`, onboarding inicial y metadata de guardado.
+- `docs/ITERACIONES_PIREPIRAPP_2026-06-29.md` registra el prompt de esta iteracion.
+
+### Verificacion
+- `Get-ChildItem frontend/scripts -Filter *.js | ForEach-Object { node --check $_.FullName }`: OK.
+- `node --check frontend/service-worker.js`: OK.
+- `node --check scripts/smoke-local-store.js`: OK.
+- Validacion estatica Node de `v4.0`, `onboarding.css/js` y `finanzas-lcd-v400`: OK, `STATIC_V4_OK`.
+- `npm run test:smoke`: OK, `SMOKE_LOCAL_STORE_OK`.
+- Validacion Node de compuerta de onboarding: OK, `ONBOARDING_GATE_OK`.
+- `git diff --check`: OK; solo advirtio normalizacion CRLF de Windows.
+- `rg --files -g "*.tmp" -g "*.bak" -g "*.log" -g "*.old" -g "*.json.backup" -g "Thumbs.db" -g ".DS_Store"`: sin archivos basura versionables.
+- `git clean -ndX`: solo listo dependencias/caches/salidas ignoradas (`node_modules`, `.tool-cache`, Gradle, Android build, `frontend/data`); no se borraron porque son generados locales utiles o potencialmente necesarios para builds.
+
+### Despliegue
+- Commit: pendiente al cerrar el hito.
+- Push: pendiente al cerrar el hito.
+- URL publica a verificar: `https://nicolasverar.github.io/pirepirapp/`.
+
+### Pendientes
+- Recorrido visual manual en navegador/PWA para ajustar microespaciado real del onboarding si aparece algun detalle de pantalla.
+
 ## 2026-06-30 - B3 centrado y compactacion final
 
 ### Objetivo
